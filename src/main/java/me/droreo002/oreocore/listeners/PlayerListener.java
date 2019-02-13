@@ -14,6 +14,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        player.sendMessage(plugin.getPrefix() + StringUtil.color("&fThis server is currently running on &bOreoCore &fversion &b" + plugin.getDescription().getVersion() + "&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7)"));
+        player.sendMessage(plugin.getPrefix() + StringUtil.color("&fThis server is currently running on &eOreoCore &7(&c" + plugin.getDescription().getVersion() + "&7)&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7) &fplugin"));
     }
 }

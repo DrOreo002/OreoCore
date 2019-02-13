@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
 import lombok.Getter;
 import me.droreo002.oreocore.commands.object.base.ExampleCommand;
+import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.debug.FlatFileDebug;
 import me.droreo002.oreocore.database.debug.MySqlDebug;
@@ -45,6 +46,8 @@ public final class OreoCore extends JavaPlugin {
     private DatabaseMySQL mysqlData;
     @Getter
     private DatabaseSQL sqlData;
+    @Getter
+    private PluginConfig pluginConfig;
 
     @Override
     public void onEnable() {
@@ -62,7 +65,11 @@ public final class OreoCore extends JavaPlugin {
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
 
-        Debug.log("OreoCore has been enabled successfully!", true);
+        //new ExampleCommand();
+        //flatFileData = new FlatFileDebug();
+        //sqlData = new SqlDebug()
+        //mysqlData = new MySqlDebug();
+        pluginConfig = new PluginConfig(this);
 
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
@@ -77,10 +84,7 @@ public final class OreoCore extends JavaPlugin {
                 Debug.log("&fAPI is currently handling no plugin. You can uninstall this from your server if you want, because it will not doing anything", true);
             }
         }, 20L * 15L); // 15 Seconds
-        //new ExampleCommand();
-        //flatFileData = new FlatFileDebug();
-        //sqlData = new SqlDebug()
-        // mysqlData = new MySqlDebug();
+        Debug.log("OreoCore has been enabled successfully!", true);
     }
 
     @Override

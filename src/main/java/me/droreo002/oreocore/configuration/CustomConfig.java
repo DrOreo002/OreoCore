@@ -29,12 +29,13 @@ public abstract class CustomConfig {
      * every time the class the initialized. The config will get created!
      *
      * @param plugin : The JavaPlugin class
+     * @param yamlFile : The yaml file object
      */
-    public CustomConfig(JavaPlugin plugin, File yamlFile, String fileName, String filePath) {
+    public CustomConfig(JavaPlugin plugin, File yamlFile) {
         this.plugin = plugin;
         this.yamlFile = yamlFile;
-        this.fileName = fileName;
-        this.filePath = filePath;
+        this.fileName = yamlFile.getName();
+        this.filePath = yamlFile.getAbsolutePath();
         setupConfig();
     }
 
