@@ -30,7 +30,7 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private static OreoCore instance;
     @Getter
-    private final List<JavaPlugin> hookedPlugin = new ArrayList<>();
+    private final Map<JavaPlugin, Boolean> hookedPlugin = new HashMap<>();
     @Getter
     private final Map<UUID, PaginatedInventory> opening = new HashMap<>();
     @Getter
@@ -68,8 +68,10 @@ public final class OreoCore extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {
                 Debug.log("&fAPI is currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
-                for (JavaPlugin pl : hookedPlugin) {
-                    Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE" : "&cDISABLED"));
+                for (Map.Entry ent : hookedPlugin.entrySet()) {
+                    JavaPlugin pl = (JavaPlugin) ent.getKey();
+                    boolean isPremium = (boolean) ent.getValue();
+                    Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
                 }
             } else {
                 Debug.log("&fAPI is currently handling no plugin. You can uninstall this from your server if you want, because it will not doing anything", true);
@@ -95,8 +97,9 @@ public final class OreoCore extends JavaPlugin {
      * Add the specified plugin as a plugin that depend on this api
      *
      * @param plugin : The specified plugin
+     * @param premium : Determine if this plugin is a premium plugin or not
      */
-    public void dependPlugin(JavaPlugin plugin) {
-        hookedPlugin.add(plugin);
+    public void dependPlugin(JavaPlugin plugin, boolean premium) {
+        hookedPlugin.put(plugin, premium);
     }
 }
