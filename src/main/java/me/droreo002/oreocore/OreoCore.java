@@ -61,8 +61,12 @@ public final class OreoCore extends JavaPlugin {
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
 
         Debug.log("OreoCore has been enabled successfully!. The API is currently being used by these plugins : ", true);
-        for (JavaPlugin pl : hookedPlugin) {
-            Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE" : "&cDISABLED"));
+        if (!hookedPlugin.isEmpty()) {
+            for (JavaPlugin pl : hookedPlugin) {
+                Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE" : "&cDISABLED"));
+            }
+        } else {
+            Debug.log("     &f> &eNo plugin is registered...");
         }
         //new ExampleCommand();
         //flatFileData = new FlatFileDebug();
