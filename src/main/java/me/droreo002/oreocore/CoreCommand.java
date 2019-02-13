@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 
 public class CoreCommand implements CommandExecutor {
 
-    private OreoCore main;
+    private OreoCore plugin;
 
-    public CoreCommand(OreoCore main) {
-        this.main = main;
+    public CoreCommand(OreoCore plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -35,6 +35,9 @@ public class CoreCommand implements CommandExecutor {
                     new CustomInventoryDummy().open(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("plugin-list")) {
+                   sendMessage(player, "&fThis server is currently running on &bOreoCore &fversion &b" + plugin.getDescription().getVersion() + "&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7)");
+                }
             }
         } else {
             sendMessage(commandSender, "A CorePlugin specified for plugins from author &c@DrOreo002");
@@ -45,7 +48,7 @@ public class CoreCommand implements CommandExecutor {
     }
 
     private void sendMessage(CommandSender sender, String text) {
-        sender.sendMessage(main.getPrefix() + StringUtil.color(text));
+        sender.sendMessage(plugin.getPrefix() + StringUtil.color(text));
     }
 
     private void sound(Player player) {
