@@ -15,6 +15,7 @@ import me.droreo002.oreocore.database.object.DatabaseSQL;
 import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
 import me.droreo002.oreocore.inventory.listener.CustomInventoryListener;
 import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
+import me.droreo002.oreocore.listeners.PlayerListener;
 import me.droreo002.oreocore.utils.logging.Debug;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtil;
@@ -57,17 +58,23 @@ public final class OreoCore extends JavaPlugin {
         // Registering
         Bukkit.getPluginManager().registerEvents(new CustomInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new PaginatedInventoryListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
 
-        Debug.log("OreoCore has been enabled successfully!. The API is currently being used by these plugins : ", true);
-        if (!hookedPlugin.isEmpty()) {
-            for (JavaPlugin pl : hookedPlugin) {
-                Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE" : "&cDISABLED"));
+        Debug.log("OreoCore has been enabled successfully!", true);
+
+        // Run after few seconds because depend plugin will get ran first
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            if (!hookedPlugin.isEmpty()) {
+                Debug.log("&fAPI is currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
+                for (JavaPlugin pl : hookedPlugin) {
+                    Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE" : "&cDISABLED"));
+                }
+            } else {
+                Debug.log("&fAPI is currently handling no plugin. You can uninstall this from your server if you want, because it will not doing anything", true);
             }
-        } else {
-            Debug.log("     &f> &eNo plugin is registered...");
-        }
+        }, 20L * 15L); // 15 Seconds
         //new ExampleCommand();
         //flatFileData = new FlatFileDebug();
         //sqlData = new SqlDebug()
