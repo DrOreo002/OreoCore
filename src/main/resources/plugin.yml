@@ -1,0 +1,14 @@
+name: OreoCore
+version: ${project.version}
+main: me.droreo002.oreocore.OreoCore
+depend: [ProtocolLib]
+softdepend: [Essentials]
+
+commands:
+  customcommand:
+    aliases:
+      - customcmd
+  oreocore:
+    aliases:
+      - ocore
+      - orcore

@@ -1,0 +1,209 @@
+package me.droreo002.oreocore.inventory.api;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.inventory.api.animation.ItemAnimation;
+import me.droreo002.oreocore.utils.misc.SoundObject;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public abstract class CustomInventory implements InventoryHolder {
+
+    private Inventory inventory;
+
+    @Getter
+    private final Map<Integer, ItemAnimation> animationButtonMap = new HashMap<>();
+    @Getter
+    private final Map<Integer, GUIButton> buttonMap = new HashMap<>();
+    @Getter
+    private int size;
+    @Getter
+    private String title;
+    @Getter
+    @Setter
+    private boolean shouldProcessButton;
+    @Getter
+    @Setter
+    private boolean containsAnimation;
+    @Getter
+    @Setter
+    private boolean cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
+    @Getter
+    @Setter
+    private List<Integer> noClickCancel; // Don't cancel the click event on these slots
+    @Getter
+    @Setter
+    private SoundObject soundOnClick;
+    @Getter
+    @Setter
+    private SoundObject soundOnOpen;
+    @Getter
+    @Setter
+    private SoundObject soundOnClose;
+
+    public CustomInventory(int size, String title) {
+        this.size = size;
+        this.title = title;
+        this.inventory = Bukkit.createInventory(this, size, title);
+        this.cancelPlayerInventoryClickEvent = true; // Default are true
+        this.shouldProcessButton = true;
+        this.noClickCancel = new ArrayList<>();
+    }
+
+    /**
+     * Called when click event is called, will only be called if its a valid custom inventory
+     *
+     * @param e : The click event object
+     */
+    public abstract void onClick(InventoryClickEvent e);
+
+    /**
+     * Called when close event is called, will only be called if its a valid custom inventory
+     *
+     * @param e : The close event object
+     */
+    public abstract void onClose(InventoryCloseEvent e);
+
+    /**
+     * Called when the open event is called, will only be called if its a valid custom inventory
+     *
+     * @param e : The open event object
+     */
+    public abstract void onOpen(InventoryOpenEvent e);
+
+    /**
+     * Called at the first time when the vanilla click event is called. And if the inventory is a valid
+     * custom inventory
+     *
+     * @param e : The click event object
+     * @return true if the event is cancelled, false otherwise
+     */
+    public boolean onPreClick(InventoryClickEvent e) {
+        return false;
+    }
+
+    public void close(Player player) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+    }
+
+    public void open(Player player, Inventory inventory) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    public void close(Player player, SoundObject soundWhenClose) {
+        if (soundWhenClose != null) {
+            soundWhenClose.send(player);
+        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+    }
+
+    public void open(Player player, Inventory inventory, SoundObject soundWhenOpen) {
+        if (soundWhenOpen != null) {
+            soundWhenOpen.send(player);
+        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    public void open(Player player) {
+        for (Map.Entry ent : buttonMap.entrySet()) {
+            int slot = (int) ent.getKey();
+            GUIButton button = (GUIButton) ent.getValue();
+            inventory.setItem(slot, button.getItem());
+        }
+
+        if (!animationButtonMap.isEmpty()) {
+            containsAnimation = true;
+            for (Map.Entry ent : animationButtonMap.entrySet()) {
+                int slot = (int) ent.getKey();
+                ItemAnimation button = (ItemAnimation) ent.getValue();
+                inventory.setItem(slot, button.getItem());
+            }
+        }
+
+        open(player, getInventory());
+    }
+
+    public void reset() {
+        for (Map.Entry ent : buttonMap.entrySet()) {
+            int slot = (int) ent.getKey();
+            GUIButton button = (GUIButton) ent.getValue();
+            inventory.setItem(slot, button.getItem());
+        }
+
+        if (!animationButtonMap.isEmpty()) {
+            containsAnimation = true;
+            for (Map.Entry ent : animationButtonMap.entrySet()) {
+                int slot = (int) ent.getKey();
+                ItemAnimation button = (ItemAnimation) ent.getValue();
+                inventory.setItem(slot, button.getItem());
+            }
+        }
+
+        for (HumanEntity ent : inventory.getViewers()) {
+            if (ent == null) continue;
+            if (!(ent instanceof Player)) continue;
+            Player player = (Player) ent;
+            player.updateInventory();
+        }
+    }
+
+    public void addButton(int slot, GUIButton button, boolean replaceIfExist) {
+        Validate.notNull(button, "Button cannot be null!");
+        if (replaceIfExist) {
+            if (buttonMap.containsKey(slot)) {
+                buttonMap.remove(slot);
+                buttonMap.put(slot, button);
+            } else {
+                buttonMap.put(slot, button);
+            }
+        } else {
+            if (buttonMap.containsKey(slot)) {
+                throw new IllegalStateException("Please select other empty slot!");
+            }
+            buttonMap.put(slot, button);
+        }
+    }
+
+    public void addButton(int slot, ItemAnimation button, boolean replaceIfExist) {
+        Validate.notNull(button, "Button cannot be null!");
+        if (replaceIfExist) {
+            if (animationButtonMap.containsKey(slot)) {
+                animationButtonMap.remove(slot);
+                animationButtonMap.put(slot, button);
+            } else {
+                animationButtonMap.put(slot, button);
+            }
+        } else {
+            if (animationButtonMap.containsKey(slot)) {
+                throw new IllegalStateException("Please select other empty slot!");
+            }
+            animationButtonMap.put(slot, button);
+        }
+    }
+
+    public void addBorder(int row, ItemStack border, boolean replaceIfExist) {
+        if (row < 0) throw new IllegalStateException("Row cannot be 0!");
+        for (int i = row * 9; i < (row * 9) + 9; i++) {
+            addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
+        }
+    }
+    
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+}
