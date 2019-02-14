@@ -14,12 +14,19 @@ public @interface ConfigVariable {
      *
      * @return The config path specified
      */
-    String path() default "";
+    String path();
 
     /**
      * Should we throw error when the config value is null?
      *
-     * @return Should?
+     * @return true or false. Depend.
      */
     boolean errorWhenNull() default false;
+
+    /**
+     * Does it implements {@link SerializableConfigVariable}
+     *
+     * @return true or false. Depend
+     */
+    boolean isSerializableObject();
 }

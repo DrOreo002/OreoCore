@@ -6,6 +6,7 @@ import me.droreo002.oreocore.configuration.ConfigMemory;
 import me.droreo002.oreocore.configuration.ConfigMemoryManager;
 import me.droreo002.oreocore.configuration.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
+import me.droreo002.oreocore.utils.misc.TitleObject;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -32,9 +33,13 @@ public class PluginConfig extends CustomConfig {
         @Getter
         private final CustomConfig customConfig;
 
-        @ConfigVariable(path = "Annotation.test", errorWhenNull = true)
+        @ConfigVariable(path = "Annotation.test", errorWhenNull = true, isSerializableObject = false)
         @Getter
         private String working;
+
+        @ConfigVariable(path = "Title.test", isSerializableObject = true)
+        @Getter
+        private TitleObject titleObject = new TitleObject();
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;

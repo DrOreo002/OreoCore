@@ -1,2 +1,9 @@
 Annotation:
   test: 'Working!'
+Title:
+  test:
+    title: '&bHello!'
+    sub-title: '&fThis is a test title!'
+    fade-in: 20
+    stay: 40
+    fade-out: 20

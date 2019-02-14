@@ -1,7 +1,9 @@
 package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.utils.logging.Debug;
-import org.apache.commons.lang.reflect.FieldUtils;
+import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,7 +49,22 @@ public final class ConfigMemoryManager {
         for (Field f : obj.getDeclaredFields()) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
-                final Object configValue = config.get(configVariable.path());
+                Object configValue = config.get(configVariable.path());
+                if (configVariable.isSerializableObject()) {
+                    ConfigurationSection cs = config.getConfigurationSection(configVariable.path());
+                    if (cs == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get ConfigurationSection on path " + configVariable.path());
+                    if (!f.isAccessible()) f.setAccessible(true);
+                    if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
+                    try {
+                        SerializableConfigVariable seri = (SerializableConfigVariable) f.get(memory);
+                        Validate.notNull(seri, "Please always initialize the variable first!. Variable name " + f.getName());
+                        configValue = seri.getFromConfig(cs);
+                        f.set(memory, configValue);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    continue;
+                }
                 if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + configVariable.path());
                 if (!f.isAccessible()) f.setAccessible(true);
                 try {

@@ -1,5 +1,6 @@
 package me.droreo002.oreocore;
 
+import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.inventory.dummy.CustomInventoryDummy;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtil;
@@ -45,6 +46,12 @@ public class CoreCommand implements CommandExecutor {
                     sound(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("title-memory")) {
+                    sendMessage(player, "This is the title!");
+                    sound(player);
+                    plugin.getPluginConfig().getMemory().getTitleObject().send(player);
+                    return true;
+                }
             }
         } else {
             sendMessage(commandSender, "A CorePlugin specified for plugins from author &c@DrOreo002");
@@ -59,6 +66,6 @@ public class CoreCommand implements CommandExecutor {
     }
 
     private void sound(Player player) {
-        new SoundObject(Sound.UI_BUTTON_CLICK).send(player);
+        new SoundObject(Sounds.CLICK).send(player);
     }
 }

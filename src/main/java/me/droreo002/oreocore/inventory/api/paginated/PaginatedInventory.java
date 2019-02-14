@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.api.paginated;
 
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.utils.inventory.CustomItem;
@@ -70,9 +71,9 @@ public abstract class PaginatedInventory implements InventoryHolder {
         /*
         Default values
          */
-        openSound = new SoundObject( Sound.ENTITY_BAT_TAKEOFF);
-        closeSound = new SoundObject(Sound.ENTITY_BAT_TAKEOFF);
-        clickSound = new SoundObject(Sound.UI_BUTTON_CLICK);
+        openSound = new SoundObject(Sounds.BAT_TAKEOFF);
+        closeSound = new SoundObject(Sounds.BAT_TAKEOFF);
+        clickSound = new SoundObject(Sounds.CLICK);
         itemSlot = new ArrayList<>();
         paginatedButton = new ArrayList<>();
         inventoryButton = new HashMap<>();

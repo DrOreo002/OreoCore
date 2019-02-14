@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import me.droreo002.oreocore.enums.XMaterial;
-import me.droreo002.oreocore.utils.multisupport.ReflectionUtils;
+import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,7 +16,7 @@ public final class CustomSkull {
         final ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
         final ItemMeta meta = item.getItemMeta();
         final Object skin = createGameProfile(texture, UUID.randomUUID());
-        ReflectionUtils.setValue(meta, true, "profile", skin);
+        BukkitReflectionUtils.setValue(meta, true, "profile", skin);
         item.setItemMeta(meta);
         return item;
     }

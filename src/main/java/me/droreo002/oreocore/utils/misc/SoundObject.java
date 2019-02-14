@@ -1,34 +1,43 @@
 package me.droreo002.oreocore.utils.misc;
 
 import lombok.Getter;
-import org.bukkit.Sound;
+import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.enums.Sounds;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class SoundObject {
+public class SoundObject implements SerializableConfigVariable<SoundObject> {
 
     // Pre - Initialized
-    public static final SoundObject SUCCESS_SOUND = new SoundObject(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
-    public static final SoundObject ERROR_SOUND = new SoundObject(Sound.ENTITY_BLAZE_DEATH);
+    public static final SoundObject SUCCESS_SOUND = new SoundObject(Sounds.ORB_PICKUP);
+    public static final SoundObject ERROR_SOUND = new SoundObject(Sounds.ORB_PICKUP);
 
     @Getter
     private float volume;
     @Getter
     private float pitch;
     @Getter
-    private Sound sound;
+    private Sounds sounds;
 
-    public SoundObject(Sound sound, float volume, float pitch) {
+    public SoundObject(Sounds sound, float volume, float pitch) {
         this.volume = volume;
         this.pitch = pitch;
-        this.sound = sound;
+        this.sounds = sound;
     }
 
-    public SoundObject(Sound sound) {
+    public SoundObject(Sounds sound) {
         this.volume = 1.0f;
         this.pitch = 1.0f;
-        this.sound = sound;
+        this.sounds = sound;
     }
 
+    /**
+     * Parsing from volume,pitch,sound. Recommended if you want fast data saving
+     *
+     * @param toParse : The string
+     */
     public SoundObject(String toParse) {
         if (!toParse.contains(",")) {
             throw new IllegalStateException("Invalid string to parse!");
@@ -36,10 +45,27 @@ public class SoundObject {
         String[] contains = toParse.split(",");
         this.volume = Float.parseFloat(contains[1]);
         this.pitch = Float.parseFloat(contains[2]);
-        this.sound = Sound.valueOf(contains[0]);
+        this.sounds = Sounds.fromString(contains[0]);
+        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + contains[0]);
     }
 
     public void send(Player player) {
-        player.playSound(player.getLocation(), sound, volume, pitch);
+        player.playSound(player.getLocation(), sounds.bukkitSound(), volume, pitch);
+    }
+
+    @Override
+    public SoundObject getFromConfig(ConfigurationSection section) {
+        float volume = (float) section.getDouble("volume");
+        float pitch = (float) section.getDouble("pitch");
+        Sounds sounds = Sounds.fromString(section.getString("sound"));
+        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
+        return new SoundObject(sounds, volume, pitch);
+    }
+
+    @Override
+    public void saveToConfig(String path, FileConfiguration config) {
+        config.set(path + ".sound", sounds.toString());
+        config.set(path + ".volume", volume);
+        config.set(path + ".pitch", pitch);
     }
 }
