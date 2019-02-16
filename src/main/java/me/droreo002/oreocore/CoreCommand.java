@@ -52,6 +52,11 @@ public class CoreCommand implements CommandExecutor {
                     plugin.getPluginConfig().getMemory().getTitleObject().send(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("enum-memory")){
+                    sendMessage(player, "Debug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
+                    sound(player);
+                    return true;
+                }
             }
         } else {
             sendMessage(commandSender, "A CorePlugin specified for plugins from author &c@DrOreo002");

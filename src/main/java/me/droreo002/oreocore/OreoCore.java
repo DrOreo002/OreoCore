@@ -21,6 +21,7 @@ import me.droreo002.oreocore.utils.logging.Debug;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

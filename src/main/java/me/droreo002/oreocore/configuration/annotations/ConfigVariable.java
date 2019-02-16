@@ -1,4 +1,6 @@
-package me.droreo002.oreocore.configuration;
+package me.droreo002.oreocore.configuration.annotations;
+
+import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

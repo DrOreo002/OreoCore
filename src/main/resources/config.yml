@@ -7,3 +7,5 @@ Title:
     fade-in: 20
     stay: 40
     fade-out: 20
+Enum:
+  test: 'HEAD'

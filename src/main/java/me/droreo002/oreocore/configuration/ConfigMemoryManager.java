@@ -1,13 +1,15 @@
 package me.droreo002.oreocore.configuration;
 
+import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
+import me.droreo002.oreocore.configuration.annotations.SerializableEnum;
 import me.droreo002.oreocore.utils.logging.Debug;
-import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public final class ConfigMemoryManager {
@@ -67,6 +69,20 @@ public final class ConfigMemoryManager {
                 }
                 if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + configVariable.path());
                 if (!f.isAccessible()) f.setAccessible(true);
+                if (f.getType().isEnum()) {
+                    System.out.println("Is enum!");
+                    try {
+                        Method valueOf = f.getType().getMethod("valueOf", String.class);
+                        Object value = valueOf.invoke(null, String.valueOf(configValue));
+                        f.set(memory, value);
+                    } catch (Exception e) {
+                        // handle error here
+                        e.printStackTrace();
+                        Debug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName());
+                        continue;
+                    }
+                    continue;
+                }
                 try {
                     f.set(memory, configValue);
                 } catch (IllegalAccessException e) {

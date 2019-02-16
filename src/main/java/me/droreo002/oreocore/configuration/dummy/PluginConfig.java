@@ -4,8 +4,9 @@ import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.ConfigMemory;
 import me.droreo002.oreocore.configuration.ConfigMemoryManager;
-import me.droreo002.oreocore.configuration.ConfigVariable;
+import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
+import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.utils.misc.TitleObject;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,6 +41,10 @@ public class PluginConfig extends CustomConfig {
         @ConfigVariable(path = "Title.test", isSerializableObject = true)
         @Getter
         private TitleObject titleObject = new TitleObject();
+
+        @ConfigVariable(path = "Enum.test", isSerializableObject = false)
+        @Getter
+        private ArmorStandBody body;
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;

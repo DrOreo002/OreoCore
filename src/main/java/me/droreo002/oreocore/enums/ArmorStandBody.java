@@ -10,11 +10,12 @@ public enum  ArmorStandBody {
     R_LEG;
 
     public static ArmorStandBody getBody(String name) {
-        ArmorStandBody bod = null;
+        ArmorStandBody bod;
         try {
             bod = ArmorStandBody.valueOf(name);
         } catch (Exception e) {
             // Ignore
+            return null;
         }
         return bod;
     }
