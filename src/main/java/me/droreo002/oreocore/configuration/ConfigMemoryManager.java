@@ -70,7 +70,6 @@ public final class ConfigMemoryManager {
                 if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + configVariable.path());
                 if (!f.isAccessible()) f.setAccessible(true);
                 if (f.getType().isEnum()) {
-                    System.out.println("Is enum!");
                     try {
                         Method valueOf = f.getType().getMethod("valueOf", String.class);
                         Object value = valueOf.invoke(null, String.valueOf(configValue));

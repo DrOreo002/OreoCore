@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
 import lombok.Getter;
+import me.droreo002.oreocore.bstats.Metrics;
 import me.droreo002.oreocore.commands.object.base.ExampleCommand;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
@@ -26,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public final class OreoCore extends JavaPlugin {
 
@@ -49,11 +51,14 @@ public final class OreoCore extends JavaPlugin {
     private DatabaseSQL sqlData;
     @Getter
     private PluginConfig pluginConfig;
+    @Getter
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+        metrics = new Metrics(this);
         prefix = StringUtil.color("&7[ &bOreoCore &7]&f ");
         essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -81,6 +86,14 @@ public final class OreoCore extends JavaPlugin {
                     boolean isPremium = (boolean) ent.getValue();
                     Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
                 }
+                metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
+                    final Map<String, Integer> res = new HashMap<>();
+                    for (Map.Entry ent : hookedPlugin.entrySet()) {
+                        JavaPlugin pl = (JavaPlugin) ent.getKey();
+                        res.put(pl.getName(), 1);
+                    }
+                    return res;
+                }));
             } else {
                 Debug.log("&fAPI is currently handling no plugin. You can uninstall this from your server if you want, because it will not doing anything", true);
             }
