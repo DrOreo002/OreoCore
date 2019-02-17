@@ -21,14 +21,17 @@ public abstract class DatabaseFlatFile extends Database {
     @Getter
     private final File dataFolder;
 
+    /**
+     * Where the string is the file name
+     */
+    @Getter
     private Map<String, Data> dataCache;
 
-    public DatabaseFlatFile(JavaPlugin plugin, String dataFolderName) {
+    public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder) {
         super(DatabaseType.FLAT_FILE, plugin);
-        this.dataFolder = new File(plugin.getDataFolder(), dataFolderName);
+        this.dataFolder = databaseFolder;
         this.dataCache = new HashMap<>();
         init(); // You have to call this first!
-        loadData();
     }
 
     /*
@@ -39,6 +42,13 @@ public abstract class DatabaseFlatFile extends Database {
         File fileDataFolder = getPlugin().getDataFolder();
         if (!fileDataFolder.exists()) fileDataFolder.mkdir();
         if (!dataFolder.exists()) dataFolder.mkdir();
+
+        File[] files = getDataFolder().listFiles();
+        if (files == null) return;
+        for (File f : files) {
+            FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
+            addData(new DatabaseFlatFile.Data(fileConfig, f));
+        }
     }
 
     /**
@@ -105,17 +115,6 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
-     * Get the data config file with that name
-     *
-     * @param fileName : The file name
-     * @return the FileConfiguration if there's any. null otherwise
-     */
-    public FileConfiguration getDataConfig(String fileName) {
-        if (dataCache.get(fileName) == null) return null;
-        return dataCache.get(fileName).getConfig();
-    }
-
-    /**
      * Get the data class
      *
      * @param fileName : The data file name
@@ -128,13 +127,12 @@ public abstract class DatabaseFlatFile extends Database {
     /**
      * Save the data with that specified name
      *
-     * @param fileName : The data's file name
+     * @param data : The data object
      */
-    public void saveData(String fileName) {
-        Data data = getDataClass(fileName);
-        if (data == null) return;
-        File file = data.getDataFile();
+    public void saveData(Data data) {
         FileConfiguration config = data.getConfig();
+        File file = data.getDataFile();
+        String fileName = FileUtils.getFileName(file, false);
         try {
             config.save(file);
         } catch (IOException e) {
@@ -142,6 +140,23 @@ public abstract class DatabaseFlatFile extends Database {
         }
         // Update the HashMap
         dataCache.put(fileName, new Data(config, file));
+    }
+
+    /**
+     * Remove the data from the cache or delete it permanently
+     *
+     * @param data : The data object
+     * @param delete : Should we delete it?
+     */
+    public void removeData(Data data, boolean delete) {
+        if (delete) {
+            File file = data.getDataFile();
+            if (!file.exists()) throw new IllegalStateException("File is not exist!. Cannot delete it!, file path is " + file.getAbsolutePath());
+            file.delete();
+            dataCache.remove(FileUtils.getFileName(data.getDataFile(), false));
+        } else {
+            dataCache.remove(FileUtils.getFileName(data.getDataFile(), false));
+        }
     }
 
     /**
@@ -154,7 +169,7 @@ public abstract class DatabaseFlatFile extends Database {
         return dataCache.containsKey(dataName);
     }
 
-    private class Data {
+    public class Data {
 
         @Getter
         @Setter
@@ -163,7 +178,7 @@ public abstract class DatabaseFlatFile extends Database {
         @Setter
         private File dataFile;
 
-        Data(FileConfiguration config, File dataFile) {
+        public Data(FileConfiguration config, File dataFile) {
             this.config = config;
             this.dataFile = dataFile;
         }

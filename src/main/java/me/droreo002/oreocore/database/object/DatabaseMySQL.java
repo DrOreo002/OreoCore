@@ -32,7 +32,6 @@ public abstract class DatabaseMySQL extends Database {
         this.addressData = addressData;
         this.updateTimeSecond = updateTimeSecond;
         init();
-        loadData();
     }
 
     @Override

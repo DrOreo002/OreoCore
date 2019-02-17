@@ -26,14 +26,14 @@ public abstract class DatabaseSQL extends Database {
     @Getter
     private String databaseName;
     @Getter
-    private File databaseParentFile;
+    private File databaseFolder;
 
-    public DatabaseSQL(JavaPlugin plugin, String databaseName, File databaseParentFile) {
+    public DatabaseSQL(JavaPlugin plugin, String databaseName, File databaseFolder) {
         super(DatabaseType.SQL, plugin);
         if (databaseName.contains(".db")) throw new IllegalStateException("Database name cannot have database extension in it!");
         this.databaseName = databaseName;
-        this.databaseParentFile = databaseParentFile;
-        if (!databaseParentFile.exists()) databaseParentFile.mkdir();
+        this.databaseFolder = databaseFolder;
+        if (!databaseFolder.exists()) databaseFolder.mkdir();
         init();
     }
 
@@ -41,7 +41,7 @@ public abstract class DatabaseSQL extends Database {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand(), true)) {
-                Debug.log("&fSQL Connection for plugin &c" + getPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseParentFile.getAbsolutePath() + "\\" + databaseName + ".db", true);
+                Debug.log("&fSQL Connection for plugin &c" + getPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db", true);
             } else {
                 Debug.log("&cFailed to initialize the SQL connection on plugin &e" + getPlugin().getName() + "&c Please contact the dev!");
             }
@@ -460,7 +460,7 @@ public abstract class DatabaseSQL extends Database {
      * @return a new Connection if its a success, null otherwise
      */
     private Connection getNewConnection() {
-        File folder = new File(databaseParentFile, databaseName + ".db");
+        File folder = new File(databaseFolder, databaseName + ".db");
         if (!folder.exists()) {
             try {
                 if (folder.createNewFile()) Debug.log("&fDatabase &b" + databaseName + ".db &fon &e" + folder.getAbsolutePath() + "&f from plugin &e"  + getPlugin().getName() + "&f has been created successfully!", true);

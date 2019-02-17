@@ -1,10 +1,12 @@
 package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
+import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class MySqlConnection {
+public class MySqlConnection implements SerializableConfigVariable<MySqlConnection> {
 
     @Getter
     private String host;
@@ -25,24 +27,22 @@ public class MySqlConnection {
         this.user = user;
     }
 
-    /**
-     * Read from the config
-     *
-     * @param config : The config class
-     * @param path : The main path. Example : Setting.mysql
-     * @return a new MySqlConnection object if valid
-     */
-    public static MySqlConnection readFromConfig(FileConfiguration config, String path) {
-        Validate.notNull(config, "Config cannot be null!");
-        Validate.notNull(path, "Path cannot be null!");
-        Validate.isTrue(path.charAt(path.length() - 1) == '.', ". (dot) at the end of the path is not allowed!");
-
-        String host = config.getString(path + ".host");
-        int port = config.getInt(path + ".port");
-        String databaseName = config.getString(path + ".databaseName");
-        String password = config.getString(path + ".password");
-        String user = config.getString(path + ".user");
-
+    @Override
+    public MySqlConnection getFromConfig(ConfigurationSection section) {
+        String host = section.getString("host");
+        int port = section.getInt("port");
+        String databaseName = section.getString("databaseName");
+        String password = section.getString("password");
+        String user = section.getString("user");
         return new MySqlConnection(host, port, databaseName, password, user);
+    }
+
+    @Override
+    public void saveToConfig(String path, FileConfiguration config) {
+        config.set(path + ".host", host);
+        config.set(path + ".port", port);
+        config.set(path + ".databaseName", databaseName);
+        config.set(path + ".password", password);
+        config.set(path + ".user", user);
     }
 }

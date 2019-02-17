@@ -11,7 +11,7 @@ import java.io.File;
 public class FlatFileDebug extends DatabaseFlatFile {
 
     public FlatFileDebug() {
-        super(OreoCore.getInstance(), "datas");
+        super(OreoCore.getInstance(), OreoCore.getInstance().getDataFolder());
         DatabaseManager.registerDatabase(OreoCore.getInstance(), this);
     }
 
