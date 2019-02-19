@@ -38,14 +38,14 @@ public abstract class DatabaseMySQL extends Database {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand(), true)) {
-                Debug.log("&bMySQL Connection for plugin &c" + getPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase", true);
+                Debug.log("&bMySQL Connection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase", true);
             } else {
-                Debug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getPlugin().getName() + "&c Please contact the dev!");
+                Debug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
         } else {
-            throw new IllegalStateException("MySQL Connection for plugin " + getPlugin().getName() + " cannot be proceeded!, please contact the dev!");
+            throw new IllegalStateException("MySQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
         }
-        this.connectionCheckerTaskID = new CheckConnection().runTaskTimerAsynchronously(getPlugin(), updateTimeSecond * 20, updateTimeSecond * 20).getTaskId();
+        this.connectionCheckerTaskID = new CheckConnection().runTaskTimerAsynchronously(getOwningPlugin(), updateTimeSecond * 20, updateTimeSecond * 20).getTaskId();
     }
 
     public abstract void loadData();
@@ -72,7 +72,7 @@ public abstract class DatabaseMySQL extends Database {
      */
     public void executeAsync(String sql, SqlCallback<Boolean> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             Connection con = null;
             Statement statement = null;
             try {
@@ -138,7 +138,7 @@ public abstract class DatabaseMySQL extends Database {
      */
     public void queryValueAsync(String statement, String row, SqlCallback<Object> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             try {
@@ -184,7 +184,7 @@ public abstract class DatabaseMySQL extends Database {
      */
     public void queryRowAsync(String statement, String row, SqlCallback<List<Object>> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             List<Object> values = new ArrayList<>();
@@ -232,7 +232,7 @@ public abstract class DatabaseMySQL extends Database {
      */
     public void queryMultipleRowsAsync(String statement, SqlCallback<Map<String, List<Object>>> callback, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             final List<Object> objects = new ArrayList<>();
@@ -474,7 +474,7 @@ public abstract class DatabaseMySQL extends Database {
     private class CheckConnection extends BukkitRunnable {
 
         private CheckConnection() {
-            Debug.log("&bMySQL Connection &fchecker for plugin &b" + getPlugin().getName() + "&f has been started!", true);
+            Debug.log("&bMySQL Connection &fchecker for plugin &b" + getOwningPlugin().getName() + "&f has been started!", true);
         }
 
         @Override

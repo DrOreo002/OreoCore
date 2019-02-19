@@ -6,6 +6,7 @@ import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.utils.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,7 +40,7 @@ public abstract class DatabaseFlatFile extends Database {
      */
     @Override
     public void init() {
-        File fileDataFolder = getPlugin().getDataFolder();
+        File fileDataFolder = getOwningPlugin().getDataFolder();
         if (!fileDataFolder.exists()) fileDataFolder.mkdir();
         if (!dataFolder.exists()) dataFolder.mkdir();
 
@@ -84,13 +85,11 @@ public abstract class DatabaseFlatFile extends Database {
     /**
      * Setup the FileConfiguration, this will also call the setup method. This is different from the load data
      *
-     * @param fileName : The file name`
+     * @param fileName : The file name
      */
     public void setup(String fileName, boolean addDefault) {
-        if (!fileName.contains(".yml")) throw new IllegalStateException("Filename must contains .yml!");
-        String keyName = fileName.replace(".yml", "");
-        if (isDataCached(keyName)) return;
-        File file = new File(dataFolder, fileName);
+        if (isDataCached(fileName.replace(".yml", ""))) return;
+        File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
         if (file.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             addData(new Data(config, file));

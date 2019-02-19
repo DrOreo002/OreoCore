@@ -21,6 +21,13 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     @Getter
     private Sounds sounds;
 
+    /**
+     * Allow null for @ConfigVariable support
+     */
+    public SoundObject() {
+
+    }
+
     public SoundObject(Sounds sound, float volume, float pitch) {
         this.volume = volume;
         this.pitch = pitch;

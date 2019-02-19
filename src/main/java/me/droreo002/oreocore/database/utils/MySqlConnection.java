@@ -19,6 +19,13 @@ public class MySqlConnection implements SerializableConfigVariable<MySqlConnecti
     @Getter
     private String user;
 
+    /**
+     * Allow null for @ConfigVariable support
+     */
+    public MySqlConnection() {
+
+    }
+
     public MySqlConnection(String host, int port, String databaseName, String password, String user) {
         this.host = host;
         this.port = port;

@@ -1,6 +1,5 @@
 package me.droreo002.oreocore.database.object;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
@@ -41,12 +40,12 @@ public abstract class DatabaseSQL extends Database {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand(), true)) {
-                Debug.log("&fSQL Connection for plugin &c" + getPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db", true);
+                Debug.log("&fSQL Connection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db", true);
             } else {
-                Debug.log("&cFailed to initialize the SQL connection on plugin &e" + getPlugin().getName() + "&c Please contact the dev!");
+                Debug.log("&cFailed to initialize the SQL connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
         } else {
-            throw new IllegalStateException("SQL Connection for plugin " + getPlugin().getName() + " cannot be proceeded!, please contact the dev!");
+            throw new IllegalStateException("SQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
         }
     }
 
@@ -74,7 +73,7 @@ public abstract class DatabaseSQL extends Database {
      */
     public void executeAsync(String sql, SqlCallback<Boolean> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             Connection con = null;
             Statement statement = null;
             try {
@@ -140,7 +139,7 @@ public abstract class DatabaseSQL extends Database {
      */
     public void queryValueAsync(String statement, String row, SqlCallback<Object> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             try {
@@ -186,7 +185,7 @@ public abstract class DatabaseSQL extends Database {
      */
     public void queryRowAsync(String statement, String row, SqlCallback<List<Object>> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             List<Object> values = new ArrayList<>();
@@ -234,7 +233,7 @@ public abstract class DatabaseSQL extends Database {
      */
     public void queryMultipleRowsAsync(String statement, SqlCallback<Map<String, List<Object>>> callback, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
             ResultSet rs;
             final List<Object> objects = new ArrayList<>();
@@ -463,10 +462,10 @@ public abstract class DatabaseSQL extends Database {
         File folder = new File(databaseFolder, databaseName + ".db");
         if (!folder.exists()) {
             try {
-                if (folder.createNewFile()) Debug.log("&fDatabase &b" + databaseName + ".db &fon &e" + folder.getAbsolutePath() + "&f from plugin &e"  + getPlugin().getName() + "&f has been created successfully!", true);
+                if (folder.createNewFile()) Debug.log("&fDatabase &b" + databaseName + ".db &fon &e" + folder.getAbsolutePath() + "&f from plugin &e"  + getOwningPlugin().getName() + "&f has been created successfully!", true);
             } catch (IOException e) {
-                Debug.log("&fFailed to create database file on &b" + folder.getAbsolutePath() + "&f. Plugin &e" + getPlugin().getName() + "&f will now disabling itself!", true);
-                Bukkit.getPluginManager().disablePlugin(getPlugin());
+                Debug.log("&fFailed to create database file on &b" + folder.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
                 return null;
             }
         }
@@ -478,8 +477,8 @@ public abstract class DatabaseSQL extends Database {
             return this.connection = DriverManager.getConnection("jdbc:sqlite:" + folder);
         }
         catch (SQLException | ClassNotFoundException ex) {
-            Debug.log("&fFailed to create database file on &b" + folder.getAbsolutePath() + "&f. Plugin &e" + getPlugin().getName() + "&f will now disabling itself!", true);
-            Bukkit.getPluginManager().disablePlugin(getPlugin());
+            Debug.log("&fFailed to create database file on &b" + folder.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+            Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
             return null;
         }
     }

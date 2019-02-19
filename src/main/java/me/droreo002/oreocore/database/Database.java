@@ -1,18 +1,21 @@
 package me.droreo002.oreocore.database;
 
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Database {
 
     @Getter
-    private final DatabaseType databaseType;
+    protected final DatabaseType databaseType;
     @Getter
-    private final JavaPlugin plugin;
+    protected final JavaPlugin owningPlugin;
 
-    public Database(DatabaseType databaseType, JavaPlugin plugin) {
+    public Database(DatabaseType databaseType, JavaPlugin owningPlugin) {
+        Validate.notNull(owningPlugin, "Plugin cannot be null!");
+        Validate.notNull(databaseType, "DatabaseType cannot be null!");
         this.databaseType = databaseType;
-        this.plugin = plugin;
+        this.owningPlugin = owningPlugin;
     }
 
     public abstract void init();

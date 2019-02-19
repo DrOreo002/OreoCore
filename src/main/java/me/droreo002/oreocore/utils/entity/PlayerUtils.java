@@ -1,8 +1,5 @@
 package me.droreo002.oreocore.utils.entity;
 
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.User;
-import me.droreo002.oreocore.OreoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,17 +9,9 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public final class PlayerUtils {
-
-    public static boolean hasPlayerBefore(String playerName) {
-        Essentials ess = OreoCore.getInstance().getEssentials();
-        User user = ess.getUser(playerName);
-        if (user == null) return false;
-        OfflinePlayer off = Bukkit.getOfflinePlayer(user.getConfigUUID());
-        if (off == null) return false;
-        return off.hasPlayedBefore();
-    }
 
     public static Location getPlayerLooking(Player player, int distance) {
         ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight( (Set<Material>) null, distance);
@@ -32,5 +21,16 @@ public final class PlayerUtils {
         }
         // Get the last
         return sight.get(sight.size() - 1);
+    }
+
+    public static String getPlayerName(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+            if (off == null) return "";
+            return off.getName();
+        } else {
+            return player.getName();
+        }
     }
 }
