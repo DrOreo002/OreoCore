@@ -26,6 +26,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                                     Player player = (Player) commandSender;
                                     if (!player.hasPermission(argument.getPermission())) {
                                         player.sendMessage(StringUtil.color(argument.getNoPermissionMessage()));
+                                        argument.error(player);
                                         return true;
                                     }
                                 }
@@ -33,7 +34,10 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             argument.execute(commandSender, args);
                             return true;
                         } else {
-                            if (!cmd.getArgumentNotFoundMessage().equals("")) commandSender.sendMessage(cmd.getArgumentNotFoundMessage());
+                            if (!cmd.getArgumentNotFoundMessage().equals("")) {
+                                commandSender.sendMessage(cmd.getArgumentNotFoundMessage());
+                                if (commandSender instanceof Player) cmd.error((Player) commandSender);
+                            }
                             return true;
                         }
                     } else {
