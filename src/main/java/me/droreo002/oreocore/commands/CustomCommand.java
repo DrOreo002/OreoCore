@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.logging.Debug;
 import me.droreo002.oreocore.utils.strings.StringUtil;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,14 +58,16 @@ public abstract class CustomCommand {
         args.add(arg);
     }
 
-    public void success(Player player) {
-        if (successSound == null) return;
-        successSound.send(player);
+    public void successSound(CommandSender sender) {
+        Validate.notNull(successSound, "Success sound is null!");
+        if (!(sender instanceof Player)) return;
+        successSound.send((Player) sender);
     }
 
-    public void error(Player player) {
-        if (errorSound == null) return;
-        errorSound.send(player);
+    public void errorSound(CommandSender sender) {
+        Validate.notNull(errorSound, "Error sound is null!");
+        if (!(sender instanceof Player)) return;
+        errorSound.send((Player) sender);
     }
 
     public boolean isArgumentRegistered(String arg) {

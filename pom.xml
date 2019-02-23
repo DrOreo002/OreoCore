@@ -6,7 +6,7 @@
 
     <groupId>me.droreo002</groupId>
     <artifactId>OreoCore</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>OreoCore</name>
@@ -16,6 +16,7 @@
     </properties>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
@@ -43,6 +44,34 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Specifying build path -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <outputDirectory>C:\Users\Anom\Desktop\Spigot 1.13\plugins</outputDirectory>
+                </configuration>
+            </plugin>
+            <!-- Basically will copy the jar into spigot 1.12 !-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="C:\Users\Anom\Desktop\Spigot 1.13\plugins\${project.build.finalName}.jar" tofile="C:\Users\Anom\Desktop\Spigot2\plugins\${project.build.finalName}.jar"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -53,6 +82,10 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>ess-repo</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
@@ -69,6 +102,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.16.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.13.2-R0.1-SNAPSHOT</version>
@@ -84,6 +123,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
             <version>4.4.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -34,9 +34,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             argument.execute(commandSender, args);
                             return true;
                         } else {
-                            if (!cmd.getArgumentNotFoundMessage().equals("")) {
+                            if (cmd.getArgumentNotFoundMessage() != null) {
                                 commandSender.sendMessage(cmd.getArgumentNotFoundMessage());
-                                if (commandSender instanceof Player) cmd.error((Player) commandSender);
+                                if (commandSender instanceof Player) cmd.errorSound(commandSender);
                             }
                             return true;
                         }

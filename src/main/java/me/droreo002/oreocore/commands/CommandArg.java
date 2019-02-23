@@ -26,12 +26,12 @@ public abstract class CommandArg {
         this.parent = parent;
     }
 
-    public void success(Player player) {
-        parent.success(player);
+    public void success(CommandSender sender) {
+        parent.successSound(sender);
     }
 
-    public void error(Player player) {
-        parent.error(player);
+    public void error(CommandSender sender) {
+        parent.errorSound(sender);
     }
 
     /**

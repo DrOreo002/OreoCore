@@ -67,6 +67,39 @@ public abstract class DatabaseSQL extends Database {
     }
 
     /**
+     * Execute a new SQL Command into the connection on the main server thread
+     * keep in mind that running on the main thread will cause some lags to the server
+     *
+     * @param sql : The sql command
+     * @param throwError : Should the api throw the sql error if there's any?
+     * @return a new ResultSet class if succeeded, null otherwise
+     */
+    public ResultSet query(String sql, boolean throwError) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        Connection con = null;
+        Statement statement = null;
+        try {
+            con = connection;
+            statement = con.createStatement();
+            return statement.executeQuery(sql);
+        } catch (SQLException e) {
+            if (throwError) e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                if (throwError) e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Execute a new SQL Command into the connection on a async thread
      *
      * @param sql : The sql command
@@ -181,9 +214,9 @@ public abstract class DatabaseSQL extends Database {
      * Query a command to get its value in an async task
      *
      * @param statement : The statement
-     * @param row : The row
+     * @param toSelect : What row that will be selected
      */
-    public void queryRowAsync(String statement, String row, SqlCallback<List<Object>> callback) {
+    public void queryRowAsync(String statement, String[] toSelect, SqlCallback<List<Object>> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
@@ -193,7 +226,9 @@ public abstract class DatabaseSQL extends Database {
                 ps = connection.prepareStatement(statement);
                 rs = ps.executeQuery();
                 while (rs.next()) {
-                    values.add(rs.getObject(row));
+                    for (String s : toSelect) {
+                        values.add(rs.getObject(s));
+                    }
                 }
                 callback.onSuccess(values);
             } catch (SQLException ex) {
@@ -332,11 +367,11 @@ public abstract class DatabaseSQL extends Database {
      * Query a command to get its value
      *
      * @param statement : The statement
-     * @param row : The row
+     * @param toSelect : What row that will be selected
      * @param throwError : Should the api throw the error if there's any?
      * @return The specified value as a list if there's any, empty list otherwise
      */
-    public List<Object> queryRow(String statement, String row, boolean throwError) {
+    public List<Object> queryRow(String statement, String[] toSelect, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs;
@@ -345,7 +380,9 @@ public abstract class DatabaseSQL extends Database {
             ps = connection.prepareStatement(statement);
             rs = ps.executeQuery();
             while (rs.next()) {
-                values.add(rs.getObject(row));
+                for (String s : toSelect) {
+                    values.add(rs.getObject(s));
+                }
             }
             return values;
         } catch (SQLException ex) {
@@ -435,12 +472,33 @@ public abstract class DatabaseSQL extends Database {
     }
 
     /**
+     * Check if the data exists
+     * Usage is : .isExists("custom_nickname", "DrOreo002", "player_settings");
+     * @param column : The column
+     * @param data : The data
+     * @param table : The table
+     * @return true if exists, false otherwise
+     */
+    public boolean isExists(String column, String data, String table) {
+        data = "'" + data + "'";
+        try {
+            final ResultSet rs = query("SELECT * FROM " + table + " WHERE " + column + "=" + data + ";", true);
+            while (rs.next()) {
+                if (rs.getString(column) != null) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    /**
      * Check the connection
      *
      * @return true if the connection is not interrupted. False otherwise
      * @throws SQLException : If there's something wrong happened
      */
-    private boolean checkConnection() {
+    public boolean checkConnection() {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = getNewConnection();
