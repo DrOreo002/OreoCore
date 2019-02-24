@@ -2,6 +2,7 @@ package me.droreo002.oreocore.database.debug;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
+import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseMySQL;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
 import me.droreo002.oreocore.utils.logging.Debug;
@@ -9,7 +10,7 @@ import me.droreo002.oreocore.utils.logging.Debug;
 public class MySqlDebug extends DatabaseMySQL {
 
     public MySqlDebug() {
-        super(OreoCore.getInstance(), new MySqlConnection("localhost", 3306, "hello", "", "root"), 300);
+        super(OreoCore.getInstance(), new MySqlConnection("localhost", 3306, "hello", "", "root"), 300, SQLType.SQL_BASED);
         DatabaseManager.registerDatabase(OreoCore.getInstance(), this);
     }
 

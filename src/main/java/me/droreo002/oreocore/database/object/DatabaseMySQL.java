@@ -3,10 +3,12 @@ package me.droreo002.oreocore.database.object;
 import lombok.Getter;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
+import me.droreo002.oreocore.database.SQLDatabase;
+import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.interfaces.SqlCallback;
+import me.droreo002.oreocore.database.utils.ConnectionPoolManager;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
 import me.droreo002.oreocore.utils.logging.Debug;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class DatabaseMySQL extends Database {
+public abstract class DatabaseMySQL extends Database implements SQLDatabase {
 
     @Getter
     private final MySqlConnection addressData;
@@ -27,11 +29,16 @@ public abstract class DatabaseMySQL extends Database {
     private Connection connection;
     @Getter
     private int connectionCheckerTaskID;
+    @Getter
+    private SQLType sqlType;
+    @Getter
+    private ConnectionPoolManager poolManager;
 
-    public DatabaseMySQL(JavaPlugin plugin, MySqlConnection addressData, int updateTimeSecond) {
+    public DatabaseMySQL(JavaPlugin plugin, MySqlConnection addressData, int updateTimeSecond, SQLType sqlType) {
         super(DatabaseType.MYSQL, plugin);
         this.addressData = addressData;
         this.updateTimeSecond = updateTimeSecond;
+        this.sqlType = sqlType;
         init();
     }
 
@@ -39,7 +46,7 @@ public abstract class DatabaseMySQL extends Database {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand(), true)) {
-                Debug.log("&bMySQL Connection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase", true);
+                Debug.log("&bMySQL Connection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
             } else {
                 Debug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
@@ -58,12 +65,53 @@ public abstract class DatabaseMySQL extends Database {
      * @throws SQLException : If the connection cannot be closed
      * @throws NullPointerException : If the data connection is currently null
      */
+    @Override
     public void close() throws SQLException {
-        if (connection != null) {
-            connection.close();
+        if (poolManager != null) {
+            poolManager.getDataSource().close();
         } else {
-            throw new NullPointerException("Cannot close while the data connection is null!");
+            if (connection != null) {
+                connection.close();
+            } else {
+                throw new NullPointerException("Cannot close while the data connection is null!");
+            }
         }
+    }
+
+    /**
+     * Execute a new SQL Command into the connection on the main server thread
+     * keep in mind that running on the main thread will cause some lags to the server
+     *
+     * @param sql : The sql command
+     * @param throwError : Should the api throw the sql error if there's any?
+     * @return a new ResultSet class if succeeded, null otherwise
+     */
+    @Override
+    public ResultSet query(String sql, boolean throwError) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        Connection con = getNewConnection();
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(sql);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            if (throwError) e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
+                }
+            } catch (SQLException e) {
+                if (throwError) e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**
@@ -71,15 +119,15 @@ public abstract class DatabaseMySQL extends Database {
      *
      * @param sql : The sql command
      */
+    @Override
     public void executeAsync(String sql, SqlCallback<Boolean> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
-            Connection con = null;
-            Statement statement = null;
+            Connection con = getNewConnection();
+            PreparedStatement statement = null;
             try {
-                con = connection;
-                statement = con.createStatement();
-                statement.execute(sql);
+                statement = con.prepareStatement(sql);
+                statement.execute();
                 callback.onSuccess(true);
             } catch (SQLException e) {
                 callback.onError(e);
@@ -88,8 +136,11 @@ public abstract class DatabaseMySQL extends Database {
                     if (statement != null) {
                         statement.close();
                     }
-                    if (con != null) {
-                        con.close();
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
                     }
                 } catch (SQLException e) {
                     callback.onError(e);
@@ -106,14 +157,14 @@ public abstract class DatabaseMySQL extends Database {
      * @param throwError : Should the api throw the sql error if there's any?
      * @return true if the command successfully executed, false otherwise
      */
+    @Override
     public boolean execute(String sql, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Connection con = null;
-        Statement statement = null;
+        Connection con = getNewConnection();
+        PreparedStatement statement = null;
         try {
-            con = connection;
-            statement = con.createStatement();
-            statement.execute(sql);
+            statement = con.prepareStatement(sql);
+            statement.execute();
             return true;
         } catch (SQLException e) {
             if (throwError) e.printStackTrace();
@@ -122,8 +173,11 @@ public abstract class DatabaseMySQL extends Database {
                 if (statement != null) {
                     statement.close();
                 }
-                if (con != null) {
-                    con.close();
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
                 }
             } catch (SQLException e) {
                 if (throwError) e.printStackTrace();
@@ -133,51 +187,20 @@ public abstract class DatabaseMySQL extends Database {
     }
 
     /**
-     * Execute a new SQL Command into the connection on the main server thread
-     * keep in mind that running on the main thread will cause some lags to the server
-     *
-     * @param sql : The sql command
-     * @param throwError : Should the api throw the sql error if there's any?
-     * @return a new ResultSet class if succeeded, null otherwise
-     */
-    public ResultSet query(String sql, boolean throwError) {
-        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Connection con = null;
-        Statement statement = null;
-        try {
-            con = connection;
-            statement = con.createStatement();
-            return statement.executeQuery(sql);
-        } catch (SQLException e) {
-            if (throwError) e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                if (throwError) e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    /**
      * Query a command to get its value in an async task
      *
      * @param statement : The statement
      * @param row : The row
      */
+    @Override
     public void queryValueAsync(String statement, String row, SqlCallback<Object> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
+            Connection con = getNewConnection();
             PreparedStatement ps = null;
-            ResultSet rs;
+            ResultSet rs = null;
             try {
-                ps = connection.prepareStatement(statement);
+                ps = con.prepareStatement(statement);
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     callback.onSuccess(rs.getObject(row));
@@ -187,8 +210,12 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
                     }
                     callback.onError(ex);
                 } catch (SQLException ex2) {
@@ -200,8 +227,11 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
                     }
                 }
                 catch (SQLException ex2) {
@@ -217,14 +247,16 @@ public abstract class DatabaseMySQL extends Database {
      * @param statement : The statement
      * @param toSelect : What row that will be selected
      */
+    @Override
     public void queryRowAsync(String statement, String[] toSelect, SqlCallback<List<Object>> callback) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
-            ResultSet rs;
+            ResultSet rs = null;
+            Connection con = getNewConnection();
             List<Object> values = new ArrayList<>();
             try {
-                ps = connection.prepareStatement(statement);
+                ps = con.prepareStatement(statement);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     for (String s : toSelect) {
@@ -237,8 +269,12 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
                     }
                     callback.onError(ex);
                 } catch (SQLException ex2) {
@@ -250,8 +286,14 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
                     }
                 }
                 catch (SQLException ex2) {
@@ -267,15 +309,17 @@ public abstract class DatabaseMySQL extends Database {
      * @param statement : The statement
      * @param row : The rows
      */
+    @Override
     public void queryMultipleRowsAsync(String statement, SqlCallback<Map<String, List<Object>>> callback, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
             PreparedStatement ps = null;
-            ResultSet rs;
+            ResultSet rs = null;
+            Connection con = getNewConnection();
             final List<Object> objects = new ArrayList<>();
             final Map<String, List<Object>> map = new HashMap<>();
             try {
-                ps = connection.prepareStatement(statement);
+                ps = con.prepareStatement(statement);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     for (final String singleRow : row) {
@@ -292,8 +336,12 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
                     }
                     callback.onError(ex);
                 }
@@ -306,8 +354,14 @@ public abstract class DatabaseMySQL extends Database {
                     if (ps != null) {
                         ps.close();
                     }
-                    if (connection != null) {
-                        connection.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
                     }
                 }
                 catch (SQLException ex2) {
@@ -325,12 +379,14 @@ public abstract class DatabaseMySQL extends Database {
      * @param throwError : Should the api throw the error if there's any?
      * @return The specified value if there's any, null otherwise
      */
+    @Override
     public Object queryValue(String statement, String row, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
-        ResultSet rs;
+        ResultSet rs = null;
+        Connection con = getNewConnection();
         try {
-            ps = connection.prepareStatement(statement);
+            ps = con.prepareStatement(statement);
             rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getObject(row);
@@ -341,8 +397,12 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    con.close();
                 }
             } catch (SQLException ex2) {
                 if (throwError) ex2.printStackTrace();
@@ -353,8 +413,14 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
                 }
             }
             catch (SQLException ex2) {
@@ -372,13 +438,15 @@ public abstract class DatabaseMySQL extends Database {
      * @param throwError : Should the api throw the error if there's any?
      * @return The specified value as a list if there's any, empty list otherwise
      */
+    @Override
     public List<Object> queryRow(String statement, String[] toSelect, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
-        ResultSet rs;
+        ResultSet rs = null;
+        Connection con = getNewConnection();
         List<Object> values = new ArrayList<>();
         try {
-            ps = connection.prepareStatement(statement);
+            ps = con.prepareStatement(statement);
             rs = ps.executeQuery();
             while (rs.next()) {
                 for (String s : toSelect) {
@@ -391,8 +459,12 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    con.close();
                 }
                 if (throwError) ex.printStackTrace();
             } catch (SQLException ex2) {
@@ -404,8 +476,14 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
                 }
             }
             catch (SQLException ex2) {
@@ -423,14 +501,16 @@ public abstract class DatabaseMySQL extends Database {
      * @param throwError : Should the api throw the error if there's any?
      * @return a HashMap contained the result values if there's any, empty HashMap otherwise
      */
+    @Override
     public Map<String, List<Object>> queryMultipleRow(String statement, boolean throwError, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
-        ResultSet rs;
+        ResultSet rs = null;
+        Connection con = getNewConnection();
         final List<Object> objects = new ArrayList<>();
         final Map<String, List<Object>> map = new HashMap<>();
         try {
-            ps = connection.prepareStatement(statement);
+            ps = con.prepareStatement(statement);
             rs = ps.executeQuery();
             while (rs.next()) {
                 for (final String singleRow : row) {
@@ -447,8 +527,12 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    con.close();
                 }
                 if (throwError) ex.printStackTrace();
             }
@@ -461,8 +545,14 @@ public abstract class DatabaseMySQL extends Database {
                 if (ps != null) {
                     ps.close();
                 }
-                if (connection != null) {
-                    connection.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
                 }
             }
             catch (SQLException ex2) {
@@ -480,16 +570,39 @@ public abstract class DatabaseMySQL extends Database {
      * @param table : The table
      * @return true if exists, false otherwise
      */
-    public boolean isExists(String column, String data, String table) {
-        data = "'" + data + "'";
+    @Override
+    public boolean isExists(String column, String data, String table, boolean throwError) {
+        table = "`" + table + "`";
+        column = "`" + column + "`";
+        PreparedStatement pre = null;
+        Connection con = null;
+        ResultSet res = null;
         try {
-            final ResultSet rs = query("SELECT * FROM " + table + " WHERE " + column + "=" + data + ";", true);
-            while (rs.next()) {
-                if (rs.getString(column) != null) {
-                    return true;
+            con = getConnection();
+            pre = con.prepareStatement("SELECT * FROM " + table + " WHERE " + column + " = ?");
+            pre.setString(1, data);
+            res = pre.executeQuery();
+            return res.next();
+        } catch (Exception e) {
+            if (throwError) e.printStackTrace();
+        } finally {
+            try {
+                if (pre != null) {
+                    pre.close();
                 }
+                if (res != null) {
+                    res.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
+                        con.close();
+                    }
+                }
+            } catch (SQLException e) {
+                if (throwError) e.printStackTrace();
             }
-        } catch (Exception ignored) {}
+        }
         return false;
     }
 
@@ -499,7 +612,7 @@ public abstract class DatabaseMySQL extends Database {
      * @return true if the connection is not interrupted. False otherwise
      * @throws SQLException : If there's something wrong happened
      */
-    private boolean checkConnection() {
+    public boolean checkConnection() {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = getNewConnection();
@@ -517,16 +630,34 @@ public abstract class DatabaseMySQL extends Database {
      *
      * @return a new Connection if its a success, null otherwise
      */
-    private Connection getNewConnection() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
+    public Connection getNewConnection() {
+        switch (sqlType) {
+            case SQL_BASED:
+                try {
+                    Class.forName("com.mysql.jdbc.Driver");
 
-            String url = "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName();
-            return DriverManager.getConnection(url, addressData.getUser(), addressData.getPassword());
-        } catch (ClassNotFoundException | SQLException e) {
-            // Handle possible Exception where connection can not be established
-            e.printStackTrace();
-            return null;
+                    String url = "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName();
+                    return DriverManager.getConnection(url, addressData.getUser(), addressData.getPassword());
+                } catch (ClassNotFoundException | SQLException e) {
+                    // Handle possible Exception where connection can not be established
+                    e.printStackTrace();
+                }
+            case HIKARI_CP:
+                poolManager = new ConnectionPoolManager( "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName(), owningPlugin);
+                poolManager.setMysql(true);
+                poolManager.setAddressData(addressData);
+                poolManager.setup();
+
+                try {
+                    return poolManager.getConnection();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            case MARIA_DB:
+                // TODO : Make
+                return null;
+            default:
+                return null;
         }
     }
 

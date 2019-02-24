@@ -2,6 +2,7 @@ package me.droreo002.oreocore.database.debug;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
+import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
 import me.droreo002.oreocore.database.object.interfaces.SqlCallback;
 import me.droreo002.oreocore.utils.logging.Debug;
@@ -12,7 +13,7 @@ import java.io.File;
 public class SqlDebug extends DatabaseSQL {
 
     public SqlDebug() {
-        super(OreoCore.getInstance(), "hello", new File(OreoCore.getInstance().getDataFolder(), "hello"));
+        super(OreoCore.getInstance(), "hello", new File(OreoCore.getInstance().getDataFolder(), "hello"), SQLType.HIKARI_CP);
         DatabaseManager.registerDatabase(OreoCore.getInstance(), this);
     }
 
