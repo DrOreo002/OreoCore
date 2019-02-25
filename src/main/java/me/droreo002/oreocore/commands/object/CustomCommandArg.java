@@ -20,10 +20,6 @@ public class CustomCommandArg extends CommandArg {
     public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         sender.sendMessage("Test!");
-        // SQL Shit
-        SqlDebug databaseSQL = (SqlDebug) OreoCore.getInstance().getSqlData();
-        databaseSQL.insertNew(player);
-
 
         // FlatFile example
 //        DatabaseFlatFile data = OreoCore.getInstance().getFlatFileData();

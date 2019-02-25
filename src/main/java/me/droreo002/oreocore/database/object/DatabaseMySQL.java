@@ -5,11 +5,10 @@ import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.database.SQLDatabase;
 import me.droreo002.oreocore.database.SQLType;
-import me.droreo002.oreocore.database.object.interfaces.SqlCallback;
 import me.droreo002.oreocore.database.utils.ConnectionPoolManager;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
 import me.droreo002.oreocore.utils.logging.Debug;
-import org.bukkit.Bukkit;
+import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public abstract class DatabaseMySQL extends Database implements SQLDatabase {
 
@@ -39,6 +40,12 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         this.addressData = addressData;
         this.updateTimeSecond = updateTimeSecond;
         this.sqlType = sqlType;
+
+        poolManager = new ConnectionPoolManager( "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName(), owningPlugin);
+        poolManager.setMysql(true);
+        poolManager.setAddressData(addressData);
+        poolManager.setup();
+
         init();
     }
 
@@ -59,12 +66,10 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     public abstract void loadData();
     public abstract String getFirstCommand();
 
-    /**
-     * Try to close the connection
-     *
-     * @throws SQLException : If the connection cannot be closed
-     * @throws NullPointerException : If the data connection is currently null
+    /*
+     Non Async
      */
+
     @Override
     public void close() throws SQLException {
         if (poolManager != null) {
@@ -78,14 +83,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         }
     }
 
-    /**
-     * Execute a new SQL Command into the connection on the main server thread
-     * keep in mind that running on the main thread will cause some lags to the server
-     *
-     * @param sql : The sql command
-     * @param throwError : Should the api throw the sql error if there's any?
-     * @return a new ResultSet class if succeeded, null otherwise
-     */
     @Override
     public ResultSet query(String sql, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
@@ -114,49 +111,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return null;
     }
 
-    /**
-     * Execute a new SQL Command into the connection on a async thread
-     *
-     * @param sql : The sql command
-     */
-    @Override
-    public void executeAsync(String sql, SqlCallback<Boolean> callback) {
-        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
-            Connection con = getNewConnection();
-            PreparedStatement statement = null;
-            try {
-                statement = con.prepareStatement(sql);
-                statement.execute();
-                callback.onSuccess(true);
-            } catch (SQLException e) {
-                callback.onError(e);
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                } catch (SQLException e) {
-                    callback.onError(e);
-                }
-            }
-        });
-    }
-
-    /**
-     * Execute a new SQL Command into the connection on the main server thread
-     * keep in mind that running on the main thread will cause some lags to the server
-     *
-     * @param sql : The sql command
-     * @param throwError : Should the api throw the sql error if there's any?
-     * @return true if the command successfully executed, false otherwise
-     */
     @Override
     public boolean execute(String sql, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
@@ -186,199 +140,43 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return false;
     }
 
-    /**
-     * Query a command to get its value in an async task
-     *
-     * @param statement : The statement
-     * @param row : The row
-     */
     @Override
-    public void queryValueAsync(String statement, String row, SqlCallback<Object> callback) {
+    public boolean isExists(String column, String data, String table, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
-            Connection con = getNewConnection();
-            PreparedStatement ps = null;
-            ResultSet rs = null;
+        table = "`" + table + "`";
+        column = "`" + column + "`";
+        PreparedStatement pre = null;
+        Connection con = null;
+        ResultSet res = null;
+        try {
+            con = getConnection();
+            pre = con.prepareStatement("SELECT * FROM " + table + " WHERE " + column + " = ?");
+            pre.setString(1, data);
+            res = pre.executeQuery();
+            return res.next();
+        } catch (Exception e) {
+            if (throwError) e.printStackTrace();
+        } finally {
             try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                if (rs.next()) {
-                    callback.onSuccess(rs.getObject(row));
+                if (pre != null) {
+                    pre.close();
                 }
-            } catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
+                if (res != null) {
+                    res.close();
+                }
+                if (!sqlType.equals(SQLType.SQL_BASED)) {
+                    // Close if not normal sql
+                    if (con != null) {
                         con.close();
                     }
-                    callback.onError(ex);
-                } catch (SQLException ex2) {
-                    callback.onError(ex2);
                 }
+            } catch (SQLException e) {
+                if (throwError) e.printStackTrace();
             }
-            finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    callback.onError(ex2);
-                }
-            }
-        });
+        }
+        return false;
     }
 
-    /**
-     * Query a command to get its value in an async task
-     *
-     * @param statement : The statement
-     * @param toSelect : What row that will be selected
-     */
-    @Override
-    public void queryRowAsync(String statement, String[] toSelect, SqlCallback<List<Object>> callback) {
-        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            Connection con = getNewConnection();
-            List<Object> values = new ArrayList<>();
-            try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    for (String s : toSelect) {
-                        values.add(rs.getObject(s));
-                    }
-                }
-                callback.onSuccess(values);
-            } catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        con.close();
-                    }
-                    callback.onError(ex);
-                } catch (SQLException ex2) {
-                    callback.onError(ex2);
-                }
-            }
-            finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    callback.onError(ex2);
-                }
-            }
-        });
-    }
-
-    /**
-     * Query a multiple row to get its values in an async task
-     *
-     * @param statement : The statement
-     * @param row : The rows
-     */
-    @Override
-    public void queryMultipleRowsAsync(String statement, SqlCallback<Map<String, List<Object>>> callback, String... row) {
-        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        Bukkit.getScheduler().runTaskAsynchronously(getOwningPlugin(), () -> {
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            Connection con = getNewConnection();
-            final List<Object> objects = new ArrayList<>();
-            final Map<String, List<Object>> map = new HashMap<>();
-            try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    for (final String singleRow : row) {
-                        objects.add(rs.getObject(singleRow));
-                    }
-                    for (final String singleRow : row) {
-                        map.put(singleRow, objects);
-                    }
-                }
-                callback.onSuccess(map);
-            }
-            catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        con.close();
-                    }
-                    callback.onError(ex);
-                }
-                catch (SQLException ex2) {
-                    callback.onError(ex2);
-                }
-            }
-            finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    callback.onError(ex2);
-                }
-            }
-        });
-    }
-
-    /**
-     * Query a command to get its value
-     *
-     * @param statement : The statement
-     * @param row : The row
-     * @param throwError : Should the api throw the error if there's any?
-     * @return The specified value if there's any, null otherwise
-     */
     @Override
     public Object queryValue(String statement, String row, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
@@ -430,14 +228,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return null;
     }
 
-    /**
-     * Query a command to get its value
-     *
-     * @param statement : The statement
-     * @param toSelect : What row that will be selected
-     * @param throwError : Should the api throw the error if there's any?
-     * @return The specified value as a list if there's any, empty list otherwise
-     */
     @Override
     public List<Object> queryRow(String statement, String[] toSelect, boolean throwError) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
@@ -493,14 +283,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return values;
     }
 
-    /**
-     * Query a multiple row to get its values
-     *
-     * @param statement : The statement
-     * @param row : The rows
-     * @param throwError : Should the api throw the error if there's any?
-     * @return a HashMap contained the result values if there's any, empty HashMap otherwise
-     */
     @Override
     public Map<String, List<Object>> queryMultipleRow(String statement, boolean throwError, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
@@ -562,56 +344,265 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return map;
     }
 
-    /**
-     * Check if the data exists
-     * Usage is : .isExists("custom_nickname", "DrOreo002", "player_settings");
-     * @param column : The column
-     * @param data : The data
-     * @param table : The table
-     * @return true if exists, false otherwise
+    /*
+    Async!
      */
+
     @Override
-    public boolean isExists(String column, String data, String table, boolean throwError) {
-        table = "`" + table + "`";
-        column = "`" + column + "`";
-        PreparedStatement pre = null;
-        Connection con = null;
-        ResultSet res = null;
-        try {
-            con = getConnection();
-            pre = con.prepareStatement("SELECT * FROM " + table + " WHERE " + column + " = ?");
-            pre.setString(1, data);
-            res = pre.executeQuery();
-            return res.next();
-        } catch (Exception e) {
-            if (throwError) e.printStackTrace();
-        } finally {
+    public Future<Boolean> executeAsync(String sql) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        return ThreadingUtils.makeFuture(() -> {
+            Connection con = getNewConnection();
+            PreparedStatement statement = null;
             try {
-                if (pre != null) {
-                    pre.close();
-                }
-                if (res != null) {
-                    res.close();
-                }
-                if (!sqlType.equals(SQLType.SQL_BASED)) {
-                    // Close if not normal sql
-                    if (con != null) {
-                        con.close();
-                    }
-                }
+                statement = con.prepareStatement(sql);
+                statement.execute();
+                return true;
             } catch (SQLException e) {
-                if (throwError) e.printStackTrace();
+                e.printStackTrace();
+                return false;
+            } finally {
+                try {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
-        }
-        return false;
+        });
     }
 
-    /**
-     * Check the connection
-     *
-     * @return true if the connection is not interrupted. False otherwise
-     * @throws SQLException : If there's something wrong happened
+    @Override
+    public Future<Object> queryValueAsync(String statement, String row) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        return ThreadingUtils.makeFuture(() -> {
+            Connection con = getNewConnection();
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try {
+                ps = con.prepareStatement(statement);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    return rs.getObject(row);
+                }
+            } catch (SQLException ex) {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
+                    }
+                    ex.printStackTrace();
+                    return null;
+                } catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
+                    }
+                }
+                catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public Future<List<Object>> queryRowAsync(String statement, String[] toSelect) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        return ThreadingUtils.makeFuture(() -> {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            Connection con = getNewConnection();
+            List<Object> values = new ArrayList<>();
+            try {
+                ps = con.prepareStatement(statement);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    for (String s : toSelect) {
+                        values.add(rs.getObject(s));
+                    }
+                }
+                return values;
+            } catch (SQLException ex) {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
+                    }
+                    ex.printStackTrace();
+                    return null;
+                } catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            }
+            finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
+                    }
+                }
+                catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            }
+        });
+    }
+
+    @Override
+    public Future<Map<String, List<Object>>> queryMultipleRowsAsync(String statement, String... row) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        return ThreadingUtils.makeFuture((Callable<Map<String, List<Object>>>) () -> {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            Connection con = getNewConnection();
+            final List<Object> objects = new ArrayList<>();
+            final Map<String, List<Object>> map = new HashMap<>();
+            try {
+                ps = con.prepareStatement(statement);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    for (final String singleRow : row) {
+                        objects.add(rs.getObject(singleRow));
+                    }
+                    for (final String singleRow : row) {
+                        map.put(singleRow, objects);
+                    }
+                }
+                return map;
+            }
+            catch (SQLException ex) {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        con.close();
+                    }
+                    ex.printStackTrace();
+                    return null;
+                }
+                catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            }
+            finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
+                    }
+                }
+                catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                    return null;
+                }
+            }
+        });
+    }
+
+    @Override
+    public Future<Boolean> isExistsAsync(String column, String data, String table) {
+        if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
+        final String tableFixed = "`" + table + "`";
+        final String columnFixed = "`" + column + "`";
+        return ThreadingUtils.makeFuture(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                PreparedStatement pre = null;
+                Connection con = null;
+                ResultSet res = null;
+                try {
+                    con = getConnection();
+                    pre = con.prepareStatement("SELECT * FROM " + tableFixed + " WHERE " + columnFixed + " = ?");
+                    pre.setString(1, data);
+                    res = pre.executeQuery();
+                    return res.next();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                } finally {
+                    try {
+                        if (pre != null) {
+                            pre.close();
+                        }
+                        if (res != null) {
+                            res.close();
+                        }
+                        if (!sqlType.equals(SQLType.SQL_BASED)) {
+                            // Close if not normal sql
+                            if (con != null) {
+                                con.close();
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+
+    /*
+    Misc
      */
+
     public boolean checkConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -625,11 +616,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return true;
     }
 
-    /**
-     * Get a new connection
-     *
-     * @return a new Connection if its a success, null otherwise
-     */
     public Connection getNewConnection() {
         switch (sqlType) {
             case SQL_BASED:
@@ -643,11 +629,6 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     e.printStackTrace();
                 }
             case HIKARI_CP:
-                poolManager = new ConnectionPoolManager( "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName(), owningPlugin);
-                poolManager.setMysql(true);
-                poolManager.setAddressData(addressData);
-                poolManager.setup();
-
                 try {
                     return poolManager.getConnection();
                 } catch (SQLException e) {

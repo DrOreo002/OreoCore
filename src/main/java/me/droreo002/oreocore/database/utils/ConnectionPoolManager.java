@@ -4,8 +4,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.database.SQLType;
 import org.apache.commons.lang.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -63,6 +64,7 @@ public final class ConnectionPoolManager {
             config.setMaxLifetime(1800000);
             config.setConnectionTimeout(5000);
         }
+        Logger logger = LogManager.getLogger(HikariDataSource.class);
         dataSource = new HikariDataSource(config);
     }
 

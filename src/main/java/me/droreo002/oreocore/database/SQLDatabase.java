@@ -1,12 +1,11 @@
 package me.droreo002.oreocore.database;
 
-import me.droreo002.oreocore.database.object.interfaces.SqlCallback;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 public interface SQLDatabase {
 
@@ -29,13 +28,6 @@ public interface SQLDatabase {
      ResultSet query(String sql, boolean throwError);
 
     /**
-     * Execute a new SQL Command into the connection on a async thread
-     *
-     * @param sql : The sql command
-     */
-     void executeAsync(String sql, SqlCallback<Boolean> callback);
-
-    /**
      * Execute a new SQL Command into the connection on the main server thread
      * keep in mind that running on the main thread will cause some lags to the server
      *
@@ -46,12 +38,20 @@ public interface SQLDatabase {
      boolean execute(String sql, boolean throwError);
 
     /**
+     * Execute a new SQL Command into the connection on a async thread
+     * to get the bool, use #.join method. This will block and wait until that boolean is available
+     *
+     * @param sql : The sql command
+     */
+    Future<Boolean> executeAsync(String sql);
+
+    /**
      * Query a command to get its value in an async task
      *
      * @param statement : The statement
      * @param row : The row
      */
-     void queryValueAsync(String statement, String row, SqlCallback<Object> callback);
+     Future<Object> queryValueAsync(String statement, String row);
 
     /**
      * Query a command to get its value in an async task
@@ -59,7 +59,7 @@ public interface SQLDatabase {
      * @param statement : The statement
      * @param toSelect : What row that will be selected
      */
-     void queryRowAsync(String statement, String[] toSelect, SqlCallback<List<Object>> callback);
+     Future<List<Object>> queryRowAsync(String statement, String[] toSelect);
 
     /**
      * Query a multiple row to get its values in an async task
@@ -67,7 +67,18 @@ public interface SQLDatabase {
      * @param statement : The statement
      * @param row : The rows
      */
-     void queryMultipleRowsAsync(String statement, SqlCallback<Map<String, List<Object>>> callback, String... row);
+     Future<Map<String, List<Object>>> queryMultipleRowsAsync(String statement, String... row);
+
+    /**
+     * Check if the data exists
+     * Usage is : .isExists("custom_nickname", "DrOreo002", "player_settings");
+     * This will run on another thread
+     *
+     * @param column : The column
+     * @param data : The data
+     * @param table : The table
+     */
+    Future<Boolean> isExistsAsync(String column, String data, String table);
 
     /**
      * Query a command to get its value
@@ -102,9 +113,11 @@ public interface SQLDatabase {
     /**
      * Check if the data exists
      * Usage is : .isExists("custom_nickname", "DrOreo002", "player_settings");
+     *
      * @param column : The column
      * @param data : The data
      * @param table : The table
+     * @param throwError : Should we throw error if there's something bad happens?
      * @return true if exists, false otherwise
      */
      boolean isExists(String column, String data, String table, boolean throwError);
