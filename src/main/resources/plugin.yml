@@ -1,5 +1,5 @@
 name: OreoCore
-version: 1.12
+version: 1.13
 main: me.droreo002.oreocore.OreoCore
 depend: [ProtocolLib]
 softdepend: [Essentials]

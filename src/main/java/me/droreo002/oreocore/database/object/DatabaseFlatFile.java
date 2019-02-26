@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.utils.io.FileUtils;
+import me.droreo002.oreocore.utils.logging.Debug;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,6 +51,12 @@ public abstract class DatabaseFlatFile extends Database {
             FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
             addData(new DatabaseFlatFile.Data(fileConfig, f));
         }
+    }
+
+    @Override
+    public void onDisable() {
+        dataCache.clear();
+        Debug.log("Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
     }
 
     /**

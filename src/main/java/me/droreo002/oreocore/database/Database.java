@@ -19,4 +19,5 @@ public abstract class Database {
     }
 
     public abstract void init();
+    public abstract void onDisable();
 }

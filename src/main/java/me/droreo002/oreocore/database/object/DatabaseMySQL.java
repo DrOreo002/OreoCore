@@ -52,8 +52,8 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     @Override
     public void init() {
         if (checkConnection()) {
-            if (execute(getFirstCommand(), true)) {
-                Debug.log("&bMySQL Connection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
+            if (execute(getFirstCommand())) {
+                Debug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
             } else {
                 Debug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
@@ -61,6 +61,16 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             throw new IllegalStateException("MySQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
         }
         this.connectionCheckerTaskID = new CheckConnection().runTaskTimerAsynchronously(getOwningPlugin(), updateTimeSecond * 20, updateTimeSecond * 20).getTaskId();
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            close();
+            Debug.log("Database &rMySQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public abstract void loadData();
@@ -84,7 +94,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public ResultSet query(String sql, boolean throwError) {
+    public ResultSet query(String sql) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Connection con = getNewConnection();
         PreparedStatement statement = null;
@@ -92,7 +102,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             statement = con.prepareStatement(sql);
             return statement.executeQuery();
         } catch (SQLException e) {
-            if (throwError) e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 if (statement != null) {
@@ -105,14 +115,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     }
                 }
             } catch (SQLException e) {
-                if (throwError) e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return null;
     }
 
     @Override
-    public boolean execute(String sql, boolean throwError) {
+    public boolean execute(String sql) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         Connection con = getNewConnection();
         PreparedStatement statement = null;
@@ -121,7 +131,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             statement.execute();
             return true;
         } catch (SQLException e) {
-            if (throwError) e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 if (statement != null) {
@@ -134,14 +144,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     }
                 }
             } catch (SQLException e) {
-                if (throwError) e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return false;
     }
 
     @Override
-    public boolean isExists(String column, String data, String table, boolean throwError) {
+    public boolean isExists(String column, String data, String table) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         table = "`" + table + "`";
         column = "`" + column + "`";
@@ -155,7 +165,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             res = pre.executeQuery();
             return res.next();
         } catch (Exception e) {
-            if (throwError) e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 if (pre != null) {
@@ -171,14 +181,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     }
                 }
             } catch (SQLException e) {
-                if (throwError) e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return false;
     }
 
     @Override
-    public Object queryValue(String statement, String row, boolean throwError) {
+    public Object queryValue(String statement, String row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -190,7 +200,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                 return rs.getObject(row);
             }
         } catch (SQLException ex) {
-            if (throwError) ex.printStackTrace();
+            ex.printStackTrace();
             try {
                 if (ps != null) {
                     ps.close();
@@ -203,7 +213,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     con.close();
                 }
             } catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         finally {
@@ -222,14 +232,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                 }
             }
             catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         return null;
     }
 
     @Override
-    public List<Object> queryRow(String statement, String[] toSelect, boolean throwError) {
+    public List<Object> queryRow(String statement, String[] toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -256,9 +266,9 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     // Close if not normal sql
                     con.close();
                 }
-                if (throwError) ex.printStackTrace();
+                ex.printStackTrace();
             } catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         finally {
@@ -277,14 +287,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                 }
             }
             catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         return values;
     }
 
     @Override
-    public Map<String, List<Object>> queryMultipleRow(String statement, boolean throwError, String... row) {
+    public Map<String, List<Object>> queryMultipleRow(String statement, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -316,10 +326,10 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                     // Close if not normal sql
                     con.close();
                 }
-                if (throwError) ex.printStackTrace();
+                ex.printStackTrace();
             }
             catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         finally {
@@ -338,7 +348,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
                 }
             }
             catch (SQLException ex2) {
-                if (throwError) ex2.printStackTrace();
+                ex2.printStackTrace();
             }
         }
         return map;
@@ -433,7 +443,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public Future<List<Object>> queryRowAsync(String statement, String[] toSelect) {
+    public Future<Object> queryRowAsync(String statement, String[] toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         return ThreadingUtils.makeFuture(() -> {
             PreparedStatement ps = null;

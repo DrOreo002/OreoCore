@@ -8,6 +8,8 @@ import me.droreo002.oreocore.bstats.Metrics;
 import me.droreo002.oreocore.commands.object.base.ExampleCommand;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
+import me.droreo002.oreocore.database.DatabaseManager;
+import me.droreo002.oreocore.database.SQLDatabase;
 import me.droreo002.oreocore.database.debug.FlatFileDebug;
 import me.droreo002.oreocore.database.debug.MySqlDebug;
 import me.droreo002.oreocore.database.debug.SqlDebug;
@@ -109,6 +111,8 @@ public final class OreoCore extends JavaPlugin {
             if (player == null) continue;
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, player::closeInventory, 1L);
         }
+        // Disable
+        DatabaseManager.getDatabases().forEach(Database::onDisable);
     }
 
     /**

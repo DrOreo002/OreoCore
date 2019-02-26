@@ -36,4 +36,12 @@ public final class DatabaseManager {
         }
         return null;
     }
+
+    public static List<Database> getDatabases() {
+        List<Database> res = new ArrayList<>();
+        for (Map.Entry ent : DATABASES.entrySet()) {
+            res.addAll((List<Database>) ent.getValue());
+        }
+        return res;
+    }
 }

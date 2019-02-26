@@ -22,20 +22,18 @@ public interface SQLDatabase {
      * keep in mind that running on the main thread will cause some lags to the server
      *
      * @param sql : The sql command
-     * @param throwError : Should the api throw the sql error if there's any?
      * @return a new ResultSet class if succeeded, null otherwise
      */
-     ResultSet query(String sql, boolean throwError);
+     ResultSet query(String sql);
 
     /**
      * Execute a new SQL Command into the connection on the main server thread
      * keep in mind that running on the main thread will cause some lags to the server
      *
      * @param sql : The sql command
-     * @param throwError : Should the api throw the sql error if there's any?
      * @return true if the command successfully executed, false otherwise
      */
-     boolean execute(String sql, boolean throwError);
+     boolean execute(String sql);
 
     /**
      * Execute a new SQL Command into the connection on a async thread
@@ -59,7 +57,7 @@ public interface SQLDatabase {
      * @param statement : The statement
      * @param toSelect : What row that will be selected
      */
-     Future<List<Object>> queryRowAsync(String statement, String[] toSelect);
+     Future<Object> queryRowAsync(String statement, String[] toSelect);
 
     /**
      * Query a multiple row to get its values in an async task
@@ -85,30 +83,27 @@ public interface SQLDatabase {
      *
      * @param statement : The statement
      * @param row : The row
-     * @param throwError : Should the api throw the error if there's any?
      * @return The specified value if there's any, null otherwise
      */
-     Object queryValue(String statement, String row, boolean throwError);
+     Object queryValue(String statement, String row);
 
     /**
      * Query a command to get its value
      *
      * @param statement : The statement
      * @param toSelect : What row that will be selected
-     * @param throwError : Should the api throw the error if there's any?
      * @return The specified value as a list if there's any, empty list otherwise
      */
-     List<Object> queryRow(String statement, String[] toSelect, boolean throwError);
+     List<Object> queryRow(String statement, String[] toSelect);
 
     /**
      * Query a multiple row to get its values
      *
      * @param statement : The statement
      * @param row : The rows
-     * @param throwError : Should the api throw the error if there's any?
      * @return a HashMap contained the result values if there's any, empty HashMap otherwise
      */
-     Map<String, List<Object>> queryMultipleRow(String statement, boolean throwError, String... row);
+     Map<String, List<Object>> queryMultipleRow(String statement, String... row);
 
     /**
      * Check if the data exists
@@ -117,10 +112,9 @@ public interface SQLDatabase {
      * @param column : The column
      * @param data : The data
      * @param table : The table
-     * @param throwError : Should we throw error if there's something bad happens?
      * @return true if exists, false otherwise
      */
-     boolean isExists(String column, String data, String table, boolean throwError);
+     boolean isExists(String column, String data, String table);
 
     /**
      * Check the connection
