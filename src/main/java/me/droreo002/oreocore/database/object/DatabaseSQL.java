@@ -78,7 +78,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     public void onDisable() {
         try {
             close();
-            Debug.log("Database &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
+            Debug.log("&fDatabase &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
