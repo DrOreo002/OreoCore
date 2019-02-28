@@ -20,6 +20,12 @@ public abstract class CommandArg {
     @Getter
     @Setter
     private String noPermissionMessage;
+    @Getter
+    @Setter
+    private boolean consoleOnly;
+    @Getter
+    @Setter
+    private String consoleOnlyMessage;
 
     public CommandArg(String trigger, CustomCommand parent) {
         this.trigger = trigger;

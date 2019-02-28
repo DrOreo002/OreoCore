@@ -22,6 +22,10 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                         CommandArg argument = cmd.getArgument(args[0]);
                         if (argument != null) {
                             if (commandSender instanceof Player) {
+                                if (argument.isConsoleOnly()) {
+                                    commandSender.sendMessage(StringUtil.color(argument.getConsoleOnlyMessage()));
+                                    return true;
+                                }
                                 if (argument.isHasPermission()) {
                                     Player player = (Player) commandSender;
                                     if (!player.hasPermission(argument.getPermission())) {
