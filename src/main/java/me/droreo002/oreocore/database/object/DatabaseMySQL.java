@@ -60,7 +60,8 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         } else {
             throw new IllegalStateException("MySQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
         }
-        this.connectionCheckerTaskID = new CheckConnection().runTaskTimerAsynchronously(getOwningPlugin(), updateTimeSecond * 20, updateTimeSecond * 20).getTaskId();
+        if (sqlType.equals(SQLType.SQL_BASED))
+            this.connectionCheckerTaskID = new CheckConnection().runTaskTimerAsynchronously(getOwningPlugin(), updateTimeSecond * 20, updateTimeSecond * 20).getTaskId();
     }
 
     @Override

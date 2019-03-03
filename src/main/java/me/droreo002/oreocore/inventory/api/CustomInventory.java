@@ -96,14 +96,31 @@ public abstract class CustomInventory implements InventoryHolder {
         return false;
     }
 
+    /**
+     * Close the player's inventory, scheduled 1 tick to prevent duplication glitch
+     *
+     * @param player : Target player
+     */
     public void close(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
+    /**
+     * Open an inventory for the player, scheduled 1 tick to prevent duplication glitch
+     *
+     * @param player : Target player
+     * @param inventory : Inventory to open
+     */
     public void open(Player player, Inventory inventory) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
     }
 
+    /**
+     * Close the player's inventory, scheduled 1 tick to prevent duplication glitch. This will also play sounds
+     *
+     * @param player : Target player
+     * @param soundWhenClose : The sound that will get played when the inventory closes
+     */
     public void close(Player player, SoundObject soundWhenClose) {
         if (soundWhenClose != null) {
             soundWhenClose.send(player);
@@ -111,6 +128,13 @@ public abstract class CustomInventory implements InventoryHolder {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
+    /**
+     * Open an inventory for the player, scheduled 1 tick to prevent duplication glitch. This will also play sounds
+     *
+     * @param player : Target player
+     * @param inventory : The inventory
+     * @param soundWhenOpen : The shounds that will get played when the inventory opens
+     */
     public void open(Player player, Inventory inventory, SoundObject soundWhenOpen) {
         if (soundWhenOpen != null) {
             soundWhenOpen.send(player);
@@ -118,6 +142,11 @@ public abstract class CustomInventory implements InventoryHolder {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
     }
 
+    /**
+     * Open the custom inventory
+     *
+     * @param player : Target player
+     */
     public void open(Player player) {
         for (Map.Entry ent : buttonMap.entrySet()) {
             int slot = (int) ent.getKey();
@@ -137,6 +166,9 @@ public abstract class CustomInventory implements InventoryHolder {
         open(player, getInventory());
     }
 
+    /**
+     * Reset the inventory, will set it to default
+     */
     public void reset() {
         for (Map.Entry ent : buttonMap.entrySet()) {
             int slot = (int) ent.getKey();
@@ -161,6 +193,13 @@ public abstract class CustomInventory implements InventoryHolder {
         }
     }
 
+    /**
+     * Add a button into the inventory
+     *
+     * @param slot : The slot to put it
+     * @param button : The button object
+     * @param replaceIfExist : Do we need to replace the button if it already exists at that slot?
+     */
     public void addButton(int slot, GUIButton button, boolean replaceIfExist) {
         Validate.notNull(button, "Button cannot be null!");
         if (replaceIfExist) {
@@ -178,7 +217,14 @@ public abstract class CustomInventory implements InventoryHolder {
         }
     }
 
-    public void addButton(int slot, ItemAnimation button, boolean replaceIfExist) {
+    /**
+     * Add a AnimatedButton into the inventory
+     *
+     * @param slot : The slot to put it
+     * @param button : The button object (Animated)
+     * @param replaceIfExist : Do we need to replace the button if it already exists at that slot?
+     */
+    public void addAnimatedButton(int slot, ItemAnimation button, boolean replaceIfExist) {
         Validate.notNull(button, "Button cannot be null!");
         if (replaceIfExist) {
             if (animationButtonMap.containsKey(slot)) {
@@ -195,11 +241,29 @@ public abstract class CustomInventory implements InventoryHolder {
         }
     }
 
+    /**
+     * Add a border, will fill the row with the specified item
+     *
+     * @param row : The row
+     * @param border : The item
+     * @param replaceIfExist : Replace if there's something on the row?
+     */
     public void addBorder(int row, ItemStack border, boolean replaceIfExist) {
         if (row < 0) throw new IllegalStateException("Row cannot be 0!");
         for (int i = row * 9; i < (row * 9) + 9; i++) {
             addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
         }
+    }
+
+    /**
+     * Check if its a button
+     *
+     * @param e : The event, we use this instead for shorter code
+     * @return true if its a button, false otherwise
+     */
+    public boolean isButton(InventoryClickEvent e) {
+        if (buttonMap.isEmpty()) return false;
+        return buttonMap.containsKey(e.getSlot());
     }
     
     @Override

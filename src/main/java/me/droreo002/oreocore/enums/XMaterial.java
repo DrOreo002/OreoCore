@@ -603,8 +603,8 @@ public enum XMaterial {
     PINK_WOOL(6, "WOOL"),
     PISTON(0, "PISTON_BASE"),
     PISTON_HEAD(0, "PISTON_EXTENSION"),
-    PLAYER_HEAD(0, "SKULL","SKULL_ITEM"),
-    PLAYER_WALL_HEAD(0, "SKULL","SKULL_ITEM"),
+    PLAYER_HEAD(3, "SKULL","SKULL_ITEM"),
+    PLAYER_WALL_HEAD(3, "SKULL","SKULL_ITEM"),
     PODZOL(2, "DIRT"),
     POISONOUS_POTATO(0, "POISONOUS_POTATO"),
     POLAR_BEAR_SPAWN_EGG(0, "MONSTER_EGG"),
@@ -955,7 +955,7 @@ public enum XMaterial {
         try {
             xmat = XMaterial.valueOf(key);
             return xmat;
-        } catch (IllegalArgumentException e){
+        } catch (Exception e){
             String[] split = key.split(":");
             if (split.length == 1) {
                 xmat = requestXMaterial(key,(byte) 0);

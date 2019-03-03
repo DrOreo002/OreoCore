@@ -13,9 +13,14 @@ public final class ItemAnimationManager {
     // Where UUID is the player UUID, Integer is the animation ID. and CustomInventory is the object
     private static final Map<InventoryHolder, Map<Integer, CustomInventory>> ANIMATIONS = new HashMap<>();
 
-    public static void registerRunnable(CustomInventory inventory) {
+    /**
+     * Register a new Animated inventory
+     *
+     * @param inventory : The custom inventory
+     */
+    public static void registerAnimation(CustomInventory inventory) {
         if (ANIMATIONS.containsKey(inventory.getInventory().getHolder())) {
-            stopRunnable(inventory.getInventory().getHolder());
+            stopAnimation(inventory.getInventory().getHolder());
         }
         HashMap<Integer, CustomInventory> hash = new HashMap<>();
         int task = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new AnimationRunnable(inventory), 0L, 5L).getTaskId();
@@ -23,7 +28,12 @@ public final class ItemAnimationManager {
         ANIMATIONS.put(inventory.getInventory().getHolder(), hash);
     }
 
-    public static void stopRunnable(InventoryHolder holder) {
+    /**
+     * Stop the animation on the Inventory
+     *
+     * @param holder : The holder
+     */
+    public static void stopAnimation(InventoryHolder holder) {
         if (!ANIMATIONS.containsKey(holder)) return;
         Map<Integer, CustomInventory> hash = ANIMATIONS.get(holder);
         for (int i : hash.keySet()) {

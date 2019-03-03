@@ -1,27 +1,24 @@
 package me.droreo002.oreocore.inventory.api.paginated;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.utils.inventory.CustomItem;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class PaginatedInventory implements InventoryHolder {
 
@@ -30,24 +27,17 @@ public abstract class PaginatedInventory implements InventoryHolder {
      */
     private final OreoCore main = OreoCore.getInstance();
     private Inventory inventory;
+
     @Getter
+    @Setter
     private GUIButton informationButton, nextButton, backButton;
     @Getter
     private String title;
     @Getter
-    private int size;
+    private int size, totalPage, currentPage, informationButtonSlot;
     @Getter
-    private int totalPage;
-    @Getter
-    private int currentPage;
-    @Getter
-    private int informationButtonSlot;
-    @Getter
-    private SoundObject openSound;
-    @Getter
-    private SoundObject closeSound;
-    @Getter
-    private SoundObject clickSound;
+    @Setter
+    private SoundObject openSound, closeSound, clickSound;
 
     /*
     Lists
@@ -78,7 +68,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
         paginatedButton = new ArrayList<>();
         inventoryButton = new HashMap<>();
 
-        informationButton = new GUIButton(new CustomItem(XMaterial.PAPER, "&7[ &bInformation &7]", new String[] {
+        informationButton = new GUIButton(new CustomItem(XMaterial.PAPER.parseItem(), "&7[ &bInformation &7]", new String[] {
                 "&8&m------------------",
                 "&r",
                 "&fYou're currently on page &c%currPage",
@@ -94,11 +84,11 @@ public abstract class PaginatedInventory implements InventoryHolder {
                 nextPage(player);
             });
         } catch (Exception e) {
-            this.backButton = new GUIButton(new CustomItem(XMaterial.ARROW, "&7[ &bPrevious Page &7]")).setListener(event -> {
+            this.backButton = new GUIButton(new CustomItem(XMaterial.ARROW.parseItem(), "&7[ &bPrevious Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 prevPage(player);
             });
-            this.nextButton = new GUIButton(new CustomItem(XMaterial.ARROW, "&7[ &bNext Page &7]")).setListener(event -> {
+            this.nextButton = new GUIButton(new CustomItem(XMaterial.ARROW.parseItem(), "&7[ &bNext Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 nextPage(player);
             });
@@ -109,10 +99,10 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * Set the item slot. This is good if you want to make a spaced or maybe
      * other design inventory
      *
-     * @param itemSlot : The item slot list
+     * @param slot : The slot array
      */
-    public void setItemSlot(List<Integer> itemSlot) {
-        this.itemSlot = itemSlot;
+    public void setItemSlot(Integer... slot) {
+        this.itemSlot = new ArrayList<>(Arrays.asList(slot));
     }
 
     /**
@@ -355,15 +345,18 @@ public abstract class PaginatedInventory implements InventoryHolder {
         updateInventory(player);
     }
 
-    @Override
-    public Inventory getInventory() {
-        return inventory;
-    }
-
+    /**
+     * Update the inventory, scheduled 1 tick to prevent duplication glitch
+     *
+     * @param player : The target player
+     */
     private void updateInventory(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(main, player::updateInventory, 1L);
     }
 
+    /**
+     * Update the information button
+     */
     private void updateInformationButton() {
         ItemStack infoButtonClone = informationButton.getItem().clone();
         ItemMeta meta = infoButtonClone.getItemMeta();
@@ -376,11 +369,54 @@ public abstract class PaginatedInventory implements InventoryHolder {
         inventory.setItem(informationButtonSlot, infoButtonClone);
     }
 
+    /**
+     * Close the player's inventory, scheduled 1 tick to prevent duplication glitch
+     *
+     * @param player : Target player
+     */
     public void close(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
+    /**
+     * Open an inventory for the player, scheduled 1 tick to prevent duplication glitch
+     *
+     * @param player : Target player
+     * @param inventory : Inventory to open
+     */
     public void open(Player player, Inventory inventory) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    /**
+     * Close the player's inventory, scheduled 1 tick to prevent duplication glitch. This will also play sounds
+     *
+     * @param player : Target player
+     * @param soundWhenClose : The sound that will get played when the inventory closes
+     */
+    public void close(Player player, SoundObject soundWhenClose) {
+        if (soundWhenClose != null) {
+            soundWhenClose.send(player);
+        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+    }
+
+    /**
+     * Open an inventory for the player, scheduled 1 tick to prevent duplication glitch. This will also play sounds
+     *
+     * @param player : Target player
+     * @param inventory : The inventory
+     * @param soundWhenOpen : The shounds that will get played when the inventory opens
+     */
+    public void open(Player player, Inventory inventory, SoundObject soundWhenOpen) {
+        if (soundWhenOpen != null) {
+            soundWhenOpen.send(player);
+        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
     }
 }

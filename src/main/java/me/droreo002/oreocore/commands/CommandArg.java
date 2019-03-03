@@ -12,20 +12,17 @@ public abstract class CommandArg {
     @Getter
     private CustomCommand parent;
     @Getter
-    @Setter
-    private boolean hasPermission;
-    @Getter
-    @Setter
     private String permission;
     @Getter
-    @Setter
     private String noPermissionMessage;
     @Getter
-    @Setter
     private boolean consoleOnly;
     @Getter
-    @Setter
     private String consoleOnlyMessage;
+    @Getter
+    private boolean playerOnly;
+    @Getter
+    private String playerOnlyMessage;
 
     public CommandArg(String trigger, CustomCommand parent) {
         this.trigger = trigger;
@@ -56,5 +53,38 @@ public abstract class CommandArg {
      */
     public void sendMessage(CommandSender sender, String message) {
         parent.sendMessage(sender, message);
+    }
+
+    /**
+     * Set the required permission for this argument
+     *
+     * @param permission : The permission
+     * @param noPermissionMessage : The message that will throw if player doesn't have that permission
+     */
+    public void setPermission(String permission, String noPermissionMessage) {
+        this.permission = permission;
+        this.noPermissionMessage = noPermissionMessage;
+    }
+
+    /**
+     * Set if this argument is player only or not
+     *
+     * @param playerOnly : Player only?
+     * @param playerOnlyMessage : The message that will throw if non player tried to execute a player only command
+     */
+    public void setPlayerOnly(boolean playerOnly, String playerOnlyMessage) {
+        this.playerOnly = playerOnly;
+        this.playerOnlyMessage = playerOnlyMessage;
+    }
+
+    /**
+     * Set if this argument is console only or not
+     *
+     * @param consoleOnly : Console only?
+     * @param consoleOnlyMessage : The message that will throw if non console tried to execute a console only command
+     */
+    public void setConsoleOnly(boolean consoleOnly, String consoleOnlyMessage) {
+        this.consoleOnly = consoleOnly;
+        this.consoleOnlyMessage = consoleOnlyMessage;
     }
 }

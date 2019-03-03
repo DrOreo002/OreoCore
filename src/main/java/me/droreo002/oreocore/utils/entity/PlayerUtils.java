@@ -1,11 +1,15 @@
 package me.droreo002.oreocore.utils.entity;
 
+import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.utils.item.CustomSkull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -32,5 +36,17 @@ public final class PlayerUtils {
         } else {
             return player.getName();
         }
+    }
+
+    public static ItemStack getSkull(Player player) {
+        return CustomSkull.getHead(player);
+    }
+
+    public static void closeInventory(Player player) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+    }
+
+    public static void openInventory(Player player, Inventory inventory) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
     }
 }

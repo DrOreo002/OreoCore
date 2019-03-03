@@ -1,8 +1,9 @@
 name: OreoCore
-version: 1.15
+version: 1.16
 main: me.droreo002.oreocore.OreoCore
 depend: [ProtocolLib]
 softdepend: [Essentials]
+api-version: 1.13
 
 commands:
   customcommand:

@@ -64,7 +64,6 @@ public final class ConnectionPoolManager {
             config.setMaxLifetime(1800000);
             config.setConnectionTimeout(5000);
         }
-        Logger logger = LogManager.getLogger(HikariDataSource.class);
         dataSource = new HikariDataSource(config);
     }
 

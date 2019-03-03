@@ -41,7 +41,8 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     }
 
     /**
-     * Parsing from volume,pitch,sound. Recommended if you want fast data saving
+     * Parsing from (volume,pitch,sound). Recommended if you want fast data saving
+     * Example : 1.0,1.0,ENTITY_BLAZE_DEATH
      *
      * @param toParse : The string
      */
@@ -62,8 +63,8 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
 
     @Override
     public SoundObject getFromConfig(ConfigurationSection section) {
-        float volume = (float) section.getDouble("volume");
-        float pitch = (float) section.getDouble("pitch");
+        float volume = (float) section.getDouble("volume", 1.0f);
+        float pitch = (float) section.getDouble("pitch", 1.0f);
         Sounds sounds = Sounds.fromString(section.getString("sound"));
         if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
         return new SoundObject(sounds, volume, pitch);
@@ -72,7 +73,8 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
         config.set(path + ".sound", sounds.toString());
-        config.set(path + ".volume", volume);
-        config.set(path + ".pitch", pitch);
+        // Not default value. Then save
+        if (volume != 1.0f) config.set(path + ".volume", volume);
+        if (pitch != 1.0f) config.set(path + ".pitch", pitch);
     }
 }
