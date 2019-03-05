@@ -27,7 +27,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                                     commandSender.sendMessage(StringUtil.color(argument.getConsoleOnlyMessage()));
                                     return true;
                                 }
-                                if (!argument.getPermission().equalsIgnoreCase("")) {
+                                if (argument.getPermission() != null) {
                                     Player player = (Player) commandSender;
                                     if (!player.hasPermission(argument.getPermission())) {
                                         player.sendMessage(StringUtil.color(argument.getNoPermissionMessage()));

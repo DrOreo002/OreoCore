@@ -109,6 +109,26 @@ public final class CustomSkull {
     }
 
     /**
+     * If its an actual player head then, set that ItemStack head into {@param player}'s head!
+     * will try to get the head using async way
+     *
+     * @param item : The ItemStack that will get edited
+     * @param player : The owner of the head A.K.A the texture
+     * @return the result ItemStack if successful, null otherwise
+     */
+    public static Future<ItemStack> toHeadAsync(ItemStack item, Player player) {
+        if (item.getType() != XMaterial.PLAYER_HEAD.parseMaterial()) return null;
+        if (CACHE.containsKey(player.getUniqueId().toString())) return ThreadingUtils.makeFuture(() -> CACHE.get(player.getUniqueId().toString()));
+        return ThreadingUtils.makeFuture(() -> {
+            SkullMeta skull = (SkullMeta) item.getItemMeta();
+            skull.setOwningPlayer(player);
+            item.setItemMeta(skull);
+            CACHE.put(player.getUniqueId().toString(), item);
+            return item;
+        });
+    }
+
+    /**
      * If its an actual player head then, set that ItemStack head texture into {@param texture}
      *
      * @param item : The ItemStack that will get edited

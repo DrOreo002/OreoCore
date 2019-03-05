@@ -97,7 +97,7 @@ public final class OreoCore extends JavaPlugin {
                     return res;
                 }));
             } else {
-                Debug.log("&fAPI is currently handling no plugin. You can uninstall this from your server if you want, because it will not doing anything", true);
+                Debug.log("&fAPI is currently handling 0 plugin. Its recommended to uninstall this from your server", true);
             }
         }, 20L * 15L); // 15 Seconds
         Debug.log("OreoCore has been enabled successfully!", true);
