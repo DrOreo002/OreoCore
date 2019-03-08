@@ -14,7 +14,6 @@ public class CustomInventoryDummy extends CustomInventory {
         super(27, "Hello World");
         addButton(5, new GUIButton(new ItemStack(Material.DIRT)).setListener(e -> {
             e.getWhoClicked().closeInventory();
-            System.out.println("Click!");
         }), true);
     }
 
