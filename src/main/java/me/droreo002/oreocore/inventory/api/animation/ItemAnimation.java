@@ -3,7 +3,7 @@ package me.droreo002.oreocore.inventory.api.animation;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.utils.strings.StringUtil;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -33,7 +33,7 @@ public class ItemAnimation extends ItemStack {
 
     public String update() {
         ItemMeta meta = getItemMeta();
-        meta.setDisplayName(StringUtil.color(frames.get(currentFrame)));
+        meta.setDisplayName(StringUtils.color(frames.get(currentFrame)));
         setItemMeta(meta);
         currentFrame += 1;
         if (currentFrame > frames.size() - 1) {

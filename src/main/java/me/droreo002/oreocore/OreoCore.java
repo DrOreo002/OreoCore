@@ -5,14 +5,9 @@ import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
-import me.droreo002.oreocore.commands.object.base.ExampleCommand;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
-import me.droreo002.oreocore.database.SQLDatabase;
-import me.droreo002.oreocore.database.debug.FlatFileDebug;
-import me.droreo002.oreocore.database.debug.MySqlDebug;
-import me.droreo002.oreocore.database.debug.SqlDebug;
 import me.droreo002.oreocore.database.object.DatabaseFlatFile;
 import me.droreo002.oreocore.database.object.DatabaseMySQL;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
@@ -22,14 +17,12 @@ import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
 import me.droreo002.oreocore.listeners.PlayerListener;
 import me.droreo002.oreocore.utils.logging.Debug;
 import me.droreo002.oreocore.utils.modules.HookUtils;
-import me.droreo002.oreocore.utils.strings.StringUtil;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 public final class OreoCore extends JavaPlugin {
 
@@ -61,7 +54,7 @@ public final class OreoCore extends JavaPlugin {
         // Plugin startup logic
         instance = this;
         metrics = new Metrics(this);
-        prefix = StringUtil.color("&7[ &bOreoCore &7]&f ");
+        prefix = StringUtils.color("&7[ &bOreoCore &7]&f ");
         essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         protocolManager = ProtocolLibrary.getProtocolManager();
         HookUtils.getInstance(); // Initialize

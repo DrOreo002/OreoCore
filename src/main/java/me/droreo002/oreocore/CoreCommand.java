@@ -3,8 +3,7 @@ package me.droreo002.oreocore;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.inventory.dummy.CustomInventoryDummy;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import me.droreo002.oreocore.utils.strings.StringUtil;
-import org.bukkit.Sound;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -67,7 +66,7 @@ public class CoreCommand implements CommandExecutor {
     }
 
     private void sendMessage(CommandSender sender, String text) {
-        sender.sendMessage(plugin.getPrefix() + StringUtil.color(text));
+        sender.sendMessage(plugin.getPrefix() + StringUtils.color(text));
     }
 
     private void sound(Player player) {

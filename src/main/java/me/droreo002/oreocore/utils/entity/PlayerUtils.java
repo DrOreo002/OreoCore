@@ -2,6 +2,7 @@ package me.droreo002.oreocore.utils.entity;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.item.CustomSkull;
+import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public final class PlayerUtils {
 
@@ -31,11 +34,16 @@ public final class PlayerUtils {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
             OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
-            if (off == null) return "";
+            if (!off.hasPlayedBefore()) return "";
             return off.getName();
         } else {
             return player.getName();
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Future<OfflinePlayer> getPlayer(String name) {
+        return ThreadingUtils.makeFuture(() -> Bukkit.getOfflinePlayer(name));
     }
 
     public static ItemStack getSkull(Player player) {

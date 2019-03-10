@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.logging.Debug;
-import me.droreo002.oreocore.utils.strings.StringUtil;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -95,7 +95,7 @@ public abstract class CustomCommand {
             Debug.log(message);
             return;
         }
-        sender.sendMessage(StringUtil.color(message));
+        sender.sendMessage(StringUtils.color(message));
     }
 
     /**

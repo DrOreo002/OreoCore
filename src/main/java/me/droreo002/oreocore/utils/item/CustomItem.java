@@ -3,7 +3,7 @@ package me.droreo002.oreocore.utils.item;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
-import me.droreo002.oreocore.utils.strings.StringUtil;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.droreo002.oreocore.utils.strings.StringUtil.*;
+import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class CustomItem extends ItemStack {
 
@@ -279,7 +279,7 @@ public class CustomItem extends ItemStack {
         ItemStack res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount, (short) materialDurr);
         ItemMeta meta = res.getItemMeta();
         if (displayName != null) meta.setDisplayName(color(displayName));
-        meta.setLore(lore.stream().map(StringUtil::color).collect(Collectors.toList()));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
         if (glow) meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 

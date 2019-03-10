@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.utils.misc;
 
 import lombok.Getter;
-import me.droreo002.oreocore.utils.strings.StringUtil;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -245,7 +245,7 @@ public class TimeStampUtils {
                     .replace("%elapsedHours", String.valueOf(elapsedHours))
                     .replace("%elapsedMinutes", String.valueOf(elapsedMinutes))
                     .replace("%elapsedSeconds", String.valueOf(elapsedSeconds));
-            return StringUtil.color(diffFormat);
+            return StringUtils.color(diffFormat);
         } else {
             diffFormat = diffFormat
                     .replace("%elapsedDays", String.valueOf(elapsedDays))

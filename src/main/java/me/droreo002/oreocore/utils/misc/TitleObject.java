@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import static me.droreo002.oreocore.utils.strings.StringUtil.*;
+import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class TitleObject implements SerializableConfigVariable<TitleObject> {
 
