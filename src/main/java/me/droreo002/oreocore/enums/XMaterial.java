@@ -603,7 +603,7 @@ public enum XMaterial {
     PINK_WOOL(6, "WOOL"),
     PISTON(0, "PISTON_BASE"),
     PISTON_HEAD(0, "PISTON_EXTENSION"),
-    PLAYER_HEAD(3, "SKULL","SKULL_ITEM"),
+    PLAYER_HEAD(3, "SKULL_ITEM"),
     PLAYER_WALL_HEAD(3, "SKULL","SKULL_ITEM"),
     PODZOL(2, "DIRT"),
     POISONOUS_POTATO(0, "POISONOUS_POTATO"),
@@ -884,25 +884,22 @@ public enum XMaterial {
     private String[] m;
     private int data;
 
-    XMaterial(int data, String... m){
+    XMaterial(int data, String... m) {
         this.m = m;
         this.data = data;
     }
 
-    public ItemStack parseItem(){
+    public ItemStack parseItem() {
         Material mat = parseMaterial();
-        if(isNewVersion()){
+        if (isNewVersion()) { // 1.13
             return new ItemStack(mat);
         }
-        return new ItemStack(mat,1,(byte) data);
+        return new ItemStack(mat, 1, (byte) data);
     }
 
     public static boolean isNewVersion(){
         Material mat = Material.getMaterial("RED_WOOL");
-        if (mat != null){
-            return true;
-        }
-        return false;
+        return mat != null;
     }
 
     private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
@@ -1015,11 +1012,13 @@ public enum XMaterial {
         }
     }
 
-    public Material parseMaterial(){
+    public Material parseMaterial() {
         Material mat = Material.matchMaterial(this.toString());
-        if (mat != null) {
-            return mat;
+        if (mat != null) return mat;
+        for (String toCheck : m) {
+            Material res = Material.matchMaterial(toCheck);
+            if (res != null) return res;
         }
-        return Material.matchMaterial(m[0]);
+        throw new NullPointerException("Error when trying to parse " + toString() + " Material!. Please contact dev!");
     }
 }
