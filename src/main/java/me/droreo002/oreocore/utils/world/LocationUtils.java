@@ -7,7 +7,7 @@ import org.bukkit.Location;
 public final class LocationUtils {
 
     public static String convertToString(Location location) {
-        return "Location;" + location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ();
+        return "Location;" + location.getWorld().getName() + ";" + Math.round(location.getX()) + ";" + Math.round(location.getY()) + ";" + Math.round(location.getZ());
     }
 
     public static Location toLocation(String format) {
