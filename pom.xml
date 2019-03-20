@@ -51,26 +51,8 @@
                 <version>3.1.0</version>
                 <configuration>
                     <outputDirectory>C:\Users\Anom\Desktop\Spigot 1.13\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Anom\Desktop\Spigot2\plugins</outputDirectory>
                 </configuration>
-            </plugin>
-            <!-- Basically will copy the jar into spigot 1.12 !-->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <tasks>
-                                <copy file="C:\Users\Anom\Desktop\Spigot 1.13\plugins\${project.build.finalName}.jar" tofile="C:\Users\Anom\Desktop\Spigot2\plugins\${project.build.finalName}.jar"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -94,10 +76,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>dmulloy2-repo</id>-->
+            <!--<url>http://repo.dmulloy2.net/nexus/repository/public/</url>-->
+        <!--</repository>-->
     </repositories>
 
     <dependencies>
@@ -119,6 +101,7 @@
             <version>1.18.4</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Local Repo, Their maven repo seems down atm (20/03/2019) -->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
