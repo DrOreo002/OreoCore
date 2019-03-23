@@ -22,10 +22,6 @@ public class FlatFileDebug extends DatabaseFlatFile {
             Debug.log("Cannot load data because the data folder is empty!", true);
             return;
         }
-        for (File f : getDataFolder().listFiles()) {
-            addData(f.getName());
-            Debug.log("Data with the name of &e" + f.getName() + "&f has ben loaded!", true);
-        }
     }
 
     @Override

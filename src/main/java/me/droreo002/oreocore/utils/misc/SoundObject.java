@@ -61,6 +61,14 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
         player.playSound(player.getLocation(), sounds.bukkitSound(), volume, pitch);
     }
 
+    public static SoundObject fromConfig(ConfigurationSection section) {
+        float volume = (float) section.getDouble("volume", 1.0f);
+        float pitch = (float) section.getDouble("pitch", 1.0f);
+        Sounds sounds = Sounds.fromString(section.getString("sound"));
+        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
+        return new SoundObject(sounds, volume, pitch);
+    }
+
     @Override
     public SoundObject getFromConfig(ConfigurationSection section) {
         float volume = (float) section.getDouble("volume", 1.0f);

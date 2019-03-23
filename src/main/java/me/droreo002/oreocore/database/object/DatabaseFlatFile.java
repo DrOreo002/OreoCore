@@ -70,7 +70,7 @@ public abstract class DatabaseFlatFile extends Database {
      *
      * @param data : The data class
      */
-    public void addData(Data data) {
+    private void addData(Data data) {
         String name = FileUtils.getFileName(data.getDataFile(), false);
         if (dataCache.containsKey(name)) return;
         dataCache.put(name, data);
@@ -81,7 +81,7 @@ public abstract class DatabaseFlatFile extends Database {
      *
      * @param fileName : The data's file name
      */
-    public void addData(String fileName) {
+    private void addData(String fileName) {
         if (!fileName.contains(".yml")) throw new IllegalStateException("Filename must contains .yml!");
         File file = new File(dataFolder, fileName);
         if (!file.exists()) throw new NullPointerException("Cannot add data from a null file!");
@@ -144,7 +144,6 @@ public abstract class DatabaseFlatFile extends Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Update the HashMap
         dataCache.put(fileName, new Data(config, file));
     }
 
