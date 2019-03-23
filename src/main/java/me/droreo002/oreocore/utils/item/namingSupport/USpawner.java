@@ -8,14 +8,14 @@ import org.bukkit.inventory.ItemStack;
 public class USpawner extends ItemStack {
 
     @Getter @Setter
-    private EntityType type;
+    private EntityType entityType;
     @Getter
     private final ItemStack is;
     @Getter
     private final SpawnerMeta sm;
 
     public USpawner(EntityType type) {
-        this.type = type;
+        this.entityType = type;
         final ItemStack is = UMaterial.SPAWNER.getItemStack();
         final SpawnerMeta sm = (SpawnerMeta) is.getItemMeta();
         sm.setType(type);
