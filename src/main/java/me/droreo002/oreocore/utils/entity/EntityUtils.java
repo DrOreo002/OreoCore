@@ -6,12 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 public final class EntityUtils {
 
@@ -23,17 +21,35 @@ public final class EntityUtils {
     }
 
     public static Entity getNearestEntityInSight(Player player, int range) {
-        ArrayList<Entity> entities = (ArrayList<Entity>) player.getNearbyEntities(range, range, range);
-        ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight( (Set<Material>) null, range);
-        ArrayList<Location> sight = new ArrayList<Location>();
-        for (int i = 0;i<sightBlock.size();i++)
-            sight.add(sightBlock.get(i).getLocation());
-        for (int i = 0;i<sight.size();i++) {
-            for (int k = 0;k<entities.size();k++) {
-                if (Math.abs(entities.get(k).getLocation().getX()-sight.get(i).getX())<1.3) {
-                    if (Math.abs(entities.get(k).getLocation().getY()-sight.get(i).getY())<1.5) {
-                        if (Math.abs(entities.get(k).getLocation().getZ()-sight.get(i).getZ())<1.3) {
-                            return entities.get(k);
+        List<Entity> entities = player.getNearbyEntities(range, range, range);
+        List<Block> sightBlock = player.getLineOfSight(null, range);
+        List<Location> sight = new ArrayList<>();
+        for (Block block : sightBlock) sight.add(block.getLocation());
+        for (Location location : sight) {
+            for (Entity entity : entities) {
+                if (Math.abs(entity.getLocation().getX() - location.getX()) < 1.3) {
+                    if (Math.abs(entity.getLocation().getY() - location.getY()) < 1.5) {
+                        if (Math.abs(entity.getLocation().getZ() - location.getZ()) < 1.3) {
+                            return entity;
+                        }
+                    }
+                }
+            }
+        }
+        return null; //Return null/nothing if no entity was found
+    }
+
+    public static Entity tryGetEntityInSight(Player player, EntityType entityType, int range) {
+        List<Entity> entities = player.getNearbyEntities(range, range, range);
+        List<Block> sightBlock = player.getLineOfSight(null, range);
+        List<Location> sight = new ArrayList<>();
+        for (Block block : sightBlock) sight.add(block.getLocation());
+        for (Location location : sight) {
+            for (Entity entity : entities) {
+                if (Math.abs(entity.getLocation().getX() - location.getX()) < 1.3) {
+                    if (Math.abs(entity.getLocation().getY() - location.getY()) < 1.5) {
+                        if (Math.abs(entity.getLocation().getZ() - location.getZ()) < 1.3) {
+                            if (entity.getType() == entityType) return entity;
                         }
                     }
                 }

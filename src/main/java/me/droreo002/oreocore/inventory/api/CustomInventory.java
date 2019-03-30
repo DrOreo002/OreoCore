@@ -30,30 +30,20 @@ public abstract class CustomInventory implements InventoryHolder {
     @Getter
     private final Map<Integer, GUIButton> buttonMap = new HashMap<>();
     @Getter
+    private final Map<Integer, ItemStack> normalItem = new HashMap<>();
+    @Getter
     private int size;
     @Getter
     private String title;
     @Getter
     @Setter
-    private boolean shouldProcessButton;
-    @Getter
-    @Setter
-    private boolean containsAnimation;
-    @Getter
-    @Setter
-    private boolean cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
+    private boolean shouldProcessButton, containsAnimation, cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
     @Getter
     @Setter
     private List<Integer> noClickCancel; // Don't cancel the click event on these slots
     @Getter
     @Setter
-    private SoundObject soundOnClick;
-    @Getter
-    @Setter
-    private SoundObject soundOnOpen;
-    @Getter
-    @Setter
-    private SoundObject soundOnClose;
+    private SoundObject soundOnClick, soundOnOpen, soundOnClose;
 
     public CustomInventory(int size, String title) {
         this.size = size;
@@ -163,6 +153,14 @@ public abstract class CustomInventory implements InventoryHolder {
             }
         }
 
+        if (!normalItem.isEmpty()) {
+            for (Map.Entry ent : normalItem.entrySet()) {
+                int slot = (int) ent.getKey();
+                ItemStack item = (ItemStack) ent.getValue();
+                inventory.setItem(slot, item);
+            }
+        }
+
         open(player, getInventory());
     }
 
@@ -253,6 +251,30 @@ public abstract class CustomInventory implements InventoryHolder {
         for (int i = row * 9; i < (row * 9) + 9; i++) {
             addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
         }
+    }
+
+    /**
+     * Add a border, will fill the row with the specified item
+     *
+     * @param rows : The rows
+     * @param border : The item
+     * @param replaceIfExist : Replace if there's something on the row?
+     */
+    public void addBorder(int[] rows, ItemStack border, boolean replaceIfExist) {
+        for (int row : rows) {
+            if (row < 0) throw new IllegalStateException("Row cannot be 0!");
+            for (int i = row * 9; i < (row * 9) + 9; i++) {
+                addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
+            }
+        }
+    }
+
+    public void setItem(int slot, ItemStack item, boolean replaceIfExists) {
+        if (replaceIfExists) {
+            animationButtonMap.remove(slot);
+            buttonMap.remove(slot);
+        }
+        normalItem.put(slot, item);
     }
 
     /**

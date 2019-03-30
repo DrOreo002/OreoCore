@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+// TODO : Create your own particle data
 /**
  * <b>ParticleEffects Library</b>
  * <p>
@@ -418,6 +419,7 @@ public enum ParticleEffect {
      * </ul>
      */
     SWEEP_ATTACK("sweepAttack", 45, 9);
+
     private static final Map<String, ParticleEffect> NAME_MAP = new HashMap<>();
     private static final Map<Integer, ParticleEffect> ID_MAP = new HashMap<>();
     private final String name;
@@ -755,6 +757,7 @@ public enum ParticleEffect {
      * @since 1.7
      */
     public static final class OrdinaryColor extends ParticleColor {
+
         private final int red;
         private final int green;
         private final int blue;

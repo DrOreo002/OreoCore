@@ -26,6 +26,7 @@ public class CustomInventoryListener implements Listener {
         Player player = (Player) e.getWhoClicked();
         int slot = e.getSlot();
         if (inven == null) return;
+        if (e.getClickedInventory() == null) return;
         if (item == null || item.getType().equals(Material.AIR)) return;
 
         if (inven.getHolder() instanceof CustomInventory) {

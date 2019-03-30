@@ -3,6 +3,7 @@ package me.droreo002.oreocore.utils.bridge;
 import me.droreo002.oreocore.enums.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ServerUtils {
@@ -32,6 +33,10 @@ public final class ServerUtils {
 
     public static void callEvent(Event event) {
         Bukkit.getPluginManager().callEvent(event);
+    }
+
+    public static void registerListener(JavaPlugin plugin, Listener listener) {
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
     private static String getVersion() {
