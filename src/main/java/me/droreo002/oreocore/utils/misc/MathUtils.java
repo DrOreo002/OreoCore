@@ -16,7 +16,6 @@ public final class MathUtils {
     static {
         // Auto remove every 10 minute. Will start after 2 second
         Bukkit.getScheduler().scheduleSyncRepeatingTask(OreoCore.getInstance(), () -> {
-            Debug.log("&eDUPLICATE_RANDOM &flist has been cleared!", true);
             if (DUPLICATED_RANDOM.size() < 5) {
                 DUPLICATED_RANDOM.clear();
                 return;

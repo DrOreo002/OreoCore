@@ -50,7 +50,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <outputDirectory>C:\Users\Anom\Desktop\Spigot 1.13\plugins</outputDirectory>
                     <outputDirectory>C:\Users\Anom\Desktop\Spigot2\plugins</outputDirectory>
                 </configuration>
             </plugin>

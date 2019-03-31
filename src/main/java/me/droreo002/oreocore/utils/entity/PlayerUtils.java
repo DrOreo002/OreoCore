@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.entity;
 
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.Bukkit;
@@ -39,6 +40,10 @@ public final class PlayerUtils {
         } else {
             return player.getName();
         }
+    }
+
+    public static boolean isInventoryFull(Player player) {
+        return InventoryUtils.isInventoryFull(player.getInventory());
     }
 
     @SuppressWarnings("deprecation")

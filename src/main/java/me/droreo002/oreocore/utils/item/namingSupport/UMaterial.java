@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.item.namingSupport;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -1259,68 +1260,80 @@ public enum UMaterial {
     ZOMBIE_VILLAGER_SPAWN_EGG(null, null, null, null, null, "ZOMBIE_VILLAGER_SPAWN_EGG"),
     ZOMBIE_WALL_HEAD(2, "SKULL", null, null, null, null, "ZOMBIE_WALL_HEAD"),
     ;
+
     private static final HashMap<String, UMaterial> inUMemory = new HashMap<>();
     private static final HashMap<String, ItemStack> inMemory = new HashMap<>();
+
     private final String version = Bukkit.getVersion();
     private String[] names = new String[7];
     private ItemStack is;
+    @Getter
     private Material material;
     private int data;
+
     UMaterial(String ...names) {
         this(0, names);
     }
+
     UMaterial(String name, int data) {
-        names[0] = name;
+        this.names[0] = name;
         this.data = data;
-        final Material m = Material.matchMaterial(name);
-        material = m;
-        is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
+        this.material = Material.matchMaterial(name);
+        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) data) : new ItemStack(material);
     }
+
     UMaterial(String name, int spoofedData, Color color) {
-        names[0] = name;
+        this.names[0] = name;
         this.data = spoofedData;
-        final Material m = Material.matchMaterial(name);
-        material = m;
-        is = new ItemStack(m);
+        this.material = Material.matchMaterial(name);
+        this.is = new ItemStack(material);
+
         final LeatherArmorMeta lam = (LeatherArmorMeta) is.getItemMeta();
         lam.setColor(color);
         is.setItemMeta(lam);
     }
+
     UMaterial(String name, int data, UPotion pd) {
         doPotion(setItemStack(name, data), pd);
     }
+
     UMaterial(UPotion pd, int data, String ...names) {
         doPotion(setItemStack(data, names), pd);
     }
+
     UMaterial(String name, Enchantment enchant, int level) {
         doEnchantmentBook(setItemStack(0, name), enchant, level);
     }
+
     UMaterial(int data, String ...names) {
         this.names = names;
         this.data = data;
-        final Material m = getMaterialName();
-        material = m;
-        is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
+        this.material = getMaterialName();
+        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) data) : new ItemStack(material);
     }
+
     UMaterial(int data, int returnData, String... names) {
         this.names = names;
         this.data = data;
-        final Material m = getMaterialName();
-        material = m;
-        is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) returnData) : new ItemStack(m);
+        this.material = getMaterialName();
+        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) returnData) : new ItemStack(material);
     }
+
     private void doPotion(ItemStack m, UPotion up) {
         this.is = up.getItemStack();
     }
+
     private void doEnchantmentBook(ItemStack m, Enchantment enchant, int level) {
         final EnchantmentStorageMeta sm = (EnchantmentStorageMeta) m.getItemMeta();
         sm.addStoredEnchant(enchant, level, true);
         m.setItemMeta(sm);
         this.is = m;
     }
-    public Material getMaterial() { return material; }
+
     public ItemStack getItemStack() { return is.clone(); }
+
     public byte getData() { return (byte) data; }
+
     // 0 = 1.8.8
     // 1 = 1.9.4
     // 2 = 1.10.2
@@ -1343,6 +1356,7 @@ public enum UMaterial {
         final String t = names[realver], t2 = names.length > ver ? names[ver] : names[names.length-1];
         return Material.matchMaterial(t != null ? t : t2 != null ? t2 : "AIR");
     }
+
     private ItemStack setItemStack(String name, int data) {
         names[0] = name;
         this.data = data;
@@ -1350,6 +1364,7 @@ public enum UMaterial {
         material = m;
         return version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
     }
+
     private ItemStack setItemStack(int data, String ...names) {
         this.names = names;
         this.data = data;
@@ -1357,11 +1372,13 @@ public enum UMaterial {
         material = m;
         return version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
     }
+
     public static ItemStack getEnchantmentBook(Enchantment enchant, int level, int amount) {
         final LinkedHashMap<Enchantment, Integer> e = new LinkedHashMap<>();
         e.put(enchant, level);
         return getEnchantmentBook(e, amount);
     }
+
     public static ItemStack getEnchantmentBook(LinkedHashMap<Enchantment, Integer> enchants, int amount) {
         final ItemStack s = new ItemStack(Material.ENCHANTED_BOOK, amount);
         final EnchantmentStorageMeta sm = (EnchantmentStorageMeta) s;
@@ -1370,6 +1387,7 @@ public enum UMaterial {
         s.setItemMeta(sm);
         return s;
     }
+
     public static ItemStack getColoredLeather(Material m, int amount, int red, int green, int blue) {
         final ItemStack i = new ItemStack(m, amount);
         final LeatherArmorMeta lam = (LeatherArmorMeta) i.getItemMeta();
@@ -1377,6 +1395,7 @@ public enum UMaterial {
         i.setItemMeta(lam);
         return i;
     }
+
     @Deprecated
     public static UMaterial match(String name, byte data) {
         name = name.toUpperCase();
@@ -1391,6 +1410,7 @@ public enum UMaterial {
         }
         return null;
     }
+
     @Deprecated
     public static ItemStack valueOf(String name, byte data) {
         name = name.toUpperCase();
@@ -1408,6 +1428,7 @@ public enum UMaterial {
         }
         return null;
     }
+
     public static UMaterial matchSpawnEgg(ItemStack egg) {
         if(egg != null) {
             final String v = Bukkit.getVersion();
@@ -1422,6 +1443,7 @@ public enum UMaterial {
         }
         return null;
     }
+
     public static UMaterial matchEnchantedBook(ItemStack book) {
         if(book != null && book.getItemMeta() instanceof EnchantmentStorageMeta) {
             final EnchantmentStorageMeta m = (EnchantmentStorageMeta) book.getItemMeta();
@@ -1456,6 +1478,7 @@ public enum UMaterial {
         }
         return null;
     }
+
     public static UMaterial matchPotion(ItemStack potion, PotionBase base) {
         if(potion != null && potion.getItemMeta() instanceof PotionMeta) {
             final String v = Bukkit.getVersion();
@@ -1493,15 +1516,17 @@ public enum UMaterial {
         }
         return null;
     }
+
     @Deprecated
     public static UMaterial match(ItemStack item) {
-        if(item != null) {
+        if (item != null) {
             final UMaterial u = match(item.getType().name(), item.getData().getData());
             final String un = u.name();
             return un.contains("SPAWN_EGG") ? matchSpawnEgg(item) : un.contains("ENCHANTED_BOOK") ? matchEnchantedBook(item) : un.contains("POTION") ? matchPotion(item, PotionBase.valueOf(un.contains("SPLASH") ? "SPLASH" : un.contains("LINGERING") ? "LINGERING" : "NORMAL")) : u;
         }
         return null;
     }
+
     public static UMaterial match(String name) {
         final byte d = name.contains(":") ? Byte.parseByte(name.split(":")[1]) : -1;
         name = (name.contains(":") ? name.split(":")[0] : name).toUpperCase();
@@ -1522,5 +1547,6 @@ public enum UMaterial {
         }
         return null;
     }
+
     public enum PotionBase { NORMAL, ARROW, LINGERING, SPLASH, }
 }

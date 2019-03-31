@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.api.animation.ItemAnimation;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -269,12 +270,36 @@ public abstract class CustomInventory implements InventoryHolder {
         }
     }
 
+    /**
+     * Set the item on slot
+     *
+     * @param slot : The slot
+     * @param item : The item
+     * @param replaceIfExists : Should api replace any button on that slot if exists?
+     */
     public void setItem(int slot, ItemStack item, boolean replaceIfExists) {
         if (replaceIfExists) {
             animationButtonMap.remove(slot);
             buttonMap.remove(slot);
         }
         normalItem.put(slot, item);
+    }
+
+    /**
+     * Find the item slot
+     *
+     * @param itemStack : The item to find
+     * @return the item slot if found, -1 otherwise
+     */
+    public int findItemSlot(ItemStack itemStack) {
+        for (int i = 0; i < size; i++) {
+            ItemStack toCheck = getInventory().getItem(i);
+            if (toCheck == null) continue;
+            if (CustomItem.isSimilar(toCheck, itemStack)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**

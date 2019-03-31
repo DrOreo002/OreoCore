@@ -5,6 +5,7 @@ import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -188,36 +189,31 @@ public class CustomItem extends ItemStack {
     /**
      * Check if the item is similar, the isSimilar method is buggy so we use this
      *
-     * @param item1 : The item 1
-     * @param item2 : The item 2
+     * @param first: The item 1
+     * @param second : The item 2
      * @return true if both item is the same, false otherwise
      */
-    public static boolean isSimilar(ItemStack item1, ItemStack item2) {
-        int count = 0; // Has to be 4
-        ItemMeta meta1 = item1.getItemMeta();
-        ItemMeta meta2 = item2.getItemMeta();
+    public static boolean isSimilar(ItemStack first,ItemStack second){
 
-        if (meta1.hasDisplayName() && meta2.hasDisplayName()) {
-            if (meta1.getDisplayName().equals(meta2.getDisplayName())) {
-                count++;
-            }
+        boolean similar = false;
+
+        if (first == null || second == null) return similar;
+        boolean sameType = (first.getType() == second.getType());
+        boolean sameDurability = (first.getDurability() == second.getDurability());
+        boolean sameAmount = (first.getAmount() == second.getAmount());
+        boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
+        boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
+        boolean sameItemMeta = true;
+
+        if (sameHasItemMeta) {
+            sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
         }
 
-        if (meta1.hasLore() && meta2.hasLore()) {
-            if (meta1.getLore().equals(meta2.getLore())) {
-                count++;
-            }
+        if (sameType && sameDurability && sameAmount && sameHasItemMeta && sameEnchantments && sameItemMeta){
+            similar = true;
         }
 
-        if (item1.getAmount() == item2.getAmount()) {
-            count++;
-        }
-
-        if (item1.getEnchantments().equals(item2.getEnchantments())) {
-            count++;
-        }
-
-        return count == 4;
+        return similar;
     }
 
     /**
