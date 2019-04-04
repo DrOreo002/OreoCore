@@ -3,7 +3,7 @@ package me.droreo002.oreocore.commands;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -23,9 +23,7 @@ public abstract class CustomCommand {
     private SoundObject successSound, errorSound;
     @Getter
     @Setter
-    private String argumentNotFoundMessage;
-    @Getter
-    private String commandBase;
+    private String argumentNotFoundMessage, commandBase;
     @Getter
     private String[] aliases;
     @Getter

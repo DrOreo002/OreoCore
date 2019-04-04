@@ -15,7 +15,7 @@ import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
 import me.droreo002.oreocore.inventory.listener.CustomInventoryListener;
 import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
 import me.droreo002.oreocore.listeners.PlayerListener;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;

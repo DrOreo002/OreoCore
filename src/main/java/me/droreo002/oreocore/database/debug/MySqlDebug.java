@@ -5,7 +5,7 @@ import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseMySQL;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 
 public class MySqlDebug extends DatabaseMySQL {
 

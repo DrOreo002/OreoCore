@@ -897,6 +897,13 @@ public enum XMaterial {
         return new ItemStack(mat, 1, (byte) data);
     }
 
+    public ItemStack parseMap(short mapID) {
+        if (!this.equals(XMaterial.MAP)) throw new IllegalStateException("Cannot parse " + this.name() + " to a map!");
+        Material mat = parseMaterial();
+        if (isNewVersion()) throw new IllegalStateException("Parsing map with ID on 1.13 is not yet supported!");
+        return new ItemStack(mat, 1, (byte) mapID);
+    }
+
     public static boolean isNewVersion(){
         Material mat = Material.getMaterial("RED_WOOL");
         return mat != null;

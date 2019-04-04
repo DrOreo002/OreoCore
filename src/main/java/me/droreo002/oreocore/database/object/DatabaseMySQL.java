@@ -7,7 +7,7 @@ import me.droreo002.oreocore.database.SQLDatabase;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.utils.ConnectionPoolManager;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;

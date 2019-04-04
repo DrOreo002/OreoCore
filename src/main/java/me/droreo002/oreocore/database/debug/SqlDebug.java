@@ -4,7 +4,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 
 import java.io.File;
 

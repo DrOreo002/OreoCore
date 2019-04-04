@@ -312,7 +312,19 @@ public abstract class CustomInventory implements InventoryHolder {
         if (buttonMap.isEmpty()) return false;
         return buttonMap.containsKey(e.getSlot());
     }
-    
+
+    /**
+     * Update the button!, also it is really recommended to call updateInventory on the player.
+     *
+     * @param slot : The new slot
+     * @param button : The new button
+     */
+    public void updateButton(int slot, GUIButton button) {
+        if (!buttonMap.containsKey(slot)) throw new NullPointerException("Cannot update button because no valid button found on slot " + slot);
+        getInventory().setItem(slot, button.getItem());
+        buttonMap.put(slot, button);
+    }
+
     @Override
     public Inventory getInventory() {
         return inventory;

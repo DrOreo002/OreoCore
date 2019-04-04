@@ -1,8 +1,7 @@
 package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
-import me.droreo002.oreocore.configuration.annotations.SerializableEnum;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

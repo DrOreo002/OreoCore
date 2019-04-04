@@ -42,15 +42,31 @@ public final class LocationUtils {
         return locations;
     }
 
-    public static List<Location> getUpCircle(Location center, double radius, int amount) {
+    public static List<Location> getUpCircle(Location center, double radius, int amount, double upIncrement) {
         List<Location> locations = new ArrayList<>();
         World world = center.getWorld();
         double increment = (2 * Math.PI) / amount;
+        double currIncrement = upIncrement;
+
         for(int i = 0; i < amount; i++) {
             double angle = i * increment;
             double x = center.getX() + (radius * Math.cos(angle));
             double z = center.getZ() + (radius * Math.sin(angle));
-            locations.add(new Location(world, x, center.add(new Vector(0D, .1D, 0D)).getY(), z));
+            locations.add(new Location(world, x, center.getY() + currIncrement, z));
+            currIncrement += upIncrement;
+        }
+        return locations;
+    }
+
+    public static List<Location> getCircleReverse(Location center, double radius, int amount) {
+        World world = center.getWorld();
+        double increment = (2 * Math.PI) / amount;
+        List<Location> locations = new ArrayList<>();
+        for(int i = 0; i < amount; i++) {
+            double angle = i * increment;
+            double x = center.getX() - (radius * Math.cos(angle));
+            double z = center.getZ() - (radius * Math.sin(angle));
+            locations.add(new Location(world, x, center.getY(), z));
         }
         return locations;
     }

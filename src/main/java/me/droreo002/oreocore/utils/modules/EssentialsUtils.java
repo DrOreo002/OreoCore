@@ -4,7 +4,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.hook.PluginHooker;
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;

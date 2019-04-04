@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.utils.logging;
+package me.droreo002.oreocore.debugging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

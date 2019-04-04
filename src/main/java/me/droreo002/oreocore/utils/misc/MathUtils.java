@@ -1,7 +1,6 @@
 package me.droreo002.oreocore.utils.misc;
 
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.utils.logging.Debug;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 
@@ -14,14 +13,8 @@ public final class MathUtils {
     private static final List<Integer> DUPLICATED_RANDOM = new ArrayList<>();
 
     static {
-        // Auto remove every 10 minute. Will start after 2 second
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(OreoCore.getInstance(), () -> {
-            if (DUPLICATED_RANDOM.size() < 5) {
-                DUPLICATED_RANDOM.clear();
-                return;
-            }
-            DUPLICATED_RANDOM.subList(0, DUPLICATED_RANDOM.size() - 5).clear();
-        }, 40L, 20L * 600L);
+        // Auto remove every 5 minute. Will start after 2 second
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(OreoCore.getInstance(), DUPLICATED_RANDOM::clear, 40L, 20L * 300L);
     }
 
     public static boolean chanceOf(double value) {

@@ -1,6 +1,6 @@
 package me.droreo002.oreocore.database;
 
-import me.droreo002.oreocore.utils.logging.Debug;
+import me.droreo002.oreocore.debugging.Debug;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;

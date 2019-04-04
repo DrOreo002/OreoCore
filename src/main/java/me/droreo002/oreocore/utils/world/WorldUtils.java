@@ -3,9 +3,13 @@ package me.droreo002.oreocore.utils.world;
 import me.droreo002.oreocore.OreoCore;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class WorldUtils {
 
@@ -26,5 +30,13 @@ public final class WorldUtils {
             fw.setFireworkMeta(fwm);
             Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), fw::detonate, 20L * detonateDelaySecond);
         }
+    }
+
+    public static List<Entity> getEntitiesOnChuck(Chunk chunk, EntityType type) {
+        List<Entity> ent = new ArrayList<>();
+        for (Entity e : chunk.getEntities()) {
+            if (e.getType().equals(type)) ent.add(e);
+        }
+        return ent;
     }
 }

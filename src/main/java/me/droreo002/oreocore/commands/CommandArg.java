@@ -8,21 +8,11 @@ import org.bukkit.entity.Player;
 public abstract class CommandArg {
 
     @Getter
-    private String trigger;
+    private String trigger, permission, noPermissionMessage, consoleOnlyMessage, playerOnlyMessage;
     @Getter
     private CustomCommand parent;
     @Getter
-    private String permission;
-    @Getter
-    private String noPermissionMessage;
-    @Getter
-    private boolean consoleOnly;
-    @Getter
-    private String consoleOnlyMessage;
-    @Getter
-    private boolean playerOnly;
-    @Getter
-    private String playerOnlyMessage;
+    private boolean consoleOnly, playerOnly;
 
     public CommandArg(String trigger, CustomCommand parent) {
         this.trigger = trigger;

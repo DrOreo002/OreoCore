@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.strings;
 
 import me.droreo002.oreocore.utils.misc.MathUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
 import java.util.UUID;
@@ -45,5 +46,26 @@ public final class StringUtils {
             builder.append(hexStr(rand.charAt(0)));
         }
         return builder.toString().toUpperCase();
+    }
+
+    public static String join(String[] elements, String separator, int startIndex, int endIndex) {
+        Validate.isTrue(startIndex >= 0 && startIndex < elements.length, "startIndex out of bounds");
+        Validate.isTrue(endIndex >= 0 && endIndex <= elements.length, "endIndex out of bounds");
+        Validate.isTrue(startIndex <= endIndex, "startIndex lower than endIndex");
+
+        StringBuilder result = new StringBuilder();
+
+        while (startIndex < endIndex) {
+            if (result.length() != 0) {
+                result.append(separator);
+            }
+
+            if (elements[startIndex] != null) {
+                result.append(elements[startIndex]);
+            }
+            startIndex++;
+        }
+
+        return result.toString();
     }
 }
