@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 public abstract class PaginatedInventory implements InventoryHolder {
@@ -279,10 +280,9 @@ public abstract class PaginatedInventory implements InventoryHolder {
      *
      * @param player : The targeted player
      */
-    public void openAsync(Player player) {
+    public void openAsync(Player player, int delayInSecond) {
         TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-        chain.setErrorHandler((e, task) -> e.printStackTrace());
-        chain.asyncFirst(() -> {
+        chain.delay(delayInSecond, TimeUnit.SECONDS).asyncFirst(() -> {
             if (paginatedButton.isEmpty()) {
                 this.currentPage = 0;
                 this.totalPage = 1;
@@ -332,7 +332,10 @@ public abstract class PaginatedInventory implements InventoryHolder {
             main.getOpening().put(player.getUniqueId(), this);
 
             return inventory;
-        }).asyncLast(player::openInventory).execute();
+        }).asyncLast(player::openInventory).execute((e, task) -> {
+            System.out.println("Got an error! " + e.getMessage());
+            e.printStackTrace();
+        });
     }
 
     /**
