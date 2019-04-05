@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.inventory.api.paginated;
 
 import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainTasks;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public abstract class PaginatedInventory implements InventoryHolder {
 
@@ -279,6 +281,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
      */
     public void openAsync(Player player) {
         TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+        chain.setErrorHandler((e, task) -> e.printStackTrace());
         chain.asyncFirst(() -> {
             if (paginatedButton.isEmpty()) {
                 this.currentPage = 0;

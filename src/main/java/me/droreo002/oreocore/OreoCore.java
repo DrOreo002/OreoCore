@@ -107,7 +107,7 @@ public final class OreoCore extends JavaPlugin {
         for (UUID uuid : opening.keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this, player::closeInventory, 1L);
+            player.closeInventory();
         }
         // Disable
         DatabaseManager.getDatabases().forEach(Database::onDisable);
