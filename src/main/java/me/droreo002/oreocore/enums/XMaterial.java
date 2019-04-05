@@ -889,8 +889,9 @@ public enum XMaterial {
         this.data = data;
     }
 
-    public ItemStack parseItem() {
-        Material mat = parseMaterial();
+    public ItemStack parseItem(boolean requestGUIAble) {
+        Material mat = (!requestGUIAble) ? parseMaterial() : Material.matchMaterial(getGUIAble(this));
+        if (mat == null) throw new NullPointerException("Material is null!. Are you trying to parse non gui-able item to gui-able?");
         if (isNewVersion()) { // 1.13
             return new ItemStack(mat);
         }
@@ -1009,13 +1010,23 @@ public enum XMaterial {
     }
 
     public boolean isFluid(XMaterial type) {
-        switch (this) {
+        switch (type) {
             case LAVA:
                 return true;
             case WATER:
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public static String getGUIAble(XMaterial type) {
+        switch (type) {
+            case OAK_DOOR:
+                if (isNewVersion()) return type.toString();
+                return "WOOD_DOOR";
+            default:
+                return "";
         }
     }
 

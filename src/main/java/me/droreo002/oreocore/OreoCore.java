@@ -1,5 +1,7 @@
 package me.droreo002.oreocore;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChainFactory;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
@@ -29,6 +31,8 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private static OreoCore instance;
     @Getter
+    private TaskChainFactory taskChainFactory;
+    @Getter
     private final Map<JavaPlugin, Boolean> hookedPlugin = new HashMap<>();
     @Getter
     private final Map<UUID, PaginatedInventory> opening = new HashMap<>();
@@ -53,6 +57,7 @@ public final class OreoCore extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+        taskChainFactory = BukkitTaskChainFactory.create(this);
         metrics = new Metrics(this);
         prefix = StringUtils.color("&7[ &bOreoCore &7]&f ");
         essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");

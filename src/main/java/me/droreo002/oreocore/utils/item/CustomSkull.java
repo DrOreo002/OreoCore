@@ -4,18 +4,27 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import me.droreo002.oreocore.enums.XMaterial;
+import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
+import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
+import me.droreo002.oreocore.utils.strings.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+
+import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
 public final class CustomSkull {
 
@@ -30,7 +39,7 @@ public final class CustomSkull {
     public static Future<ItemStack> getSkullAsync(final String texture) {
         if (CACHE.containsKey(texture)) return ThreadingUtils.makeFuture(() -> CACHE.get(texture));
         return ThreadingUtils.makeFuture(() -> {
-            final ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+            final ItemStack item = XMaterial.PLAYER_HEAD.parseItem(false);
             final ItemMeta meta = item.getItemMeta();
             final Object skin = createGameProfile(texture, UUID.randomUUID());
             BukkitReflectionUtils.setValue(meta, true, "profile", skin);
@@ -48,7 +57,7 @@ public final class CustomSkull {
      */
     public static ItemStack getSkull(final String texture) {
         if (CACHE.containsKey(texture)) return CACHE.get(texture);
-        final ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+        final ItemStack item = XMaterial.PLAYER_HEAD.parseItem(false);
         final ItemMeta meta = item.getItemMeta();
         final Object skin = createGameProfile(texture, UUID.randomUUID());
         try {
@@ -78,16 +87,16 @@ public final class CustomSkull {
     /**
      * Get the player head
      *
-     * @param player : The target player
+     * @param uuid : The owner of the head A.K.A the texture
      * @return The player's head as a ItemStack
      */
-    public static ItemStack getHead(Player player) {
-        if (CACHE.containsKey(player.getUniqueId().toString())) return CACHE.get(player.getUniqueId().toString());
-        ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+    public static ItemStack getHead(UUID uuid) {
+        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
+        ItemStack item = XMaterial.PLAYER_HEAD.parseItem(false);
         SkullMeta skull = (SkullMeta) item.getItemMeta();
-        skull.setOwningPlayer(player);
+        skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
         item.setItemMeta(skull);
-        CACHE.put(player.getUniqueId().toString(), item);
+        CACHE.put(uuid.toString(), item);
         return item;
     }
 
@@ -95,16 +104,16 @@ public final class CustomSkull {
      * If its an actual player head then, set that ItemStack head into {@param player}'s head!
      *
      * @param item : The ItemStack that will get edited
-     * @param player : The owner of the head A.K.A the texture
+     * @param uuid : The owner of the head A.K.A the texture
      * @return the result ItemStack if successful, null otherwise
      */
-    public static ItemStack toHead(ItemStack item, Player player) {
+    public static ItemStack toHead(ItemStack item, UUID uuid) {
         if (item.getType() != XMaterial.PLAYER_HEAD.parseMaterial()) return null;
-        if (CACHE.containsKey(player.getUniqueId().toString())) return CACHE.get(player.getUniqueId().toString());
+        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
         SkullMeta skull = (SkullMeta) item.getItemMeta();
-        skull.setOwningPlayer(player);
+        skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
         item.setItemMeta(skull);
-        CACHE.put(player.getUniqueId().toString(), item);
+        CACHE.put(uuid.toString(), item);
         return item;
     }
 
@@ -113,17 +122,17 @@ public final class CustomSkull {
      * will try to get the head using async way
      *
      * @param item : The ItemStack that will get edited
-     * @param player : The owner of the head A.K.A the texture
+     * @param uuid : The owner of the head A.K.A the texture
      * @return the result ItemStack if successful, null otherwise
      */
-    public static Future<ItemStack> toHeadAsync(ItemStack item, Player player) {
+    public static Future<ItemStack> toHeadAsync(ItemStack item, UUID uuid) {
         if (item.getType() != XMaterial.PLAYER_HEAD.parseMaterial()) return null;
-        if (CACHE.containsKey(player.getUniqueId().toString())) return ThreadingUtils.makeFuture(() -> CACHE.get(player.getUniqueId().toString()));
+        if (CACHE.containsKey(uuid.toString())) return ThreadingUtils.makeFuture(() -> CACHE.get(uuid.toString()));
         return ThreadingUtils.makeFuture(() -> {
             SkullMeta skull = (SkullMeta) item.getItemMeta();
-            skull.setOwningPlayer(player);
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
             item.setItemMeta(skull);
-            CACHE.put(player.getUniqueId().toString(), item);
+            CACHE.put(uuid.toString(), item);
             return item;
         });
     }
@@ -148,5 +157,81 @@ public final class CustomSkull {
         item.setItemMeta(meta);
         CACHE.put(texture, item);
         return item;
+    }
+
+    /**
+     * Get from section, the section must have material key name in order to work
+     * Available key :
+     *  material > Material as string (String)
+     *  materialDurr > The durability or item ID (int)
+     *  amount > The item amount (int)
+     *  name > The item displayName (String)
+     *  lore > The item lore (List String)
+     *  glow > Set the item glow or not (bool)
+     *  texture > The head texture, will only work if the material is player skull or head (String)
+     *
+     *
+     * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
+     *                    into the specified string from the TextPlaceholder class
+     * @param section : The section
+     * @param headOwner : The owner of the head, use null to use texture instead. Texture will be taken from config section
+     * @return a new ItemStack if its valid section, null otherwise
+     */
+    @SuppressWarnings("deprecation")
+    public static ItemStack fromSection(ConfigurationSection section, Map<ItemMetaType, TextPlaceholder> placeholder, UUID headOwner) {
+        Validate.notNull(section, "Section cannot be null!");
+        if (!section.contains("material")) throw new NullPointerException("Section must have material key!");
+        String material = section.getString("material", "DIRT");
+        int materialDurr = section.getInt("itemID", 0);
+        int amount = section.getInt("amount", 1);
+        boolean glow = section.getBoolean("glow", false);
+        String texture = section.getString("texture");
+        String displayName = section.getString("name");
+        List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
+
+        if (placeholder != null) {
+            for (Map.Entry ent : placeholder.entrySet()) {
+                final ItemMetaType editable = (ItemMetaType) ent.getKey();
+                final TextPlaceholder place = (TextPlaceholder) ent.getValue();
+
+                switch (editable) {
+                    case DISPLAY_NAME:
+                        for (TextPlaceholder t : place.getPlaceholders()) {
+                            if (displayName.contains(t.getFrom())) {
+                                displayName = displayName.replace(t.getFrom(), t.getTo());
+                            }
+                        }
+                        break;
+                    case LORE:
+                        if (!lore.isEmpty()) {
+                            for (TextPlaceholder t : place.getPlaceholders()) {
+                                lore = lore.stream().map(s -> {
+                                    if (s.contains(t.getFrom())) return s.replace(t.getFrom(), t.getTo());
+                                    return s;
+                                }).collect(Collectors.toList());
+                            }
+                        }
+                        break;
+                    default: break;
+                }
+            }
+        }
+
+        ItemStack res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount, (short) materialDurr);
+        if (texture != null) {
+            res = CustomSkull.setTexture(res, texture);
+        } else {
+            res = CustomSkull.getHead(headOwner);
+        }
+
+        SkullMeta meta = (SkullMeta) res.getItemMeta();
+        if (displayName != null) meta.setDisplayName(color(displayName));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
+        if (glow) meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+
+        if (res == null) return null;
+        res.setItemMeta(meta);
+        return res;
     }
 }

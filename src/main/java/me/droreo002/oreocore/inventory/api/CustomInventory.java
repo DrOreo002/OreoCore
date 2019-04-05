@@ -1,11 +1,13 @@
 package me.droreo002.oreocore.inventory.api;
 
+import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.api.animation.ItemAnimation;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.misc.SoundObject;
+import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -163,6 +165,41 @@ public abstract class CustomInventory implements InventoryHolder {
         }
 
         open(player, getInventory());
+    }
+
+    /**
+     * Open the custom inventory via async way
+     *
+     * @param player : Target player
+     */
+    public void openAsync(Player player) {
+        TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+        chain.asyncFirst(() -> {
+            for (Map.Entry ent : buttonMap.entrySet()) {
+                int slot = (int) ent.getKey();
+                GUIButton button = (GUIButton) ent.getValue();
+                inventory.setItem(slot, button.getItem());
+            }
+
+            if (!animationButtonMap.isEmpty()) {
+                containsAnimation = true;
+                for (Map.Entry ent : animationButtonMap.entrySet()) {
+                    int slot = (int) ent.getKey();
+                    ItemAnimation button = (ItemAnimation) ent.getValue();
+                    inventory.setItem(slot, button.getItem());
+                }
+            }
+
+            if (!normalItem.isEmpty()) {
+                for (Map.Entry ent : normalItem.entrySet()) {
+                    int slot = (int) ent.getKey();
+                    ItemStack item = (ItemStack) ent.getValue();
+                    inventory.setItem(slot, item);
+                }
+            }
+
+            return inventory;
+        }).asyncLast(player::openInventory).execute();
     }
 
     /**

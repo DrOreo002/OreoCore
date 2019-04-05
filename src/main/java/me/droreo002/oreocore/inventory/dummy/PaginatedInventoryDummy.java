@@ -14,7 +14,7 @@ public class PaginatedInventoryDummy extends PaginatedInventory {
 
         for (int i = 0; i < 10; i++) {
             final int finalI = i;
-            addPaginatedButton(new GUIButton(new CustomItem(XMaterial.DIRT.parseItem(), "&fHello World " + i)).setListener(e -> {
+            addPaginatedButton(new GUIButton(new CustomItem(XMaterial.DIRT.parseItem(false), "&fHello World " + i)).setListener(e -> {
                 e.getWhoClicked().sendMessage("hello " + finalI);
                 e.getWhoClicked().closeInventory();
             }));

@@ -1,5 +1,8 @@
 package me.droreo002.oreocore.utils.entity;
 
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainTasks;
+import com.google.common.base.Stopwatch;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
@@ -16,16 +19,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 public final class PlayerUtils {
 
     public static Location getPlayerLooking(Player player, int distance) {
-        ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight( (Set<Material>) null, distance);
+        ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight(null, distance);
         ArrayList<Location> sight = new ArrayList<Location>();
-        for (int i = 0; i < sightBlock.size(); i++) {
-            sight.add(sightBlock.get(i).getLocation());
+        for (Block block : sightBlock) {
+            sight.add(block.getLocation());
         }
         // Get the last
         return sight.get(sight.size() - 1);
@@ -42,17 +43,24 @@ public final class PlayerUtils {
         }
     }
 
+    /**
+     * Get a OfflinePlayer, this will always try it via async way
+     *
+     * @param name : The player name
+     */
+    @SuppressWarnings("deprecation")
+    public static void getOfflinePlayer(String name, TaskChainTasks.LastTask<OfflinePlayer> callback) {
+        Stopwatch watch = Stopwatch.createStarted();
+        TaskChain<OfflinePlayer> chain = ThreadingUtils.makeChain();
+        chain.asyncFirst(() -> Bukkit.getOfflinePlayer(name)).asyncLast(callback).execute();
+    }
+
     public static boolean isInventoryFull(Player player) {
         return InventoryUtils.isInventoryFull(player.getInventory());
     }
 
-    @SuppressWarnings("deprecation")
-    public static Future<OfflinePlayer> getPlayer(String name) {
-        return ThreadingUtils.makeFuture(() -> Bukkit.getOfflinePlayer(name));
-    }
-
     public static ItemStack getSkull(Player player) {
-        return CustomSkull.getHead(player);
+        return CustomSkull.getHead(player.getUniqueId());
     }
 
     public static void closeInventory(Player player) {

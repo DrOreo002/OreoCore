@@ -25,10 +25,10 @@ public class CustomItem extends ItemStack {
         keep an eye on it will ya?
      */
 
-    public static final ItemStack LBLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(), ".");
-    public static final ItemStack PURPLE_GLASSPANE = new CustomItem(XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem(), ".");
-    public static final ItemStack GRAY_GLASSPANE = new CustomItem(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(), ".");
-    public static final ItemStack BLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(), ".");
+    public static final ItemStack LBLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
+    public static final ItemStack PURPLE_GLASSPANE = new CustomItem(XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem(false), ".");
+    public static final ItemStack GRAY_GLASSPANE = new CustomItem(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(false), ".");
+    public static final ItemStack BLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
 
     public CustomItem(ItemStack item) {
         super(item);
@@ -226,6 +226,7 @@ public class CustomItem extends ItemStack {
      *  lore > The item lore (List String)
      *  glow > Set the item glow or not (bool)
      *  texture > The head texture, will only work if the material is player skull or head (String)
+     *
      *
      * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
      *                    into the specified string from the TextPlaceholder class
