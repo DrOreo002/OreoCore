@@ -6,10 +6,12 @@ import java.util.Collection;
 import java.util.List;
 
 import lombok.Getter;
+import me.droreo002.oreocore.debugging.Debug;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -19,6 +21,8 @@ public final class TextBuilder {
 
     @Getter
     private final List<BaseComponent> list = new ArrayList<>();
+
+    public TextBuilder() {}
 
     private TextBuilder(final String base, final ClickEvent.Action clickAction, final String clickValue, final HoverEvent.Action hoverAction, final String hoverValue) {
         if (base == null) {
@@ -62,6 +66,36 @@ public final class TextBuilder {
 
         Arrays.stream(TextComponent.fromLegacyText(text)).forEach(component -> {
             component.setClickEvent(new ClickEvent(action, value));
+            list.add(component);
+        });
+        return this;
+    }
+
+    public TextBuilder add(final String text, final ClickEvent.Action action, final List<String> value) {
+        if (text == null || value == null) {
+            return this;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        value.forEach(s -> builder.append(s).append("\n"));
+
+        Arrays.stream(TextComponent.fromLegacyText(text)).forEach(component -> {
+            component.setClickEvent(new ClickEvent(action, builder.toString()));
+            list.add(component);
+        });
+        return this;
+    }
+
+    public TextBuilder add(final String text, final HoverEvent.Action action, final List<String> value) {
+        if (text == null || value == null) {
+            return this;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        value.forEach(s -> builder.append(StringUtils.color(s)).append("\n"));
+
+        Arrays.stream(TextComponent.fromLegacyText(text)).forEach(component -> {
+            component.setHoverEvent(new HoverEvent(action, TextComponent.fromLegacyText(builder.toString())));
             list.add(component);
         });
         return this;
