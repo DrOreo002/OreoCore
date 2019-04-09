@@ -2,6 +2,7 @@ package me.droreo002.oreocore.configuration;
 
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.Debug;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;

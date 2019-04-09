@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.debugging.Debug;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -15,12 +16,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
- * From Realizedd's Duel plugin
+ * From Realizedd's Duel plugin (With some changes)
  */
 public final class TextBuilder {
 
-    @Getter
-    private final List<BaseComponent> list = new ArrayList<>();
+    @Getter @Setter
+    private List<BaseComponent> list = new ArrayList<>();
 
     public TextBuilder() {}
 
@@ -50,7 +51,7 @@ public final class TextBuilder {
         return of(base, null, null, null, null);
     }
 
-    public TextBuilder add(final String text) {
+    public TextBuilder addText(final String text) {
         if (text == null) {
             return this;
         }
@@ -59,7 +60,7 @@ public final class TextBuilder {
         return this;
     }
 
-    public TextBuilder add(final String text, final ClickEvent.Action action, final String value) {
+    public TextBuilder addClickEvent(final String text, final ClickEvent.Action action, final String value) {
         if (text == null || value == null) {
             return this;
         }
@@ -71,37 +72,22 @@ public final class TextBuilder {
         return this;
     }
 
-    public TextBuilder add(final String text, final ClickEvent.Action action, final List<String> value) {
+    public TextBuilder addHoverEvent(final String text, final HoverEvent.Action action, final List<String> value) {
         if (text == null || value == null) {
             return this;
         }
 
-        StringBuilder builder = new StringBuilder();
-        value.forEach(s -> builder.append(s).append("\n"));
+        List<TextComponent> components = new ArrayList<>();
+        value.forEach(s -> components.add(new TextComponent(StringUtils.color(s) + "\n")));
 
         Arrays.stream(TextComponent.fromLegacyText(text)).forEach(component -> {
-            component.setClickEvent(new ClickEvent(action, builder.toString()));
+            component.setHoverEvent(new HoverEvent(action, components.toArray(new TextComponent[components.size() - 1])));
             list.add(component);
         });
         return this;
     }
 
-    public TextBuilder add(final String text, final HoverEvent.Action action, final List<String> value) {
-        if (text == null || value == null) {
-            return this;
-        }
-
-        StringBuilder builder = new StringBuilder();
-        value.forEach(s -> builder.append(StringUtils.color(s)).append("\n"));
-
-        Arrays.stream(TextComponent.fromLegacyText(text)).forEach(component -> {
-            component.setHoverEvent(new HoverEvent(action, TextComponent.fromLegacyText(builder.toString())));
-            list.add(component);
-        });
-        return this;
-    }
-
-    public TextBuilder add(final String text, final HoverEvent.Action action, final String value) {
+    public TextBuilder addHoverEvent(final String text, final HoverEvent.Action action, final String value) {
         if (text == null || value == null) {
             return this;
         }
@@ -113,7 +99,7 @@ public final class TextBuilder {
         return this;
     }
 
-    public TextBuilder add(final String text, final ClickEvent.Action clickAction, final String clickValue, final HoverEvent.Action hoverAction, final String hoverValue) {
+    public TextBuilder addClickEvent(final String text, final ClickEvent.Action clickAction, final String clickValue, final HoverEvent.Action hoverAction, final String hoverValue) {
         if (text == null) {
             return this;
         }
