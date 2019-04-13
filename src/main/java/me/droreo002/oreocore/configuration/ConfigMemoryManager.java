@@ -33,13 +33,13 @@ public final class ConfigMemoryManager {
     public static void reloadMemory(JavaPlugin plugin, ConfigMemory memory) {
         if (CONFIG_MEMORY.containsKey(plugin)) {
             List<ConfigMemory> mem = CONFIG_MEMORY.get(plugin);
-            if (mem.contains(memory)) {
+            boolean match = mem.stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
+            if (match) {
                 mem.remove(memory);
                 process(memory);
                 mem.add(memory);
-                CONFIG_MEMORY.remove(plugin);
                 CONFIG_MEMORY.put(plugin, mem);
-                Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
+                Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been reloaded!", true);
             }
         }
     }

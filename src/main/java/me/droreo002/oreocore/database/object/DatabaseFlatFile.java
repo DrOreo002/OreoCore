@@ -17,6 +17,7 @@ import java.util.Map;
 
 public abstract class DatabaseFlatFile extends Database {
 
+    // TODO : Make data helper maybe?
     @Getter
     private final File dataFolder;
 
@@ -57,7 +58,7 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
-     * Load the data on first startup. Only recommended to call it at that time
+     * Load the data on first startup. Only recommended to call it at that time useful for 'final' data
      */
     public abstract void loadData();
     public abstract void addDefaults(FileConfiguration config);

@@ -1,9 +1,11 @@
 package me.droreo002.oreocore.utils.misc;
 
 import lombok.Getter;
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.enums.Sounds;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -57,8 +59,23 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
         if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + contains[0]);
     }
 
+    /**
+     * Send the sound to the player
+     *
+     * @param player : The target player
+     */
     public void send(Player player) {
         player.playSound(player.getLocation(), sounds.bukkitSound(), volume, pitch);
+    }
+
+    /**
+     * Send the sound to the player
+     *
+     * @param player : The target player
+     * @param delay : The delay in second
+     */
+    public void send(Player player, int delay) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> send(player), 20L * delay);
     }
 
     public static SoundObject fromConfig(ConfigurationSection section) {

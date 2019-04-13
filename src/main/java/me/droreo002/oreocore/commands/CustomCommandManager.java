@@ -24,9 +24,10 @@ public final class CustomCommandManager {
         }
         PluginCommand pluginCommand = Bukkit.getPluginCommand(command.getCommandBase());
         if (pluginCommand == null) {
-            Debug.log("&cWarning &f: Cannot register this command properly because it was not inside the PluginCommand cache (" + command.getCommandBase() + ")", true);
+            Debug.log("&4&lWarning &8> &fCannot register this command properly because it was not inside the PluginCommand cache &7(&e" + command.getCommandBase() + "&7)", true);
             return;
         }
+        if (!pluginCommand.getAliases().containsAll(Arrays.asList(command.getAliases()))) Debug.log("&4&lWarning &8> &fCommand with the base of &e" + command.getCommandBase() + "&f has aliases on it but some of the aliases is not inside the &eplugin.yml! &fplease add!", true);
         pluginCommand.setExecutor(new CommandHandler());
         pluginCommand.setTabCompleter(new CommandHandler());
         Debug.log("Base command with the name of &e" + command.getCommandBase() + "&f from plugin &e" + plugin.getName() + "&f. Has been registered successfully!", true);
