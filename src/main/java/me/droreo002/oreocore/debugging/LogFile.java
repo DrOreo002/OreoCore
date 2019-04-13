@@ -34,7 +34,7 @@ public abstract class LogFile {
 
     public LogFile(JavaPlugin owner) {
         this.owner = owner;
-        this.utils = new TimeStampUtils(getTimestampFormat());
+        this.utils = new TimeStampUtils((getTimestampFormat().contains("/")) ? getTimestampFormat().replace("/", "-") : getTimestampFormat());
         this.logger = Logger.getLogger(getLoggerName());
         this.currentLogFileName = getNextLogName();
         setup();
@@ -57,12 +57,14 @@ public abstract class LogFile {
                 currentLogFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
         }
         try {
             logHandler = new FileHandler(currentLogFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         logHandler.setFormatter(new CSLFormatter());
         logger.setLevel(Level.ALL);
@@ -138,12 +140,42 @@ public abstract class LogFile {
             }
         }
     }
-    
+
+    /**
+     * Get the log folder
+     *
+     * @return : The folder
+     */
     public abstract File getLogFolder();
+
+    /**
+     * Get the Timestamp format, if format contains / it will automatically convert to - , so make sure the separator
+     * is - only!
+     *
+     * @return : The format
+     */
     public abstract String getTimestampFormat();
+
+    /**
+     * Get the log name
+     *
+     * @return : The log name
+     */
     public abstract String getLoggerName();
+
+    /**
+     * Get the log update time (in second)
+     *
+     * @return : The update time
+     */
     public abstract int getLogUpdateTime();
+
+    /**
+     * Get the log format, override to remove default value
+     *
+     * @return : The log format
+     */
     public String getLogFormat() {
-        return "%timeStamp [LOG] %logLevel %message";
+        return "%date [LOG] %logLevel %message";
     }
 }
