@@ -4,4 +4,4 @@ I'm currently to lazy to make the wiki for tutorials. Maybe later...
 
 **Plugin that using this api**
 
-> None
+> ChestShopLimiter [Premium]
