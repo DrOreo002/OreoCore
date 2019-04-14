@@ -11,6 +11,7 @@ import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
+import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.Bukkit;
@@ -30,6 +31,9 @@ public abstract class PaginatedInventory implements InventoryHolder {
     /*
     Variables
      */
+    private static final String NEXT_ARROW = "http://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf";
+    private static final String PREV_ARROW = "http://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9";
+
     private final OreoCore main = OreoCore.getInstance();
     private Inventory inventory;
 
@@ -80,11 +84,11 @@ public abstract class PaginatedInventory implements InventoryHolder {
                 "&fThere's a total of &c%totalPage &fpages!"
         }));
         try {
-            this.backButton = new GUIButton(new CustomItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU5YmUxNTU3MjAxYzdmZjFhMGIzNjk2ZDE5ZWFiNDEwNDg4MGQ2YTljZGI0ZDVmYTIxYjZkYWE5ZGIyZDEifX19", "&7[ &bPrevious Page &7]")).setListener(event -> {
+            this.backButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(PREV_ARROW), "&7[ &bPrevious Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 prevPage(player);
             });
-            this.nextButton = new GUIButton(new CustomItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJiMGMwN2ZhMGU4OTIzN2Q2NzllMTMxMTZiNWFhNzVhZWJiMzRlOWM5NjhjNmJhZGIyNTFlMTI3YmRkNWIxIn19fQ==\\", "&7[ &bNext Page &7]")).setListener(event -> {
+            this.nextButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(NEXT_ARROW), "&7[ &bNext Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 nextPage(player);
             });

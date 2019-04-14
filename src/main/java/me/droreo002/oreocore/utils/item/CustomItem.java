@@ -20,20 +20,26 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class CustomItem extends ItemStack {
 
-    /*
-        Something might not work on 1.12 and below
-        keep an eye on it will ya?
-     */
-
     public static final ItemStack LBLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
     public static final ItemStack PURPLE_GLASSPANE = new CustomItem(XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem(false), ".");
     public static final ItemStack GRAY_GLASSPANE = new CustomItem(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(false), ".");
     public static final ItemStack BLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     */
     public CustomItem(ItemStack item) {
         super(item);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param name : The display name for the item
+     */
     public CustomItem(ItemStack item, String name) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -41,18 +47,13 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
-    public CustomItem(String name, String[] lores, String texture) throws Exception {
-        super(CustomSkull.getSkull(texture));
-        ItemMeta meta = getItemMeta();
-        meta.setDisplayName(color(name));
-        List<String> add = new ArrayList<>();
-        for (String s : lores) {
-            add.add(color(s));
-        }
-        meta.setLore(add);
-        setItemMeta(meta);
-    }
-
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param name : The display name for the item
+     * @param lores : The lore for the item
+     */
     public CustomItem(ItemStack item, String name, String[] lores) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -65,6 +66,13 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param name : The display name for the item
+     * @param lores : The lore for the item
+     */
     public CustomItem(ItemStack item, String name, List<String> lores) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -77,6 +85,12 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param lores : The lore for the item
+     */
     public CustomItem(ItemStack item, List<String> lores) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -88,6 +102,12 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param lores : The lore for the item
+     */
     public CustomItem(ItemStack item, String[] lores) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -99,6 +119,13 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param lores : The lore for the item
+     * @param isExtra : Should we keep the original ore and add the new one?
+     */
     public CustomItem(ItemStack item, String[] lores, boolean isExtra) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -117,6 +144,13 @@ public class CustomItem extends ItemStack {
         setItemMeta(meta);
     }
 
+    /**
+     * Create new custom item
+     *
+     * @param item : The ItemStack
+     * @param lores : The lore for the item
+     * @param isExtra : Should we keep the original ore and add the new one?
+     */
     public CustomItem(ItemStack item, List<String> lores, boolean isExtra) {
         super(item);
         ItemMeta meta = getItemMeta();
@@ -134,44 +168,13 @@ public class CustomItem extends ItemStack {
         meta.setLore(add);
         setItemMeta(meta);
     }
-    
-    public CustomItem(String texture, String name) throws Exception {
-        super(CustomSkull.getSkull(texture));
-        ItemMeta meta = getItemMeta();
-        meta.setDisplayName(color(name));
-        setItemMeta(meta);
-    }
 
-    public CustomItem(String texture) throws Exception {
-        super(CustomSkull.getSkull(texture));
-    }
-
-    public CustomItem(String texture, String name, String[] lores) throws Exception {
-        super(CustomSkull.getSkull(texture));
-        ItemMeta meta = getItemMeta();
-        meta.setDisplayName(color(name));
-        List<String> all = new ArrayList<>();
-        for (String s : lores) {
-            all.add(color(s));
-        }
-        meta.setLore(all);
-        meta.setDisplayName(color(name));
-        setItemMeta(meta);
-    }
-
-    public CustomItem(String texture, String name, List<String> lores) throws Exception {
-        super(CustomSkull.getSkull(texture));
-        ItemMeta meta = getItemMeta();
-        meta.setDisplayName(color(name));
-        List<String> all = new ArrayList<>();
-        for (String s : lores) {
-            all.add(color(s));
-        }
-        meta.setLore(all);
-        meta.setDisplayName(color(name));
-        setItemMeta(meta);
-    }
-
+    /**
+     * Add flag to the item
+     *
+     * @param flags : The flags to add
+     * @return the modified CustomItem
+     */
     public CustomItem addFlags(ItemFlag... flags) {
         ItemMeta meta = getItemMeta();
         meta.addItemFlags(flags);
@@ -179,6 +182,12 @@ public class CustomItem extends ItemStack {
         return this;
     }
 
+    /**
+     * Hide all attributes for the item, it should just preview
+     * the item name and lore when hovering
+     *
+     * @return the modified CustomItem
+     */
     public CustomItem hideAllAttributes() {
         ItemMeta meta = getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);

@@ -41,35 +41,13 @@ public final class CustomSkull {
         if (CACHE.containsKey(texture)) return ThreadingUtils.makeFuture(() -> CACHE.get(texture));
         return ThreadingUtils.makeFuture(() -> {
             final ItemStack item = XMaterial.PLAYER_HEAD.parseItem(false);
-            final ItemMeta meta = item.getItemMeta();
+            final SkullMeta meta = (SkullMeta) item.getItemMeta();
             final Object skin = createGameProfile(texture, UUID.randomUUID());
             BukkitReflectionUtils.setValue(meta, true, "profile", skin);
             item.setItemMeta(meta);
             CACHE.put(texture, item);
             return item;
         });
-    }
-
-    /**
-     * Get skull via texture (base64 decoded)
-     *
-     * @param texture : The texture
-     * @return The texture if succeeded, null otherwise
-     */
-    public static ItemStack getSkull(final String texture) {
-        if (CACHE.containsKey(texture)) return CACHE.get(texture);
-        final ItemStack item = XMaterial.PLAYER_HEAD.parseItem(false);
-        final ItemMeta meta = item.getItemMeta();
-        final Object skin = createGameProfile(texture, UUID.randomUUID());
-        try {
-            BukkitReflectionUtils.setValue(meta, true, "profile", skin);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
-        item.setItemMeta(meta);
-        CACHE.put(texture, item);
-        return item;
     }
 
     /**
@@ -93,7 +71,7 @@ public final class CustomSkull {
 
         ItemStack head = XMaterial.PLAYER_HEAD.parseItem(false);
 
-        ItemMeta headMeta = head.getItemMeta();
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 
         try {
             BukkitReflectionUtils.setValue(headMeta, true, "profile", profile);
