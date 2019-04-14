@@ -9,6 +9,7 @@ import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -50,10 +51,10 @@ public final class CustomSkull {
     }
 
     /**
-     * Get the skull (Warning, will freeze the server if its loaded more than 10 at one time)
+     * Get skull via texture (base64 decoded)
      *
-     * @param texture : The texture string
-     * @return an player head with that texture applied
+     * @param texture : The texture
+     * @return The texture if succeeded, null otherwise
      */
     public static ItemStack getSkull(final String texture) {
         if (CACHE.containsKey(texture)) return CACHE.get(texture);
@@ -64,10 +65,46 @@ public final class CustomSkull {
             BukkitReflectionUtils.setValue(meta, true, "profile", skin);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
+            return null;
         }
         item.setItemMeta(meta);
         CACHE.put(texture, item);
         return item;
+    }
+
+    /**
+     * Get the skull (Warning, will freeze the server if its loaded more than 10 at one time)
+     *
+     * @param url :  The texture URL
+     * @return an player head with that texture applied
+     */
+    public static ItemStack getSkullUrl(final String url) {
+        //if (CACHE.containsKey(url)) return CACHE.get(url);
+        final Base64 base64 = new Base64();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+
+        PropertyMap propertyMap = profile.getProperties();
+
+        if (propertyMap == null) throw new IllegalStateException("Profile doesn't contain a property map");
+
+        byte[] encodedData = base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+
+        propertyMap.put("textures", new Property("textures", new String(encodedData)));
+
+        ItemStack head = XMaterial.PLAYER_HEAD.parseItem(false);
+
+        ItemMeta headMeta = head.getItemMeta();
+
+        try {
+            BukkitReflectionUtils.setValue(headMeta, true, "profile", profile);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        head.setItemMeta(headMeta);
+        CACHE.put(url, head);
+        return head;
     }
 
     /**
