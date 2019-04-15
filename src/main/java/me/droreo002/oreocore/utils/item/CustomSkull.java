@@ -57,7 +57,7 @@ public final class CustomSkull {
      * @return an player head with that texture applied
      */
     public static ItemStack getSkullUrl(final String url) {
-        //if (CACHE.containsKey(url)) return CACHE.get(url);
+        if (CACHE.containsKey(url)) return CACHE.get(url);
         final Base64 base64 = new Base64();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 

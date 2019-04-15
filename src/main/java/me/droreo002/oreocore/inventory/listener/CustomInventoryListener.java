@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.inventory.listener;
 
+import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.CustomInventory;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.inventory.api.animation.ItemAnimationManager;
@@ -42,19 +43,24 @@ public class CustomInventoryListener implements Listener {
                 return;
             }
 
+            // Cancelling
             if (custom.getNoClickCancel().contains(slot)) {
                 e.setCancelled(false);
             } else {
                 e.setCancelled(true);
             }
 
-            // Original button
+            // Running onClick method
             custom.onClick(e);
+
+            /*
+            Button Management
+             */
             if (custom.getSoundOnClick() != null) custom.getSoundOnClick().send(player);
             if (custom.isShouldProcessButton()) {
                 if (custom.getButtonMap().containsKey(slot)) {
-                    if (custom.getButtonMap().get(slot).getListener() != null) {
-                        GUIButton but = custom.getButtonMap().get(slot);
+                    GUIButton but = custom.getButtonMap().get(slot);
+                    if (but.getListener() != null) {
                         if (but.getSoundOnClick() != null) {
                             but.getSoundOnClick().send(player);
                         }
@@ -91,8 +97,14 @@ public class CustomInventoryListener implements Listener {
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().getHolder() instanceof CustomInventory) {
             Player player = (Player) e.getPlayer();
-            if (player.getItemOnCursor() != null && player.isSneaking()) { // Anti cheat
-                player.setItemOnCursor(new ItemStack(Material.AIR));
+            if (XMaterial.isNewVersion()) {
+                if (!player.getItemOnCursor().getType().equals(XMaterial.AIR.parseMaterial()) && player.isSneaking()) { // Anti cheat
+                    player.setItemOnCursor(new ItemStack(Material.AIR));
+                }
+            } else {
+                if (player.getItemOnCursor() != null && player.isSneaking()) { // Anti cheat
+                    player.setItemOnCursor(new ItemStack(Material.AIR));
+                }
             }
             CustomInventory custom = (CustomInventory) e.getInventory().getHolder();
             custom.onClose(e);
