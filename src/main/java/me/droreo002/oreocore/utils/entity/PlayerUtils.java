@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -41,6 +42,19 @@ public final class PlayerUtils {
         } else {
             return player.getName();
         }
+    }
+
+    /**
+     * Check if player is vanished. Will prob only work on SuperVanish
+     *
+     * @param player : The target player
+     * @return true if vanished, false otherwise
+     */
+    public static boolean isVanished(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
     }
 
     /**
