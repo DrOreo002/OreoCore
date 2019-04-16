@@ -386,12 +386,13 @@ public abstract class CustomInventory implements InventoryHolder {
      *
      * @param panel : The panel object
      */
-    public void addPanel(InventoryPanel panel, boolean override) {
-        if (override) {
-            panels.put(panel.getPanelId(), panel);
-            return;
+    public void addPanel(InventoryPanel panel) {
+        for (Map.Entry ent : panel.getButtons().entrySet()) {
+            int slot = (int) ent.getKey();
+            GUIButton but = (GUIButton) ent.getValue();
+
+            addButton(slot, but, panel.isShouldOverrideOtherButton());
         }
-        if (panels.containsKey(panel.getPanelId())) return;
         panels.put(panel.getPanelId(), panel);
     }
 

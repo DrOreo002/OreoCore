@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory.listener;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.CustomInventory;
 import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.api.InventoryPanel;
 import me.droreo002.oreocore.inventory.api.animation.ItemAnimationManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
