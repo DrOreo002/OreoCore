@@ -1,7 +1,6 @@
 package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
-import me.droreo002.oreocore.inventory.dummy.CustomInventoryDummy;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
@@ -31,10 +30,6 @@ public class CoreCommand implements CommandExecutor {
         }
         if (args.length > 0) {
             if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("inventory")) {
-                    new CustomInventoryDummy().open(player);
-                    return true;
-                }
                 if (args[0].equalsIgnoreCase("plugin-list")) {
                    sendMessage(player, "&fThis server is currently running on &bOreoCore &fversion &b" + plugin.getDescription().getVersion() + "&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7)");
                    sound(player);

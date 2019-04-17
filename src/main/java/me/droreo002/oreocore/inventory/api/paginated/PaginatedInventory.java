@@ -108,10 +108,12 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * Set the item slot. This is good if you want to make a spaced or maybe
      * other design inventory
      *
-     * @param slot : The slot array
+     * @param rows : The rows
      */
-    public void setItemSlot(Integer... slot) {
-        this.itemSlot = new ArrayList<>(Arrays.asList(slot));
+    public void setItemRow(Integer... rows) {
+        for (int i : rows) {
+            setItemRow(i);
+        }
     }
 
     /**
@@ -119,7 +121,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
      *
      * @param row : The inventory row
      */
-    public void setItemSlot(int row) {
+    private void setItemRow(int row) {
         if (!itemSlot.isEmpty()) {
             itemSlot.clear();
         }
