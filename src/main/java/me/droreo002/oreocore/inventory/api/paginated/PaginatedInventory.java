@@ -122,16 +122,16 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * @param row : The inventory row
      */
     private void setItemRow(int row) {
-        if (!itemSlot.isEmpty()) {
-            itemSlot.clear();
-        }
         if (row == 0) {
             for (int i = 0; i < 9; i++) {
                 itemSlot.add(i);
             }
         } else {
-            for (int i = row * 9; i < i + 9; i++) {
-                itemSlot.add(row);
+            int start = row * 9;
+            int stop = start + 9;
+
+            for (int i = start; i < stop; i++) {
+                itemSlot.add(i);
             }
         }
     }
