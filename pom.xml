@@ -80,10 +80,6 @@
             <id>dmulloy2-repo</id>
             <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
-        <repository>
-            <id>dre-repo</id>
-            <url>https://erethon.de/repo/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -124,12 +120,6 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.3.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.erethon</groupId>
-            <artifactId>headlib</artifactId>
-            <version>3.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -34,15 +34,15 @@ public class PluginConfig extends CustomConfig {
         @Getter
         private final CustomConfig customConfig;
 
-        @ConfigVariable(path = "Annotation.test", errorWhenNull = true, isSerializableObject = false)
+        @ConfigVariable(path = "Annotation.test", errorWhenNull = true)
         @Getter
         private String working;
 
-        @ConfigVariable(path = "Title.test", isSerializableObject = true)
+        @ConfigVariable(path = "Title.test")
         @Getter
         private TitleObject titleObject = new TitleObject();
 
-        @ConfigVariable(path = "Enum.test", isSerializableObject = false)
+        @ConfigVariable(path = "Enum.test")
         @Getter
         private ArmorStandBody body;
 

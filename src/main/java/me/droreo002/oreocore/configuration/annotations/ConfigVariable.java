@@ -30,5 +30,12 @@ public @interface ConfigVariable {
      *
      * @return true or false. Depend
      */
-    boolean isSerializableObject();
+    boolean isSerializableObject() default false;
+
+    /**
+     * Does it support for value updating?
+     *
+     * @return true or false. Depend
+     */
+    boolean isUpdateAbleObject() default false;
 }
