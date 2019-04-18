@@ -83,10 +83,11 @@ public final class ConfigMemoryManager {
         for (Field f : obj.getDeclaredFields()) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
-                Object configValue = config.get(configVariable.path());
+                String path = configVariable.path();
+                Object configValue = config.get(path);
                 if (configVariable.isSerializableObject()) {
-                    ConfigurationSection cs = config.getConfigurationSection(configVariable.path());
-                    if (cs == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get ConfigurationSection on path " + configVariable.path());
+                    ConfigurationSection cs = config.getConfigurationSection(path);
+                    if (cs == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get ConfigurationSection on path " + path);
                     if (!f.isAccessible()) f.setAccessible(true);
                     if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
                     try {
@@ -99,7 +100,7 @@ public final class ConfigMemoryManager {
                     }
                     continue;
                 }
-                if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + configVariable.path());
+                if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + path);
                 if (!f.isAccessible()) f.setAccessible(true);
                 if (f.getType().isEnum()) {
                     try {
@@ -114,12 +115,103 @@ public final class ConfigMemoryManager {
                     }
                     continue;
                 }
-                try {
-                    f.set(memory, configValue);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                
+                switch (configVariable.valueType()) {
+                    case FLOAT:
+                        configValue = (float) config.getDouble(path);
+                        set(f, memory, configValue);
+                        return;
+                    case BOOLEAN:
+                        configValue = config.getBoolean(path);
+                        set(f, memory, configValue);
+                        return;
+                    case BOOLEAN_LIST:
+                        configValue = config.getBooleanList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case BYTE_LIST:
+                        configValue = config.getByteList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case CHARACTER_LIST:
+                        configValue = config.getCharacterList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case COLOR:
+                        configValue = config.getColor(path);
+                        set(f, memory, configValue);
+                        return;
+                    case CONFIGURATION_SECTION:
+                        configValue = config.getConfigurationSection(path);
+                        set(f, memory, configValue);
+                        return;
+                    case DOUBLE:
+                        configValue = config.getDouble(path);
+                        set(f, memory, configValue);
+                        return;
+                    case DOUBLE_LIST:
+                        configValue = config.getDoubleList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case FLOAT_LIST:
+                        configValue = config.getFloatList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case INT:
+                        configValue = config.getInt(path);
+                        set(f, memory, configValue);
+                        return;
+                    case INTEGER_LIST:
+                        configValue = config.getIntegerList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case ITEM_STACK:
+                        configValue = config.getItemStack(path);
+                        set(f, memory, configValue);
+                        return;
+                    case LIST:
+                        configValue = config.getList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case LONG:
+                        configValue = config.getLong(path);
+                        set(f, memory, configValue);
+                        return;
+                    case LONG_LIST:
+                        configValue = config.getLongList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case MAP_LIST:
+                        configValue = config.getMapList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case STRING:
+                        configValue = config.getString(path);
+                        set(f, memory, configValue);
+                        return;
+                    case STRING_LIST:
+                        configValue = config.getStringList(path);
+                        set(f, memory, configValue);
+                        return;
+                    case VECTOR:
+                        configValue = config.getVector(path);
+                        set(f, memory, configValue);
+                        return;
                 }
+
+                /*
+                Nothing found set
+                 */
+                set(f, memory, configValue);
             }
+        }
+    }
+    
+    private static void set(Field f, ConfigMemory memory, Object v) {
+        try {
+            f.set(memory, v);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 }

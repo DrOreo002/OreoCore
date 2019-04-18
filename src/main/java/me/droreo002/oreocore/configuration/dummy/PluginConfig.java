@@ -38,7 +38,7 @@ public class PluginConfig extends CustomConfig {
         @Getter
         private String working;
 
-        @ConfigVariable(path = "Title.test")
+        @ConfigVariable(path = "Title.test", isSerializableObject = true)
         @Getter
         private TitleObject titleObject = new TitleObject();
 

@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.configuration.annotations;
 
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.configuration.ValueType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -38,4 +39,11 @@ public @interface ConfigVariable {
      * @return true or false. Depend
      */
     boolean isUpdateAbleObject() default false;
+
+    /**
+     * The value type of this config, use auto for auto getting
+     *
+     * @return the type
+     */
+    ValueType valueType() default ValueType.AUTO;
 }
