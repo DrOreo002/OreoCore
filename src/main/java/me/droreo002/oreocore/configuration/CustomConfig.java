@@ -2,6 +2,7 @@ package me.droreo002.oreocore.configuration;
 
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.Debug;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,6 +25,8 @@ public abstract class CustomConfig {
     private String fileName;
     @Getter
     private String filePath;
+    @Getter
+    private ConfigMemory memory;
 
     /**
      * Extend this class into another class. And cache it somewhere as a field
@@ -66,6 +69,7 @@ public abstract class CustomConfig {
             e.printStackTrace();
             Debug.log("Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
         }
+        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
     }
 
     public void reloadConfig() {
@@ -74,5 +78,11 @@ public abstract class CustomConfig {
         if (configData != null) {
             config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(configData)));
         }
+        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
+    }
+
+    public void registerMemory(ConfigMemory memory) {
+        this.memory = memory;
+        ConfigMemoryManager.registerMemory(getPlugin(), memory);
     }
 }
