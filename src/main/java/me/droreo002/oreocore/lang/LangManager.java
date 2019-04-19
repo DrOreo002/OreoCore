@@ -34,6 +34,7 @@ public abstract class LangManager extends CustomConfig {
      * @param s : The path
      */
     public void addPath(String s) {
+        if (paths.contains(s)) throw new IllegalStateException("Path already inside the list");
         paths.add(s);
     }
 
@@ -57,7 +58,7 @@ public abstract class LangManager extends CustomConfig {
      * @return the String if succeeded, null otherwise
      */
     public String getLang(String path, TextPlaceholder placeholder, boolean addPrefix) {
-        if (values.get(path) == null) return "Error. Lang message on path " + path + " cannot be found!";
+        if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
         if (placeholder != null) {
             // Process placeholder
             String result = (String) values.get(path);
@@ -76,10 +77,10 @@ public abstract class LangManager extends CustomConfig {
      *
      * @param path : The path to the list
      * @param placeholder : The placeholder, null if there's none
-     * @return List containing the string if there's any, empty string otherwise
+     * @return List containing the string if there's any, null otherwise
      */
     public List<String> getLangList(String path, TextPlaceholder placeholder) {
-        if (values.get(path) == null) return new ArrayList<>();
+        if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
         if (placeholder != null) {
             List<String> result = new ArrayList<>();
             for (String s : (List<String>) values.get(path)) {
