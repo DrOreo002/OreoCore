@@ -36,6 +36,7 @@ public abstract class Debugger {
 
     public void log(String msg, Level logLevel, boolean logToFile) {
         if (logToFile) {
+            if (getLogFile() == null) throw new NullPointerException("Log file is null!");
             getLogFile().getLogger().log(logLevel, StringUtils.stripColor(msg));
         }
         sendConsoleMessage(msg);

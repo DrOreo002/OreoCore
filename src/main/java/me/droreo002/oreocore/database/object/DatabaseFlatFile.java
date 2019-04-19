@@ -17,9 +17,10 @@ import java.util.Map;
 
 public abstract class DatabaseFlatFile extends Database {
 
-    // TODO : Make data helper maybe?
     @Getter
     private final File dataFolder;
+    @Getter
+    private final boolean loadDataOnStartup;
 
     /**
      * Where the string is the file name
@@ -27,10 +28,11 @@ public abstract class DatabaseFlatFile extends Database {
     @Getter
     private Map<String, Data> dataCache;
 
-    public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder) {
+    public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
         this.dataFolder = databaseFolder;
         this.dataCache = new HashMap<>();
+        this.loadDataOnStartup = loadDataOnStartup;
         init(); // You have to call this first!
     }
 
@@ -43,11 +45,14 @@ public abstract class DatabaseFlatFile extends Database {
         if (!fileDataFolder.exists()) fileDataFolder.mkdir();
         if (!dataFolder.exists()) dataFolder.mkdir();
 
-        File[] files = getDataFolder().listFiles();
-        if (files == null) return;
-        for (File f : files) {
-            FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
-            addData(new DatabaseFlatFile.Data(fileConfig, f));
+        // Performance issue may occur
+        if (loadDataOnStartup) {
+            File[] files = getDataFolder().listFiles();
+            if (files == null) return;
+            for (File f : files) {
+                FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
+                addData(new DatabaseFlatFile.Data(fileConfig, f));
+            }
         }
     }
 
@@ -78,13 +83,15 @@ public abstract class DatabaseFlatFile extends Database {
      * Add a new data entry into cache
      *
      * @param fileName : The data's file name
+     * @return true if succeeded, false otherwise
      */
-    private void addData(String fileName) {
-        if (!fileName.contains(".yml")) throw new IllegalStateException("Filename must contains .yml!");
+    public boolean addData(String fileName) {
+        if (!fileName.contains(".yml")) fileName += ".yml";
         File file = new File(dataFolder, fileName);
-        if (!file.exists()) throw new NullPointerException("Cannot add data from a null file!");
+        if (!file.exists()) return false;
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         addData(new Data(config, file));
+        return true;
     }
 
     /**

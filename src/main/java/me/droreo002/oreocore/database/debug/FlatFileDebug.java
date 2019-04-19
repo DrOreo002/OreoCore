@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class FlatFileDebug extends DatabaseFlatFile {
 
     public FlatFileDebug() {
-        super(OreoCore.getInstance(), OreoCore.getInstance().getDataFolder());
+        super(OreoCore.getInstance(), OreoCore.getInstance().getDataFolder(), true);
         DatabaseManager.registerDatabase(OreoCore.getInstance(), this);
     }
 
