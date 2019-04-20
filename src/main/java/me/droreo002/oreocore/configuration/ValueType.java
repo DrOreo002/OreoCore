@@ -23,5 +23,4 @@ public enum ValueType {
     STRING,
     STRING_LIST,
     VECTOR
-
 }

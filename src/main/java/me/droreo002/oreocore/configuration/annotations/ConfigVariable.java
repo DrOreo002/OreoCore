@@ -39,7 +39,7 @@ public @interface ConfigVariable {
      * @return true or false. Depend
      */
     boolean isUpdateAbleObject() default false;
-
+    
     /**
      * The value type of this config, use auto for auto getting
      *

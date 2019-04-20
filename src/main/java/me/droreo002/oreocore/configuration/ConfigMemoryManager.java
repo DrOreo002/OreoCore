@@ -2,6 +2,7 @@ package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -200,7 +201,7 @@ public final class ConfigMemoryManager {
                 }
 
                 /*
-                Nothing found set
+                Nothing found try to set it instead
                  */
                 set(f, memory, configValue);
             }
