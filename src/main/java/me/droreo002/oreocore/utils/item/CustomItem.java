@@ -229,7 +229,7 @@ public class CustomItem extends ItemStack {
      * Get from section, the section must have material key name in order to work
      * Available key :
      *  material > Material as string (String)
-     *  materialDurr > The durability or item ID (int)
+     *  itemID > The durability or item ID (int)
      *  amount > The item amount (int)
      *  name > The item displayName (String)
      *  lore > The item lore (List String)
@@ -247,7 +247,7 @@ public class CustomItem extends ItemStack {
         Validate.notNull(section, "Section cannot be null!");
         if (!section.contains("material")) throw new NullPointerException("Section must have material key!");
         String material = section.getString("material", "DIRT");
-        int materialDurr = section.getInt("itemID", 0);
+        int materialDurr = section.getInt("itemID", -1);
         int amount = section.getInt("amount", 1);
         boolean glow = section.getBoolean("glow", false);
         String texture = section.getString("texture");
@@ -280,7 +280,12 @@ public class CustomItem extends ItemStack {
             }
         }
 
-        ItemStack res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount, (short) materialDurr);
+        ItemStack res;
+        if (materialDurr != -1) {
+            res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount, (short) materialDurr);
+        } else {
+            res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount);
+        }
         ItemMeta meta = res.getItemMeta();
         if (displayName != null) meta.setDisplayName(color(displayName));
         meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));

@@ -1037,6 +1037,6 @@ public enum XMaterial {
             Material res = Material.matchMaterial(toCheck);
             if (res != null) return res;
         }
-        throw new NullPointerException("Error when trying to parse " + toString() + " Material!. Please contact dev!");
+        throw new NullPointerException("Error when trying to parse " + name() + " Material!. Please contact dev!");
     }
 }
