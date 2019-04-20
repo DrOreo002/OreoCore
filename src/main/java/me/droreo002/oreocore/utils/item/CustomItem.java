@@ -243,7 +243,7 @@ public class CustomItem extends ItemStack {
      * @return a new ItemStack if its valid section, null otherwise
      */
     @SuppressWarnings("deprecation")
-    public static ItemStack fromSection(ConfigurationSection section, Map<ItemMetaType, TextPlaceholder> placeholder) {
+    public static ItemStack fromSection(ConfigurationSection section, TextPlaceholder placeholder) {
         Validate.notNull(section, "Section cannot be null!");
         if (!section.contains("material")) throw new NullPointerException("Section must have material key!");
         String material = section.getString("material", "DIRT");
@@ -255,11 +255,9 @@ public class CustomItem extends ItemStack {
         List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
 
         if (placeholder != null) {
-            for (Map.Entry ent : placeholder.entrySet()) {
-                final ItemMetaType editable = (ItemMetaType) ent.getKey();
-                final TextPlaceholder place = (TextPlaceholder) ent.getValue();
+            for (TextPlaceholder place : placeholder.getPlaceholders()) {
 
-                switch (editable) {
+                switch (place.getType()) {
                     case DISPLAY_NAME:
                         for (TextPlaceholder t : place.getPlaceholders()) {
                             if (displayName.contains(t.getFrom())) {
