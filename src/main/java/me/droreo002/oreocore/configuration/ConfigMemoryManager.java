@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -75,7 +76,15 @@ public final class ConfigMemoryManager {
                 }
             }
         }
-        memory.getParent().saveConfig();
+        /*
+        Update config
+         */
+        try {
+            config.save(memory.getParent().getYamlFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Debug.log("Failed to save custom config file! &7(&e" + memory.getParent().getFilePath() + "&7)", true);
+        }
     }
 
     private static void process(ConfigMemory memory) {
