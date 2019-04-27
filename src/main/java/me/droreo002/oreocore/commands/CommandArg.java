@@ -2,8 +2,10 @@ package me.droreo002.oreocore.commands;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class CommandArg {
 
@@ -76,5 +78,59 @@ public abstract class CommandArg {
     public void setConsoleOnly(boolean consoleOnly, String consoleOnlyMessage) {
         this.consoleOnly = consoleOnly;
         this.consoleOnlyMessage = consoleOnlyMessage;
+    }
+
+    /**
+     * Check if string is an Integer
+     *
+     * @param sender : The command sender
+     * @param toCheck : The message to check
+     * @param notIntegerMessage : The message to send if its not an integer
+     * @return true if its an integer, false otherwise
+     */
+    public boolean isInteger(CommandSender sender, String toCheck, String notIntegerMessage) {
+        try {
+            Integer.valueOf(toCheck);
+        } catch (NumberFormatException e) {
+            sendMessage(sender, notIntegerMessage);
+            error(sender);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the item is valid
+     *
+     * @param player : The player
+     * @param expected : The expected item
+     * @param notValidMessage : Message to send if the item is not valid
+     * @return true if valid, false otherwise
+     */
+    public boolean isHandItemValid(Player player, ItemStack expected, String notValidMessage) {
+        boolean b = player.getInventory().getItemInMainHand().isSimilar(expected);
+        if (!b) {
+            sendMessage(player, notValidMessage);
+            error(player);
+            return false;
+        }
+        return b;
+    }
+
+    /**
+     * Check if the item is null or not
+     *
+     * @param player : The player
+     * @param nullMessage : Null message
+     * @return true or false
+     */
+    public boolean isHandItemNotNull(Player player, String nullMessage) {
+        final ItemStack item = player.getInventory().getItemInMainHand();
+        if (item.getType().equals(Material.AIR)) {
+            sendMessage(player, nullMessage);
+            error(player);
+            return false;
+        }
+        return true;
     }
 }

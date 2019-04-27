@@ -99,12 +99,13 @@ public abstract class DatabaseFlatFile extends Database {
      *
      * @param fileName : The file name
      */
-    public void setup(String fileName, boolean addDefault) {
+    public void setup(String fileName, boolean addDefault, SetupCallback callback) {
         if (isDataCached(fileName.replace(".yml", ""))) return;
         File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
         if (file.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             addData(new Data(config, file));
+            callback.callBack(SetupCallbackType.LOADED);
             return;
         }
         try {
@@ -123,6 +124,7 @@ public abstract class DatabaseFlatFile extends Database {
             }
         }
         addData(new Data(config, file));
+        callback.callBack(SetupCallbackType.CREATED_AND_LOADED);
     }
 
     /**
@@ -192,5 +194,14 @@ public abstract class DatabaseFlatFile extends Database {
             this.config = config;
             this.dataFile = dataFile;
         }
+    }
+
+    public interface SetupCallback {
+        void callBack(SetupCallbackType type);
+    }
+
+    public enum SetupCallbackType {
+        CREATED_AND_LOADED,
+        LOADED
     }
 }
