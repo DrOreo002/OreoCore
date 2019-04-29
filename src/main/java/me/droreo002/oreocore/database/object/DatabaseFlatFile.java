@@ -100,7 +100,6 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName : The file name
      */
     public void setup(String fileName, boolean addDefault, SetupCallback callback) {
-        if (isDataCached(fileName.replace(".yml", ""))) return;
         File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
         if (file.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);

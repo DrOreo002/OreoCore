@@ -23,7 +23,9 @@ package me.droreo002.oreocore.enums;
  * DEALINGS IN THE SOFTWARE.
  **/
 import java.util.HashMap;
+import java.util.Map;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -881,8 +883,13 @@ public enum XMaterial {
     ZOMBIE_WALL_HEAD(0, "SKULL","SKULL_ITEM"),
     ;
 
-    private String[] m;
-    private int data;
+    private final String[] m;
+    private final int data;
+
+    private static final Map<String, XMaterial> cachedSearch = new HashMap<>();
+    private static final Map<String, XMaterial> cachedString = new HashMap<>();
+    private static final Map<XMaterial, Material> cachedXMaterial = new HashMap<>();
+    private static Boolean isNew = null;
 
     XMaterial(int data, String... m) {
         this.m = m;
@@ -905,12 +912,9 @@ public enum XMaterial {
         return new ItemStack(mat, 1, (byte) mapID);
     }
 
-    public static boolean isNewVersion(){
-        Material mat = Material.getMaterial("RED_WOOL");
-        return mat != null;
+    public static boolean isNewVersion() {
+        return isNew != null ? isNew : (isNew = Material.getMaterial("RED_WOOL") != null);
     }
-
-    private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
 
     public static XMaterial requestXMaterial(String name, byte data){
         if (cachedSearch.containsKey(name.toUpperCase() + "," + data)){
@@ -933,8 +937,7 @@ public enum XMaterial {
             return comp.getType() == this.parseMaterial();
         }
         if (comp.getType() == this.parseMaterial() && (int) comp.getData().getData() == this.data) return true;
-        XMaterial xmat = fromMaterial(comp.getType());
-        if (isDamageable(xmat)){
+        if (isDamageable()){
             return this.parseMaterial() == comp.getType();
         }
         return false;
@@ -956,57 +959,48 @@ public enum XMaterial {
     }
 
     public static XMaterial fromString(String key) {
-        XMaterial xmat;
+        XMaterial mu = cachedString.get(key);
+        if (mu != null) {
+            return mu;
+        }
+        if (key == null) {
+            return XMaterial.BEDROCK;
+        }
+
+        key = key.toUpperCase();
         try {
-            xmat = XMaterial.valueOf(key);
+            final XMaterial xmat = XMaterial.valueOf(key);
             return xmat;
-        } catch (Exception e){
+        } catch (IllegalArgumentException e) {
             String[] split = key.split(":");
-            if (split.length == 1) {
-                xmat = requestXMaterial(key,(byte) 0);
-            } else {
-                xmat = requestXMaterial(split[0],(byte) Integer.parseInt(split[1]));
-            }
-            return xmat;
+            XMaterial result = split.length == 1 ? requestXMaterial(key, (byte) 0)
+                    : requestXMaterial(split[0], (byte) Integer.parseInt(split[1]));
+            cachedString.put(key, result);
+            return result;
         }
     }
 
-    public boolean isDamageable(XMaterial type){
-        if (type == null) return false;
-        String[] split = type.toString().split("_");
+    public boolean isDamageable() {
+        String[] split = this.toString().split("_");
         int length = split.length;
-        switch(split[length-1]) {
+        switch (split[length - 1]) {
             case "HELMET":
-                return true;
             case "CHESTPLATE":
-                return true;
             case "LEGGINGS":
-                return true;
             case "BOOTS":
-                return true;
             case "SWORD":
-                return true;
             case "AXE":
-                return true;
             case "PICKAXE":
-                return true;
             case "SHOVEL":
-                return true;
             case "HOE":
-                return true;
             case "ELYTRA":
-                return true;
             case "TURTLE_HELMET":
-                return true;
             case "TRIDENT":
-                return true;
             case "HORSE_ARMOR":
-                return true;
             case "SHEARS":
                 return true;
-            default:
-                return false;
         }
+        return false;
     }
 
     public boolean isFluid(XMaterial type) {
@@ -1031,12 +1025,15 @@ public enum XMaterial {
     }
 
     public Material parseMaterial() {
-        Material mat = Material.matchMaterial(this.toString());
-        if (mat != null) return mat;
-        for (String toCheck : m) {
-            Material res = Material.matchMaterial(toCheck);
-            if (res != null) return res;
+        Material cache = cachedXMaterial.get(this);
+        if (cache != null) {
+            return cache;
         }
-        throw new NullPointerException("Error when trying to parse " + name() + " Material!. Please contact dev!");
+        Material mat = Material.matchMaterial(this.toString());
+        mat = mat != null ? mat : Material.matchMaterial(m[0]);
+        if (mat != null) {
+            cachedXMaterial.put(this, mat);
+        }
+        return mat;
     }
 }
