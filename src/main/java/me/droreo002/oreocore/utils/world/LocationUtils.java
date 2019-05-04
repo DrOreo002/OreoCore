@@ -5,10 +5,11 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public final class LocationUtils {
 
     public static String convertToString(Location location) {
         Validate.notNull(location, "Location cannot be null!");
-        return "Location;" + location.getWorld().getName() + ";" + Math.round(location.getX()) + ";" + Math.round(location.getY()) + ";" + Math.round(location.getZ());
+        return "Location;" + location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ();
     }
 
     public static Location toLocation(String format) {
@@ -83,5 +84,19 @@ public final class LocationUtils {
         if (center) dir.add(new Vector(.5D, 2D, .5D));
         Location loc = player.getLocation().setDirection(dir);
         player.teleport(loc);
+    }
+
+    /**
+     * Make the Entity facing the locations's direction
+     *
+     * @param armorStand : The target ArmorStand
+     * @param target : The target location
+     * @param center : Should we center the location?
+     */
+    public static void faceDirection(ArmorStand armorStand, Location target, boolean center) {
+        Vector dir = target.clone().subtract(armorStand.getEyeLocation()).toVector();
+        if (center) dir.add(new Vector(.5D, 2D, .5D));
+        Location loc = armorStand.getEyeLocation().setDirection(dir);
+        armorStand.teleport(loc);
     }
 }

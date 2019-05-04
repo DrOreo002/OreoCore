@@ -18,7 +18,8 @@ public final class WorldUtils {
         location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), 5f, false, false);
     }
 
-    public static void spawnFireWork(World w, Location location, int detonateDelaySecond, int amount, FireworkEffect effect) {
+    public static void spawnFireWork(Location location, int detonateDelaySecond, int amount, FireworkEffect effect) {
+        final World w = location.getWorld();
         for (int i = 0; i < amount; i++) {
             Firework fw = (Firework) w.spawnEntity(location, EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
