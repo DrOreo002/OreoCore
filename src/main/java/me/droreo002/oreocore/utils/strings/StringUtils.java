@@ -5,33 +5,65 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class StringUtils {
 
     private static final char[] HEX_MAP = { '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
+    /**
+     * Colorize the string
+     *
+     * @param text : The string to colorize
+     * @return the colorized string
+     */
     public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
+    /**
+     * Check if the string is an UUID
+     *
+     * @param toCheck : The string to check
+     * @return true if its UUID false otherwise
+     */
     public static boolean isUUID(String toCheck) {
         try {
-            UUID lel = UUID.fromString(toCheck); // Declare to remove that stupid yellow warning (IntelliJ)
+            UUID.fromString(toCheck); // Declare to remove that stupid yellow warning (IntelliJ)
         } catch (IllegalStateException e) {
             return false;
         }
         return true;
     }
 
+    /**
+     * Strip the string's color
+     *
+     * @param text : The string to strip
+     * @return the stripped string
+     */
     public static String stripColor(String text) {
         return ChatColor.stripColor(color(text)); // Try to color first
     }
 
+    /**
+     * Uppercase the first letter of the string
+     *
+     * @param str : The string to modify
+     * @return the upper cased string (First letter)
+     */
     public static String upperCaseFirstLetter(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    /**
+     * Get the hex string from char
+     *
+     * @param data : The char data
+     * @return result string
+     */
     public static String hexStr(char data) {
         StringBuilder builder = new StringBuilder("  ");
         builder.setCharAt(0, HEX_MAP[(data & 0xF0) >> 4]);
@@ -39,6 +71,11 @@ public final class StringUtils {
         return builder.toString();
     }
 
+    /**
+     * Generate a new RID
+     *
+     * @return The RID
+     */
     public static String generateRid() {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 16; i++) {
@@ -48,6 +85,16 @@ public final class StringUtils {
         return builder.toString().toUpperCase();
     }
 
+    /**
+     * Join the string together
+     *
+     * @param elements : The string elements
+     * @param separator : The string separator
+     * @param startIndex : Start index of elements
+     * @param endIndex : End index of elements
+     *
+     * @return the joined string
+     */
     public static String join(String[] elements, String separator, int startIndex, int endIndex) {
         Validate.isTrue(startIndex >= 0 && startIndex < elements.length, "startIndex out of bounds");
         Validate.isTrue(endIndex >= 0 && endIndex <= elements.length, "endIndex out of bounds");
@@ -67,5 +114,17 @@ public final class StringUtils {
         }
 
         return result.toString();
+    }
+
+    /**
+     * Check if the string has a special character inside
+     *
+     * @param text : The string to check
+     * @return true if it has a special character, false otherwise
+     */
+    public static boolean hasSpecialCharacter(String text) {
+        Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(text);
+        return m.find();
     }
 }

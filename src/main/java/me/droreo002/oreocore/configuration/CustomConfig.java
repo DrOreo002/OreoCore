@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public abstract class CustomConfig {
+public class CustomConfig {
 
     @Getter
     private JavaPlugin plugin;

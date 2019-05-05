@@ -18,7 +18,7 @@ public final class BridgeUtils {
         player.playSound(player.getLocation(), sounds.bukkitSound(), 1.0f, 1.0f);
     }
 
-    // TODO : Place in ParticleFactory
+    // TODO : Place in ParticleFactory, maybe?. Was too lazy
     public static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
         WrapperPlayServerWorldParticles particles = new WrapperPlayServerWorldParticles();
         particles.setParticleType(particle);
