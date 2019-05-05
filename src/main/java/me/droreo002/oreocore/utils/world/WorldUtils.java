@@ -1,17 +1,25 @@
 package me.droreo002.oreocore.utils.world;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.droreo002.oreocore.OreoCore;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class WorldUtils {
+
+    // TODO : Check for version compatibility
+//    public static void createFakeExplosion(Location location, Player player) {
+//        Validate.notNull(location, "Location cannot be null!");
+//        location.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, );
+//    }
 
     public static void createExplosion(Location location) {
         Validate.notNull(location, "Location cannot be null!");

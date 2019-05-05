@@ -202,14 +202,13 @@ public class CustomItem extends ItemStack {
      * @param second : The item 2
      * @return true if both item is the same, false otherwise
      */
-    public static boolean isSimilar(ItemStack first,ItemStack second){
+    public static boolean isSimilar(ItemStack first,ItemStack second) {
 
         boolean similar = false;
 
-        if (first == null || second == null) return similar;
+        if (first == null || second == null) return false;
         boolean sameType = (first.getType() == second.getType());
         boolean sameDurability = (first.getDurability() == second.getDurability());
-        boolean sameAmount = (first.getAmount() == second.getAmount());
         boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
         boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
         boolean sameItemMeta = true;
@@ -218,7 +217,7 @@ public class CustomItem extends ItemStack {
             sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
         }
 
-        if (sameType && sameDurability && sameAmount && sameHasItemMeta && sameEnchantments && sameItemMeta){
+        if (sameType && sameDurability && sameHasItemMeta && sameEnchantments && sameItemMeta){
             similar = true;
         }
 
