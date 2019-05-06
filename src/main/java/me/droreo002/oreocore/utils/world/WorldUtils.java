@@ -1,7 +1,11 @@
 package me.droreo002.oreocore.utils.world;
 
+import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.enums.Sounds;
+import me.droreo002.oreocore.utils.bridge.BridgeUtils;
+import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -9,21 +13,34 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class WorldUtils {
 
-    // TODO : Check for version compatibility
-//    public static void createFakeExplosion(Location location, Player player) {
-//        Validate.notNull(location, "Location cannot be null!");
-//        location.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, );
-//    }
-
-    public static void createExplosion(Location location) {
+    /**
+     * Create a fake explosion on that location for that player
+     *
+     * @param location : The location
+     * @param player : The player
+     */
+    public static void createFakeExplosion(Location location, Player player) {
         Validate.notNull(location, "Location cannot be null!");
-        location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), 5f, false, false);
+        BridgeUtils.playParticles(player, EnumWrappers.Particle.EXPLOSION_HUGE, 5, location, new Vector(0D,0D, 0D));
+        new SoundObject(Sounds.EXPLODE).send(player);
+    }
+
+    /**
+     * Create an explosion on that location
+     *
+     * @param location : The location
+     * @param power : The explosion power
+     */
+    public static void createExplosion(Location location, float power) {
+        Validate.notNull(location, "Location cannot be null!");
+        location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), power, false, false);
     }
 
     public static void spawnFireWork(Location location, int detonateDelaySecond, int amount, FireworkEffect effect) {

@@ -11,5 +11,7 @@ public enum MinecraftVersion {
     v1_11_R1,
     v1_12_R1,
     v1_13_R1,
-    v1_13_R2;
+    v1_13_R2,
+    v1_14_R1,
+    FAILED_TO_GET
 }

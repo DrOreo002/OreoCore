@@ -1,12 +1,16 @@
 package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.SoundObject;
+import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class CoreCommand implements CommandExecutor {
 
@@ -46,9 +50,16 @@ public class CoreCommand implements CommandExecutor {
                     plugin.getPluginConfig().getMemory().getTitleObject().send(player);
                     return true;
                 }
-                if (args[0].equalsIgnoreCase("enum-memory")){
+                if (args[0].equalsIgnoreCase("enum-memory")) {
                     sendMessage(player, "Debug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
                     sound(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-common-codec")) {
+                    sendMessage(player, "Testing common codec on server version " + ServerUtils.getServerVersion());
+                    sound(player);
+                    ItemStack item = CustomSkull.getSkullUrl("http://textures.minecraft.net/texture/3ab0263bdd76f3e418dba5bf481b921ced397d8b8a34a5561fb7beaa46ece1");
+                    player.getInventory().addItem(item);
                     return true;
                 }
             }

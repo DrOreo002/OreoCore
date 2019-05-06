@@ -8,6 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ServerUtils {
 
+    /**
+     * Get the server version as enum
+     *
+     * @return : The server version as enum
+     */
     public static MinecraftVersion getServerVersion() {
         for (MinecraftVersion version : MinecraftVersion.values()) {
             String currentVersion = getVersion();
@@ -16,7 +21,7 @@ public final class ServerUtils {
                 return version;
             }
         }
-        return null;
+        return MinecraftVersion.FAILED_TO_GET;
     }
 
     public static boolean isPluginInstalled(String plugin) {
@@ -39,6 +44,13 @@ public final class ServerUtils {
         Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
+    /**
+     * Get the minecraft server version as String
+     *
+     * Deprecated, please use getServerVersion instead
+     * @return : The string valur
+     */
+    @Deprecated
     private static String getVersion() {
         String version;
         try {
