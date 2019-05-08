@@ -1,6 +1,5 @@
 package me.droreo002.oreocore.commands;
 
-import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+
+import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class CommandHandler implements CommandExecutor, TabCompleter {
 
@@ -24,13 +25,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             if (commandSender instanceof Player) {
                                 if (argument.isConsoleOnly()) {
                                     argument.error(commandSender);
-                                    commandSender.sendMessage(StringUtils.color(argument.getConsoleOnlyMessage()));
+                                    commandSender.sendMessage(color(argument.getConsoleOnlyMessage()));
                                     return true;
                                 }
                                 if (argument.getPermission() != null) {
                                     Player player = (Player) commandSender;
                                     if (!player.hasPermission(argument.getPermission())) {
-                                        player.sendMessage(StringUtils.color(argument.getNoPermissionMessage()));
+                                        player.sendMessage(color(argument.getNoPermissionMessage()));
                                         argument.error(player);
                                         return true;
                                     }
@@ -38,7 +39,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             } else {
                                 if (argument.isPlayerOnly()) {
                                     argument.error(commandSender);
-                                    commandSender.sendMessage(StringUtils.color(argument.getPlayerOnlyMessage()));
+                                    commandSender.sendMessage(color(argument.getPlayerOnlyMessage()));
                                     return true;
                                 }
                             }
@@ -46,7 +47,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             return true;
                         } else {
                             if (cmd.getArgumentNotFoundMessage() != null) {
-                                commandSender.sendMessage(cmd.getArgumentNotFoundMessage());
+                                commandSender.sendMessage(color(cmd.getArgumentNotFoundMessage()));
                                 if (commandSender instanceof Player) cmd.errorSound(commandSender);
                             }
                             return true;

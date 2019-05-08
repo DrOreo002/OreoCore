@@ -142,7 +142,7 @@ public class TimeStampUtils {
      * @return The edited TimeStamp
      */
     public Timestamp addDays(int days, Timestamp t1) {
-        Long miliseconds = TimeUnit.DAYS.toMillis(days);
+        long miliseconds = TimeUnit.DAYS.toMillis(days);
         return new Timestamp(t1.getTime() + miliseconds);
     }
 
