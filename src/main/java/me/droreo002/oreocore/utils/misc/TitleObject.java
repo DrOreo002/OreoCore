@@ -2,6 +2,7 @@ package me.droreo002.oreocore.utils.misc;
 
 import lombok.Getter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.enums.Sounds;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,6 +21,8 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
     private int stay;
     @Getter
     private int fadeOut;
+    @Getter
+    private SoundObject soundOnSend;
 
     public TitleObject() {
         this.title = "Dummy";
@@ -27,17 +30,20 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         this.fadeIn = 1;
         this.stay = 1;
         this.fadeOut = 1;
+        this.soundOnSend = null;
     }
 
-    public TitleObject(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+    public TitleObject(String title, String subTitle, int fadeIn, int stay, int fadeOut, SoundObject soundOnSend) {
         this.title = title;
         this.subTitle = subTitle;
         this.fadeIn = fadeIn;
         this.stay = stay;
         this.fadeOut = fadeOut;
+        this.soundOnSend = soundOnSend;
     }
 
     public void send(Player player) {
+        if (soundOnSend != null) soundOnSend.send(player);
         player.sendTitle(color(title), color(subTitle), fadeIn, stay, fadeOut);
     }
 
@@ -49,7 +55,12 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         int fadeIn = section.getInt("fade-in");
         int stay = section.getInt("stay");
         int fadeOut = section.getInt("fade-out");
-        return new TitleObject(title, subTitle, fadeIn, stay, fadeOut);
+        SoundObject soundOnSend = null;
+        if (section.isSet("soundOnSend")) {
+            final Sounds s = Sounds.fromString(section.getString("soundOnSend"));
+            if (s != null) soundOnSend = new SoundObject(s);
+        }
+        return new TitleObject(title, subTitle, fadeIn, stay, fadeOut, soundOnSend);
     }
 
     @Override
