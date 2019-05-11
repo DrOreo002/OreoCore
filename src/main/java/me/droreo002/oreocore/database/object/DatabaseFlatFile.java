@@ -95,7 +95,7 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
-     * Setup the FileConfiguration, this will also call the setup method. This is different from the load data
+     * Setup the FileConfiguration, this will also call the SetupCallback method. This is different from the load data
      *
      * @param fileName : The file name
      */
@@ -124,6 +124,36 @@ public abstract class DatabaseFlatFile extends Database {
         }
         addData(new Data(config, file));
         callback.callBack(SetupCallbackType.CREATED_AND_LOADED);
+    }
+
+    /**
+     * Setup the FileConfiguration, without calling the SetupCallback method
+     *
+     * @param fileName : The file name
+     */
+    public void setup(String fileName, boolean addDefault) {
+        File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
+        if (file.exists()) {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            addData(new Data(config, file));
+            return;
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        if (addDefault) {
+            addDefaults(config);
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        addData(new Data(config, file));
     }
 
     /**

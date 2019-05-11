@@ -3,6 +3,7 @@ package me.droreo002.oreocore.utils.item;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
+import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -239,7 +240,7 @@ public class CustomItem extends ItemStack {
      * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
      *                    into the specified string from the TextPlaceholder class
      * @param section : The section
-     * @return a new ItemStack if its valid section, null otherwise
+     * @return a new ItemStack if its valid section. This is a non nullable method
      */
     @SuppressWarnings("deprecation")
     public static ItemStack fromSection(ConfigurationSection section, TextPlaceholder placeholder) {
@@ -255,7 +256,6 @@ public class CustomItem extends ItemStack {
 
         if (placeholder != null) {
             for (TextPlaceholder place : placeholder.getPlaceholders()) {
-
                 switch (place.getType()) {
                     case DISPLAY_NAME:
                         for (TextPlaceholder t : place.getPlaceholders()) {
@@ -267,10 +267,32 @@ public class CustomItem extends ItemStack {
                     case LORE:
                         if (!lore.isEmpty()) {
                             for (TextPlaceholder t : place.getPlaceholders()) {
-                                lore = lore.stream().map(s -> {
-                                    if (s.contains(t.getFrom())) return s.replace(t.getFrom(), t.getTo());
-                                    return s;
-                                }).collect(Collectors.toList());
+                                if (t.isLorePlaceholder()) {
+                                    List<Integer> index = new ArrayList<>();
+                                    for (int i = 0; i < lore.size(); i++) {
+                                        final String s = lore.get(i);
+                                        if (s.contains(t.getFrom())) {
+                                            lore.set(i, s.replace(t.getFrom(), ""));
+                                            index.add(i);
+                                        }
+                                    }
+
+                                    List<String> lores = ListUtils.toList(t.getTo());
+                                    for (int i : index) {
+                                        int start = i+1;
+                                        try {
+                                            lore.addAll(start, lores);
+                                        } catch (IndexOutOfBoundsException e) {
+                                            lore.add(" ");
+                                            lore.addAll(start, lores);
+                                        }
+                                    }
+                                } else {
+                                    lore = lore.stream().map(s -> {
+                                        if (s.contains(t.getFrom())) return s.replace(t.getFrom(), t.getTo());
+                                        return s;
+                                    }).collect(Collectors.toList());
+                                }
                             }
                         }
                         break;
@@ -285,11 +307,6 @@ public class CustomItem extends ItemStack {
         } else {
             res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount);
         }
-        ItemMeta meta = res.getItemMeta();
-        if (displayName != null) meta.setDisplayName(color(displayName));
-        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
-        if (glow) meta.setUnbreakable(true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 
         if (material.equalsIgnoreCase(XMaterial.PLAYER_HEAD.parseMaterial().toString())) {
             if (texture != null) {
@@ -297,8 +314,14 @@ public class CustomItem extends ItemStack {
             }
         }
 
-        if (res == null) return null;
+        ItemMeta meta = res.getItemMeta();
+        if (meta == null) return res;
+        if (displayName != null) meta.setDisplayName(color(displayName));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
+        if (glow) meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
         res.setItemMeta(meta);
+
         return res;
     }
 }

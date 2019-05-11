@@ -32,7 +32,14 @@ public final class ItemUtils {
                 }
                 return builder.toString();
             } else {
-                return "";
+                StringBuilder builder = new StringBuilder();
+                String[] arr = item.getType().toString().split("_");
+                for (int i = 0; i <= (arr.length - 1); i++) {
+                    if (i != arr.length) { // Last one
+                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
+                    }
+                }
+                return builder.toString();
             }
         }
         ItemMeta meta = item.getItemMeta();
@@ -49,7 +56,14 @@ public final class ItemUtils {
                 }
                 return builder.toString();
             } else {
-                return "";
+                StringBuilder builder = new StringBuilder();
+                String[] arr = item.getType().toString().split("_");
+                for (int i = 0; i <= (arr.length - 1); i++) {
+                    if (i != arr.length) { // Last one
+                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
+                    }
+                }
+                return builder.toString();
             }
         }
         return meta.getDisplayName();

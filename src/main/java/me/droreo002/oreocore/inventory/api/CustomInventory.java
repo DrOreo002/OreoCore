@@ -279,7 +279,7 @@ public abstract class CustomInventory implements InventoryHolder {
             }
         } else {
             if (buttonMap.containsKey(slot)) {
-                throw new IllegalStateException("Please select other empty slot!");
+                throw new IllegalStateException("Slot " + slot + " already occupied");
             }
             buttonMap.put(slot, button);
         }
