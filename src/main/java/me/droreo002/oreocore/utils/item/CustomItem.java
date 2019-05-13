@@ -1,24 +1,25 @@
 package me.droreo002.oreocore.utils.item;
 
 import me.droreo002.oreocore.enums.XMaterial;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
+@SerializableAs("CustomItem")
 public class CustomItem extends ItemStack {
 
     public static final ItemStack LBLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
@@ -323,5 +324,25 @@ public class CustomItem extends ItemStack {
         res.setItemMeta(meta);
 
         return res;
+    }
+
+    /**
+     * Convert this CustomItem to a section
+     *
+     * @param config : The config target
+     * @param path : The path to save
+     */
+    public void toSection(FileConfiguration config, String path) {
+        config.set(path + ".material", this.getType().toString());
+        config.set(path + ".itemID", this.getDurability());
+        config.set(path + ".amount", this.getAmount());
+        if (getItemMeta() != null) {
+            if (getItemMeta().hasDisplayName()) config.set(path + ".name", getItemMeta().getDisplayName());
+            if (getItemMeta().hasLore()) config.set(path + ".lore", getItemMeta().getLore());
+        }
+        if (getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
+
+        }
+        config.set(path + ".glow", false);
     }
 }

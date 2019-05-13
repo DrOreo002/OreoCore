@@ -64,7 +64,6 @@ public final class PlayerUtils {
      */
     @SuppressWarnings("deprecation")
     public static void getOfflinePlayer(String name, TaskChainTasks.LastTask<OfflinePlayer> callback) {
-        Stopwatch watch = Stopwatch.createStarted();
         TaskChain<OfflinePlayer> chain = ThreadingUtils.makeChain();
         chain.asyncFirst(() -> Bukkit.getOfflinePlayer(name)).asyncLast(callback).execute();
     }

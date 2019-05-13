@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeStampUtils {
 
+    public static final TimeStampUtils DEFAULT = new TimeStampUtils("dd/MM/yyyy");
+
     @Getter
     private String timeStampFormat;
     @Getter
@@ -24,7 +26,7 @@ public class TimeStampUtils {
     }
 
     public TimeStampUtils() {
-        this.timeStampFormat = "dd/M/yyyy hh:mm:ss";
+        this.timeStampFormat = "dd/MM/yyyy hh:mm:ss";
         this.dateFormat = new SimpleDateFormat(timeStampFormat);
     }
 
@@ -48,10 +50,7 @@ public class TimeStampUtils {
                 data = addHour(value, data);
                 break;
             case DAY:
-                data = addDays(value, data);
-                break;
-            default:
-                data = addMinute(value, data);
+                data = addDay(value, data);
                 break;
         }
         return data;
@@ -77,10 +76,7 @@ public class TimeStampUtils {
                 data = addHour(value, data);
                 break;
             case DAY:
-                data = addDays(value, data);
-                break;
-            default:
-                data = addMinute(value, data);
+                data = addDay(value, data);
                 break;
         }
         return data.before(getCurrentTimestamp());
@@ -92,7 +88,7 @@ public class TimeStampUtils {
      * @return a new TimeStamp object
      */
     public Timestamp getCurrentTimestamp() {
-        return convertStringToTimestamp(new SimpleDateFormat(timeStampFormat).format(new Date()));
+        return convertStringToTimestamp(dateFormat.format(new Date()));
     }
 
     /**
@@ -101,7 +97,7 @@ public class TimeStampUtils {
      * @return The Result as a string
      */
     public String getCurrentTimestampString() {
-        return new SimpleDateFormat(timeStampFormat).format(new Date());
+        return dateFormat.format(new Date());
     }
 
     /**
@@ -111,7 +107,7 @@ public class TimeStampUtils {
      * @return The string result
      */
     public String convertTimestampToString(Timestamp time) {
-        return new SimpleDateFormat(timeStampFormat).format(time);
+        return dateFormat.format(time);
     }
 
     /**
@@ -138,12 +134,15 @@ public class TimeStampUtils {
      * Add days into the TimeStamp
      *
      * @param days : How much to add?
-     * @param t1 : The TimeStamp object that will get edited
+     * @param timestamp : The TimeStamp object that will get edited
      * @return The edited TimeStamp
      */
-    public Timestamp addDays(int days, Timestamp t1) {
-        long miliseconds = TimeUnit.DAYS.toMillis(days);
-        return new Timestamp(t1.getTime() + miliseconds);
+    public Timestamp addDay(int days, Timestamp timestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+
+        cal.add(Calendar.DAY_OF_WEEK, days);
+        return new Timestamp(cal.getTime().getTime());
     }
 
     /**

@@ -8,7 +8,6 @@ import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,14 +53,13 @@ public final class CustomSkull {
      */
     public static ItemStack getSkullUrl(final String url) {
         if (CACHE.containsKey(url)) return CACHE.get(url);
-        final Base64 base64 = new Base64();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
         PropertyMap propertyMap = profile.getProperties();
 
         if (propertyMap == null) throw new IllegalStateException("Profile doesn't contain a property map");
 
-        byte[] encodedData = base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
 
         propertyMap.put("textures", new Property("textures", new String(encodedData)));
 
@@ -93,6 +91,25 @@ public final class CustomSkull {
         final PropertyMap propertyMap = profile.getProperties();
         propertyMap.put("textures", new Property("textures", texture));
         return profile;
+    }
+
+    /**
+     * Get the head texture
+     *
+     * @param item : The head item
+     * @return the texture if available, empty string otherwise
+     */
+    public static String getTexture(ItemStack item) {
+        final SkullMeta headMeta = (SkullMeta) item.getItemMeta();
+        GameProfile gameProfile;
+        try {
+            gameProfile = (GameProfile) BukkitReflectionUtils.getValue(headMeta, true, "profile");
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return "";
+        }
+        Property property = gameProfile.getProperties().get("textures").iterator().next();
+        return new String(Base64.getDecoder().decode(property.getValue().getBytes()));
     }
 
     /**

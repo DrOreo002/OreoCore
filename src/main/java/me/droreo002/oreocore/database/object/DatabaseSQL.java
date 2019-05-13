@@ -515,7 +515,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     @Override
     public Future<Map<String, List<Object>>> queryMultipleRowsAsync(String statement, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture((Callable<Map<String, List<Object>>>) () -> {
+        return ThreadingUtils.makeFuture(() -> {
             PreparedStatement ps = null;
             ResultSet rs = null;
             Connection con = getNewConnection();
@@ -582,39 +582,36 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         final String tableFixed = "`" + table + "`";
         final String columnFixed = "`" + column + "`";
-        return ThreadingUtils.makeFuture(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                PreparedStatement pre = null;
-                Connection con = null;
-                ResultSet res = null;
+        return ThreadingUtils.makeFuture(() -> {
+            PreparedStatement pre = null;
+            Connection con = null;
+            ResultSet res = null;
+            try {
+                con = getConnection();
+                pre = con.prepareStatement("SELECT * FROM " + tableFixed + " WHERE " + columnFixed + " = ?");
+                pre.setString(1, data);
+                res = pre.executeQuery();
+                return res.next();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            } finally {
                 try {
-                    con = getConnection();
-                    pre = con.prepareStatement("SELECT * FROM " + tableFixed + " WHERE " + columnFixed + " = ?");
-                    pre.setString(1, data);
-                    res = pre.executeQuery();
-                    return res.next();
-                } catch (Exception e) {
+                    if (pre != null) {
+                        pre.close();
+                    }
+                    if (res != null) {
+                        res.close();
+                    }
+                    if (!sqlType.equals(SQLType.SQL_BASED)) {
+                        // Close if not normal sql
+                        if (con != null) {
+                            con.close();
+                        }
+                    }
+                } catch (SQLException e) {
                     e.printStackTrace();
                     return false;
-                } finally {
-                    try {
-                        if (pre != null) {
-                            pre.close();
-                        }
-                        if (res != null) {
-                            res.close();
-                        }
-                        if (!sqlType.equals(SQLType.SQL_BASED)) {
-                            // Close if not normal sql
-                            if (con != null) {
-                                con.close();
-                            }
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
                 }
             }
         });

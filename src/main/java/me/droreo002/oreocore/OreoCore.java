@@ -18,9 +18,11 @@ import me.droreo002.oreocore.inventory.listener.CustomInventoryListener;
 import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
 import me.droreo002.oreocore.listeners.PlayerListener;
 import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,6 +65,7 @@ public final class OreoCore extends JavaPlugin {
         essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         protocolManager = ProtocolLibrary.getProtocolManager();
         HookUtils.getInstance(); // Initialize
+        ConfigurationSerialization.registerClass(CustomItem.class);
 
         // Registering
         Bukkit.getPluginManager().registerEvents(new CustomInventoryListener(), this);

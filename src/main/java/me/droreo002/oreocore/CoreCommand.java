@@ -1,6 +1,7 @@
 package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
+import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -55,11 +56,24 @@ public class CoreCommand implements CommandExecutor {
                     sound(player);
                     return true;
                 }
-                if (args[0].equalsIgnoreCase("test-common-codec")) {
-                    sendMessage(player, "Testing common codec on server version " + ServerUtils.getServerVersion());
+                if (args[0].equalsIgnoreCase("test-get-head")) {
+                    sendMessage(player, "Testing get-head on server version " + ServerUtils.getServerVersion());
                     sound(player);
                     ItemStack item = CustomSkull.getSkullUrl("http://textures.minecraft.net/texture/3ab0263bdd76f3e418dba5bf481b921ced397d8b8a34a5561fb7beaa46ece1");
                     player.getInventory().addItem(item);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-get-texture")) {
+                    sendMessage(player, "Testing get-texture on server version " + ServerUtils.getServerVersion());
+                    sound(player);
+                    ItemStack item = player.getInventory().getItemInMainHand();
+                    if (item == null || !item.getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
+                        sound(player);
+                        sendMessage(commandSender, "Please put the head on your main hand");
+                        return true;
+                    }
+                    sound(player);
+                    sendMessage(player, "Texture are " + CustomSkull.getTexture(item));
                     return true;
                 }
             }
