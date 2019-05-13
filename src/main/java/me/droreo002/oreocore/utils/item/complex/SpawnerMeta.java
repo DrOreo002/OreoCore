@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.utils.item.namingSupport;
+package me.droreo002.oreocore.utils.item.complex;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.meta.ItemMeta;

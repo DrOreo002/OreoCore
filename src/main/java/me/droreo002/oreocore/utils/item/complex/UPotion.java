@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.utils.item.namingSupport;
+package me.droreo002.oreocore.utils.item.complex;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;

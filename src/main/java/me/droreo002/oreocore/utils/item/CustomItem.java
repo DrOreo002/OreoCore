@@ -341,7 +341,10 @@ public class CustomItem extends ItemStack {
             if (getItemMeta().hasLore()) config.set(path + ".lore", getItemMeta().getLore());
         }
         if (getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
-
+            String texture = CustomSkull.getTexture(this);
+            if (!texture.equals("")) {
+                config.set(path + ".texture", texture);
+            }
         }
         config.set(path + ".glow", false);
     }

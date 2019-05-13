@@ -105,7 +105,6 @@ public final class CustomSkull {
         try {
             gameProfile = (GameProfile) BukkitReflectionUtils.getValue(headMeta, true, "profile");
         } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
             return "";
         }
         Property property = gameProfile.getProperties().get("textures").iterator().next();
