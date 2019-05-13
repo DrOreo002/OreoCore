@@ -29,6 +29,7 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+@Deprecated
 public enum XMaterial {
 
     ACACIA_BOAT(0, "BOAT_ACACIA"),
