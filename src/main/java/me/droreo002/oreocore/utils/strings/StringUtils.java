@@ -1,9 +1,13 @@
 package me.droreo002.oreocore.utils.strings;
 
+import me.droreo002.oreocore.enums.Currency;
 import me.droreo002.oreocore.utils.misc.MathUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,11 +132,29 @@ public final class StringUtils {
         return m.find();
     }
 
-    public static String formatNumber(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format("%.1f %c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
+    /**
+     * Format the long value to readAble
+     * @param value : The long value
+     * @return readable format. Example : 1000 to 1k
+     */
+    public static String formatToReadable(long value, Map<Currency, String> format) {
+        if (format.size() < 3) throw new IllegalStateException("Please add all currency format to the map!"); // Not all of Currency is set
+        final NavigableMap<Long, String> suffixes = new TreeMap<>();
+        suffixes.put(1_000L, format.get(Currency.THOUSANDS));
+        suffixes.put(1_000_000L, format.get(Currency.MILLIONS));
+        suffixes.put(1_000_000_000L, format.get(Currency.BILLIONS));
+        suffixes.put(1_000_000_000_000L, format.get(Currency.TRILLIONS));
+        
+        if (value == Long.MIN_VALUE) return formatToReadable(Long.MIN_VALUE + 1, format);
+        if (value < 0) return "-" + formatToReadable(-value, format);
+        if (value < 1000) return Long.toString(value); //deal with easy case
+
+        Map.Entry<Long, String> e = suffixes.floorEntry(value);
+        Long divideBy = e.getKey();
+        String suffix = e.getValue();
+
+        long truncated = value / (divideBy / 10); //the number part of the output times 10
+        boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
+        return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
     }
 }
