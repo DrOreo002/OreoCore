@@ -2,6 +2,8 @@ package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
+import me.droreo002.oreocore.inventory.debug.InventoryAnimationDebug;
+import me.droreo002.oreocore.inventory.debug.PInventoryAnimationDebug;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -74,6 +76,30 @@ public class CoreCommand implements CommandExecutor {
                     }
                     sound(player);
                     sendMessage(player, "Texture are " + CustomSkull.getTexture(item));
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-animated-inventory")) {
+                    sendMessage(player, "Please select the type (CustomInventory, PaginatedInventory)");
+                    sound(player);
+                    return true;
+                }
+            }
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("test-animated-inventory")) {
+                    String type = args[1];
+
+                    switch (type.toLowerCase()) {
+                        case "custominventory":
+                            sendMessage(player, "Testing animated-inventory on server version " + ServerUtils.getServerVersion());
+                            sound(player);
+                            new InventoryAnimationDebug().open(player);
+                            return true;
+                        case "paginatedinventory":
+                            sendMessage(player, "Testing animated-inventory on server version " + ServerUtils.getServerVersion());
+                            sound(player);
+                            new PInventoryAnimationDebug().open(player);
+                            return true;
+                    }
                     return true;
                 }
             }

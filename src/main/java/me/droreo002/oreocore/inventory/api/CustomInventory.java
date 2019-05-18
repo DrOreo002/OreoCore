@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.XMaterial;
-import me.droreo002.oreocore.inventory.api.animation.ItemAnimation;
+import me.droreo002.oreocore.inventory.api.animation.IAnimatedInventory;
+import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
+import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
+import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.apache.commons.lang.Validate;
@@ -19,34 +23,43 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
-public abstract class CustomInventory implements InventoryHolder {
+public abstract class CustomInventory implements InventoryHolder, IAnimatedInventory, OreoInventory {
 
     private Inventory inventory;
 
     @Getter
-    private final Map<Integer, ItemAnimation> animationButtonMap = new HashMap<>();
+    private final Set<GUIButton> buttons;
     @Getter
-    private final Map<Integer, GUIButton> buttonMap = new HashMap<>();
-    @Getter
-    private final Map<String, InventoryPanel> panels = new HashMap<>();
+    private final Map<String, InventoryPanel> panels;
     @Getter
     private int size;
     @Getter
     private String title;
+    @Getter
+    private boolean containsAnimation;
+
     @Getter @Setter
-    private boolean shouldProcessButton, containsAnimation, cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
+    private int animationId;
+    @Getter @Setter
+    private boolean shouldProcessButton, cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
     @Getter @Setter
     private List<Integer> noClickCancel; // Don't cancel the click event on these slots
     @Getter @Setter
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
 
     public CustomInventory(int size, String title) {
+        this.buttons = new HashSet<>();
+        this.panels = new HashMap<>();
         this.size = size;
         this.title = title;
         this.inventory = Bukkit.createInventory(this, size, title);
@@ -54,27 +67,6 @@ public abstract class CustomInventory implements InventoryHolder {
         this.shouldProcessButton = true;
         this.noClickCancel = new ArrayList<>();
     }
-
-    /**
-     * Called when click event is called, will only be called if its a valid custom inventory
-     *
-     * @param e : The click event object
-     */
-    public abstract void onClick(InventoryClickEvent e);
-
-    /**
-     * Called when close event is called, will only be called if its a valid custom inventory
-     *
-     * @param e : The close event object
-     */
-    public abstract void onClose(InventoryCloseEvent e);
-
-    /**
-     * Called when the open event is called, will only be called if its a valid custom inventory
-     *
-     * @param e : The open event object
-     */
-    public abstract void onOpen(InventoryOpenEvent e);
 
     /**
      * Called at the first time when the vanilla click event is called. And if the inventory is a valid
@@ -92,7 +84,8 @@ public abstract class CustomInventory implements InventoryHolder {
      *
      * @param player : Target player
      */
-    public void close(Player player) {
+    @Override
+    public void closeInventory(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
@@ -102,7 +95,8 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param player : Target player
      * @param inventory : Inventory to open
      */
-    public void open(Player player, Inventory inventory) {
+    @Override
+    public void openInventory(Player player, Inventory inventory) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
     }
 
@@ -112,7 +106,8 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param player : Target player
      * @param soundWhenClose : The sound that will get played when the inventory closes
      */
-    public void close(Player player, SoundObject soundWhenClose) {
+    @Override
+    public void closeInventory(Player player, SoundObject soundWhenClose) {
         if (soundWhenClose != null) {
             soundWhenClose.send(player);
         }
@@ -126,7 +121,8 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param inventory : The inventory
      * @param soundWhenOpen : The shounds that will get played when the inventory opens
      */
-    public void open(Player player, Inventory inventory, SoundObject soundWhenOpen) {
+    @Override
+    public void openInventory(Player player, Inventory inventory, SoundObject soundWhenOpen) {
         if (soundWhenOpen != null) {
             soundWhenOpen.send(player);
         }
@@ -138,21 +134,20 @@ public abstract class CustomInventory implements InventoryHolder {
      *
      * @param player : Target player
      */
+    @Override
     public void open(Player player) {
-        for (Map.Entry ent : buttonMap.entrySet()) {
-            int slot = (int) ent.getKey();
-            GUIButton button = (GUIButton) ent.getValue();
-            inventory.setItem(slot, button.getItem());
-        }
+        setup();
+        openInventory(player, getInventory());
+    }
 
-        if (!animationButtonMap.isEmpty()) {
-            if (!panels.isEmpty()) throw new IllegalStateException("Panel support for AnimationButton is currently WIP!");
-            containsAnimation = true;
-            for (Map.Entry ent : animationButtonMap.entrySet()) {
-                int slot = (int) ent.getKey();
-                ItemAnimation button = (ItemAnimation) ent.getValue();
-                inventory.setItem(slot, button.getItem());
-            }
+    /**
+     * Setup the inventory
+     */
+    @Override
+    public void setup() {
+        for (GUIButton button : buttons) {
+            if (button.isAnimated()) containsAnimation = true;
+            inventory.setItem(button.getInventorySlot(), button.getItem());
         }
 
         if (!panels.isEmpty()) {
@@ -163,9 +158,8 @@ public abstract class CustomInventory implements InventoryHolder {
                         inventory.setItem(i, XMaterial.AIR.parseItem(false));
                     }
                 }
-                for (Map.Entry pButtonEnt : panel.getButtons().entrySet()) {
-                    int slot = (int) pButtonEnt.getKey();
-                    GUIButton button = (GUIButton) pButtonEnt.getValue();
+                for (GUIButton button : panel.getButtons()) {
+                    final int slot = button.getInventorySlot();
 
                     if (panel.isShouldOverrideOtherButton()) {
                         inventory.setItem(slot, button.getItem());
@@ -177,81 +171,16 @@ public abstract class CustomInventory implements InventoryHolder {
                 }
             }
         }
-
-        open(player, getInventory());
-    }
-
-    /**
-     * Open the custom inventory via async way
-     *
-     * @param player : Target player
-     */
-    public void openAsync(Player player) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
-            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-            chain.asyncFirst(() -> {
-                for (Map.Entry ent : buttonMap.entrySet()) {
-                    int slot = (int) ent.getKey();
-                    GUIButton button = (GUIButton) ent.getValue();
-                    inventory.setItem(slot, button.getItem());
-                }
-
-                if (!animationButtonMap.isEmpty()) {
-                    if (!panels.isEmpty()) throw new IllegalStateException("Panel support for AnimationButton is currently WIP!");
-                    containsAnimation = true;
-                    for (Map.Entry ent : animationButtonMap.entrySet()) {
-                        int slot = (int) ent.getKey();
-                        ItemAnimation button = (ItemAnimation) ent.getValue();
-                        inventory.setItem(slot, button.getItem());
-                    }
-                }
-
-                if (!panels.isEmpty()) {
-                    for (Map.Entry ent : panels.entrySet()) {
-                        InventoryPanel panel = (InventoryPanel) ent.getValue();
-                        if (panel.isShouldOverrideOtherButton()) { // Remove every single thing inside
-                            for (int i : panel.getSlots()) {
-                                inventory.setItem(i, XMaterial.AIR.parseItem(false));
-                            }
-                        }
-                        for (Map.Entry pButtonEnt : panel.getButtons().entrySet()) {
-                            int slot = (int) pButtonEnt.getKey();
-                            GUIButton button = (GUIButton) pButtonEnt.getValue();
-
-                            if (panel.isShouldOverrideOtherButton()) {
-                                inventory.setItem(slot, button.getItem());
-                            } else {
-                                if (inventory.getItem(slot) != null) {
-                                    inventory.setItem(slot, button.getItem());
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return inventory;
-            }).asyncLast(player::openInventory).execute();
-        }, 1L);
     }
 
     /**
      * Reset the inventory, will set it to default
      */
     public void reset() {
-        for (Map.Entry ent : buttonMap.entrySet()) {
-            int slot = (int) ent.getKey();
-            GUIButton button = (GUIButton) ent.getValue();
-            inventory.setItem(slot, button.getItem());
+        for (int slot = 0; slot < size; slot++) {
+            if (getInventory().getItem(slot) != null) getInventory().setItem(slot, UMaterial.AIR.getItemStack()); // Remove the whole shit
         }
-
-        if (!animationButtonMap.isEmpty()) {
-            containsAnimation = true;
-            for (Map.Entry ent : animationButtonMap.entrySet()) {
-                int slot = (int) ent.getKey();
-                ItemAnimation button = (ItemAnimation) ent.getValue();
-                inventory.setItem(slot, button.getItem());
-            }
-        }
+        setup();
 
         for (HumanEntity ent : inventory.getViewers()) {
             if (ent == null) continue;
@@ -264,49 +193,47 @@ public abstract class CustomInventory implements InventoryHolder {
     /**
      * Add a button into the inventory
      *
-     * @param slot : The slot to put it
      * @param button : The button object
      * @param replaceIfExist : Do we need to replace the button if it already exists at that slot?
      */
-    public void addButton(int slot, GUIButton button, boolean replaceIfExist) {
+    @Override
+    public void addButton(GUIButton button, boolean replaceIfExist) {
         Validate.notNull(button, "Button cannot be null!");
         if (replaceIfExist) {
-            if (buttonMap.containsKey(slot)) {
-                buttonMap.remove(slot);
-                buttonMap.put(slot, button);
+            if (isHasButton(button.getInventorySlot())) {
+                removeButton(button.getInventorySlot());
+                buttons.add(button);
             } else {
-                buttonMap.put(slot, button);
+                buttons.add(button);
             }
+            getInventory().setItem(button.getInventorySlot(), button.getItem());
         } else {
-            if (buttonMap.containsKey(slot)) {
-                throw new IllegalStateException("Slot " + slot + " already occupied");
+            if (isHasButton(button.getInventorySlot())) {
+                throw new IllegalStateException("Slot " + button.getInventorySlot() + " already occupied");
             }
-            buttonMap.put(slot, button);
+            buttons.add(button);
         }
     }
 
     /**
-     * Add a AnimatedButton into the inventory
+     * Check if that slot contains button
      *
-     * @param slot : The slot to put it
-     * @param button : The button object (Animated)
-     * @param replaceIfExist : Do we need to replace the button if it already exists at that slot?
+     * @param slot : The slot to check
+     * @return true if contains, false otherwise
      */
-    public void addAnimatedButton(int slot, ItemAnimation button, boolean replaceIfExist) {
-        Validate.notNull(button, "Button cannot be null!");
-        if (replaceIfExist) {
-            if (animationButtonMap.containsKey(slot)) {
-                animationButtonMap.remove(slot);
-                animationButtonMap.put(slot, button);
-            } else {
-                animationButtonMap.put(slot, button);
-            }
-        } else {
-            if (animationButtonMap.containsKey(slot)) {
-                throw new IllegalStateException("Please select other empty slot!");
-            }
-            animationButtonMap.put(slot, button);
-        }
+    @Override
+    public boolean isHasButton(int slot) {
+        return buttons.stream().anyMatch(button -> button.getInventorySlot() == slot);
+    }
+
+    /**
+     * Remove the button
+     *
+     * @param slot : The button slot to remove
+     */
+    @Override
+    public void removeButton(int slot) {
+        buttons.removeIf(button -> button.getInventorySlot() == slot);
     }
 
     /**
@@ -316,11 +243,51 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param border : The item
      * @param replaceIfExist : Replace if there's something on the row?
      */
+    @Override
     public void addBorder(int row, ItemStack border, boolean replaceIfExist) {
         if (row < 0) throw new IllegalStateException("Row cannot be 0!");
         for (int i = row * 9; i < (row * 9) + 9; i++) {
-            addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
+            addButton(new GUIButton(border, i).setListener(GUIButton.CLOSE_LISTENER), replaceIfExist);
         }
+    }
+
+    @Override
+    public GUIButton getButton(int slot) {
+        return buttons.stream().filter(but -> but.getInventorySlot() == slot)
+                .findFirst().orElse(null);
+    }
+
+    /**
+     * Open the inventory for the specified player
+     *
+     * @param player : The targeted player
+     * @param delayInSecond : The delay in second before opening the inventory
+     */
+    @Override
+    public void openAsync(Player player, int delayInSecond) {
+        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
+            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+            chain.delay(delayInSecond, TimeUnit.SECONDS).asyncFirst(() -> {
+                setup();
+                return getInventory();
+            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
+        }, 1L);
+    }
+
+    /**
+     * Open the custom inventory via async way
+     *
+     * @param player : Target player
+     */
+    @Override
+    public void openAsync(Player player) {
+        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
+            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+            chain.asyncFirst(() -> {
+                setup();
+                return getInventory();
+            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
+        }, 1L);
     }
 
     /**
@@ -330,11 +297,12 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param border : The item
      * @param replaceIfExist : Replace if there's something on the row?
      */
+    @Override
     public void addBorder(int[] rows, ItemStack border, boolean replaceIfExist) {
         for (int row : rows) {
             if (row < 0) throw new IllegalStateException("Row cannot be 0!");
             for (int i = row * 9; i < (row * 9) + 9; i++) {
-                addButton(i, new GUIButton(border).setListener(e -> close((Player) e.getWhoClicked())), replaceIfExist);
+                addButton(new GUIButton(border, i).setListener(GUIButton.CLOSE_LISTENER), replaceIfExist);
             }
         }
     }
@@ -357,26 +325,15 @@ public abstract class CustomInventory implements InventoryHolder {
     }
 
     /**
-     * Check if its a button
-     *
-     * @param e : The event, we use this instead for shorter code
-     * @return true if its a button, false otherwise
-     */
-    public boolean isButton(InventoryClickEvent e) {
-        if (buttonMap.isEmpty()) return false;
-        return buttonMap.containsKey(e.getSlot());
-    }
-
-    /**
      * Update the button!, also it is really recommended to call updateInventory on the player.
      *
-     * @param slot : The new slot
      * @param button : The new button
      */
-    public void updateButton(int slot, GUIButton button) {
-        if (!buttonMap.containsKey(slot)) throw new NullPointerException("Cannot update button because no valid button found on slot " + slot);
-        getInventory().setItem(slot, button.getItem());
-        buttonMap.put(slot, button);
+    public void updateButton(GUIButton button) {
+        if (!isHasButton(button.getInventorySlot())) throw new NullPointerException("Cannot update button because no valid button found on slot " + button.getInventorySlot());
+        getInventory().setItem(button.getInventorySlot(), button.getItem());
+        removeButton(button.getInventorySlot());
+        buttons.add(button);
     }
 
     /**
@@ -385,17 +342,39 @@ public abstract class CustomInventory implements InventoryHolder {
      * @param panel : The panel object
      */
     public void addPanel(InventoryPanel panel) {
-        for (Map.Entry ent : panel.getButtons().entrySet()) {
-            int slot = (int) ent.getKey();
-            GUIButton but = (GUIButton) ent.getValue();
-
-            addButton(slot, but, panel.isShouldOverrideOtherButton());
+        for (GUIButton but : panel.getButtons()) {
+            addButton(but, panel.isShouldOverrideOtherButton());
         }
         panels.put(panel.getPanelId(), panel);
     }
 
     @Override
+    public void start() {
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory()), 0L, 5L).getTaskId();
+    }
+
+    @Override
+    public void stop() {
+        Bukkit.getScheduler().cancelTask(animationId);
+    }
+
+    @Override
     public Inventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent e) {
+
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent e) {
+
+    }
+
+    @Override
+    public void onOpen(InventoryOpenEvent e) {
+
     }
 }

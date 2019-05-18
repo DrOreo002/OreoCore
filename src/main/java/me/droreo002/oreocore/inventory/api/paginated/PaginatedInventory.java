@@ -8,15 +8,22 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.api.animation.IAnimatedInventory;
+import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
+import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomSkull;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +33,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public abstract class PaginatedInventory implements InventoryHolder {
+public abstract class PaginatedInventory implements InventoryHolder, IAnimatedInventory, OreoInventory {
 
     /*
     Variables
@@ -37,16 +44,18 @@ public abstract class PaginatedInventory implements InventoryHolder {
     private final OreoCore main = OreoCore.getInstance();
     private Inventory inventory;
 
-    @Getter
-    @Setter
+    @Getter @Setter
     private GUIButton informationButton, nextButton, backButton;
     @Getter
     private String title;
     @Getter
     private int size, totalPage, currentPage, informationButtonSlot;
-    @Getter
-    @Setter
+    @Getter @Setter
     private SoundObject openSound, closeSound, clickSound;
+    @Getter @Setter
+    private boolean hasAnimation;
+    @Getter @Setter
+    private int animationId;
 
     /*
     Lists
@@ -56,11 +65,11 @@ public abstract class PaginatedInventory implements InventoryHolder {
     @Getter
     private List<Integer> itemSlot;
     @Getter
-    private List<List<GUIButton>> items;
+    private List<List<GUIButton>> buttons;
     @Getter
-    private List<GUIButton> paginatedButton;
+    private Set<GUIButton> paginatedButton;
     @Getter
-    private Map<Integer, GUIButton> inventoryButton;
+    private Set<GUIButton> inventoryButton;
 
     public PaginatedInventory(int size, String title) {
         this.title = title;
@@ -74,10 +83,10 @@ public abstract class PaginatedInventory implements InventoryHolder {
         closeSound = new SoundObject(Sounds.BAT_TAKEOFF);
         clickSound = new SoundObject(Sounds.CLICK);
         itemSlot = new ArrayList<>();
-        paginatedButton = new ArrayList<>();
-        inventoryButton = new HashMap<>();
+        paginatedButton = new HashSet<>();
+        inventoryButton = new HashSet<>();
 
-        informationButton = new GUIButton(new CustomItem(XMaterial.PAPER.parseItem(false), "&7[ &bInformation &7]", new String[] {
+        informationButton = new GUIButton(new CustomItem(UMaterial.PAPER.getItemStack(), "&7[ &bInformation &7]", new String[] {
                 "&8&m------------------",
                 "&r",
                 "&fYou're currently on page &c%currPage",
@@ -93,11 +102,11 @@ public abstract class PaginatedInventory implements InventoryHolder {
                 nextPage(player);
             });
         } catch (Exception e) {
-            this.backButton = new GUIButton(new CustomItem(XMaterial.ARROW.parseItem(false), "&7[ &bPrevious Page &7]")).setListener(event -> {
+            this.backButton = new GUIButton(new CustomItem(UMaterial.ARROW.getItemStack(), "&7[ &bPrevious Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 prevPage(player);
             });
-            this.nextButton = new GUIButton(new CustomItem(XMaterial.ARROW.parseItem(false), "&7[ &bNext Page &7]")).setListener(event -> {
+            this.nextButton = new GUIButton(new CustomItem(UMaterial.ARROW.getItemStack(), "&7[ &bNext Page &7]")).setListener(event -> {
                 Player player = (Player) event.getWhoClicked();
                 nextPage(player);
             });
@@ -142,6 +151,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * @param button : The button object
      */
     public void addPaginatedButton(GUIButton button) {
+        if (button.isAnimated()) this.hasAnimation = true;
         paginatedButton.add(button);
     }
 
@@ -149,26 +159,38 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * Add a normal button into the inventory with specified slot
      *
      * @param button : The button object
-     * @param slot : The slot
      * @param replaceIfExist : Replace the item on the inventory if it exist already
      */
-    public void addNormalButton(GUIButton button, int slot, boolean replaceIfExist) {
+    @Override
+    public void addButton(GUIButton button, boolean replaceIfExist) {
+        if (button.isAnimated()) this.hasAnimation = true;
+        int slot = button.getInventorySlot();
         if (replaceIfExist) {
-            if (inventoryButton.containsKey(slot)) {
-                inventoryButton.remove(slot);
+            if (isHasButton(slot)) {
+                removeButton(slot);
                 inventory.setItem(slot, new ItemStack(Material.AIR));
-                inventoryButton.put(slot, button);
+                inventoryButton.add(button);
             } else {
                 inventory.setItem(slot, new ItemStack(Material.AIR));
-                inventoryButton.put(slot, button);
+                inventoryButton.add(button);
             }
         } else {
             // We don't want to add duplicated slot. Because its not replace if exist, so it also not going to replace
             // on the hashmap
-            if (!inventoryButton.containsKey(slot)) {
-                inventoryButton.put(slot, button);
+            if (!isHasButton(slot)) {
+                inventoryButton.add(button);
             }
         }
+    }
+
+    @Override
+    public boolean isHasButton(int slot) {
+        return inventoryButton.stream().anyMatch(but -> but.getInventorySlot() == slot);
+    }
+
+    @Override
+    public void removeButton(int slot) {
+        inventoryButton.removeIf(but -> but.getInventorySlot() == slot);
     }
 
     /**
@@ -184,30 +206,20 @@ public abstract class PaginatedInventory implements InventoryHolder {
         int informationSlot = (nextSlot + backSlot) / 2;
 
         this.informationButtonSlot = informationSlot;
-        addNormalButton(backButton, backSlot, true);
-        addNormalButton(nextButton, nextSlot, true);
-        addNormalButton(informationButton, informationSlot, true);
+
+        backButton.setInventorySlot(backSlot);
+        nextButton.setInventorySlot(nextSlot);
+        informationButton.setInventorySlot(informationSlot);
+
+        addButton(backButton, true);
+        addButton(nextButton, true);
+        addButton(informationButton, true);
 
         if (addBorder) {
             for (int i = backSlot; i < nextSlot; i++) {
                 if (inventory.getItem(i) == null) {
                     inventory.setItem(i, border);
                 }
-            }
-        }
-    }
-
-    /**
-     * Fill that row with the specified item. Will replace any item if there's any on that slot
-     *
-     * @param row : The inventory row
-     * @param item : The item
-     * @param replaceIfExist : Replace the item on that slot if there's any?
-     */
-    public void addBorder(int row, GUIButton item, boolean replaceIfExist) {
-        for (int i = 9 * row; i < row + 9; i++) {
-            if (replaceIfExist) {
-                addNormalButton(item, i, true);
             }
         }
     }
@@ -220,43 +232,85 @@ public abstract class PaginatedInventory implements InventoryHolder {
      */
     public void addPatternButton(boolean replaceIfExists, GUIPattern... pat) {
         for (GUIPattern pt : pat) {
-            addNormalButton(pt.getButton(), pt.getSlot(), replaceIfExists);
+            addButton(pt.getButton(), replaceIfExists);
         }
     }
 
     /**
-     * Open the inventory for the specified player
+     * Fill that row with the specified item. Will replace any item if there's any on that slot
      *
-     * @param player : The targeted player
+     * @param row : The inventory row
+     * @param item : The item
+     * @param replaceIfExist : Replace the item on that slot if there's any?
      */
-    public void open(Player player) {
+    @Override
+    public void addBorder(int row, ItemStack item, boolean replaceIfExist) {
+        for (int i = 9 * row; i < row + 9; i++) {
+            if (replaceIfExist) {
+                final GUIButton but = new GUIButton(item, i);
+                addButton(but, true);
+            }
+        }
+    }
+
+    /**
+     * Fill that row with the specified item. Will replace any item if there's any on that slot
+     *
+     * @param rows: The inventory rows
+     * @param item : The item
+     * @param replaceIfExist : Replace the item on that slot if there's any?
+     */
+    @Override
+    public void addBorder(int[] rows, ItemStack item, boolean replaceIfExist) {
+        for (int row : rows) {
+            for (int i = 9 * row; i < row + 9; i++) {
+                if (replaceIfExist) {
+                    final GUIButton but = new GUIButton(item, i);
+                    addButton(but, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Setup the inventory
+     */
+    @Override
+    public void setup() {
         if (paginatedButton.isEmpty()) {
             this.currentPage = 0;
             this.totalPage = 1;
 
-            for (Map.Entry ent : inventoryButton.entrySet()) {
-                int slot = (int) ent.getKey();
-                GUIButton button = (GUIButton) ent.getValue();
-                inventory.setItem(slot, button.getItem());
-            }
+            inventoryButton.forEach(but -> inventory.setItem(but.getInventorySlot(), but.getItem()));
+        } else {
+            // Paginate
+            this.paginator = new Paginator<>(new ArrayList<>(paginatedButton));
+            this.buttons = paginator.paginates(itemSlot.size());
+            // Specify more variables
+            this.currentPage = 0;
+            this.totalPage = paginator.totalPage(itemSlot.size()) - 1; // Somehow returned <original + 1> not sure why.
 
-            updateInformationButton();
-            main.getOpening().remove(player.getUniqueId());
-            main.getOpening().put(player.getUniqueId(), this);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> player.openInventory(inventory), 1L);
-            return;
+            setupPaginatedButtons();
+            inventoryButton.forEach(but -> inventory.setItem(but.getInventorySlot(), but.getItem()));
         }
-        // Paginate
-        this.paginator = new Paginator<>(paginatedButton);
-        this.items = paginator.paginates(itemSlot.size());
-        // Specify more variables
-        this.currentPage = 0;
-        this.totalPage = paginator.totalPage(itemSlot.size()) - 1; // Somehow returned <original + 1> not sure why.
 
-        // Add the items
+        updateInformationButton();
+    }
+
+    @Override
+    public GUIButton getButton(int slot) {
+        return inventoryButton.stream().filter(but -> but.getInventorySlot() == slot)
+                .findFirst().orElse(null);
+    }
+
+    /**
+     * Setup the paginated buttons
+     */
+    private void setupPaginatedButtons() {
+        // Add the buttons
         int toGet = 0;
         for (int i : itemSlot) {
-            List<GUIButton> but = items.get(currentPage);
+            List<GUIButton> but = buttons.get(currentPage);
             ItemStack item;
             try {
                 item = but.get(toGet).getItem();
@@ -266,19 +320,12 @@ public abstract class PaginatedInventory implements InventoryHolder {
             }
             toGet++;
             if (item == null) continue;
+            but.get(toGet - 1).setInventorySlot(i);
             inventory.setItem(i, item);
         }
 
-        for (Map.Entry ent : inventoryButton.entrySet()) {
-            int slot = (int) ent.getKey();
-            GUIButton button = (GUIButton) ent.getValue();
-            inventory.setItem(slot, button.getItem());
-        }
-
-        updateInformationButton();
-        main.getOpening().remove(player.getUniqueId());
-        main.getOpening().put(player.getUniqueId(), this);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> player.openInventory(inventory), 1L);
+        stop();
+        start();
     }
 
     /**
@@ -286,63 +333,43 @@ public abstract class PaginatedInventory implements InventoryHolder {
      *
      * @param player : The targeted player
      */
+    @Override
+    public void open(Player player) {
+        setup();
+        main.getOpening().remove(player.getUniqueId());
+        main.getOpening().put(player.getUniqueId(), this);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> openInventory(player, inventory), 1L);
+    }
+
+    @Override
+    public void openAsync(Player player) {
+        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
+            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+            chain.asyncFirst(() -> {
+                setup();
+                main.getOpening().remove(player.getUniqueId());
+                main.getOpening().put(player.getUniqueId(), this);
+                return getInventory();
+            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
+        }, 1L);
+    }
+
+    /**
+     * Open the inventory for the specified player
+     *
+     * @param player : The targeted player
+     * @param delayInSecond : The delay in second before opening the inventory
+     */
+    @Override
     public void openAsync(Player player, int delayInSecond) {
         Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
             TaskChain<Inventory> chain = ThreadingUtils.makeChain();
             chain.delay(delayInSecond, TimeUnit.SECONDS).asyncFirst(() -> {
-                if (paginatedButton.isEmpty()) {
-                    PaginatedInventory.this.currentPage = 0;
-                    PaginatedInventory.this.totalPage = 1;
-
-                    for (Map.Entry ent : inventoryButton.entrySet()) {
-                        int slot = (int) ent.getKey();
-                        GUIButton button = (GUIButton) ent.getValue();
-                        inventory.setItem(slot, button.getItem());
-                    }
-
-                    updateInformationButton();
-                    main.getOpening().remove(player.getUniqueId());
-                    main.getOpening().put(player.getUniqueId(), PaginatedInventory.this);
-                    return inventory;
-                }
-                // Paginate
-                PaginatedInventory.this.paginator = new Paginator<>(paginatedButton);
-                PaginatedInventory.this.items = paginator.paginates(itemSlot.size());
-                // Specify more variables
-                PaginatedInventory.this.currentPage = 0;
-                PaginatedInventory.this.totalPage = paginator.totalPage(itemSlot.size()) - 1; // Somehow returned <original + 1> not sure why.
-
-                // Add the items
-                int toGet = 0;
-                for (int i : itemSlot) {
-                    List<GUIButton> but = items.get(currentPage);
-                    ItemStack item;
-                    try {
-                        item = but.get(toGet).getItem();
-                    } catch (IndexOutOfBoundsException e) {
-                        toGet++;
-                        continue;
-                    }
-                    toGet++;
-                    if (item == null) continue;
-                    inventory.setItem(i, item);
-                }
-
-                for (Map.Entry ent : inventoryButton.entrySet()) {
-                    int slot = (int) ent.getKey();
-                    GUIButton button = (GUIButton) ent.getValue();
-                    inventory.setItem(slot, button.getItem());
-                }
-
-                updateInformationButton();
+                setup();
                 main.getOpening().remove(player.getUniqueId());
-                main.getOpening().put(player.getUniqueId(), PaginatedInventory.this);
-
-                return inventory;
-            }).asyncLast(player::openInventory).execute((e, task) -> {
-                System.out.println("Got an error! " + e.getMessage());
-                e.printStackTrace();
-            });
+                main.getOpening().put(player.getUniqueId(), this);
+                return getInventory();
+            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
         }, 1L);
     }
 
@@ -351,7 +378,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
      *
      * @param player : The targeted player
      */
-    public void nextPage(Player player) {
+    private void nextPage(Player player) {
         if (totalPage == 0 || (currentPage + 1) >= totalPage) {
             // No next page
             return;
@@ -363,22 +390,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
             }
         }
 
-        // Add the items
-        int toGet = 0;
-        for (int i : itemSlot) {
-            List<GUIButton> but = items.get(currentPage);
-            ItemStack item;
-            try {
-                item = but.get(toGet).getItem();
-            } catch (IndexOutOfBoundsException e) {
-                toGet++;
-                continue;
-            }
-            toGet++;
-            if (item == null) continue;
-            inventory.setItem(i, item);
-        }
-
+        setupPaginatedButtons();
         updateInformationButton();
         updateInventory(player);
     }
@@ -388,7 +400,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
      *
      * @param player : The targeted player
      */
-    public void prevPage(Player player) {
+    private void prevPage(Player player) {
         if (totalPage == 0 || (currentPage - 1) < 0) {
             // No prev page
             return;
@@ -400,23 +412,7 @@ public abstract class PaginatedInventory implements InventoryHolder {
             }
         }
 
-        // Add the items
-        int toGet = 0;
-        for (int i : itemSlot) {
-            int fixedCurrentPage = (currentPage == 0) ? currentPage : (currentPage - 1);
-            List<GUIButton> but = items.get(fixedCurrentPage);
-            ItemStack item;
-            try {
-                item = but.get(toGet).getItem();
-            } catch (IndexOutOfBoundsException e) {
-                toGet++;
-                continue;
-            }
-            toGet++;
-            if (item == null) continue;
-            inventory.setItem(i, item);
-        }
-
+        setupPaginatedButtons();
         updateInformationButton();
         updateInventory(player);
     }
@@ -445,12 +441,28 @@ public abstract class PaginatedInventory implements InventoryHolder {
         inventory.setItem(informationButtonSlot, infoButtonClone);
     }
 
+    @Override
+    public void onClick(InventoryClickEvent e) {
+
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent e) {
+
+    }
+
+    @Override
+    public void onOpen(InventoryOpenEvent e) {
+
+    }
+
     /**
      * Close the player's inventory, scheduled 1 tick to prevent duplication glitch
      *
      * @param player : Target player
      */
-    public void close(Player player) {
+    @Override
+    public void closeInventory(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
@@ -460,7 +472,8 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * @param player : Target player
      * @param inventory : Inventory to open
      */
-    public void open(Player player, Inventory inventory) {
+    @Override
+    public void openInventory(Player player, Inventory inventory) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
     }
 
@@ -470,7 +483,8 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * @param player : Target player
      * @param soundWhenClose : The sound that will get played when the inventory closes
      */
-    public void close(Player player, SoundObject soundWhenClose) {
+    @Override
+    public void closeInventory(Player player, SoundObject soundWhenClose) {
         if (soundWhenClose != null) {
             soundWhenClose.send(player);
         }
@@ -484,11 +498,22 @@ public abstract class PaginatedInventory implements InventoryHolder {
      * @param inventory : The inventory
      * @param soundWhenOpen : The shounds that will get played when the inventory opens
      */
-    public void open(Player player, Inventory inventory, SoundObject soundWhenOpen) {
+    @Override
+    public void openInventory(Player player, Inventory inventory, SoundObject soundWhenOpen) {
         if (soundWhenOpen != null) {
             soundWhenOpen.send(player);
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    @Override
+    public void start() {
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory()), 0L, 5L).getTaskId();
+    }
+
+    @Override
+    public void stop() {
+        Bukkit.getScheduler().cancelTask(animationId);
     }
 
     @Override

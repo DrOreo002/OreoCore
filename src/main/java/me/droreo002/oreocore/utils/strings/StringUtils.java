@@ -130,7 +130,7 @@ public final class StringUtils {
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(text);
         return m.find();
-    }
+    } // TODO : Continue inventory animation!
 
     /**
      * Format the long value to readAble

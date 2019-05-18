@@ -3,8 +3,6 @@ package me.droreo002.oreocore.inventory.listener;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.CustomInventory;
 import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.inventory.api.InventoryPanel;
-import me.droreo002.oreocore.inventory.api.animation.ItemAnimationManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -59,22 +57,14 @@ public class CustomInventoryListener implements Listener {
              */
             if (custom.getSoundOnClick() != null) custom.getSoundOnClick().send(player);
             if (custom.isShouldProcessButton()) {
-                if (custom.getButtonMap().containsKey(slot)) {
-                    GUIButton but = custom.getButtonMap().get(slot);
+                if (custom.isHasButton(slot)) {
+                    GUIButton but = custom.getButton(slot);
+                    if (but == null) return;
                     if (but.getListener() != null) {
                         if (but.getSoundOnClick() != null) {
                             but.getSoundOnClick().send(player);
                         }
                         but.getListener().onClick(e);
-                    }
-                }
-
-                // Animation button
-                if (custom.isContainsAnimation()) {
-                    if (custom.getAnimationButtonMap().containsKey(slot)) {
-                        if (custom.getAnimationButtonMap().get(slot).getListener() != null) {
-                            custom.getAnimationButtonMap().get(slot).getListener().onClick(e);
-                        }
                     }
                 }
             }
@@ -90,7 +80,7 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnOpen() != null) {
                 custom.getSoundOnOpen().send((Player) e.getPlayer());
             }
-            if (custom.isContainsAnimation()) ItemAnimationManager.registerAnimation(custom);
+            if (custom.isContainsAnimation()) custom.start();
         }
     }
 
@@ -113,7 +103,7 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnClose() != null) {
                 custom.getSoundOnClose().send(player);
             }
-            if (custom.isContainsAnimation()) ItemAnimationManager.stopAnimation(custom);
+            if (custom.isContainsAnimation()) custom.stop();
         }
     }
 }

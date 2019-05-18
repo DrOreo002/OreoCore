@@ -51,11 +51,13 @@ public class PaginatedInventoryListener implements Listener {
                 pagi.getClickSound().send(player);
             }
 
+            pagi.onClick(e);
+
             // Paginated button listener
             if (!pagi.getPaginatedButton().isEmpty()) {
                 // Convert (For paginated button)
                 Map<Integer, GUIButton> buttons = new HashMap<>();
-                List<GUIButton> list = pagi.getItems().get(pagi.getCurrentPage());
+                List<GUIButton> list = pagi.getButtons().get(pagi.getCurrentPage());
                 int currSlot = 0;
                 for (int i : pagi.getItemSlot()) {
                     GUIButton b;
@@ -78,8 +80,8 @@ public class PaginatedInventoryListener implements Listener {
             }
 
             // Check for normal button
-            if (pagi.getInventoryButton().containsKey(slot)) {
-                GUIButton.ButtonListener lis = pagi.getInventoryButton().get(slot).getListener();
+            if (pagi.isHasButton(slot)) {
+                GUIButton.ButtonListener lis = (pagi.getButton(slot) == null) ? null : pagi.getButton(slot).getListener();
                 if (lis != null) {
                     lis.onClick(e);
                 }
@@ -99,6 +101,7 @@ public class PaginatedInventoryListener implements Listener {
             }
             PaginatedInventory pagi = main.getOpening().get(player.getUniqueId());
             pagi.getOpenSound().send(player);
+            pagi.onOpen(e);
         }
     }
 
@@ -114,6 +117,7 @@ public class PaginatedInventoryListener implements Listener {
             PaginatedInventory pagi = main.getOpening().get(player.getUniqueId());
             pagi.getCloseSound().send(player);
             main.getOpening().remove(player.getUniqueId());
+            pagi.onClose(e);
         }
     }
 }

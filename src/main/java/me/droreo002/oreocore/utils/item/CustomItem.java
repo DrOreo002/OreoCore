@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.item;
 
 import me.droreo002.oreocore.enums.XMaterial;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -22,10 +23,10 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 @SerializableAs("CustomItem")
 public class CustomItem extends ItemStack {
 
-    public static final ItemStack LBLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
-    public static final ItemStack PURPLE_GLASSPANE = new CustomItem(XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem(false), ".");
-    public static final ItemStack GRAY_GLASSPANE = new CustomItem(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(false), ".");
-    public static final ItemStack BLUE_GLASSPANE = new CustomItem(XMaterial.BLUE_STAINED_GLASS_PANE.parseItem(false), ".");
+    public static final ItemStack LBLUE_GLASSPANE = new CustomItem(UMaterial.BLUE_STAINED_GLASS_PANE.getItemStack(), ".");
+    public static final ItemStack PURPLE_GLASSPANE = new CustomItem(UMaterial.PURPLE_STAINED_GLASS_PANE.getItemStack(), ".");
+    public static final ItemStack GRAY_GLASSPANE = new CustomItem(UMaterial.GRAY_STAINED_GLASS_PANE.getItemStack(), ".");
+    public static final ItemStack BLUE_GLASSPANE = new CustomItem(UMaterial.BLUE_STAINED_GLASS_PANE.getItemStack(), ".");
 
     /**
      * Create new custom item
@@ -198,6 +199,24 @@ public class CustomItem extends ItemStack {
     }
 
     /**
+     * Add a display name
+     *
+     * @param display : The display name to add\
+     *
+     * @return the modified CustomItem
+     */
+    public CustomItem addDisplayName(String display) {
+        ItemMeta meta = getItemMeta();
+        if (meta.hasDisplayName()) {
+            meta.setDisplayName(color(meta.getDisplayName() + display));
+        } else {
+            meta.setDisplayName(color(display));
+        }
+        setItemMeta(meta);
+        return this;
+    }
+
+    /**
      * Check if the item is similar, the isSimilar method is buggy so we use this
      *
      * @param first: The item 1
@@ -245,8 +264,9 @@ public class CustomItem extends ItemStack {
      */
     @SuppressWarnings("deprecation")
     public static ItemStack fromSection(ConfigurationSection section, TextPlaceholder placeholder) {
-        Validate.notNull(section, "Section cannot be null!");
+        if (section == null) throw new NullPointerException("Section cannot be null!");
         if (!section.contains("material")) throw new NullPointerException("Section must have material key!");
+
         String material = section.getString("material", "DIRT");
         int materialDurr = section.getInt("itemID", -1);
         int amount = section.getInt("amount", 1);
@@ -302,14 +322,16 @@ public class CustomItem extends ItemStack {
             }
         }
 
+        UMaterial uMaterial = UMaterial.match(material);
+        if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
         ItemStack res;
         if (materialDurr != -1) {
-            res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount, (short) materialDurr);
+            res = new ItemStack(uMaterial.getMaterial(), amount, (short) materialDurr);
         } else {
-            res = new ItemStack(XMaterial.fromString(material).parseMaterial(), amount);
+            res = new ItemStack(uMaterial.getMaterial(), amount);
         }
 
-        if (material.equalsIgnoreCase(XMaterial.PLAYER_HEAD.parseMaterial().toString())) {
+        if (material.equals(UMaterial.PLAYER_HEAD.getMaterial().toString())) {
             if (texture != null) {
                 res = CustomSkull.setTexture(res, texture);
             }
@@ -327,6 +349,78 @@ public class CustomItem extends ItemStack {
     }
 
     /**
+     * Apply the sections thing into the specified ItemStack. Will only apply display name, and lore
+     *
+     * @param item : The item to change
+     * @param section : The section of values needed
+     * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
+     *                     into the specified string from the TextPlaceholder class
+     * @return a new ItemStack if its valid section. This is a non nullable method
+     */
+    public static ItemStack applyFromSection(ItemStack item, ConfigurationSection section, TextPlaceholder placeholder) {
+        if (section == null) throw new NullPointerException("Section cannot be null!");
+
+        String displayName = section.getString("name");
+        List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
+
+        if (placeholder != null) {
+            for (TextPlaceholder place : placeholder.getPlaceholders()) {
+                switch (place.getType()) {
+                    case DISPLAY_NAME:
+                        for (TextPlaceholder t : place.getPlaceholders()) {
+                            if (displayName.contains(t.getFrom())) {
+                                displayName = displayName.replace(t.getFrom(), t.getTo());
+                            }
+                        }
+                        break;
+                    case LORE:
+                        if (!lore.isEmpty()) {
+                            for (TextPlaceholder t : place.getPlaceholders()) {
+                                if (t.isLorePlaceholder()) {
+                                    List<Integer> index = new ArrayList<>();
+                                    for (int i = 0; i < lore.size(); i++) {
+                                        final String s = lore.get(i);
+                                        if (s.contains(t.getFrom())) {
+                                            lore.set(i, s.replace(t.getFrom(), ""));
+                                            index.add(i);
+                                        }
+                                    }
+
+                                    List<String> lores = ListUtils.toList(t.getTo());
+                                    for (int i : index) {
+                                        int start = i+1;
+                                        try {
+                                            lore.addAll(start, lores);
+                                        } catch (IndexOutOfBoundsException e) {
+                                            lore.add(" ");
+                                            lore.addAll(start, lores);
+                                        }
+                                    }
+                                } else {
+                                    lore = lore.stream().map(s -> {
+                                        if (s.contains(t.getFrom())) return s.replace(t.getFrom(), t.getTo());
+                                        return s;
+                                    }).collect(Collectors.toList());
+                                }
+                            }
+                        }
+                        break;
+                    default: break;
+                }
+            }
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+        if (displayName != null) meta.setDisplayName(color(displayName));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    /**
      * Convert this CustomItem to a section
      *
      * @param config : The config target
@@ -340,7 +434,7 @@ public class CustomItem extends ItemStack {
             if (getItemMeta().hasDisplayName()) config.set(path + ".name", getItemMeta().getDisplayName());
             if (getItemMeta().hasLore()) config.set(path + ".lore", getItemMeta().getLore());
         }
-        if (getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
+        if (getType().equals(UMaterial.PLAYER_HEAD.getMaterial())) {
             String texture = CustomSkull.getTexture(this);
             if (!texture.equals("")) {
                 config.set(path + ".texture", texture);
