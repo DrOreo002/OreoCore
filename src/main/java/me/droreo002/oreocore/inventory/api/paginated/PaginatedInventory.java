@@ -56,6 +56,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     private boolean hasAnimation;
     @Getter @Setter
     private int animationId;
+    @Getter @Setter
+    private long animationUpdateTime;
 
     /*
     Lists
@@ -324,8 +326,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
             inventory.setItem(i, item);
         }
 
-        stop();
-        start();
+        stopAnimation();
+        startAnimation();
     }
 
     /**
@@ -507,12 +509,13 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     }
 
     @Override
-    public void start() {
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory()), 0L, 5L).getTaskId();
+    public void startAnimation() {
+        if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory(), this.animationUpdateTime), 0L, this.animationUpdateTime).getTaskId();
     }
 
     @Override
-    public void stop() {
+    public void stopAnimation() {
         Bukkit.getScheduler().cancelTask(animationId);
     }
 

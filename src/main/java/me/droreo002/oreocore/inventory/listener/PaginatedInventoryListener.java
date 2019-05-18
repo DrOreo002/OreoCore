@@ -102,6 +102,7 @@ public class PaginatedInventoryListener implements Listener {
             PaginatedInventory pagi = main.getOpening().get(player.getUniqueId());
             pagi.getOpenSound().send(player);
             pagi.onOpen(e);
+            if (pagi.isHasAnimation()) pagi.startAnimation();
         }
     }
 
@@ -118,6 +119,7 @@ public class PaginatedInventoryListener implements Listener {
             pagi.getCloseSound().send(player);
             main.getOpening().remove(player.getUniqueId());
             pagi.onClose(e);
+            if (pagi.isHasAnimation()) pagi.stopAnimation();
         }
     }
 }

@@ -1,11 +1,13 @@
 package me.droreo002.oreocore.inventory.api.animation;
 
 import lombok.Getter;
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -17,9 +19,16 @@ public class IAnimationRunnable implements Runnable {
     @Getter
     private final Inventory inventory;
 
-    public IAnimationRunnable(Set<GUIButton> buttons, Inventory inventory) {
+    public IAnimationRunnable(Set<GUIButton> buttons, Inventory inventory, long updateRate) {
         this.buttons = buttons;
         this.inventory = inventory;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
+            }
+        }.runTaskTimer(OreoCore.getInstance(), 0L, updateRate);
     }
 
     @Override
@@ -70,6 +79,5 @@ public class IAnimationRunnable implements Runnable {
 
             inventory.setItem(slot, button.getItem()); // Update the item
         }
-        inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
     }
 }

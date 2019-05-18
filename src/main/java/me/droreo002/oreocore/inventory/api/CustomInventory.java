@@ -56,6 +56,8 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     private List<Integer> noClickCancel; // Don't cancel the click event on these slots
     @Getter @Setter
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
+    @Getter @Setter
+    private long animationUpdateTime;
 
     public CustomInventory(int size, String title) {
         this.buttons = new HashSet<>();
@@ -349,12 +351,13 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     }
 
     @Override
-    public void start() {
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory()), 0L, 5L).getTaskId();
+    public void startAnimation() {
+        if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory(), this.animationUpdateTime), 0L, this.animationUpdateTime).getTaskId();
     }
 
     @Override
-    public void stop() {
+    public void stopAnimation() {
         Bukkit.getScheduler().cancelTask(animationId);
     }
 

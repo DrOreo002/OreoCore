@@ -20,12 +20,12 @@ public abstract class CustomCommand {
 
     @Getter
     private JavaPlugin owner;
-    @Getter
-    @Setter
+    @Getter @Setter
     private SoundObject successSound, errorSound;
-    @Getter
-    @Setter
+    @Getter @Setter
     private String argumentNotFoundMessage, commandBase;
+    @Getter
+    private String tabCompletePermission, tabCompleteNoPermissionMessage;
     @Getter
     private String[] aliases;
     @Getter
@@ -36,6 +36,8 @@ public abstract class CustomCommand {
         this.commandBase = commandBase;
         this.args = new ArrayList<>();
         this.aliases = aliases;
+        this.tabCompletePermission = "";
+        this.tabCompleteNoPermissionMessage = "";
     }
 
     /**
@@ -52,23 +54,55 @@ public abstract class CustomCommand {
         return commandBase.equalsIgnoreCase(argument);
     }
 
+    /**
+     * Add a argument into the command
+     *
+     * @param arg : The argument class
+     */
     public void addArgument(CommandArg arg) {
         if (isArgumentRegistered(arg.getTrigger())) return;
         args.add(arg);
     }
 
+    /**
+     * Play the success sound to the CommandSender
+     *
+     * @param sender : The target sound
+     */
     public void successSound(CommandSender sender) {
         Validate.notNull(successSound, "Success sound is null!");
         if (!(sender instanceof Player)) return;
         successSound.send((Player) sender);
     }
 
+    /**
+     * Play the error sound to the CommandSender
+     *
+     * @param sender : The target sound
+     */
     public void errorSound(CommandSender sender) {
         Validate.notNull(errorSound, "Error sound is null!");
         if (!(sender instanceof Player)) return;
         errorSound.send((Player) sender);
     }
 
+    /**
+     * Set the tab complete permission
+     *
+     * @param tabCompletePermission : The tab complete permission
+     * @param tabCompleteNoPermissionMessage : The message to fire if player don't have the permission
+     */
+    public void setTabCompletePermission(String tabCompletePermission, String tabCompleteNoPermissionMessage) {
+        this.tabCompletePermission = tabCompletePermission;
+        this.tabCompleteNoPermissionMessage = tabCompleteNoPermissionMessage;
+    }
+
+    /**
+     * Check if the argument is registered or not
+     *
+     * @param arg : The argument class
+     * @return true if registered, false otherwise
+     */
     public boolean isArgumentRegistered(String arg) {
         for (CommandArg ar : args) {
             if (ar.getTrigger().equalsIgnoreCase(arg)) return true;
@@ -76,6 +110,12 @@ public abstract class CustomCommand {
         return false;
     }
 
+    /**
+     * Get the command argument by name
+     *
+     * @param arg : The command argument name or trigger
+     * @return the CommandArg class if found, null otherwise
+     */
     public CommandArg getArgument(String arg) {
         if (!isArgumentRegistered(arg)) return null;
         for (CommandArg ar : args) {

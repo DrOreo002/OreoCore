@@ -80,7 +80,7 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnOpen() != null) {
                 custom.getSoundOnOpen().send((Player) e.getPlayer());
             }
-            if (custom.isContainsAnimation()) custom.start();
+            if (custom.isContainsAnimation()) custom.startAnimation();
         }
     }
 
@@ -103,7 +103,7 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnClose() != null) {
                 custom.getSoundOnClose().send(player);
             }
-            if (custom.isContainsAnimation()) custom.stop();
+            if (custom.isContainsAnimation()) custom.stopAnimation();
         }
     }
 }

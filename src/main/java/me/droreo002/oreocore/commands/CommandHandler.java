@@ -79,6 +79,16 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
             for (CustomCommand cmd : cmds) {
                 if (cmd.isCommand(command.getName())) {
                     // Is the correct command
+                    if (!cmd.getTabCompletePermission().equals("")) {
+                        if (sender instanceof Player) {
+                            final Player player = (Player) sender;
+                            if (!player.hasPermission(cmd.getTabCompletePermission())) {
+                                cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());
+                                cmd.errorSound(sender);
+                                return null;
+                            }
+                        }
+                    }
                     return cmd.onTabComplete(sender, command, alias, args);
                 }
             }
