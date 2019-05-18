@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     private boolean containsAnimation;
 
     @Getter @Setter
-    private int animationId;
+    private int animationId, animationUpdateId;
     @Getter @Setter
     private boolean shouldProcessButton, cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
     @Getter @Setter
@@ -353,11 +354,18 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Override
     public void startAnimation() {
         if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory(), this.animationUpdateTime), 0L, this.animationUpdateTime).getTaskId();
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory()), 0L, this.animationUpdateTime).getTaskId();
+        this.animationUpdateId = new BukkitRunnable() {
+            @Override
+            public void run() {
+                inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
+            }
+        }.runTaskTimer(OreoCore.getInstance(), 0L, (animationUpdateTime > 10L) ? 1L : animationUpdateTime).getTaskId();
     }
 
     @Override
     public void stopAnimation() {
+        Bukkit.getScheduler().cancelTask(animationId);
         Bukkit.getScheduler().cancelTask(animationId);
     }
 

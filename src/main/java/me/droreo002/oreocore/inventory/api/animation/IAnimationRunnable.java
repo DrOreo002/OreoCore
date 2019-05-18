@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 public class IAnimationRunnable implements Runnable {
 
@@ -19,16 +20,9 @@ public class IAnimationRunnable implements Runnable {
     @Getter
     private final Inventory inventory;
 
-    public IAnimationRunnable(Set<GUIButton> buttons, Inventory inventory, long updateRate) {
+    public IAnimationRunnable(Set<GUIButton> buttons, Inventory inventory) {
         this.buttons = buttons;
         this.inventory = inventory;
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
-            }
-        }.runTaskTimer(OreoCore.getInstance(), 0L, updateRate);
     }
 
     @Override

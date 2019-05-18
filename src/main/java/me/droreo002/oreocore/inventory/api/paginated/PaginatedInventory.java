@@ -28,6 +28,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +56,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Getter @Setter
     private boolean hasAnimation;
     @Getter @Setter
-    private int animationId;
+    private int animationId, animationUpdateId;
     @Getter @Setter
     private long animationUpdateTime;
 
@@ -325,9 +326,6 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
             but.get(toGet - 1).setInventorySlot(i);
             inventory.setItem(i, item);
         }
-
-        stopAnimation();
-        startAnimation();
     }
 
     /**
@@ -511,12 +509,19 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Override
     public void startAnimation() {
         if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory(), this.animationUpdateTime), 0L, this.animationUpdateTime).getTaskId();
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory()), 0L, this.animationUpdateTime).getTaskId();
+        this.animationUpdateId = new BukkitRunnable() {
+            @Override
+            public void run() {
+                inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
+            }
+        }.runTaskTimer(OreoCore.getInstance(), 0L, (animationUpdateTime > 10L) ? 1L : animationUpdateTime).getTaskId();
     }
 
     @Override
     public void stopAnimation() {
         Bukkit.getScheduler().cancelTask(animationId);
+        Bukkit.getScheduler().cancelTask(animationUpdateId);
     }
 
     @Override
