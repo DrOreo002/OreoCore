@@ -27,16 +27,23 @@ public abstract class Debugger {
             msg = getPrefix() + msg;
         }
         if (logToFile) {
-            if (getLogFile() == null) throw new NullPointerException("Log file is null!");
+            if (getLogFile() == null) return;
             if (!usePrefixLogFile()) msg = msg.replace(getPrefix(), "");
             getLogFile().getLogger().log(logLevel, StringUtils.stripColor(msg));
         }
         sendConsoleMessage(msg);
     }
 
+    /**
+     * Log the msg
+     *
+     * @param msg : The message
+     * @param logLevel : The log level
+     * @param logToFile : Should we log it to file?
+     */
     public void log(String msg, Level logLevel, boolean logToFile) {
         if (logToFile) {
-            if (getLogFile() == null) throw new NullPointerException("Log file is null!");
+            if (getLogFile() == null) return;
             getLogFile().getLogger().log(logLevel, StringUtils.stripColor(msg));
         }
         sendConsoleMessage(msg);
