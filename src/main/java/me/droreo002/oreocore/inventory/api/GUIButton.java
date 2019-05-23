@@ -71,11 +71,11 @@ public class GUIButton {
      *
      * @return the next frame. Will clear the nextFrame back to 0 if already reached max and this is a repeating animation
      */
-    public IButtonFrame nextFrame() {
+    public IButtonFrame getNextFrame() {
         if (nextFrame >= frames.size()) {
             if (repeatingAnimation) {
                 this.nextFrame = 0;
-                return nextFrame();
+                return getNextFrame();
             } else {
                 return null;
             }
@@ -83,6 +83,15 @@ public class GUIButton {
         IButtonFrame frm = frames.get(nextFrame);
         nextFrame++;
         return frm;
+    }
+
+    /**
+     * Get the current frame
+     *
+     * @return the frame if available, null otherwise
+     */
+    public IButtonFrame getCurrentFrame() {
+        return frames.get(nextFrame);
     }
 
     public void addFrame(IButtonFrame buttonFrame) {

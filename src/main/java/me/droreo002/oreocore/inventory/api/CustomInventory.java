@@ -50,7 +50,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     private boolean containsAnimation;
 
     @Getter @Setter
-    private int animationId, animationUpdateId;
+    private int animationUpdateId;
     @Getter @Setter
     private boolean shouldProcessButton, cancelPlayerInventoryClickEvent; // Cancel the click when player clicked his / her inventory?
     @Getter @Setter
@@ -59,6 +59,9 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
     @Getter @Setter
     private long animationUpdateTime;
+
+    private int animationId;
+    private IAnimationRunnable animationRunnable;
 
     public CustomInventory(int size, String title) {
         this.buttons = new HashSet<>();
@@ -354,7 +357,8 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Override
     public void startAnimation() {
         if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(buttons, getInventory()), 0L, this.animationUpdateTime).getTaskId();
+        this.animationRunnable = new IAnimationRunnable(buttons, getInventory(), this);
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationRunnable, 0L, this.animationUpdateTime).getTaskId();
         this.animationUpdateId = new BukkitRunnable() {
             @Override
             public void run() {
@@ -366,7 +370,23 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Override
     public void stopAnimation() {
         Bukkit.getScheduler().cancelTask(animationId);
-        Bukkit.getScheduler().cancelTask(animationId);
+        Bukkit.getScheduler().cancelTask(animationUpdateId);
+        animationRunnable.getSingleButtonRunnable().forEach(Bukkit.getScheduler()::cancelTask);
+    }
+
+    @Override
+    public IAnimationRunnable getAnimationRunnable() {
+        return this.animationRunnable;
+    }
+
+    @Override
+    public int getAnimationTaskId() {
+        return this.animationId;
+    }
+
+    @Override
+    public void setAnimationTaskId(int newId) {
+        this.animationId = newId;
     }
 
     @Override

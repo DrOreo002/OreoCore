@@ -25,6 +25,16 @@ public interface IButtonFrame {
     List<String> nextLore(List<String> prevLore);
 
     /**
+     * The next frame speed, basically will change the animation speed
+     * default will be -1L (Disabled)
+     *
+     * @return the next frame speed
+     */
+    default long getNextFrameUpdateSpeed() {
+        return -1L;
+    }
+
+    /**
      * Get that kind of ItemMeta to update
      *
      * @return the item meta to update

@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.inventory.api.helper;
 
 import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,4 +59,10 @@ public interface OreoInventory {
      void addBorder(int[] rows, ItemStack border, boolean replace);
 
      void setup();
+
+     int getAnimationTaskId();
+
+     void setAnimationTaskId(int newId);
+
+     IAnimationRunnable getAnimationRunnable();
 }

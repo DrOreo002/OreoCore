@@ -56,13 +56,10 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Getter @Setter
     private boolean hasAnimation;
     @Getter @Setter
-    private int animationId, animationUpdateId;
+    private  int animationUpdateId;
     @Getter @Setter
     private long animationUpdateTime;
 
-    /*
-    Lists
-     */
     @Getter
     private Paginator<GUIButton> paginator;
     @Getter
@@ -73,6 +70,9 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     private Set<GUIButton> paginatedButton;
     @Getter
     private Set<GUIButton> inventoryButton;
+
+    private int animationId;
+    private IAnimationRunnable animationRunnable;
 
     public PaginatedInventory(int size, String title) {
         this.title = title;
@@ -509,7 +509,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Override
     public void startAnimation() {
         if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
-        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory()), 0L, this.animationUpdateTime).getTaskId();
+        this.animationRunnable = new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory(), this);
+        this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationRunnable, 0L, this.animationUpdateTime).getTaskId();
         this.animationUpdateId = new BukkitRunnable() {
             @Override
             public void run() {
@@ -522,6 +523,22 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     public void stopAnimation() {
         Bukkit.getScheduler().cancelTask(animationId);
         Bukkit.getScheduler().cancelTask(animationUpdateId);
+        animationRunnable.getSingleButtonRunnable().forEach(Bukkit.getScheduler()::cancelTask);
+    }
+
+    @Override
+    public int getAnimationTaskId() {
+        return this.animationId;
+    }
+
+    @Override
+    public void setAnimationTaskId(int newId) {
+        this.animationId = newId;
+    }
+
+    @Override
+    public IAnimationRunnable getAnimationRunnable() {
+        return this.animationRunnable;
     }
 
     @Override
