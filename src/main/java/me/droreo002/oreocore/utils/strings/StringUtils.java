@@ -5,6 +5,7 @@ import me.droreo002.oreocore.utils.misc.MathUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -16,6 +17,14 @@ public final class StringUtils {
 
     private static final char[] HEX_MAP = { '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    public static final Map<Currency, String> DEFAULT_CURRENCY = new HashMap<>();
+
+    static {
+        DEFAULT_CURRENCY.put(Currency.THOUSANDS, "k");
+        DEFAULT_CURRENCY.put(Currency.MILLIONS, "M");
+        DEFAULT_CURRENCY.put(Currency.BILLIONS, "B");
+        DEFAULT_CURRENCY.put(Currency.TRILLIONS, "T");
+    }
 
     /**
      * Colorize the string
@@ -130,7 +139,7 @@ public final class StringUtils {
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(text);
         return m.find();
-    } // TODO : Continue inventory animation!
+    }
 
     /**
      * Format the long value to readAble
