@@ -103,7 +103,7 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnClose() != null) {
                 custom.getSoundOnClose().send(player);
             }
-            if (custom.isContainsAnimation()) custom.stopAnimation();
+            if (custom.isContainsAnimation() && !custom.isKeepAnimation()) custom.stopAnimation();
         }
     }
 }

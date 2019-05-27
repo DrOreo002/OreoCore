@@ -2,11 +2,13 @@ package me.droreo002.oreocore.utils.entity;
 
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainTasks;
+import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
 import com.google.common.base.Stopwatch;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
+import net.minecraft.server.v1_14_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,6 +57,30 @@ public final class PlayerUtils {
             if (meta.asBoolean()) return true;
         }
         return false;
+    }
+
+    /**
+     * Update the player's inventory
+     *
+     * @param player : Target player
+     */
+    public static void updateInventory(Player player, Inventory inventory) {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            int index = i;
+            if (i < 9) {
+                index = i + 36;
+            }
+
+            ItemStack item = player.getInventory().getItem(i);
+            if (item == null) continue;
+
+            WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot();
+            packet.setSlot(index);
+            packet.setSlotData(item);
+            packet.setWindowId(0);
+
+            packet.sendPacket(player);
+        }
     }
 
     /**

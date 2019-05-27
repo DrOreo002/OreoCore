@@ -64,5 +64,7 @@ public interface OreoInventory {
 
      void setAnimationTaskId(int newId);
 
+     void refreshInventory();
+
      IAnimationRunnable getAnimationRunnable();
 }

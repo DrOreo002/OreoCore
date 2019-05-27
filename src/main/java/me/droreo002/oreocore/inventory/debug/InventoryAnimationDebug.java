@@ -33,9 +33,8 @@ public class InventoryAnimationDebug extends CustomInventory {
                 }
             });
         }
+        setAnimationUpdateTime(5L);
         button.setRepeatingAnimation(true);
-
-        setAnimationUpdateTime(2L);
         addButton(button, true);
     }
 }

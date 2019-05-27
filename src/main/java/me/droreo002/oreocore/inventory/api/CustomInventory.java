@@ -4,11 +4,13 @@ import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.animation.IAnimatedInventory;
 import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
 import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
 import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
+import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -59,6 +61,8 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
     @Getter @Setter
     private long animationUpdateTime;
+    @Getter @Setter
+    private boolean keepAnimation;
 
     private int animationId;
     private IAnimationRunnable animationRunnable;
@@ -72,6 +76,10 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
         this.cancelPlayerInventoryClickEvent = true; // Default are true
         this.shouldProcessButton = true;
         this.noClickCancel = new ArrayList<>();
+        this.soundOnClick = new SoundObject(Sounds.CLICK);
+        this.soundOnClose = new SoundObject(Sounds.CHEST_CLOSE);
+        this.soundOnOpen = new SoundObject(Sounds.CHEST_OPEN);
+        this.animationUpdateTime = 1L;
     }
 
     /**
@@ -176,23 +184,6 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Reset the inventory, will set it to default
-     */
-    public void reset() {
-        for (int slot = 0; slot < size; slot++) {
-            if (getInventory().getItem(slot) != null) getInventory().setItem(slot, UMaterial.AIR.getItemStack()); // Remove the whole shit
-        }
-        setup();
-
-        for (HumanEntity ent : inventory.getViewers()) {
-            if (ent == null) continue;
-            if (!(ent instanceof Player)) continue;
-            Player player = (Player) ent;
-            player.updateInventory();
         }
     }
 
@@ -356,7 +347,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
 
     @Override
     public void startAnimation() {
-        if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
+        if (animationId != 0) Bukkit.getScheduler().cancelTask(animationId);
         this.animationRunnable = new IAnimationRunnable(buttons, getInventory(), this);
         this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationRunnable, 0L, this.animationUpdateTime).getTaskId();
         this.animationUpdateId = new BukkitRunnable() {
@@ -364,7 +355,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
             public void run() {
                 inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
             }
-        }.runTaskTimer(OreoCore.getInstance(), 0L, (animationUpdateTime > 10L) ? 1L : animationUpdateTime).getTaskId();
+        }.runTaskTimer(OreoCore.getInstance(), 0L, 1L).getTaskId();
     }
 
     @Override
@@ -392,6 +383,23 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Override
     public Inventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public void refreshInventory() {
+        for (int slot = 0; slot < size; slot++) {
+            if (getInventory().getItem(slot) != null) getInventory().setItem(slot, UMaterial.AIR.getItemStack()); // Remove the whole shit
+        }
+        setup();
+
+        stopAnimation();
+        for (HumanEntity ent : inventory.getViewers()) {
+            if (ent == null) continue;
+            if (!(ent instanceof Player)) continue;
+            Player player = (Player) ent;
+            player.updateInventory();
+        }
+        startAnimation();
     }
 
     @Override

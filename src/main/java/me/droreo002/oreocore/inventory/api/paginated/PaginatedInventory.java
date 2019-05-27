@@ -59,6 +59,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     private  int animationUpdateId;
     @Getter @Setter
     private long animationUpdateTime;
+    @Getter @Setter
+    private boolean keepAnimation;
 
     @Getter
     private Paginator<GUIButton> paginator;
@@ -82,8 +84,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
         /*
         Default values
          */
-        openSound = new SoundObject(Sounds.BAT_TAKEOFF);
-        closeSound = new SoundObject(Sounds.BAT_TAKEOFF);
+        openSound = new SoundObject(Sounds.CHEST_OPEN);
+        closeSound = new SoundObject(Sounds.CHEST_CLOSE);
         clickSound = new SoundObject(Sounds.CLICK);
         itemSlot = new ArrayList<>();
         paginatedButton = new HashSet<>();
@@ -509,6 +511,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Override
     public void startAnimation() {
         if (animationUpdateTime == 0L) this.animationUpdateTime = 5L; // Default value
+        if (animationId != 0) Bukkit.getScheduler().cancelTask(animationId);
         this.animationRunnable = new IAnimationRunnable(new HashSet<>(buttons.get(currentPage)), getInventory(), this);
         this.animationId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationRunnable, 0L, this.animationUpdateTime).getTaskId();
         this.animationUpdateId = new BukkitRunnable() {
@@ -516,7 +519,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
             public void run() {
                 inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
             }
-        }.runTaskTimer(OreoCore.getInstance(), 0L, (animationUpdateTime > 10L) ? 1L : animationUpdateTime).getTaskId();
+        }.runTaskTimer(OreoCore.getInstance(), 0L, 1L).getTaskId();
     }
 
     @Override
@@ -524,6 +527,12 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
         Bukkit.getScheduler().cancelTask(animationId);
         Bukkit.getScheduler().cancelTask(animationUpdateId);
         animationRunnable.getSingleButtonRunnable().forEach(Bukkit.getScheduler()::cancelTask);
+    }
+
+    @Override
+    public void refreshInventory() {
+        // TODO : Make
+        throw new IllegalStateException("Refreshing paginated inventory is not currently supported!");
     }
 
     @Override
