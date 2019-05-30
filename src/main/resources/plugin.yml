@@ -1,5 +1,5 @@
 name: OreoCore
-version: 5.7
+version: 5.8
 main: me.droreo002.oreocore.OreoCore
 depend: [ProtocolLib]
 softdepend: [Essentials]
