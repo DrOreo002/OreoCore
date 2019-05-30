@@ -75,9 +75,7 @@ public class CustomConfig {
     public void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(yamlFile);
         InputStream configData = plugin.getResource(getFileName());
-        if (configData != null) {
-            config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(configData)));
-        }
+        if (configData != null) ConfigUpdater.update(yamlFile, configData);
         if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
     }
 
