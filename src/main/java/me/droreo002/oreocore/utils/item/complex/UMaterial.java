@@ -1,9 +1,9 @@
 package me.droreo002.oreocore.utils.item.complex;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /*
-    UMaterial Version: 4
+    UMaterial Version: 5
 
     This software is created and owned by RandomHashTags, and is licensed under the GNU Affero General Public License v3.0 (https://choosealicense.com/licenses/agpl-3.0/)
     You can only find this software at https://gitlab.com/RandomHashTags/umaterial
@@ -37,9 +37,10 @@ import java.util.Map;
  */
 public enum UMaterial {
     /*
-        <item>(1.8.8, 1.9.4, 1.10.2, 1.11.2, 1.12.2, 1.13.2, 1.14.0)
-        1.8.8 = http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Material.html
-        1.13.2 = https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+        <item>(1.8.9, 1.9.4, 1.10.2, 1.11.2, 1.12.2, 1.13.2, 1.14.2)
+        1.8.9 = http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Material.html
+        1.13.2 = ?
+        1.14.2 = https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
         visual = https://www.digminecraft.com/lists/item_id_list_pc.php
         Special blocks = https://www.planetminecraft.com/blog/secret-blocks-vanilla/
     */
@@ -49,13 +50,15 @@ public enum UMaterial {
     ACACIA_FENCE("ACACIA_FENCE", 0),
     ACACIA_FENCE_GATE("ACACIA_FENCE_GATE", 0),
     ACACIA_LEAVES("LEAVES_2", null, null, null, null, "ACACIA_LEAVES"),
-    ACACIA_LOG("LOG_2", null, null, null, null, "ACACIA_LOG"),
+    ACACIA_LOG(0, "LOG_2", null, null, null, null, "ACACIA_LOG"),
     ACACIA_PLANKS(4, "WOOD", null, null, null, null, "ACACIA_PLANKS"),
     ACACIA_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "ACACIA_PRESSURE_PLATE"),
     ACACIA_SAPLING(4, "SAPLING", null, null, null, null, "ACACIA_SAPLING"),
+    ACACIA_SIGN("SIGN", null, null, null, null, null, "ACACIA_SIGN"),
     ACACIA_SLAB(4, "WOOD_STEP", null, null, null, null, "ACACIA_SLAB"),
     ACACIA_STAIRS("ACACIA_STAIRS"),
     ACACIA_TRAPDOOR("TRAP_DOOR", null, null, null, null, "ACACIA_TRAPDOOR"),
+    ACACIA_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "ACACIA_WALL_SIGN"),
     ACACIA_WOOD(12, "LOG_2", null, null, null, null, "ACACIA_WOOD"),
     ACTIVATOR_RAIL("ACTIVATOR_RAIL"),
     AIR("AIR"),
@@ -69,6 +72,9 @@ public enum UMaterial {
     ATTACHED_PUMPKIN_STEM(null, null, null, null, null, "ATTACHED_PUMPKIN_STEM"),
     AZURE_BLUET(3, "RED_ROSE", null, null, null, null, "AZURE_BLUET"),
     BAKED_POTATO("BAKED_POTATO"),
+    BAMBOO(null, null, null, null, null, null, "BAMBOO"),
+    BAMBOO_SAPLING(null, null, null, null, null, null, "BAMBOO_SAPLING"),
+    BARREL(null, null, null, null, null, null, "BARREL"),
     BARRIER("BARRIER"),
     BAT_SPAWN_EGG(65, "MONSTER_EGG", null, null, null, null, "BAT_SPAWN_EGG"),
     BEACON("BEACON"),
@@ -88,15 +94,18 @@ public enum UMaterial {
     BIRCH_PLANKS(2, "WOOD", null, null, null, null, "BIRCH_PLANKS"),
     BIRCH_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "BIRCH_PRESSURE_PLATE"),
     BIRCH_SAPLING(2, "SAPLING", null, null, null, null, "BIRCH_SAPLING"),
+    BIRCH_SIGN("SIGN", null, null, null, null, null, "BIRCH_SIGN"),
     BIRCH_SLAB(2, "WOOD_STEP", null, null, null, null, "BIRCH_SLAB"),
     BIRCH_STAIRS("BIRCH_WOOD_STAIRS", null, null, null, null, "BIRCH_STAIRS"),
     BIRCH_TRAPDOOR("TRAP_DOOR", null, null, null, null, "BIRCH_TRAPDOOR"),
+    BIRCH_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "BIRCH_WALL_SIGN"),
     BIRCH_WOOD(14, "LOG", null, null, null, null, "BIRCH_WOOD"),
     BLACK_BANNER("BANNER", null, null, null, null, "BLACK_BANNER"),
     BLACK_BED(15, "BED", null, null, null, null, "BLACK_BED"),
     BLACK_CARPET(15, "CARPET", null, null, null, null, "BLACK_CARPET"),
     BLACK_CONCRETE(15, null, null, null, null, null, "BLACK_CONCRETE"),
     BLACK_CONCRETE_POWDER(15, null, null, null, null, "CONCRETE_POWDER", "BLACK_CONCRETE_POWDER"),
+    BLACK_DYE(null, null, null, null, null, null, "BLACK_DYE"),
     BLACK_GLAZED_TERRACOTTA(null, null, null, null, "BLACK_GLAZED_TERRACOTTA"),
     BLACK_LEATHER_BOOTS("LEATHER_BOOTS", 15, Color.fromRGB(25, 25, 25)),
     BLACK_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 15, Color.fromRGB(25, 25, 25)),
@@ -107,6 +116,7 @@ public enum UMaterial {
     BLACK_STAINED_GLASS_PANE(15, "STAINED_GLASS_PANE", null, null, null, null, "BLACK_STAINED_GLASS_PANE"),
     BLACK_TERRACOTTA(15, "STAINED_CLAY", null, null, null, null, "BLACK_TERRACOTTA"),
     BLACK_WOOL(15, "WOOL", null, null, null, null, "BLACK_WOOL"),
+    BLAST_FURNACE(null, null, null, null, null, null, "BLAST_FURNACE"),
     BLAZE_POWDER("BLAZE_POWDER"),
     BLAZE_ROD("BLAZE_ROD"),
     BLAZE_SPAWN_EGG(61, "MONSTER_EGG", null, null, null, null, "BLAZE_SPAWN_EGG"),
@@ -115,6 +125,7 @@ public enum UMaterial {
     BLUE_CARPET(11, "CARPET", null, null, null, null, "BLUE_CARPET"),
     BLUE_CONCRETE(11, null, null, null, null, "CONCRETE", "BLUE_CONCRETE"),
     BLUE_CONCRETE_POWDER(11, null, null, null, null, "CONCRETE_POWDER", "BLUE_CONCRETE_POWDER"),
+    BLUE_DYE(null, null, null, null, null, null, "BLUE_DYE"),
     BLUE_GLAZED_TERRACOTTA(null, null, null, null, "BLUE_GLAZED_TERRACOTTA"),
     BLUE_LEATHER_BOOTS("LEATHER_BOOTS", 11, Color.fromRGB(51, 76, 178)),
     BLUE_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 11, Color.fromRGB(51, 76, 178)),
@@ -145,6 +156,8 @@ public enum UMaterial {
     BRICK("BRICK", null, null, null, "CLAY_BRICK", "BRICK"),
     BRICK_SLAB(4, "STEP", null, null, null, null, "BRICK_SLAB"),
     BRICK_STAIRS("BRICK_STAIRS"),
+    BRICK_WALL(null, null, null, null, null, null, "BRICK_WALL"),
+    BRICKS("BRICK_BLOCK", null, null, null, null, "BRICKS"),
     BROWN_BANNER(3, "BANNER", null, null, null, null, "BROWN_BANNER"),
     BROWN_BED(12, "BED", null, null, null, null, "BROWN_BED"),
     BROWN_CARPET(12, "CARPET", null, null, null, null, "BROWN_CARPET"),
@@ -161,6 +174,7 @@ public enum UMaterial {
     BROWN_STAINED_GLASS(12, "STAINED_GLASS", null, null, null, null, "BROWN_STAINED_GLASS"),
     BROWN_STAINED_GLASS_PANE(12, "STAINED_GLASS_PANE", null, null, null, null, "BROWN_STAINED_GLASS_PANE"),
     BROWN_TERRACOTTA(12, "STAINED_CLAY", null, null, null, null, "BROWN_TERRACOTTA"),
+    BROWN_WALL_BANNER(3, "BANNER", null, null, null, null, "BROWN_WALL_BANNER"),
     BROWN_WOOL(12, "WOOL", null, null, null, null, "BROWN_WOOL"),
     BUBBLE_COLUMN(null, null, null, null, null, "BUBBLE_COLUMN"),
     BUBBLE_CORAL(null, null, null, null, null, "BUBBLE_CORAL"),
@@ -170,12 +184,13 @@ public enum UMaterial {
     BUCKET("BUCKET"),
     BURNING_FURNACE("BURNING_FURNACE", null, null, null, null, "LEGACY_BURNING_FURNACE"),
     CACTUS("CACTUS"),
-    CACTUS_GREEN(2, "INK_SACK", null, null, null, null, "CACTUS_GREEN"),
     CAKE("CAKE"),
     CAKE_BLOCK("CAKE_BLOCK", null, null, null, null, "CAKE"),
+    CAMPFIRE(null, null, null, null, null, null, "CAMPFIRE"),
     CARROT("CARROT"),
     CARROT_ITEM("CARROT_ITEM", null, null, null, null, "CARROT"),
     CARROT_ON_A_STICK("CARROT_STICK", null, null, null, null, "CARROT_ON_A_STICK"),
+    CARTOGRAPHY_TABLE(null, null, null, null, null, null, "CARTOGRAPHY_TABLE"),
     CARVED_PUMPKIN("PUMPKIN", null, null, null, null, "CARVED_PUMPKIN"),
     CAULDRON("CAULDRON"),
     CAULDRON_ITEM("CAULDRON_ITEM", null, null, null, null, "CAULDRON"),
@@ -214,10 +229,13 @@ public enum UMaterial {
     COCOA("COCOA"),
     COCOA_BEANS(3, "INK_SACK", null, null, null, null, "COCOA_BEANS"),
     COD(2, "RAW_FISH", null, null, null, null, "COD"),
+    COD_BUCKET(null, null, null, null, null, null, "COD_BUCKET"),
+    COD_SPAWN_EGG(null, null, null, null, null, null, "COD_SPAWN_EGG"),
     COMMAND_BLOCK("COMMAND", null, null, null, null, "COMMAND_BLOCK"),
     COMMAND_BLOCK_MINECART("COMMAND_MINECART", null, null, null, null, "COMMAND_BLOCK_MINECART"),
     COMPARATOR("REDSTONE_COMPARATOR", null, null, null, null, "COMPARATOR"),
     COMPASS("COMPASS"),
+    COMPOSTER(null, null, null, null, null, null, "COMPOSTER"),
     CONDUIT(null, null, null, null, null, "CONDUIT"),
     COOKED_BEEF("COOKED_BEEF"),
     COOKED_CHICKEN("COOKED_CHICKEN"),
@@ -227,19 +245,25 @@ public enum UMaterial {
     COOKED_RABBIT("COOKED_RABBIT"),
     COOKED_SALMON(1, "COOKED_FISH", null, null, null, null, "COOKED_SALMON"),
     COOKIE("COOKIE"),
+    CORNFLOWER(null, null, null, null, null, null, "CORNFLOWER"),
     COW_SPAWN_EGG(92, "MONSTER_EGG", null, null, null, null, "COW_SPAWN_EGG"),
     CRACKED_STONE_BRICKS(2, "SMOOTH_BRICK", null, null, null, null, "CRACKED_STONE_BRICKS"),
     CRAFTING_TABLE("WORKBENCH", null, null, null, null, "CRAFTING_TABLE"),
+    CREEPER_BANNER_PATTERN(null, null, null, null, null, null, "CREEPER_BANNER_PATTERN"),
     CREEPER_HEAD(4, "SKULL_ITEM", null, null, null, null, "CREEPER_HEAD"),
     CREEPER_SPAWN_EGG(50, "MONSTER_EGG", null, null, null, null, "CREEPER_SPAWN_EGG"),
     CREEPER_WALL_HEAD(3, "SKULL", null, null, null, null, "CREEPER_WALL_HEAD"),
+    CROSSBOW(null, null, null, null, null, null, "CROSSBOW"),
     CUT_RED_SANDSTONE(2, "RED_SANDSTONE", null, null, null, null, "CUT_RED_SANDSTONE"),
+    CUR_RED_SANDSTONE_SLAB(null, null, null, null, null, null, "CUT_RED_SANDSTONE_SLAB"),
     CUT_SANDSTONE(2, "SANDSTONE", null, null, null, null, "CUT_SANDSTONE"),
+    CUT_SANDSTONE_SLAB(null, null, null, null, null, null, "CUT_SANDSTONE_SLAB"),
     CYAN_BANNER(6, "BANNER", null, null, null, null, "CYAN_BANNER"),
     CYAN_BED(9, "BED", null, null, null, null, "CYAN_BED"),
     CYAN_CARPET(9, "CARPET", null, null, null, null, "CYAN_CARPET"),
     CYAN_CONCRETE(9, null, null, null, null, "CONCRETE", "CYAN_CONCRETE"),
     CYAN_CONCRETE_POWDER(9, null, null, null, null, "CONCRETE_POWDER", "CYAN_CONCRETE_POWDER"),
+    CYAN_DYE(6, "INK_SACK", null, null, null, null, "CYAN_DYE"),
     CYAN_GLAZED_TERRACOTTA(null, null, null, null, "CYAN_GLAZED_TERRACOTTA"),
     CYAN_LEATHER_BOOTS("LEATHER_BOOTS", 9, Color.fromRGB(76, 127, 153)),
     CYAN_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 9, Color.fromRGB(76, 127, 153)),
@@ -251,10 +275,8 @@ public enum UMaterial {
     CYAN_TERRACOTTA(9, "STAINED_CLAY", null, null, null, null, "CYAN_TERRACOTTA"),
     CYAN_WALL_BANNER(6, "BANNER", null, null, null, null, "CYAN_WALL_BANNER"),
     CYAN_WOOL(9, "WOOL", null, null, null, null, "CYAN_WOOL"),
-    CYAN_DYE(6, "INK_SACK", null, null, null, null, "CYAN_DYE"),
     DAMAGED_ANVIL(2, "ANVIL", null, null, null, null, "DAMAGED_ANVIL"),
     DANDELION("YELLOW_FLOWER", null, null, null, null, "DANDELION"),
-    DANDELION_YELLOW(11, "INK_SACK", null, null, null, null, "DANDELION_YELLOW"),
     DARK_OAK_BOAT("BOAT", null, null, null, "BOAT_DARK_OAK", "DARK_OAK_BOAT"),
     DARK_OAK_BUTTON("WOOD_BUTTON", null, null, null, null, "DARK_OAK_BUTTON"),
     DARK_OAK_DOOR(null, null, null, null, null, "DARK_OAK_DOOR"),
@@ -266,9 +288,11 @@ public enum UMaterial {
     DARK_OAK_PLANKS(5, "WOOD", null, null, null, null, "DARK_OAK_PLANKS"),
     DARK_OAK_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "DARK_OAK_PRESSURE_PLATE"),
     DARK_OAK_SAPLING(5, "SAPLING", null, null, null, null, "DARK_OAK_SAPLING"),
+    DARK_OAK_SIGN("SIGN", null, null, null, null, null, "DARK_OAK_SIGN"),
     DARK_OAK_SLAB(5, "WOOD_STEP", null, null, null, null, "DARK_OAK_SLAB"),
     DARK_OAK_STAIRS("DARK_OAK_STAIRS"),
     DARK_OAK_TRAPDOOR("TRAP_DOOR", null, null, null, null, "DARK_OAK_TRAPDOOR"),
+    DARK_OAK_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "DARK_OAK_WALL_SIGN"),
     DARK_OAK_WOOD(13, "LOG_2", null, null, null, null, "DARK_OAK_WOOD"),
     DARK_PRISMARINE(2, "PRISMARINE", null, null, null, null, "DARK_PRISMARINE"),
     DARK_PRISMARINE_SLAB(null, null, null, null, null, "DARK_PRISMARINE_SLAB"),
@@ -291,6 +315,10 @@ public enum UMaterial {
     DEAD_HORN_CORAL_BLOCK(null, null, null, null, null, "DEAD_HORN_CORAL_BLOCK"),
     DEAD_HORN_CORAL_FAN(null, null, null, null, null, "DEAD_HORN_CORAL_FAN"),
     DEAD_HORN_CORAL_WALL_FAN(null, null, null, null, null, "DEAD_HORN_CORAL_WALL_FAN"),
+    DEAD_TUBE_CORAL(null, null, null, null, null, "DEAD_TUBE_CORAL"),
+    DEAD_TUBE_CORAL_BLOCK(null, null, null, null, null, "DEAD_TUBE_CORAL_BLOCK"),
+    DEAD_TUBE_CORAL_FAN(null, null, null, null, null, "DEAD_TUBE_CORAL_FAN"),
+    DEAD_TUBE_CORAL_WALL_FAN(null, null, null, null, null, "DEAD_TUBE_CORAL_WALL_FAN"),
     DEBUG_STICK(null, null, null, null, null, "DEBUG_STICK"),
     DETECTOR_RAIL("DETECTOR_RAIL"),
     DIAMOND("DIAMOND"),
@@ -307,6 +335,9 @@ public enum UMaterial {
     DIAMOND_SHOVEL("DIAMOND_SPADE", null, null, null, null, "DIAMOND_SHOVEL"),
     DIAMOND_SWORD("DIAMOND_SWORD"),
     DIORITE(3, "STONE", null, null, null, null, "DIORITE"),
+    DIORITE_SLAB(null, null, null, null, null, null, "DIORITE_SLAB"),
+    DIORITE_STAIRS(null, null, null, null, null, null, "DIORITE_STAIRS"),
+    DIORITE_WALL(null, null, null, null, null, null, "DIORITE_WALL"),
     DIRT("DIRT"),
     DISPENSER("DISPENSER"),
     DOLPHIN_SPAWN_EGG(null, null, null, null, null, "DOLPHIN_SPAWN_EGG"),
@@ -442,6 +473,9 @@ public enum UMaterial {
     END_PORTAL_FRAME("ENDER_PORTAL_FRAME", null, null, null, null, "END_PORTAL_FRAME"),
     END_ROD(null, "END_ROD"),
     END_STONE("ENDER_STONE", null, null, null, null, "END_STONE"),
+    END_STONE_BRICK_SLAB(null, null, null, null, null, null, "END_STONE_BRICK_SLAB"),
+    END_STONE_BRICK_STAIRS(null, null, null, null, null, null, "END_STONE_BRICK_STAIRS"),
+    END_STONE_BRICK_WALL(null, null, null, null, null, null, "END_STONE_BRICK_WALL"),
     END_STONE_BRICKS(null, "END_BRICKS", null, null, null, "END_STONE_BRICKS"),
     ENDER_CHEST("ENDER_CHEST"),
     ENDER_EYE("EYE_OF_ENDER", null, null, null, null, "ENDER_EYE"),
@@ -464,19 +498,23 @@ public enum UMaterial {
     FIREWORK_ROCKET("FIREWORK", null, null, null, null, "FIREWORK_ROCKET"),
     FIREWORK_STAR("FIREWORK_CHARGE", null, null, null, null, "FIREWORK_STAR"),
     FISHING_ROD("FISHING_ROD"),
+    FLETCHING_TABLE(null, null, null, null, null, null, "FLETCHING_TABLE"),
     FLINT("FLINT"),
     FLINT_AND_STEEL("FLINT_AND_STEEL"),
+    FLOWER_BANNER_PATTERN(null, null, null, null, null, null, "FLOWER_BANNER_PATTERN"),
     FLOWER_POT("FLOWER_POT"),
     FLOWER_POT_ITEM("FLOWER_POT_ITEM", null, null, null, null, "FLOWER_POT"),
+    FOX_SPAWN_EGG(null, null, null, null, null, null, "FOX_SPAWN_EGG"),
     FROSTED_ICE(null, "FROSTED_ICE"),
     FURNACE("FURNACE"),
     FURNACE_MINECART("POWERED_MINECART", null, null, null, null, "FURNACE_MINECART"),
     GHAST_SPAWN_EGG(56, "MONSTER_EGG", null, null, null, null, "GHAST_SPAWN_EGG"),
     GHAST_TEAR("GHAST_TEAR"),
     GLASS("GLASS"),
-    GLASS_PANE("THIN_GLASS", null, null, null, null, "GLASS_PANE"),
     GLASS_BOTTLE("GLASS_BOTTLE"),
+    GLASS_PANE("THIN_GLASS", null, null, null, null, "GLASS_PANE"),
     GLISTERING_MELON_SLICE("SPECKLED_MELON", null, null, null, null, "GLISTERING_MELON_SLICE"),
+    GLOBE_BANNER_PATTERN(null, null, null, null, null, null, "GLOBE_BANNER_PATTERN"),
     GLOWING_REDSTONE_ORE("GLOWING_REDSTONE_ORE", null, null, null, null, "LEGACY_GLOWING_REDSTONE_ORE"),
     GLOWSTONE("GLOWSTONE"),
     GLOWSTONE_DUST("GLOWSTONE_DUST"),
@@ -497,6 +535,9 @@ public enum UMaterial {
     GOLDEN_SHOVEL("GOLD_SPADE", null, null, null, null, "GOLDEN_SHOVEL"),
     GOLDEN_SWORD("GOLD_SWORD", null, null, null, null, "GOLDEN_SWORD"),
     GRANITE(1, "STONE", null, null, null, null, "GRANITE"),
+    GRANITE_SLAB(null, null, null, null, null, null, "GRANITE_SLAB"),
+    GRANITE_STAIRS(null, null, null, null, null, null, "GRANITE_STAIRS"),
+    GRANITE_WALL(null, null, null, null, null, null, "GRANITE_WALL"),
     GRASS("GRASS"),
     GRASS_BLOCK("GRASS", null, null, null, null, "GRASS_BLOCK"),
     GRASS_PATH(null, "GRASS_PATH"),
@@ -523,6 +564,7 @@ public enum UMaterial {
     GREEN_CARPET(13, "CARPET", null, null, null, null, "GREEN_CARPET"),
     GREEN_CONCRETE(13, null, null, null, null, "CONCRETE", "GREEN_CONCRETE"),
     GREEN_CONCRETE_POWDER(13, null, null, null, null, "CONCRETE_POWDER", "GREEN_CONCRETE_POWDER"),
+    GREEN_DYE(2, "INK_SACK", null, null, null, null, "CACTUS_GREEN", "GREEN_DYE"),
     GREEN_GLAZED_TERRACOTTA(null, null, null, null, "GREEN_GLAZED_TERRACOTTA"),
     GREEN_LEATHER_BOOTS("LEATHER_BOOTS", 13, Color.fromRGB(102, 127, 51)),
     GREEN_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 13, Color.fromRGB(102, 127, 51)),
@@ -534,6 +576,7 @@ public enum UMaterial {
     GREEN_TERRACOTTA(13, "STAINED_CLAY", null, null, null, null, "GREEN_TERRACOTTA"),
     GREEN_WALL_BANNER(2, "BANNER", null, null, null, null, "GREEN_WALL_BANNER"),
     GREEN_WOOL(13, "WOOL", null, null, null, null, "GREEN_WOOL"),
+    GRINDSTONE(null, null, null, null, null, null, "GRINDSTONE"),
     GUARDIAN_SPAWN_EGG(68, "MONSTER_EGG", null, null, null, null, "GUARDIAN_SPAWN_EGG"),
     GUNPOWDER("SULPHUR", null, null, null, null, "GUNPOWDER"),
     HAY_BLOCK("HAY_BLOCK"),
@@ -560,8 +603,8 @@ public enum UMaterial {
     IRON_BLOCK("IRON_BLOCK"),
     IRON_BOOTS("IRON_BOOTS"),
     IRON_CHESTPLATE("IRON_CHESTPLATE"),
-    IRON_DOOR("IRON_DOOR"),
-    IRON_DOOR_BLOCK("IRON_DOOR_BLOCK", null, null, null, null, "IRON_DOOR"),
+    IRON_DOOR("IRON_DOOR_BLOCK", null, null, null, null, "IRON_DOOR"),
+    IRON_DOOR_ITEM("IRON_DOOR"),
     IRON_HELMET("IRON_HELMET"),
     IRON_HOE("IRON_HOE"),
     IRON_HORSE_ARMOR("IRON_BARDING", null, null, null, null, "IRON_HORSE_ARMOR"),
@@ -575,6 +618,7 @@ public enum UMaterial {
     IRON_TRAPDOOR("IRON_TRAPDOOR"),
     ITEM_FRAME("ITEM_FRAME"),
     JACK_O_LANTERN("JACK_O_LANTERN"),
+    JIGSAW(null, null, null, null, null, null, "JIGSAW"),
     JUKEBOX("JUKEBOX"),
     JUNGLE_BOAT("BOAT", null, null, null, "BOAT_JUNGLE", "JUNGLE_BOAT"),
     JUNGLE_BUTTON("WOOD_BUTTON", null, null, null, null, "JUNGLE_BUTTON"),
@@ -587,14 +631,17 @@ public enum UMaterial {
     JUNGLE_PLANKS(3, "WOOD", null, null, null, null, "JUNGLE_PLANKS"),
     JUNGLE_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "JUNGLE_PRESSURE_PLATE"),
     JUNGLE_SAPLING(3, "SAPLING", null, null, null, null, "JUNGLE_SAPLING"),
+    JUNGLE_SIGN("SIGN", null, null, null, null, null, "JUNGLE_SIGN"),
     JUNGLE_SLAB(3, "WOOD_STEP", null, null, null, null, "JUNGLE_SLAB"),
     JUNGLE_STAIRS("JUNGLE_WOOD_STAIRS", null, null, null, null, "JUNGLE_STAIRS"),
     JUNGLE_TRAPDOOR("TRAP_DOOR", null, null, null, null, "JUNGLE_TRAPDOOR"),
+    JUNGLE_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "JUNGLE_WALL_SIGN"),
     JUNGLE_WOOD(15, "LOG", null, null, null, null, "JUNGLE_WOOD"),
     KELP(null, null, null, null, null, "KELP"),
     KELP_PLANT(null, null, null, null, null, "KELP_PLANT"),
     KNOWLEDGE_BOOK(null, null, null, null, "KNOWLEDGE_BOOK"),
     LADDER("LADDER"),
+    LANTERN(null, null, null, null, null, null, "LANTERN"),
     LAPIS_BLOCK("LAPIS_BLOCK"),
     LAPIS_LAZULI(4, "INK_SACK", null, null, null, null, "LAPIS_LAZULI"),
     LAPIS_ORE("LAPIS_ORE"),
@@ -606,7 +653,9 @@ public enum UMaterial {
     LEATHER_BOOTS("LEATHER_BOOTS"),
     LEATHER_CHESTPLATE("LEATHER_CHESTPLATE"),
     LEATHER_HELMET("LEATHER_HELMET"),
+    LEATHER_HORSE_ARMOR(null, null, null, null, null, null, "LEATHER_HORSE_ARMOR"),
     LEATHER_LEGGINGS("LEATHER_LEGGINGS"),
+    LECTERN(null, null, null, null, null, null, "LECTERN"),
     LEVER("LEVER"),
     LIGHT_BLUE_BANNER(12, "BANNER", null, null, null, null, "LIGHT_BLUE_BANNER"),
     LIGHT_BLUE_BED(3, "BED", null, null, null, null, "LIGHT_BLUE_BED"),
@@ -644,6 +693,7 @@ public enum UMaterial {
     LIGHT_GRAY_WOOL(8, "WOOL", null, null, null, null, "LIGHT_GRAY_WOOL"),
     LIGHT_WEIGHTED_PRESSURE_PLATE("GOLD_PLATE", null, null, null, null, "LIGHT_WEIGHTED_PRESSURE_PLATE"),
     LILAC(1, "DOUBLE_PLANT", null, null, null, null, "LILAC"),
+    LILY_OF_THE_VALLEY(null, null, null, null, null, null, "LILY_OF_THE_VALLEY"),
     LILY_PAD("WATER_LILY", null, null, null, null, "LILY_PAD"),
     LIME_BANNER(10, "BANNER", null, null, null, null, "LIME_BANNER"),
     LIME_BED(5, "BED", null, null, null, null, "LIME_BED"),
@@ -662,48 +712,49 @@ public enum UMaterial {
     LIME_TERRACOTTA(5, "STAINED_CLAY", null, null, null, null, "LIME_TERRACOTTA"),
     LIME_WALL_BANNER(10, "BANNER", null, null, null, null, "LIME_WALL_BANNER"),
     LIME_WOOL(5, "WOOL", null, null, null, null, "LIME_WOOL"),
-    LINGERING_POTION_AWKWARD(new UPotion(PotionBase.LINGERING, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "AWKWARD" : "WATER"), false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_FIRE_RESISTANCE(new UPotion(PotionBase.LINGERING, PotionType.FIRE_RESISTANCE, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.FIRE_RESISTANCE, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_HARMING_1(new UPotion(PotionBase.LINGERING, PotionType.INSTANT_DAMAGE, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_HARMING_2(new UPotion(PotionBase.LINGERING, PotionType.INSTANT_DAMAGE, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_HEALING_1(new UPotion(PotionBase.LINGERING, PotionType.INSTANT_HEAL, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_HEALING_2(new UPotion(PotionBase.LINGERING, PotionType.INSTANT_HEAL, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_INVISIBILITY(new UPotion(PotionBase.LINGERING, PotionType.INVISIBILITY, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_INVISIBILITY_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.INVISIBILITY, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_LEAPING_1(new UPotion(PotionBase.LINGERING, PotionType.JUMP, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_LEAPING_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.JUMP, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_LEAPING_2(new UPotion(PotionBase.LINGERING, PotionType.JUMP, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_LUCK(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") ? PotionType.valueOf("LUCK") : PotionType.WATER, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_MUNDANE(new UPotion(PotionBase.LINGERING, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "MUNDANE" : "WATER"), false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_NIGHT_VISION(new UPotion(PotionBase.LINGERING, PotionType.NIGHT_VISION, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.NIGHT_VISION, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_POISON_1(new UPotion(PotionBase.LINGERING, PotionType.POISON, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_POISON_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.POISON, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_POISON_2(new UPotion(PotionBase.LINGERING, PotionType.POISON, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_REGENERATION_1(new UPotion(PotionBase.LINGERING, PotionType.REGEN, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_REGENERATION_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.REGEN, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_REGENERATION_2(new UPotion(PotionBase.LINGERING, PotionType.REGEN, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SLOW_FALLING(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SLOWNESS_1(new UPotion(PotionBase.LINGERING, PotionType.SLOWNESS, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.SLOWNESS, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SLOWNESS_2(new UPotion(PotionBase.LINGERING, PotionType.SLOWNESS, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_STRENGTH_1(new UPotion(PotionBase.LINGERING, PotionType.STRENGTH, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_STRENGTH_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.STRENGTH, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_STRENGTH_2(new UPotion(PotionBase.LINGERING, PotionType.STRENGTH, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SWIFTNESS_1(new UPotion(PotionBase.LINGERING, PotionType.SPEED, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.SPEED, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_SWIFTNESS_2(new UPotion(PotionBase.LINGERING, PotionType.SPEED, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_THICK(new UPotion(PotionBase.LINGERING, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "THICK" : "WATER"), false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_TURTLE_MASTER_1(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_TURTLE_MASTER_2(new UPotion(PotionBase.LINGERING, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, true), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_WATER(new UPotion(PotionBase.LINGERING, PotionType.WATER, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_WATER_BREATHING(new UPotion(PotionBase.LINGERING, PotionType.WATER_BREATHING, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.WATER_BREATHING, true, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_WEAKNESS(new UPotion(PotionBase.LINGERING, PotionType.WEAKNESS, false, false), 0, null, "LINGERING_POTION"),
-    LINGERING_POTION_WEAKNESS_EXTENDED(new UPotion(PotionBase.LINGERING, PotionType.WEAKNESS, true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION(null, null, null, null, null, null, "LINGERING_POTION"),
+    LINGERING_POTION_AWKWARD(new UPotion(PotionBase.LINGERING,"AWKWARD", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_FIRE_RESISTANCE(new UPotion(PotionBase.LINGERING, "FIRE_RESISTANCE", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.LINGERING, "FIRE_RESISTANCE", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_HARMING_1(new UPotion(PotionBase.LINGERING, "INSTANT_DAMAGE", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_HARMING_2(new UPotion(PotionBase.LINGERING, "INSTANT_DAMAGE", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_HEALING_1(new UPotion(PotionBase.LINGERING, "INSTANT_HEAL", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_HEALING_2(new UPotion(PotionBase.LINGERING, "INSTANT_HEAL", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_INVISIBILITY(new UPotion(PotionBase.LINGERING, "INVISIBILITY", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_INVISIBILITY_EXTENDED(new UPotion(PotionBase.LINGERING, "INVISIBILITY", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_LEAPING_1(new UPotion(PotionBase.LINGERING, "JUMP", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_LEAPING_1_EXTENDED(new UPotion(PotionBase.LINGERING, "JUMP", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_LEAPING_2(new UPotion(PotionBase.LINGERING, "JUMP", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_LUCK(new UPotion(PotionBase.LINGERING, "LUCK", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_MUNDANE(new UPotion(PotionBase.LINGERING, "MUNDANE", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_NIGHT_VISION(new UPotion(PotionBase.LINGERING, "NIGHT_VISION", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.LINGERING, "NIGHT_VISION", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_POISON_1(new UPotion(PotionBase.LINGERING, "POISON", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_POISON_1_EXTENDED(new UPotion(PotionBase.LINGERING, "POISON", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_POISON_2(new UPotion(PotionBase.LINGERING, "POISON", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_REGENERATION_1(new UPotion(PotionBase.LINGERING, "REGEN", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_REGENERATION_1_EXTENDED(new UPotion(PotionBase.LINGERING, "REGEN", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_REGENERATION_2(new UPotion(PotionBase.LINGERING, "REGEN", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SLOW_FALLING(new UPotion(PotionBase.LINGERING, "SLOW_FALLING", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.LINGERING, "SLOW_FALLING", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SLOWNESS_1(new UPotion(PotionBase.LINGERING, "SLOWNESS", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.LINGERING, "SLOWNESS", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SLOWNESS_2(new UPotion(PotionBase.LINGERING, "SLOWNESS", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_STRENGTH_1(new UPotion(PotionBase.LINGERING, "STRENGTH", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_STRENGTH_1_EXTENDED(new UPotion(PotionBase.LINGERING, "STRENGTH", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_STRENGTH_2(new UPotion(PotionBase.LINGERING, "STRENGTH", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SWIFTNESS_1(new UPotion(PotionBase.LINGERING, "SPEED", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.LINGERING, "SPEED", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_SWIFTNESS_2(new UPotion(PotionBase.LINGERING, "SPEED", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_THICK(new UPotion(PotionBase.LINGERING, "THICK", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_TURTLE_MASTER_1(new UPotion(PotionBase.LINGERING, "TURTLE_MASTER", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.LINGERING, "TURTLE_MASTER", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_TURTLE_MASTER_2(new UPotion(PotionBase.LINGERING, "TURTLE_MASTER", false, true), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_WATER(new UPotion(PotionBase.LINGERING, "WATER", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_WATER_BREATHING(new UPotion(PotionBase.LINGERING, "WATER_BREATHING", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.LINGERING, "WATER_BREATHING", true, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_WEAKNESS(new UPotion(PotionBase.LINGERING, "WEAKNESS", false, false), 0, null, "LINGERING_POTION"),
+    LINGERING_POTION_WEAKNESS_EXTENDED(new UPotion(PotionBase.LINGERING, "WEAKNESS", true, false), 0, null, "LINGERING_POTION"),
     LLAMA_SPAWN_EGG(103, null, null, null, "MONSTER_EGG", null, "LLAMA_SPAWN_EGG"),
     MAGENTA_BANNER(13, "BANNER", null, null, null, null, "MAGENTA_BANNER"),
     MAGENTA_BED(2, "BED", null, null, null, null, "MAGENTA_BED"),
@@ -732,9 +783,15 @@ public enum UMaterial {
     MELON_STEM("MELON_STEM"),
     MILK_BUCKET("MILK_BUCKET"),
     MINECART("MINECART"),
+    MOJANG_BANNER_PATTERN(null, null, null, null, null, null, "MOJANG_BANNER_PATTERN"),
     MOOSHROOM_SPAWN_EGG(96, "MONSTER_EGG", null, null, null, null, "MOOSHROOM_SPAWN_EGG"),
     MOSSY_COBBLESTONE("MOSSY_COBBLESTONE"),
+    MOSSY_COBBLESTONE_SLAB(null, null, null, null, null, null, "MOSSY_COBBLESTONE_SLAB"),
+    MOSSY_COBBLESTONE_STAIRS(null, null, null, null, null, null, "MOSSY_COBBLESTONE_STAIRS"),
     MOSSY_COBBLESTONE_WALL(1, "COBBLE_WALL", null, null, null, null, "MOSSY_COBBLESTONE_WALL"),
+    MOSSY_STONE_BRICK_SLAB(null, null, null, null, null,  null, "MOSSY_STONE_BRICK_SLAB"),
+    MOSSY_STONE_BRICK_STAIRS(null, null, null, null, null, null, "MOSSY_STONE_BRICK_STAIRS"),
+    MOSSY_STONE_BRICK_WALL(null, null, null, null, null, null, "MOSSY_STONE_BRICK_WALL"),
     MOSSY_STONE_BRICKS(1, "SMOOTH_BRICK", null, null, null, null, "MOSSY_STONE_BRICKS"),
     MOVING_PISTON(null, null, null, null, null, "MOVING_PISTON"),
     MULE_SPAWN_EGG(32, "MONSTER_EGG", null, null, null, null, "MULE_SPAWN_EGG"),
@@ -760,12 +817,13 @@ public enum UMaterial {
     NETHER_BRICK_FENCE("NETHER_FENCE", null, null, null, null, "NETHER_BRICK_FENCE"),
     NETHER_BRICK_SLAB(6, "STEP", null, null, null, null, "NETHER_BRICK_SLAB"),
     NETHER_BRICK_STAIRS("NETHER_BRICK_STAIRS"),
+    NETHER_BRICK_WALL(null, null, null, null, null, null, "NETHER_BRICK_WALL"),
     NETHER_BRICKS("NETHER_BRICK", null, null, null, null, "NETHER_BRICKS"),
     NETHER_PORTAL("PORTAL", null, null, null, null, "NETHER_PORTAL"),
     NETHER_QUARTZ_ORE("QUARTZ_ORE", null, null, null, null, "NETHER_QUARTZ_ORE"),
     NETHER_STAR("NETHER_STAR"),
     NETHER_WART("NETHER_STALK", null, null, null, null, "NETHER_WART"),
-    NETHER_WART_BLOCK("NETHER_WARTS", null, null, null, null, "NETHER_WART_BLOCK"),
+    NETHER_WART_BLOCK("NETHER_WARTS", null, "NETHER_WART_BLOCK"),
     NETHERRACK("NETHERRACK"),
     NOTE_BLOCK("NOTE_BLOCK"),
     OAK_BOAT("BOAT", null, null, null, null, "OAK_BOAT"),
@@ -779,9 +837,11 @@ public enum UMaterial {
     OAK_PLANKS("WOOD", null, null, null, null, "OAK_PLANKS"),
     OAK_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "OAK_PRESSURE_PLATE"),
     OAK_SAPLING("SAPLING", null, null, null, null, "OAK_SAPLING"),
+    OAK_SIGN("SIGN", null, null, null, null, null, "OAK_SIGN"),
     OAK_SLAB("WOOD_STEP", null, null, null, null, "OAK_SLAB"),
     OAK_STAIRS("WOOD_STAIRS", null, null, null, null, "OAK_STAIRS"),
     OAK_TRAPDOOR("TRAP_DOOR", null, null, null, null, "OAK_TRAPDOOR"),
+    OAK_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "OAK_WALL_SIGN"),
     OAK_WOOD(12, "LOG", null, null, null, null, "OAK_WOOD"),
     OBSERVER(null, null, null, "OBSERVER"),
     OBSIDIAN("OBSIDIAN"),
@@ -814,6 +874,7 @@ public enum UMaterial {
     PHANTOM_MEMBRANE(null, null, null, null, null, "PHANTOM_MEMBRANE"),
     PHANTOM_SPAWN_EGG(null, null, null, null, null, "PHANTOM_SPAWN_EGG"),
     PIG_SPAWN_EGG(90, "MONSTER_EGG", null, null, null, null, "PIG_SPAWN_EGG"),
+    PILLAGER_SPAWN_EGG(null, null, null, null, null, null, "PILLAGER_SPAWN_EGG"),
     PINK_BANNER(9, "BANNER", null, null, null, null, "PINK_BANNER"),
     PINK_BED(6, "BED", null, null, null, null, "PINK_BED"),
     PINK_CARPET(6, "CARPET", null, null, null, null, "PINK_CARPET"),
@@ -841,59 +902,66 @@ public enum UMaterial {
     POISONOUS_POTATO("POISONOUS_POTATO"),
     POLAR_BEAR_SPAWN_EGG(102, null, null, "MONSTER_EGG", null, null, "POLAR_BEAR_SPAWN_EGG"),
     POLISHED_ANDESITE(6, "STONE", null, null, null, null, "POLISHED_ANDESITE"),
+    POLISHED_ANDESITE_SLAB(null, null, null, null, null, null, "POLISHED_ANDESITE_SLAB"),
+    POLISHED_ANDESITE_STAIRS(null, null, null, null, null, null, "POLISHED_ANDESITE_STAIRS"),
     POLISHED_DIORITE(4, "STONE", null, null, null, null, "POLISHED_DIORITE"),
+    POLISHED_DIORITE_SLAB(null, null, null, null, null, null, "POLISHED_DIORITE_SLAB"),
+    POLISHED_DIORITE_STAIRS(null, null, null, null, null, null, "POLISHED_DIORITE_STAIRS"),
     POLISHED_GRANITE(2, "STONE", null, null, null, null, "POLISHED_GRANITE"),
+    POLISHED_GRANITE_SLAB(null, null, null, null, null, null, "POLISHED_GRANITE_SLAB"),
+    POLISHED_GRANITE_STAIRS(null, null, null, null, null, null, "POLISHED_GRANITE_STAIRS"),
     POPPED_CHORUS_FRUIT(null, "CHORUS_FRUIT_POPPED", null, null, null, "POPPED_CHORUS_FRUIT"),
     POPPY("RED_ROSE", null, null, null, null, "POPPY"),
     PORKCHOP("PORK", null, null, null, null, "PORKCHOP"),
     POTATO_ITEM("POTATO_ITEM", null, null, null, null, "POTATO"),
     POTATOES("POTATO", null, null, null, null, "POTATOES"),
     POTION("POTION"),
-    POTION_AWKWARD("POTION", !Bukkit.getVersion().contains("1.8") ? 0 : 16, new UPotion(PotionBase.NORMAL, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "AWKWARD" : "WATER"), false, false)),
-    POTION_FIRE_RESISTANCE("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.FIRE_RESISTANCE, false, false)),
-    POTION_FIRE_RESISTANCE_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.FIRE_RESISTANCE, true, false)),
-    POTION_HARMING_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INSTANT_DAMAGE, false, false)),
-    POTION_HARMING_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INSTANT_DAMAGE, false, true)),
-    POTION_HEALING_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INSTANT_HEAL, false, false)),
-    POTION_HEALING_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INSTANT_HEAL, false, true)),
-    POTION_INVISIBILITY("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INVISIBILITY, false, false)),
-    POTION_INVISIBILITY_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.INVISIBILITY, true, false)),
-    POTION_LEAPING_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.JUMP, false, false)),
-    POTION_LEAPING_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.JUMP, true, false)),
-    POTION_LEAPING_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.JUMP, false, true)),
-    POTION_LUCK("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") ? PotionType.valueOf("LUCK") : PotionType.WATER, false, false)),
-    POTION_MUNDANE("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "MUNDANE" : "WATER"), false, false)),
-    POTION_NIGHT_VISION("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.NIGHT_VISION, false, false)),
-    POTION_NIGHT_VISION_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.NIGHT_VISION, true, false)),
-    POTION_POISON_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.POISON, false, false)),
-    POTION_POISON_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.POISON, true, false)),
-    POTION_POISON_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.POISON, false, true)),
-    POTION_REGENERATION_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.REGEN, false, false)),
-    POTION_REGENERATION_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.REGEN, true, false)),
-    POTION_REGENERATION_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.REGEN, false, true)),
-    POTION_SLOW_FALLING("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, false, false)),
-    POTION_SLOW_FALLING_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, true, false)),
-    POTION_SLOWNESS_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SLOWNESS, false, false)),
-    POTION_SLOWNESS_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SLOWNESS, true, false)),
-    POTION_SLOWNESS_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SLOWNESS, false, true)),
-    POTION_STRENGTH_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.STRENGTH, false, false)),
-    POTION_STRENGTH_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.STRENGTH, true, false)),
-    POTION_STRENGTH_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.STRENGTH, false, true)),
-    POTION_SWIFTNESS_1("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SPEED, false, false)),
-    POTION_SWIFTNESS_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SPEED, true, false)),
-    POTION_SWIFTNESS_2("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.SPEED, false, true)),
-    POTION_THICK("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "THICK" : "WATER"), false, false)),
-    POTION_TURTLE_MASTER_1("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, false)),
-    POTION_TURTLE_MASTER_1_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, true, false)),
-    POTION_TURTLE_MASTER_2("POTION", 0, new UPotion(PotionBase.NORMAL, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, true)),
-    POTION_WATER("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.WATER, false, false)),
-    POTION_WATER_BREATHING("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.WATER_BREATHING, false, false)),
-    POTION_WATER_BREATHING_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.WATER_BREATHING, true, false)),
-    POTION_WEAKNESS("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.WEAKNESS, false, false)),
-    POTION_WEAKNESS_EXTENDED("POTION", 0, new UPotion(PotionBase.NORMAL, PotionType.WEAKNESS, true, false)),
+    POTION_AWKWARD(new UPotion(PotionBase.NORMAL, "AWKWARD", false, false), 0, "POTION"),
+    POTION_FIRE_RESISTANCE(new UPotion(PotionBase.NORMAL, "FIRE_RESISTANCE", false, false), 0, "POTION"),
+    POTION_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.NORMAL, "FIRE_RESISTANCE", true, false), 0, "POTION"),
+    POTION_HARMING_1(new UPotion(PotionBase.NORMAL, "INSTANT_DAMAGE", false, false), 0, "POTION"),
+    POTION_HARMING_2(new UPotion(PotionBase.NORMAL, "INSTANT_DAMAGE", false, true), 0, "POTION"),
+    POTION_HEALING_1(new UPotion(PotionBase.NORMAL, "INSTANT_HEAL", false, false), 0, "POTION"),
+    POTION_HEALING_2(new UPotion(PotionBase.NORMAL, "INSTANT_HEAL", false, true), 0, "POTION"),
+    POTION_INVISIBILITY(new UPotion(PotionBase.NORMAL, "INVISIBILITY", false, false), 0, "POTION"),
+    POTION_INVISIBILITY_EXTENDED(new UPotion(PotionBase.NORMAL, "INVISIBILITY", true, false), 0, "POTION"),
+    POTION_LEAPING_1(new UPotion(PotionBase.NORMAL, "JUMP", false, false), 0, "POTION"),
+    POTION_LEAPING_1_EXTENDED(new UPotion(PotionBase.NORMAL, "JUMP", true, false), 0, "POTION"),
+    POTION_LEAPING_2(new UPotion(PotionBase.NORMAL, "JUMP", false, true), 0, "POTION"),
+    POTION_LUCK(new UPotion(PotionBase.NORMAL, "LUCK", false, false), 0, "POTION"),
+    POTION_MUNDANE(new UPotion(PotionBase.NORMAL, "MUNDANE", false, false), 0, "POTION"),
+    POTION_NIGHT_VISION(new UPotion(PotionBase.NORMAL, "NIGHT_VISION", false, false), 0, "POTION"),
+    POTION_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.NORMAL, "NIGHT_VISION", true, false), 0, "POTION"),
+    POTION_POISON_1(new UPotion(PotionBase.NORMAL, "POISON", false, false), 0, "POTION"),
+    POTION_POISON_1_EXTENDED(new UPotion(PotionBase.NORMAL, "POISON", true, false), 0, "POTION"),
+    POTION_POISON_2(new UPotion(PotionBase.NORMAL, "POISON", false, true), 0, "POTION"),
+    POTION_REGENERATION_1(new UPotion(PotionBase.NORMAL, "REGEN", false, false), 0, "POTION"),
+    POTION_REGENERATION_1_EXTENDED(new UPotion(PotionBase.NORMAL, "REGEN", true, false), 0, "POTION"),
+    POTION_REGENERATION_2(new UPotion(PotionBase.NORMAL, "REGEN", false, true), 0, "POTION"),
+    POTION_SLOW_FALLING(new UPotion(PotionBase.NORMAL, "SLOW_FALLING", false, false), 0, "POTION"),
+    POTION_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.NORMAL, "SLOW_FALLING", true, false), 0, "POTION"),
+    POTION_SLOWNESS_1(new UPotion(PotionBase.NORMAL, "SLOWNESS", false, false), 0, "POTION"),
+    POTION_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.NORMAL, "SLOWNESS", true, false), 0, "POTION"),
+    POTION_SLOWNESS_2(new UPotion(PotionBase.NORMAL, "SLOWNESS", false, true), 0, "POTION"),
+    POTION_STRENGTH_1(new UPotion(PotionBase.NORMAL, "STRENGTH", false, false), 0, "POTION"),
+    POTION_STRENGTH_1_EXTENDED(new UPotion(PotionBase.NORMAL, "STRENGTH", true, false), 0, "POTION"),
+    POTION_STRENGTH_2(new UPotion(PotionBase.NORMAL, "STRENGTH", false, true), 0, "POTION"),
+    POTION_SWIFTNESS_1(new UPotion(PotionBase.NORMAL, "SPEED", false, false), 0, "POTION"),
+    POTION_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.NORMAL, "SPEED", true, false), 0, "POTION"),
+    POTION_SWIFTNESS_2(new UPotion(PotionBase.NORMAL, "SPEED", false, true), 0, "POTION"),
+    POTION_THICK(new UPotion(PotionBase.NORMAL, "THICK", false, false), 0, "POTION"),
+    POTION_TURTLE_MASTER_1(new UPotion(PotionBase.NORMAL, "TURTLE_MASTER", false, false), 0, "POTION"),
+    POTION_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.NORMAL, "TURTLE_MASTER", true, false), 0, "POTION"),
+    POTION_TURTLE_MASTER_2(new UPotion(PotionBase.NORMAL, "TURTLE_MASTER", false, true), 0, "POTION"),
+    POTION_WATER(new UPotion(PotionBase.NORMAL, "WATER", false, false), 0, "POTION"),
+    POTION_WATER_BREATHING(new UPotion(PotionBase.NORMAL, "WATER_BREATHING", false, false), 0, "POTION"),
+    POTION_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.NORMAL, "WATER_BREATHING", true, false), 0, "POTION"),
+    POTION_WEAKNESS(new UPotion(PotionBase.NORMAL, "WEAKNESS", false, false), 0, "POTION"),
+    POTION_WEAKNESS_EXTENDED(new UPotion(PotionBase.NORMAL, "WEAKNESS", true, false), 0, "POTION"),
     POTTED_ACACIA_SAPLING(null, null, null, null, null, "POTTED_ACACIA_SAPLING"),
     POTTED_ALLIUM(null, null, null, null, null, "POTTED_ALLIUM"),
     POTTED_AZURE_BLUET(null, null, null, null, null, "POTTED_AZURE_BLUET"),
+    POTTED_BAMBOO(null, null, null, null, null, null, "POTTED_BAMBOO"),
     POTTED_BIRCH_SAPLING(null, null, null, null, null, "POTTED_BIRCH_SAPLING"),
     POTTED_BLUE_ORCHID(null, null, null, null, null, "POTTED_BLUE_ORCHID"),
     POTTED_BROWN_MUSHROOM(null, null, null, null, null, "POTTED_BROWN_MUSHROOM"),
@@ -903,6 +971,7 @@ public enum UMaterial {
     POTTED_DEAD_BUSH(null, null, null, null, null, "POTTED_DEAD_BUSH"),
     POTTED_FERN(null, null, null, null, null, "POTTED_FERN"),
     POTTED_JUNGLE_SAPLING(null, null, null, null, null, "POTTED_JUNGLE_SAPLING"),
+    POTTED_LILY_OF_THE_VALLET(null, null, null, null, null, null, "POTTED_LILY_OF_THE_VALLEY"),
     POTTED_OAK_SAPLING(null, null, null, null, null, "POTTED_OAK_SAPLING"),
     POTTED_ORANGE_TULIP(null, null, null, null, null, "POTTED_ORANGE_TULIP"),
     POTTED_OXEYE_DAISY(null, null, null, null, null, "POTTED_OXEYE_DAISY"),
@@ -912,6 +981,7 @@ public enum UMaterial {
     POTTED_RED_TULIP(null, null, null, null, null, "POTTED_RED_TULIP"),
     POTTED_SPRUCE_SAPLING(null, null, null, null, null, "POTTED_SPRUCE_SAPLING"),
     POTTED_WHITE_TULIP(null, null, null, null, null, "POTTED_WHITE_TULIP"),
+    POTTED_WITHER_ROSE(null, null, null, null, null, null, "POTTED_WITHER_ROSE"),
     POWERED_RAIL("POWERED_RAIL"),
     PRISMARINE("PRISMARINE"),
     PRISMARINE_BRICK_SLAB(null, null, null, null, null, "PRISMARINE_BRICK_SLAB"),
@@ -921,6 +991,7 @@ public enum UMaterial {
     PRISMARINE_SHARD("PRISMARINE_SHARD"),
     PRISMARINE_SLAB(null, null, null, null, null, "PRISMARINE_SLAB"),
     PRISMARINE_STAIRS(null, null, null, null, null, "PRISMARINE_STAIRS"),
+    PRISMARINE_WALL(null, null, null, null, null, null, "PRISMARINE_WALL"),
     PUFFERFISH(3, "RAW_FISH", null, null, null, null, "PUFFERFISH"),
     PUFFERFISH_BUCKET(null, null, null, null, null, "PUFFERFISH_BUCKET"),
     PUFFERFISH_SPAWN_EGG(null, null, null, null, null, "PUFFERFISH_SPAWN_EGG"),
@@ -960,11 +1031,13 @@ public enum UMaterial {
     RABBIT_SPAWN_EGG(101, "MONSTER_EGG", null, null, null, null, "RABBIT_SPAWN_EGG"),
     RABBIT_STEW("RABBIT_STEW"),
     RAIL("RAILS", null, null, null, null, "RAIL"),
+    RAVAGER_SPAWN_EGG(null, null, null, null, null, null, "RAVAGER_SPAWN_EGG"),
     RED_BANNER(1, "BANNER", null, null, null, null, "RED_BANNER"),
     RED_BED(14, "BED", null, null, null, null, "RED_BED"),
     RED_CARPET(14, "CARPET", null, null, null, null, "RED_CARPET"),
     RED_CONCRETE(14, null, null, null, null, "CONCRETE", "RED_CONCRETE"),
     RED_CONCRETE_POWDER(14, null, null, null, null, "CONCRETE_POWDER", "RED_CONCRETE_POWDER"),
+    RED_DYE(1, "INK_SACK", null, null, null, "ROSE_RED", null, "RED_DYE"),
     RED_GLAZED_TERRACOTTA(null, null, null, null, "RED_GLAZED_TERRACOTTA"),
     RED_LEATHER_BOOTS("LEATHER_BOOTS", 14, Color.fromRGB(153, 51, 51)),
     RED_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 14, Color.fromRGB(153, 51, 51)),
@@ -972,11 +1045,15 @@ public enum UMaterial {
     RED_LEATHER_LEGGINGS("LEATHER_LEGGINGS", 14, Color.fromRGB(153, 51, 51)),
     RED_MUSHROOM("RED_MUSHROOM"),
     RED_MUSHROOM_BLOCK(14, "HUGE_MUSHROOM_2", null, null, null, null, "RED_MUSHROOM_BLOCK"),
+    RED_NETHER_BRICK_SLAB(null, null, null, null, null, null, "RED_NETHER_BRICK_SLAB"),
+    RED_NETHER_BRICK_STAIRS(null, null, null, null, null, null, "RED_NETHER_BRICK_STAIRS"),
+    RED_NETHER_BRICK_WALL(null, null, null, null, null, null, "RED_NETHER_BRICK_WALL"),
     RED_NETHER_BRICKS(null, null, "RED_NETHER_BRICK", null, null, "RED_NETHER_BRICKS"),
     RED_SAND(1, "SAND", null, null, null, null, "RED_SAND"),
     RED_SANDSTONE("RED_SANDSTONE"),
     RED_SANDSTONE_SLAB("STONE_SLAB2", null, null, null, null, "RED_SANDSTONE_SLAB"),
     RED_SANDSTONE_STAIRS("RED_SANDSTONE_STAIRS"),
+    RED_SANDSTONE_WALL(null, null, null, null, null, null, "RED_SANDSTONE_WALL"),
     RED_SHULKER_BOX(null, null, null, "RED_SHULKER_BOX"),
     RED_STAINED_GLASS(14, "STAINED_GLASS", null, null, null, null, "RED_STAINED_GLASS"),
     RED_STAINED_GLASS_PANE(14, "STAINED_GLASS_PANE", null, null, null, null, "RED_STAINED_GLASS_PANE"),
@@ -996,7 +1073,6 @@ public enum UMaterial {
     REPEATER("DIODE", null, null, null, null, "REPEATER"),
     REPEATING_COMMAND_BLOCK("COMMAND", "COMMAND_REPEATING", null, null, null, "REPEATING_COMMAND_BLOCK"),
     ROSE_BUSH(4, "DOUBLE_PLANT", null, null, null, null, "ROSE_BUSH"),
-    ROSE_RED(1, "INK_SACK", null, null, null, null, "ROSE_RED"),
     ROTTEN_FLESH("ROTTEN_FLESH"),
     SADDLE("SADDLE"),
     SALMON(1, "RAW_FISH", null, null, null, null, "SALMON"),
@@ -1006,6 +1082,8 @@ public enum UMaterial {
     SANDSTONE("SANDSTONE"),
     SANDSTONE_SLAB(1, "STEP", null, null, null, null, "SANDSTONE_SLAB"),
     SANDSTONE_STAIRS("SANDSTONE_STAIRS"),
+    SANDSTONE_WALL(null, null, null, null, null, null, "SANDSTONE_WALL"),
+    SCAFFOLDING(null, null, null, null, null, null, "SCAFFOLDING"),
     SCUTE(null, null, null, null, null, "SCUTE"),
     SEA_LANTERN("SEA_LANTERN"),
     SEA_PICKLE(null, null, null, null, null, "SEA_PICKLE"),
@@ -1016,21 +1094,29 @@ public enum UMaterial {
     SHULKER_BOX(null, null, null, "WHITE_SHULKER_BOX"),
     SHULKER_SHELL(null, null, null, "SHULKER_SHELL"),
     SHULKER_SPAWN_EGG(69, null, null, null, "MONSTER_EGG", null, "SHULKER_SPAWN_EGG"),
-    SIGN("SIGN"),
-    SIGN_POST("SIGN_POST", null, null, null, null, "SIGN"),
     SILVERFISH_SPAWN_EGG(60, "MONSTER_EGG", null, null, null, null, "SILVERFISH_SPAWN_EGG"),
     SKELETON_HORSE_SPAWN_EGG(null, null, null, null, null, "SKELETON_HORSE_SPAWN_EGG"),
     SKELETON_SKULL("SKULL", null, null, null, null, "SKELETON_SKULL"),
     SKELETON_SKULL_ITEM("SKULL_ITEM", null, null, null, null, "SKELETON_SKULL"),
     SKELETON_SPAWN_EGG(51, "MONSTER_EGG", null, null, null, null, "SKELETON_SPAWN_EGG"),
     SKELETON_WALL_SKULL("SKULL", null, null, null, null, "SKELETON_WALL_SKULL"),
+    SKULL_BANNER_PATTERN(null, null, null, null, null, null, "SKULL_BANNER_PATTERN"),
     SLIME_BALL("SLIME_BALL"),
     SLIME_BLOCK("SLIME_BLOCK"),
     SLIME_SPAWN_EGG(55, "MONSTER_EGG", null, null, null, null, "SLIME_SPAWN_EGG"),
+    SMITHING_TABLE(null, null, null, null, null, null, "SMITHING_TABLE"),
+    SMOKER(null, null, null, null, null, null, "SMOKER"),
     SMOOTH_QUARTZ(null, null, null, null, null, "SMOOTH_QUARTZ"),
+    SMOOTH_QUARTZ_SLAB(null, null, null, null, null, null, "SMOOTH_QUARTZ_SLAB"),
+    SMOOTH_QUARTZ_STAIRS(null, null, null, null, null, null, "SMOOTH_QUARTZ_STAIRS"),
     SMOOTH_RED_SANDSTONE(8, "DOUBLE_STONE_SLAB2", null, null, null, null, "SMOOTH_RED_SANDSTONE"),
+    SMOOTH_RED_SANDSTONE_SLAB(null, null, null, null, null, null, "SMOOTH_RED_SANDSTONE_SLAB"),
+    SMOOTH_RED_SANDSTONE_STAIRS(null, null, null, null, null, null, "SMOOTH_RED_SANDSTONE_STAIRS"),
     SMOOTH_SANDSTONE(9, "DOUBLE_STEP", null, null, null, null, "SMOOTH_SANDSTONE"),
+    SMOOTH_SANDSTONE_SLAB(null, null, null, null, null, null, "SMOOTH_SANDSTONE_SLAB"),
+    SMOOTH_SANDSTONE_STAIRS(null, null, null, null, null, null, "SMOOTH_SANDSTONE_STAIRS"),
     SMOOTH_STONE(8, "DOUBLE_STEP", null, null, null, null, "SMOOTH_STONE"),
+    SMOOTH_STONE_SLAB(null, null, null, null, null, null, "SMOOTH_STONE_SLAB"),
     SNOW("SNOW"),
     SNOW_BLOCK("SNOW_BLOCK"),
     SNOWBALL("SNOW_BALL", null, null, null, null, "SNOWBALL"),
@@ -1041,48 +1127,48 @@ public enum UMaterial {
     SPIDER_EYE("SPIDER_EYE"),
     SPIDER_SPAWN_EGG(52, "MONSTER_EGG", null, null, null, null, "SPIDER_SPAWN_EGG"),
     SPLASH_POTION(null, "SPLASH_POTION"),
-    SPLASH_POTION_AWKWARD(new UPotion(PotionBase.SPLASH, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "AWKWARD" : "WATER"), false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_FIRE_RESISTANCE(new UPotion(PotionBase.SPLASH, PotionType.FIRE_RESISTANCE, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.FIRE_RESISTANCE, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_HARMING_1(new UPotion(PotionBase.SPLASH, PotionType.INSTANT_DAMAGE, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_HARMING_2(new UPotion(PotionBase.SPLASH, PotionType.INSTANT_DAMAGE, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_HEALING_1(new UPotion(PotionBase.SPLASH, PotionType.INSTANT_HEAL, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_HEALING_2(new UPotion(PotionBase.SPLASH, PotionType.INSTANT_HEAL, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_INVISIBILITY(new UPotion(PotionBase.SPLASH, PotionType.INVISIBILITY, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_INVISIBILITY_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.INVISIBILITY, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_LEAPING_1(new UPotion(PotionBase.SPLASH, PotionType.JUMP, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_LEAPING_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.JUMP, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_LEAPING_2(new UPotion(PotionBase.SPLASH, PotionType.JUMP, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_LUCK(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") ? PotionType.valueOf("LUCK") : PotionType.WATER, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_MUNDANE(new UPotion(PotionBase.SPLASH, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "MUNDANE" : "WATER"), false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_NIGHT_VISION(new UPotion(PotionBase.SPLASH, PotionType.NIGHT_VISION, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.NIGHT_VISION, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_POISON_1(new UPotion(PotionBase.SPLASH, PotionType.POISON, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_POISON_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.POISON, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_POISON_2(new UPotion(PotionBase.SPLASH, PotionType.POISON, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_REGENERATION_1(new UPotion(PotionBase.SPLASH, PotionType.REGEN, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_REGENERATION_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.REGEN, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_REGENERATION_2(new UPotion(PotionBase.SPLASH, PotionType.REGEN, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SLOW_FALLING(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("SLOW_FALLING") : PotionType.WATER, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SLOWNESS_1(new UPotion(PotionBase.SPLASH, PotionType.SLOWNESS, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.SLOWNESS, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SLOWNESS_2(new UPotion(PotionBase.SPLASH, PotionType.SLOWNESS, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_STRENGTH_1(new UPotion(PotionBase.SPLASH, PotionType.STRENGTH, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_STRENGTH_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.STRENGTH, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_STRENGTH_2(new UPotion(PotionBase.SPLASH, PotionType.STRENGTH, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SWIFTNESS_1(new UPotion(PotionBase.SPLASH, PotionType.SPEED, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.SPEED, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_SWIFTNESS_2(new UPotion(PotionBase.SPLASH, PotionType.SPEED, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_THICK(new UPotion(PotionBase.SPLASH, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "THICK" : "WATER"), false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_TURTLE_MASTER_1(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_TURTLE_MASTER_2(new UPotion(PotionBase.SPLASH, !Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? PotionType.valueOf("TURTLE_MASTER") : PotionType.WATER, false, true), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_WATER(new UPotion(PotionBase.SPLASH, PotionType.WATER, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_WATER_BREATHING(new UPotion(PotionBase.SPLASH, PotionType.WATER_BREATHING, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.WATER_BREATHING, true, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_WEAKNESS(new UPotion(PotionBase.SPLASH, PotionType.WEAKNESS, false, false), 0, null, "SPLASH_POTION"),
-    SPLASH_POTION_WEAKNESS_EXTENDED(new UPotion(PotionBase.SPLASH, PotionType.WEAKNESS, true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_AWKWARD(new UPotion(PotionBase.SPLASH, "AWKWARD", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_FIRE_RESISTANCE(new UPotion(PotionBase.SPLASH, "FIRE_RESISTANCE", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.SPLASH, "FIRE_RESISTANCE", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_HARMING_1(new UPotion(PotionBase.SPLASH, "INSTANT_DAMAGE", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_HARMING_2(new UPotion(PotionBase.SPLASH, "INSTANT_DAMAGE", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_HEALING_1(new UPotion(PotionBase.SPLASH, "INSTANT_HEAL", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_HEALING_2(new UPotion(PotionBase.SPLASH, "INSTANT_HEAL", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_INVISIBILITY(new UPotion(PotionBase.SPLASH, "INVISIBILITY", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_INVISIBILITY_EXTENDED(new UPotion(PotionBase.SPLASH, "INVISIBILITY", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_LEAPING_1(new UPotion(PotionBase.SPLASH, "JUMP", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_LEAPING_1_EXTENDED(new UPotion(PotionBase.SPLASH, "JUMP", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_LEAPING_2(new UPotion(PotionBase.SPLASH, "JUMP", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_LUCK(new UPotion(PotionBase.SPLASH, "LUCK", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_MUNDANE(new UPotion(PotionBase.SPLASH, "MUNDANE", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_NIGHT_VISION(new UPotion(PotionBase.SPLASH, "NIGHT_VISION", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.SPLASH, "NIGHT_VISION", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_POISON_1(new UPotion(PotionBase.SPLASH, "POISON", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_POISON_1_EXTENDED(new UPotion(PotionBase.SPLASH, "POISON", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_POISON_2(new UPotion(PotionBase.SPLASH, "POISON", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_REGENERATION_1(new UPotion(PotionBase.SPLASH, "REGEN", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_REGENERATION_1_EXTENDED(new UPotion(PotionBase.SPLASH, "REGEN", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_REGENERATION_2(new UPotion(PotionBase.SPLASH, "REGEN", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SLOW_FALLING(new UPotion(PotionBase.SPLASH, "SLOW_FALLING", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.SPLASH, "SLOW_FALLING", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SLOWNESS_1(new UPotion(PotionBase.SPLASH, "SLOWNESS", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.SPLASH, "SLOWNESS", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SLOWNESS_2(new UPotion(PotionBase.SPLASH, "SLOWNESS", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_STRENGTH_1(new UPotion(PotionBase.SPLASH, "STRENGTH", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_STRENGTH_1_EXTENDED(new UPotion(PotionBase.SPLASH, "STRENGTH", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_STRENGTH_2(new UPotion(PotionBase.SPLASH, "STRENGTH", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SWIFTNESS_1(new UPotion(PotionBase.SPLASH, "SPEED", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.SPLASH, "SPEED", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_SWIFTNESS_2(new UPotion(PotionBase.SPLASH, "SPEED", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_THICK(new UPotion(PotionBase.SPLASH, "THICK", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_TURTLE_MASTER_1(new UPotion(PotionBase.SPLASH, "TURTLE_MASTER", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.SPLASH, "TURTLE_MASTER", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_TURTLE_MASTER_2(new UPotion(PotionBase.SPLASH, "TURTLE_MASTER", false, true), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_WATER(new UPotion(PotionBase.SPLASH, "WATER", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_WATER_BREATHING(new UPotion(PotionBase.SPLASH, "WATER_BREATHING", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.SPLASH, "WATER_BREATHING", true, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_WEAKNESS(new UPotion(PotionBase.SPLASH, "WEAKNESS", false, false), 0, null, "SPLASH_POTION"),
+    SPLASH_POTION_WEAKNESS_EXTENDED(new UPotion(PotionBase.SPLASH, "WEAKNESS", true, false), 0, null, "SPLASH_POTION"),
     SPONGE("SPONGE"),
     SPRUCE_BOAT("BOAT", null, null, null, "BOAT_SPRUCE", "SPRUCE_BOAT"),
     SPRUCE_BUTTON("WOOD_BUTTON", null, null, null, null, "SPRUCE_BUTTON"),
@@ -1095,9 +1181,11 @@ public enum UMaterial {
     SPRUCE_PLANKS(1, "WOOD", null, null, null, null, "SPRUCE_PLANKS"),
     SPRUCE_PRESSURE_PLATE("WOOD_PLATE", null, null, null, null, "SPRUCE_PRESSURE_PLATE"),
     SPRUCE_SAPLING(1, "SAPLING", null, null, null, null, "SPRUCE_SAPLING"),
+    SPRUCE_SIGN("SIGN", null, null, null, null, null, "SPRUCE_SIGN"),
     SPRUCE_SLAB(1, "WOOD_STEP", null, null, null, null, "SPRUCE_SLAB"),
     SPRUCE_STAIRS("SPRUCE_WOOD_STAIRS", null, null, null, null, "SPRUCE_STAIRS"),
     SPRUCE_TRAPDOOR("TRAP_DOOR", null, null, null, null, "SPRUCE_TRAPDOOR"),
+    SPRUCE_WALL_SIGN("WALL_SIGN", null, null, null, null, null, "SPRUCE_WALL_SIGN"),
     SPRUCE_WOOD(13, "LOG", null, null, null, null, "SPRUCE_WOOD"),
     SQUID_SPAWN_EGG(94, "MONSTER_EGG", null, null, null, null, "SQUID_SPAWN_EGG"),
     STICK("STICK"),
@@ -1106,6 +1194,7 @@ public enum UMaterial {
     STONE_AXE("STONE_AXE"),
     STONE_BRICK_SLAB(5, "STEP", null, null, null, null, "STONE_BRICK_SLAB"),
     STONE_BRICK_STAIRS("SMOOTH_STAIRS", null, null, null, null, "STONE_BRICK_STAIRS"),
+    STONE_BRICK_WALL(null, null, null, null, null, null, "STONE_BRICK_WALL"),
     STONE_BRICKS("SMOOTH_BRICK", null, null, null, null, "STONE_BRICKS"),
     STONE_BUTTON("STONE_BUTTON"),
     STONE_HOE("STONE_HOE"),
@@ -1114,6 +1203,7 @@ public enum UMaterial {
     STONE_SHOVEL("STONE_SPADE", null, null, null, null, "STONE_SHOVEL"),
     STONE_SLAB("STEP", null, null, null, null, "STONE_SLAB"),
     STONE_SWORD("STONE_SWORD"),
+    STONECUTTER(null, null, null, null, null, null, "STONECUTTER"),
     STRAY_SPAWN_EGG(null, null, "MONSTER_EGG", null, null, "STRAY_SPAWN_EGG"),
     STRING("STRING"),
     STRIPPED_ACACIA_LOG(null, null, null, null, null, "STRIPPED_ACACIA_LOG"),
@@ -1129,57 +1219,62 @@ public enum UMaterial {
     STRIPPED_SPRUCE_LOG(null, null, null, null, null, "STRIPPED_SPRUCE_LOG"),
     STRIPPED_SPRUCE_WOOD(null, null, null, null, null, "STRIPPED_SPRUCE_WOOD"),
     STRUCTURE_BLOCK(null, "STRUCTURE_BLOCK"),
+    STRUCTURE_VOID(null, null, null, null, null, null, "STRUCTURE_VOID"),
     SUGAR("SUGAR"),
     SUGAR_CANE_ITEM("SUGAR_CANE"),
     SUNFLOWER("DOUBLE_PLANT", null, null, null, null, "SUNFLOWER"),
+    SUSPICIOUS_STEW(null, null, null, null, null, null, "SUSPICIOUS_STEW"),
+    SWEET_BERRIES(null, null, null, null, null, null, "SWEET_BERRIES"),
+    SWEET_BERRY_BUSH(null, null, null, null, null, null, "SWEET_BERRY_BUSH"),
     TALL_GRASS(1, "LONG_GRASS", null, null, null, null, "TALL_GRASS"),
     TALL_GRASS_BOTTOM(2, "DOUBLE_PLANT", null, null, null, null, "TALL_GRASS"),
     TALL_GRASS_TOP(10, 2, "DOUBLE_PLANT", null, null, null, null, "TALL_GRASS"),
     TALL_SEAGRASS(null, null, null, null, null, "TALL_SEAGRASS"),
     TERRACOTTA("HARD_CLAY", null, null, null, null, "TERRACOTTA"),
     TIPPED_ARROW("ARROW", null, null, null, "TIPPED_ARROW"),
-    TIPPED_ARROW_FIRE_RESISTANCE(new UPotion(PotionBase.ARROW, PotionType.FIRE_RESISTANCE, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.FIRE_RESISTANCE, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_HARMING_1(new UPotion(PotionBase.ARROW, PotionType.INSTANT_DAMAGE, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_HARMING_2(new UPotion(PotionBase.ARROW, PotionType.INSTANT_DAMAGE, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_HEALING_1(new UPotion(PotionBase.ARROW, PotionType.INSTANT_HEAL, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_HEALING_2(new UPotion(PotionBase.ARROW, PotionType.INSTANT_HEAL, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_INVISIBILITY(new UPotion(PotionBase.ARROW, PotionType.INVISIBILITY, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_INVISIBILITY_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.INVISIBILITY, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_LEAPING_1(new UPotion(PotionBase.ARROW, PotionType.JUMP, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_LEAPING_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.JUMP, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_LEAPING_2(new UPotion(PotionBase.ARROW, PotionType.JUMP, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_LUCK(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") ? "LUCK" : "JUMP"), false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_NIGHT_VISION(new UPotion(PotionBase.ARROW, PotionType.NIGHT_VISION, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.NIGHT_VISION, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_POISON_1(new UPotion(PotionBase.ARROW, PotionType.POISON, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_POISON_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.POISON, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_POISON_2(new UPotion(PotionBase.ARROW, PotionType.POISON, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_REGENERATION_1(new UPotion(PotionBase.ARROW, PotionType.REGEN, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_REGENERATION_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.REGEN, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_REGENERATION_2(new UPotion(PotionBase.ARROW, PotionType.REGEN, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SLOW_FALLING(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? "SLOW_FALLING" : "SLOWNESS"), false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? "SLOW_FALLING" : "SLOWNESS"), true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SLOWNESS_1(new UPotion(PotionBase.ARROW, PotionType.SLOWNESS, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.SLOWNESS, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SLOWNESS_2(new UPotion(PotionBase.ARROW, PotionType.SLOWNESS, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_STRENGTH_1(new UPotion(PotionBase.ARROW, PotionType.STRENGTH, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_STRENGTH_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.STRENGTH, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_STRENGTH_2(new UPotion(PotionBase.ARROW, PotionType.STRENGTH, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SWIFTNESS_1(new UPotion(PotionBase.ARROW, PotionType.SPEED, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.SPEED, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_SWIFTNESS_2(new UPotion(PotionBase.ARROW, PotionType.SPEED, false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_TURTLE_MASTER_1(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? "TURTLE_MASTER" : "SLOWNESS"), false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? "TURTLE_MASTER" : "SLOWNESS"), true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_TURTLE_MASTER_2(new UPotion(PotionBase.ARROW, PotionType.valueOf(!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") ? "TURTLE_MASTER" : "SLOWNESS"), false, true), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_WATER_BREATHING(new UPotion(PotionBase.ARROW, PotionType.WATER_BREATHING, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.WATER_BREATHING, true, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_WEAKNESS(new UPotion(PotionBase.ARROW, PotionType.WEAKNESS, false, false), 0, "ARROW", "TIPPED_ARROW"),
-    TIPPED_ARROW_WEAKNESS_EXTENDED(new UPotion(PotionBase.ARROW, PotionType.WEAKNESS, true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_FIRE_RESISTANCE(new UPotion(PotionBase.TIPPED_ARROW, "FIRE_RESISTANCE", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_FIRE_RESISTANCE_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "FIRE_RESISTANCE", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_HARMING_1(new UPotion(PotionBase.TIPPED_ARROW, "INSTANT_DAMAGE", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_HARMING_2(new UPotion(PotionBase.TIPPED_ARROW, "INSTANT_DAMAGE", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_HEALING_1(new UPotion(PotionBase.TIPPED_ARROW, "INSTANT_HEAL", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_HEALING_2(new UPotion(PotionBase.TIPPED_ARROW, "INSTANT_HEAL", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_INVISIBILITY(new UPotion(PotionBase.TIPPED_ARROW, "INVISIBILITY", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_INVISIBILITY_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "INVISIBILITY", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_LEAPING_1(new UPotion(PotionBase.TIPPED_ARROW, "JUMP", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_LEAPING_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "JUMP", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_LEAPING_2(new UPotion(PotionBase.TIPPED_ARROW, "JUMP", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_LUCK(new UPotion(PotionBase.TIPPED_ARROW, "LUCK", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_NIGHT_VISION(new UPotion(PotionBase.TIPPED_ARROW, "NIGHT_VISION", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_NIGHT_VISION_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "NIGHT_VISION", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_POISON_1(new UPotion(PotionBase.TIPPED_ARROW, "POISON", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_POISON_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "POISON", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_POISON_2(new UPotion(PotionBase.TIPPED_ARROW, "POISON", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_REGENERATION_1(new UPotion(PotionBase.TIPPED_ARROW, "REGEN", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_REGENERATION_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "REGEN", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_REGENERATION_2(new UPotion(PotionBase.TIPPED_ARROW, "REGEN", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SLOW_FALLING(new UPotion(PotionBase.TIPPED_ARROW, "SLOW_FALLING", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SLOW_FALLING_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "SLOW_FALLING", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SLOWNESS_1(new UPotion(PotionBase.TIPPED_ARROW, "SLOWNESS", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SLOWNESS_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "SLOWNESS", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SLOWNESS_2(new UPotion(PotionBase.TIPPED_ARROW, "SLOWNESS", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_STRENGTH_1(new UPotion(PotionBase.TIPPED_ARROW, "STRENGTH", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_STRENGTH_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "STRENGTH", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_STRENGTH_2(new UPotion(PotionBase.TIPPED_ARROW, "STRENGTH", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SWIFTNESS_1(new UPotion(PotionBase.TIPPED_ARROW, "SPEED", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SWIFTNESS_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "SPEED", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_SWIFTNESS_2(new UPotion(PotionBase.TIPPED_ARROW, "SPEED", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_TURTLE_MASTER_1(new UPotion(PotionBase.TIPPED_ARROW, "TURTLE_MASTER", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_TURTLE_MASTER_1_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "TURTLE_MASTER", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_TURTLE_MASTER_2(new UPotion(PotionBase.TIPPED_ARROW, "TURTLE_MASTER", false, true), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_WATER_BREATHING(new UPotion(PotionBase.TIPPED_ARROW, "WATER_BREATHING", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_WATER_BREATHING_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "WATER_BREATHING", true, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_WEAKNESS(new UPotion(PotionBase.TIPPED_ARROW, "WEAKNESS", false, false), 0, "ARROW", "TIPPED_ARROW"),
+    TIPPED_ARROW_WEAKNESS_EXTENDED(new UPotion(PotionBase.TIPPED_ARROW, "WEAKNESS", true, false), 0, "ARROW", "TIPPED_ARROW"),
     TNT("TNT"),
     TNT_MINECART("EXPLOSIVE_MINECART", null, null, null, null, "TNT_MINECART"),
     TORCH("TORCH"),
     TOTEM_OF_UNDYING(null, null, null, "TOTEM", null, "TOTEM_OF_UNDYING"),
+    TRADER_LLAMA_SPAWN_EGG(null, null, null, null, null, null, "TRADER_LLAMA_SPAWN_EGG"),
     TRAPPED_CHEST("TRAPPED_CHEST"),
     TRIDENT(null, null, null, null, null, "TRIDENT"),
     TRIPWIRE("TRIPWIRE"),
@@ -1199,8 +1294,8 @@ public enum UMaterial {
     VINDICATOR_SPAWN_EGG(36, null, null, null, "MONSTER_EGG", null, "VINDICATOR_SPAWN_EGG"),
     VINE("VINE", 0),
     VOID_AIR("AIR", null, null, null, null, "VOID_AIR"),
-    WALL_SIGN("WALL_SIGN"),
     WALL_TORCH(null, null, null, null, null, "WALL_TORCH"),
+    WANDERING_TRADER_SPAWN_EGG(null, null, null, null, null, null, "WANDERING_TRADER_SPAWN_EGG"),
     WATER("WATER"),
     WATER_BUCKET("WATER_BUCKET"),
     WET_SPONGE(1, "SPONGE", null, null, null, null, "WET_SPONGE"),
@@ -1211,6 +1306,7 @@ public enum UMaterial {
     WHITE_CARPET("CARPET", null, null, null, null, "WHITE_CARPET"),
     WHITE_CONCRETE(null, null, null, null, "CONCRETE", "WHITE_CONCRETE"),
     WHITE_CONCRETE_POWDER(null, null, null, null, "CONCRETE_POWDER", "WHITE_CONCRETE_POWDER"),
+    WHITE_DYE(null, null, null, null, null, null, "WHITE_DYE"),
     WHITE_GLAZED_TERRACOTTA(null, null, null, null, "WHITE_GLAZED_TERRACOTTA"),
     WHITE_LEATHER_BOOTS("LEATHER_BOOTS", 0, Color.fromRGB(255, 255, 255)),
     WHITE_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 0, Color.fromRGB(255, 255, 255)),
@@ -1224,6 +1320,7 @@ public enum UMaterial {
     WHITE_WALL_BANNER("BANNER", null, null, null, null, "WHITE_WALL_BANNER"),
     WHITE_WOOL("WOOL", null, null, null, null, "WHITE_WOOL"),
     WITCH_SPAWN_EGG(66, "MONSTER_EGG", null, null, null, null, "WITCH_SPAWN_EGG"),
+    WITHER_ROSE(null, null, null, null, null, null, "WITHER_ROSE"),
     WITHER_SKELETON_SKULL(1, "SKULL", null, null, null, null, "WITHER_SKELETON_SKULL"),
     WITHER_SKELETON_SKULL_ITEM(1, "SKULL_ITEM", null, null, null, null, "WITHER_SKELETON_SKULL"),
     WITHER_SKELETON_SPAWN_EGG(null, null, null, null, null, "WITHER_SKELETON_SPAWN_EGG"),
@@ -1241,6 +1338,7 @@ public enum UMaterial {
     YELLOW_CARPET(4, "CARPET", null, null, null, null, "YELLOW_CARPET"),
     YELLOW_CONCRETE(4, null, null, null, null, "CONCRETE", "YELLOW_CONCRETE"),
     YELLOW_CONCRETE_POWDER(4, null, null, null, null, "CONCRETE_POWDER", "YELLOW_CONCRETE_POWDER"),
+    YELLOW_DYE(11, "INK_SACK", null, null, null, null, "DANDELION_YELLOW", "YELLOW_DYE"),
     YELLOW_GLAZED_TERRACOTTA(null, null, null, null, "YELLOW_GLAZED_TERRACOTTA"),
     YELLOW_LEATHER_BOOTS("LEATHER_BOOTS", 4, Color.fromRGB(229, 229, 51)),
     YELLOW_LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 4, Color.fromRGB(229, 229, 51)),
@@ -1258,16 +1356,15 @@ public enum UMaterial {
     ZOMBIE_PIGMAN_SPAWN_EGG(57, "MONSTER_EGG", null, null, null, null, "ZOMBIE_PIGMAN_SPAWN_EGG"),
     ZOMBIE_SPAWN_EGG(54, "MONSTER_EGG", null, null, null, null, "ZOMBIE_SPAWN_EGG"),
     ZOMBIE_VILLAGER_SPAWN_EGG(null, null, null, null, null, "ZOMBIE_VILLAGER_SPAWN_EGG"),
-    ZOMBIE_WALL_HEAD(2, "SKULL", null, null, null, null, "ZOMBIE_WALL_HEAD"),
+    ZOMBIE_WALL_HEAD(2, "SKULL", null, null, null, null, null, "ZOMBIE_WALL_HEAD"),
     ;
 
     private static final HashMap<String, UMaterial> inUMemory = new HashMap<>();
     private static final HashMap<String, ItemStack> inMemory = new HashMap<>();
-
     private final String version = Bukkit.getVersion();
-    private String[] names = new String[7];
+
+    private String[] names = new String[8];
     private ItemStack is;
-    @Getter
     private Material material;
     private int data;
 
@@ -1276,29 +1373,27 @@ public enum UMaterial {
     }
 
     UMaterial(String name, int data) {
-        this.names[0] = name;
+        names[0] = name;
         this.data = data;
-        this.material = Material.matchMaterial(name);
-        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) data) : new ItemStack(material);
+        final Material m = Material.matchMaterial(name);
+        material = m;
+        is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
     }
 
     UMaterial(String name, int spoofedData, Color color) {
-        this.names[0] = name;
+        names[0] = name;
         this.data = spoofedData;
-        this.material = Material.matchMaterial(name);
-        this.is = new ItemStack(material);
-
+        final Material m = Material.matchMaterial(name);
+        material = m;
+        is = new ItemStack(m);
         final LeatherArmorMeta lam = (LeatherArmorMeta) is.getItemMeta();
         lam.setColor(color);
         is.setItemMeta(lam);
     }
 
-    UMaterial(String name, int data, UPotion pd) {
-        doPotion(setItemStack(name, data), pd);
-    }
-
     UMaterial(UPotion pd, int data, String ...names) {
-        doPotion(setItemStack(data, names), pd);
+        setItemStack(0, names);
+        is = pd.getItemStack();
     }
 
     UMaterial(String name, Enchantment enchant, int level) {
@@ -1308,19 +1403,19 @@ public enum UMaterial {
     UMaterial(int data, String ...names) {
         this.names = names;
         this.data = data;
-        this.material = getMaterialName();
-        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) data) : new ItemStack(material);
+        setup(data);
     }
 
     UMaterial(int data, int returnData, String... names) {
         this.names = names;
         this.data = data;
-        this.material = getMaterialName();
-        this.is = version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(material, 1, (byte) returnData) : new ItemStack(material);
+        setup(returnData);
     }
 
-    private void doPotion(ItemStack m, UPotion up) {
-        this.is = up.getItemStack();
+    private void setup(int data) {
+        final Material m = getMaterialName();
+        material = m;
+        is = m != null ? version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m) : null;
     }
 
     private void doEnchantmentBook(ItemStack m, Enchantment enchant, int level) {
@@ -1330,9 +1425,17 @@ public enum UMaterial {
         this.is = m;
     }
 
-    public ItemStack getItemStack() { return is.clone(); }
+    public Material getMaterial() {
+        return material;
+    }
 
-    public byte getData() { return (byte) data; }
+    public ItemStack getItemStack() {
+        return is != null ? is.clone() : null;
+    }
+
+    public byte getData() {
+        return (byte) data;
+    }
 
     // 0 = 1.8.8
     // 1 = 1.9.4
@@ -1344,7 +1447,7 @@ public enum UMaterial {
     private Material getMaterialName() {
         final int ver = version.contains("1.8") ? 0 : version.contains("1.9") ? 1 : version.contains("1.10") ? 2 : version.contains("1.11") ? 3 : version.contains("1.12") ? 4 : version.contains("1.13") ? 5 : version.contains("1.14") ? 6 : names.length-1;
         int realver = names.length <= ver ? names.length-1 : ver;
-        if(names[realver] == null) {
+        if (names[realver] == null) {
             boolean did = false;
             for(int i = realver; i >= 0; i--) {
                 if(!did && names[i] != null) {
@@ -1354,15 +1457,7 @@ public enum UMaterial {
             }
         }
         final String t = names[realver], t2 = names.length > ver ? names[ver] : names[names.length-1];
-        return Material.matchMaterial(t != null ? t : t2 != null ? t2 : "AIR");
-    }
-
-    private ItemStack setItemStack(String name, int data) {
-        names[0] = name;
-        this.data = data;
-        final Material m = getMaterialName();
-        material = m;
-        return version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
+        return t != null || t2 != null ? Material.matchMaterial(t != null ? t : t2) : null;
     }
 
     private ItemStack setItemStack(int data, String ...names) {
@@ -1370,7 +1465,7 @@ public enum UMaterial {
         this.data = data;
         final Material m = getMaterialName();
         material = m;
-        return version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m);
+        return m != null ? version.contains("1.8") || version.contains("1.9") || version.contains("1.10") || version.contains("1.11") || version.contains("1.12") ? new ItemStack(m, 1, (byte) data) : new ItemStack(m) : null;
     }
 
     public static ItemStack getEnchantmentBook(Enchantment enchant, int level, int amount) {
@@ -1399,12 +1494,14 @@ public enum UMaterial {
     @Deprecated
     public static UMaterial match(String name, byte data) {
         name = name.toUpperCase();
-        if(inUMemory.keySet().contains(name + data)) return inUMemory.get(name + data);
-        for(UMaterial u : UMaterial.values()) {
-            for(String n : u.names) {
-                if(n != null && n.equals(name) && u.getData() == data) {
-                    inUMemory.put(name + data, u);
-                    return u;
+        if (inUMemory.containsKey(name + data)) return inUMemory.get(name + data);
+        for (UMaterial u : UMaterial.values()) {
+            if (u.getData() == data) {
+                for(String n : u.names) {
+                    if(n != null && n.equals(name)) {
+                        inUMemory.put(name + data, u);
+                        return u;
+                    }
                 }
             }
         }
@@ -1414,12 +1511,12 @@ public enum UMaterial {
     @Deprecated
     public static ItemStack valueOf(String name, byte data) {
         name = name.toUpperCase();
-        if(inMemory.keySet().contains(name + data)) return inMemory.get(name + data).clone();
-        for(UMaterial u : UMaterial.values()) {
-            for(String n : u.names) {
-                if(n != null && n.equals(name)) {
-                    final ItemStack i = u.getItemStack();
-                    if(u.getData() == data) {
+        if (inMemory.keySet().contains(name + data)) return inMemory.get(name + data).clone();
+        for (UMaterial u : UMaterial.values()) {
+            if (u.getData() == data) {
+                for (String n : u.names) {
+                    if (n != null && n.equals(name)) {
+                        final ItemStack i = u.getItemStack();
                         inMemory.put(name + data, i);
                         return i;
                     }
@@ -1519,34 +1616,109 @@ public enum UMaterial {
 
     @Deprecated
     public static UMaterial match(ItemStack item) {
-        if (item != null) {
-            final UMaterial u = match(item.getType().name(), item.getData().getData());
+        if(item != null) {
+            final String n = item.getType().name(), v = Bukkit.getVersion();
+            if(!v.contains("1.8") && !v.contains("1.9") && !v.contains("1.10") && !v.contains("1.11") && !v.contains("1.12")) {
+                return match(n);
+            }
+            final byte d = n.equals("FLINT_AND_STEEL") ? 0 : item.getData().getData();
+            final UMaterial u = match(n, d);
             final String un = u.name();
             return un.contains("SPAWN_EGG") ? matchSpawnEgg(item) : un.contains("ENCHANTED_BOOK") ? matchEnchantedBook(item) : un.contains("POTION") ? matchPotion(item, PotionBase.valueOf(un.contains("SPLASH") ? "SPLASH" : un.contains("LINGERING") ? "LINGERING" : "NORMAL")) : u;
         }
         return null;
     }
 
-    public static UMaterial match(String name) {
-        final byte d = name.contains(":") ? Byte.parseByte(name.split(":")[1]) : -1;
-        name = (name.contains(":") ? name.split(":")[0] : name).toUpperCase();
-        if(inUMemory.containsKey(name + d)) return inUMemory.get(name + d);
-        for(UMaterial u : UMaterial.values()) {
-            if(u.name().equals(name)) {
-                inUMemory.put(name, u);
-                return u;
+    public static UMaterial getItem(Block block) {
+        final Material type = block.getType();
+        final String m = type.name(), v = Bukkit.getVersion();
+        final byte d = block.getData();
+        UMaterial t = null;
+        if(!v.contains("1.8") && !v.contains("1.9") && !v.contains("1.10") && !v.contains("1.11") && !v.contains("1.12") || m.contains("TERRACOTTA") || m.startsWith("TORCH") || m.startsWith("REDSTONE_TORCH") || m.contains("STAIRS") || m.equals("FLINT_AND_STEEL") || m.equals("SOIL") || m.equals("LADDER") || m.equals("BONE_BLOCK") || m.equals("OBSERVER") || m.contains("FENCE_GATE") || m.contains("TRAPDOOR") || m.contains("CHEST")
+                || m.equals("DISPENSER") || m.equals("DROPPER") || m.equals("JACK_O_LANTERN") || m.equals("PUMPKIN") || m.equals("HAY_BLOCK") || m.contains("SHULKER_BOX") || m.equals("LEVER") || m.contains("BUTTON") || m.contains("RAIL") || m.equals("FURNACE") || m.equals("VINE") || m.equals("TRIPWIRE_HOOK") || m.equals("HOPPER") || m.equals("END_ROD")) {
+            return match(m);
+        } else if(m.startsWith("LOG")) {
+            final boolean log2 = m.equals("LOG_2");
+            if(d == 8) {
+                t = UMaterial.ACACIA_WOOD;
+            } else if(d == 12) {
+                t = log2 ? UMaterial.ACACIA_WOOD : UMaterial.OAK_WOOD;
+            } else if(d == 13) {
+                t = log2 ? UMaterial.DARK_OAK_WOOD : UMaterial.SPRUCE_WOOD;
+            } else if(d == 14) {
+                t = UMaterial.BIRCH_WOOD;
+            } else if(d == 15) {
+                t = UMaterial.JUNGLE_WOOD;
             }
-            final byte D = u.getData();
-            final String[] names = u.names;
-            for(String n : names) {
-                if(n != null && n.equals(name) && (d == -1 || D == d)) {
-                    for(String na : names) inUMemory.put(na, u);
+        } else if(m.startsWith("LEAVES")) {
+            final org.bukkit.material.Leaves l = new org.bukkit.material.Leaves(type, d);
+            t = match(l.getSpecies().name().replace("GENERIC", "OAK").replace("REDWOOD", "SPRUCE") + "_LEAVES");
+        } else if(m.contains("SAPLING")) {
+            if(v.contains("1.8")) {
+                t = match("SAPLING", d);
+            } else {
+                final org.bukkit.material.Sapling s = new org.bukkit.material.Sapling(type, d);
+                t = match(s.getSpecies().name().replace("GENERIC", "OAK").replace("REDWOOD", "SPRUCE") + "_SAPLING");
+            }
+        } else if(m.contains("_DOOR")) {
+            t = match(type.name().replace("WOODEN_DOOR", "OAK_DOOR"));
+        } else if(m.contains("STEP")) {
+            final org.bukkit.material.WoodenStep s = new org.bukkit.material.WoodenStep(type, d);
+            t = match(s.getSpecies().name().replace("GENERIC", "OAK").replace("REDWOOD", "SPRUCE") + "_SLAB");
+        } else if(m.contains("BED_BLOCK")) {
+            if(v.contains("1.12")) {
+                final org.bukkit.block.Bed b = (org.bukkit.block.Bed) block.getState();
+                t = match(b.getColor().name() + "_BED");
+            } else return UMaterial.WHITE_BED;
+        } else if(m.contains("CROP")) {
+            return UMaterial.AIR;
+        } else if(m.contains("PISTON_")) {
+            return m.contains("_STICKY_") ? UMaterial.STICKY_PISTON : UMaterial.PISTON;
+        } else if(m.contains("BANNER")) {
+            final org.bukkit.block.Banner b = (org.bukkit.block.Banner) block.getState();
+            t = match(b.getBaseColor().name() + "_BANNER");
+        } else if(m.contains("SIGN")) {
+            return UMaterial.OAK_SIGN;
+        } else if(m.equals("COCOA")) {
+            return UMaterial.COCOA_BEANS;
+        } else if(m.equals("BREWING_STAND") || m.equals("CAULDRON")) {
+            return UMaterial.valueOf(m + "_ITEM");
+        } else if(m.startsWith("DIODE")) {
+            return UMaterial.REPEATER;
+        } else if(m.startsWith("REDSTONE_COMPARATOR")) {
+            return UMaterial.COMPARATOR;
+        } else if(m.startsWith("END") && m.endsWith("_PORTAL_FAME")) {
+            return UMaterial.END_PORTAL_FRAME;
+        }
+        return t != null ? t : match(m, d);
+    }
+
+    public static UMaterial match(String name) {
+        try {
+            return UMaterial.valueOf(name.toUpperCase());
+        } catch (Exception e) {
+            final byte d = name.contains(":") ? Byte.parseByte(name.split(":")[1]) : 0;
+            name = name.split(":")[0].toUpperCase();
+            if(inUMemory.containsKey(name + d)) return inUMemory.get(name + d);
+            for(UMaterial u : UMaterial.values()) {
+                if(u.name().equals(name)) {
+                    inUMemory.put(name, u);
                     return u;
+                }
+                final byte D = u.getData();
+                if(D == d) {
+                    final String[] names = u.names;
+                    for(String n : names) {
+                        if(n != null && n.equals(name)) {
+                            for(String na : names) inUMemory.put(na, u);
+                            return u;
+                        }
+                    }
                 }
             }
         }
         return null;
     }
 
-    public enum PotionBase { NORMAL, ARROW, LINGERING, SPLASH, }
+    public enum PotionBase { NORMAL, ARROW, TIPPED_ARROW, LINGERING, SPLASH, }
 }

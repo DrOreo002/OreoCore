@@ -15,6 +15,7 @@ import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -25,7 +26,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
         this.buttons = new HashSet<>();
         this.panels = new HashMap<>();
         this.size = size;
-        this.title = title;
+        this.title = StringUtils.color(title);
         this.inventory = Bukkit.createInventory(this, size, title);
         this.cancelPlayerInventoryClickEvent = true; // Default are true
         this.shouldProcessButton = true;

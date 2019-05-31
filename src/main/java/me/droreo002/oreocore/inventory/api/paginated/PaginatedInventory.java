@@ -18,6 +18,7 @@ import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -77,7 +78,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     private IAnimationRunnable animationRunnable;
 
     public PaginatedInventory(int size, String title) {
-        this.title = title;
+        this.title = StringUtils.color(title);
         this.size = size;
         this.inventory = Bukkit.createInventory(this, size, title);
 
