@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.multisupport;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
@@ -105,7 +106,7 @@ public class SimpleReflectionUtils {
      * Get a Bukkit {@link Player} players NMS playerConnection object
      *
      * @param player The player
-     * @return The players connection
+     * @return The players nms connection
      */
     public static Object getConnection(Player player) {
         Method getHandleMethod = getMethod(player.getClass(), "getHandle");
@@ -115,6 +116,26 @@ public class SimpleReflectionUtils {
                 Object nmsPlayer = getHandleMethod.invoke(player);
                 Field playerConField = getField(nmsPlayer.getClass(), "playerConnection");
                 return playerConField.get(nmsPlayer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the handler of the entity (NMS)
+     *
+     * @param entity The entity
+     * @return The players nms handle
+     */
+    public static Object getHandle(Entity entity) {
+        Method getHandleMethod = getMethod(entity.getClass(), "getHandle");
+
+        if (getHandleMethod != null) {
+            try {
+                return getHandleMethod.invoke(entity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
