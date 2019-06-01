@@ -97,10 +97,16 @@ public class ConfigUpdater {
 
                     if (array.length > 1) {
 
+                        // This is a string value
                         if (array[1].startsWith("\"") || array[1].startsWith("'")) {
 
                             char c = array[1].charAt(0);
-                            line = array[0] + ": " + c + config.get(key) + c;
+                            String value = config.getString(key);
+                            int index = -1;
+                            if (value.contains("'")) index = value.indexOf("'");
+                            if (index != -1) value = new StringBuilder(value).insert(index, "'").toString();
+                            // Basically will insert another ' to the string if it found any. Since without the ' it will broke!
+                            line = array[0] + ": " + c + value + c;
 
                         } else {
 
@@ -121,6 +127,7 @@ public class ConfigUpdater {
 
         }
 
+        writer.close();
     }
 
     private static BufferedReader getBufferedReader(InputStream inputStream) {

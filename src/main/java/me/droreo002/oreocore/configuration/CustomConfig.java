@@ -73,10 +73,15 @@ public class CustomConfig {
     }
 
     public void reloadConfig() {
+        yamlFile = new File(filePath);
+        if (!yamlFile.exists()) {
+            setupConfig();
+        }
         config = YamlConfiguration.loadConfiguration(yamlFile);
+        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
+
         InputStream configData = plugin.getResource(getFileName());
         if (configData != null) ConfigUpdater.update(yamlFile, configData);
-        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
     }
 
     public void registerMemory(ConfigMemory memory) {
