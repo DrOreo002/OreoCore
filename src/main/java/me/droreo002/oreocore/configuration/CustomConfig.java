@@ -80,6 +80,7 @@ public class CustomConfig {
         config = YamlConfiguration.loadConfiguration(yamlFile);
         if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
 
+        saveConfig();
         InputStream configData = plugin.getResource(getFileName());
         if (configData != null) ConfigUpdater.update(yamlFile, configData);
     }

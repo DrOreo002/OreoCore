@@ -41,7 +41,6 @@ public final class ConfigMemoryManager {
                 process(memory);
                 mem.add(memory);
                 CONFIG_MEMORY.put(plugin, mem);
-                Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been reloaded!", true);
             }
         }
     }
@@ -55,7 +54,6 @@ public final class ConfigMemoryManager {
                 update(memory);
                 // Reload
                 reloadMemory(plugin, memory);
-                Debug.log("&eYamlConfiguration &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been updated to match the &bConfigMemory!", true);
             }
         }
     }
@@ -75,15 +73,6 @@ public final class ConfigMemoryManager {
                     }
                 }
             }
-        }
-        /*
-        Update config
-         */
-        try {
-            config.save(memory.getParent().getYamlFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-            Debug.log("Failed to save custom config file! &7(&e" + memory.getParent().getFilePath() + "&7)", true);
         }
     }
 

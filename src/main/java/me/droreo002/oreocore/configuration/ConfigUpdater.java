@@ -4,6 +4,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class to update/add new sections/keys to your config
@@ -68,6 +71,7 @@ public class ConfigUpdater {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(toUpdate));
 
+        List<String> searchedKey = new ArrayList<>();
         String line;
         outer: while ((line = reader.readLine()) != null) {
 
@@ -81,10 +85,15 @@ public class ConfigUpdater {
 
             for (String key : config.getKeys(true)) {
 
+                if (searchedKey.contains(key)) continue; // Ignore this key
+
                 String[] keyArray = key.split("\\.");
                 String keyString = keyArray[keyArray.length - 1];
 
+                // If a config key
                 if (line.trim().startsWith(keyString + ":")) {
+
+                    searchedKey.add(key);
 
                     if (config.isConfigurationSection(key)) {
 
@@ -105,12 +114,12 @@ public class ConfigUpdater {
                             int index = -1;
                             if (value.contains("'")) index = value.indexOf("'");
                             if (index != -1) value = new StringBuilder(value).insert(index, "'").toString();
+
                             // Basically will insert another ' to the string if it found any. Since without the ' it will broke!
                             line = array[0] + ": " + c + value + c;
-
                         } else {
 
-                            line = array[0] + ": " + config.get(key);
+                            line = array[0] + ": " + config.getString(key);
 
                         }
 
@@ -118,17 +127,15 @@ public class ConfigUpdater {
 
                     write(writer, line);
                     continue outer;
-
                 }
-
             }
 
             write(writer, line);
-
         }
 
         writer.close();
     }
+
 
     private static BufferedReader getBufferedReader(InputStream inputStream) {
 
