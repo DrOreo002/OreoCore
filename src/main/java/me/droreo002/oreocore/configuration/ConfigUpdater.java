@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ConfigUpdater {
 
         }
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(toUpdate));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(toUpdate), StandardCharsets.UTF_8));
 
         List<String> searchedKey = new ArrayList<>();
         String line;
