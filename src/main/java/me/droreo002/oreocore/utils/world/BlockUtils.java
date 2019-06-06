@@ -2,6 +2,7 @@ package me.droreo002.oreocore.utils.world;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
 @SuppressWarnings("deprecation")
@@ -42,5 +43,16 @@ public final class BlockUtils {
             direction.normalize();
         }
         return direction;
+    }
+
+    /**
+     * Get the attached face of that sign
+     *
+     * @param s : The sign
+     * @return the attached face
+     */
+    public static BlockFace getAttachedFace(Sign s) {
+        org.bukkit.material.Sign sd = (org.bukkit.material.Sign) s.getData();
+        return sd.getAttachedFace();
     }
 }

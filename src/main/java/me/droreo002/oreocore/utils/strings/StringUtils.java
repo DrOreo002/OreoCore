@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +19,7 @@ public final class StringUtils {
     private static final char[] HEX_MAP = { '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
     public static final Map<Currency, String> DEFAULT_CURRENCY = new HashMap<>();
+    private static AtomicLong idCounter = new AtomicLong();
 
     static {
         DEFAULT_CURRENCY.put(Currency.THOUSANDS, "k");
@@ -165,5 +167,14 @@ public final class StringUtils {
         long truncated = value / (divideBy / 10); //the number part of the output times 10
         boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
         return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
+    }
+
+    /**
+     * Create a Human readable ID. This is also Thread save
+     *
+     * @return : The ID as String
+     */
+    public static String createID() {
+        return String.valueOf(idCounter.getAndIncrement());
     }
 }
