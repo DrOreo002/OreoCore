@@ -189,7 +189,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public Object queryValue(String statement) {
+    public Object queryValue(String statement, String row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -198,7 +198,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             ps = con.prepareStatement(statement);
             rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.next();
+                return rs.getObject(row);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -240,7 +240,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public List<Object> queryRow(String statement) {
+    public List<Object> queryRow(String statement, String... toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -250,7 +250,9 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
             ps = con.prepareStatement(statement);
             rs = ps.executeQuery();
             while (rs.next()) {
-                values.add(rs.next());
+                for (String s : toSelect) {
+                    values.add(rs.getObject(s));
+                }
             }
             return values;
         } catch (SQLException ex) {
