@@ -82,19 +82,17 @@ public interface SQLDatabase {
      * Query a command to get its value
      *
      * @param statement : The statement
-     * @param row : The row
      * @return The specified value if there's any, null otherwise
      */
-     Object queryValue(String statement, String row);
+     Object queryValue(String statement);
 
     /**
      * Query a command to get its value
      *
      * @param statement : The statement
-     * @param toSelect : What row that will be selected
      * @return The specified value as a list if there's any, empty list otherwise
      */
-     List<Object> queryRow(String statement, String... toSelect);
+     List<Object> queryRow(String statement);
 
     /**
      * Query a multiple row to get its values
