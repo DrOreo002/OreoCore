@@ -44,15 +44,4 @@ public final class BlockUtils {
         }
         return direction;
     }
-
-    /**
-     * Get the attached face of that sign
-     *
-     * @param s : The sign
-     * @return the attached face
-     */
-    public static BlockFace getAttachedFace(Sign s) {
-        org.bukkit.material.Sign sd = (org.bukkit.material.Sign) s.getData();
-        return sd.getAttachedFace();
-    }
 }

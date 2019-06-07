@@ -250,7 +250,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public List<Object> queryRow(String statement, String[] toSelect) {
+    public List<Object> queryRow(String statement, String... toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -364,7 +364,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
         }
         return map;
     }
-    
+
     /*
     Async!
      */
@@ -454,7 +454,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     }
 
     @Override
-    public Future<Object> queryRowAsync(String statement, String[] toSelect) {
+    public Future<Object> queryRowAsync(String statement, String... toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
         return ThreadingUtils.makeFuture(() -> {
             PreparedStatement ps = null;

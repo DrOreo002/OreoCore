@@ -57,7 +57,7 @@ public interface SQLDatabase {
      * @param statement : The statement
      * @param toSelect : What row that will be selected
      */
-     Future<Object> queryRowAsync(String statement, String[] toSelect);
+     Future<Object> queryRowAsync(String statement, String... toSelect);
 
     /**
      * Query a multiple row to get its values in an async task
@@ -94,7 +94,7 @@ public interface SQLDatabase {
      * @param toSelect : What row that will be selected
      * @return The specified value as a list if there's any, empty list otherwise
      */
-     List<Object> queryRow(String statement, String[] toSelect);
+     List<Object> queryRow(String statement, String... toSelect);
 
     /**
      * Query a multiple row to get its values
