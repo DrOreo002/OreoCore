@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.XMaterial;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
@@ -33,22 +34,35 @@ public final class CustomSkull {
     }
 
     /**
-     * Get the Skull via async way
+     * Create a new GameProfile
      *
-     * @param texture : The texture string
-     * @return an player head with that texture applied
+     * @param texture The head texture that will get applied into the Profile
+     * @param id : The ID
+     * @return a new GameProfile with its texture edited
      */
-    public static Future<ItemStack> getSkullAsync(final String texture) {
-        if (CACHE.containsKey(texture)) return ThreadingUtils.makeFuture(() -> CACHE.get(texture));
-        return ThreadingUtils.makeFuture(() -> {
-            final ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
-            final SkullMeta meta = (SkullMeta) item.getItemMeta();
-            final Object skin = createGameProfile(texture, UUID.randomUUID());
-            BukkitReflectionUtils.setValue(meta, true, "profile", skin);
-            item.setItemMeta(meta);
-            addToCache(item, texture);
-            return item;
-        });
+    private static GameProfile createGameProfile(final String texture, final UUID id) {
+        final GameProfile profile = new GameProfile(id, null);
+        final PropertyMap propertyMap = profile.getProperties();
+        propertyMap.put("textures", new Property("textures", texture));
+        return profile;
+    }
+
+    /**
+     * Get the head texture
+     *
+     * @param item : The head item
+     * @return the texture if available, empty string otherwise
+     */
+    public static String getTexture(ItemStack item) {
+        final SkullMeta headMeta = (SkullMeta) item.getItemMeta();
+        GameProfile gameProfile;
+        try {
+            gameProfile = (GameProfile) BukkitReflectionUtils.getValue(headMeta, true, "profile");
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            return "";
+        }
+        Property property = gameProfile.getProperties().get("textures").iterator().next();
+        return new String(Base64.getDecoder().decode(property.getValue().getBytes()));
     }
 
     /**
@@ -86,38 +100,6 @@ public final class CustomSkull {
     }
 
     /**
-     * Create a new GameProfile
-     *
-     * @param texture The head texture that will get applied into the Profile
-     * @param id : The ID
-     * @return a new GameProfile with its texture edited
-     */
-    private static GameProfile createGameProfile(final String texture, final UUID id) {
-        final GameProfile profile = new GameProfile(id, null);
-        final PropertyMap propertyMap = profile.getProperties();
-        propertyMap.put("textures", new Property("textures", texture));
-        return profile;
-    }
-
-    /**
-     * Get the head texture
-     *
-     * @param item : The head item
-     * @return the texture if available, empty string otherwise
-     */
-    public static String getTexture(ItemStack item) {
-        final SkullMeta headMeta = (SkullMeta) item.getItemMeta();
-        GameProfile gameProfile;
-        try {
-            gameProfile = (GameProfile) BukkitReflectionUtils.getValue(headMeta, true, "profile");
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            return "";
-        }
-        Property property = gameProfile.getProperties().get("textures").iterator().next();
-        return new String(Base64.getDecoder().decode(property.getValue().getBytes()));
-    }
-
-    /**
      * Get the player head
      *
      * @param uuid : The owner of the head A.K.A the texture
@@ -127,7 +109,7 @@ public final class CustomSkull {
         if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
         ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
         SkullMeta skull = (SkullMeta) item.getItemMeta();
-        skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        setOwningPlayer(skull, uuid);
         item.setItemMeta(skull);
         addToCache(item, uuid.toString());
         return item;
@@ -145,31 +127,10 @@ public final class CustomSkull {
 
         if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
         SkullMeta skull = (SkullMeta) item.getItemMeta();
-        skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        setOwningPlayer(skull, uuid);
         item.setItemMeta(skull);
         addToCache(item, uuid.toString());
         return item;
-    }
-
-    /**
-     * If its an actual player head then, set that ItemStack head into {@param player}'s head!
-     * will try to get the head using async way
-     *
-     * @param item : The ItemStack that will get edited
-     * @param uuid : The owner of the head A.K.A the texture
-     * @return the result ItemStack if successful, null otherwise
-     */
-    public static Future<ItemStack> toHeadAsync(ItemStack item, UUID uuid) {
-        validate(item);
-
-        if (CACHE.containsKey(uuid.toString())) return ThreadingUtils.makeFuture(() -> CACHE.get(uuid.toString()));
-        return ThreadingUtils.makeFuture(() -> {
-            SkullMeta skull = (SkullMeta) item.getItemMeta();
-            skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
-            item.setItemMeta(skull);
-            addToCache(item, uuid.toString());
-            return item;
-        });
     }
 
     /**
@@ -219,5 +180,26 @@ public final class CustomSkull {
      */
     private static void validate(ItemStack item) {
         if (item.getType() != UMaterial.PLAYER_HEAD_ITEM.getMaterial()) throw new NullPointerException("Item " + item.getType() + ". Required is " + UMaterial.PLAYER_HEAD_ITEM.getMaterial());
+    }
+
+    /**
+     * Set the owning player of Skull, with backward version compatible
+     *
+     * @param skull The SkullMeta
+     * @param uuid the player's UUID
+     */
+    private static void setOwningPlayer(SkullMeta skull, UUID uuid) {
+        boolean oldLegacy = false;
+        switch (ServerUtils.getServerVersion()) {
+            case v1_8_R1:
+            case v1_8_R2:
+            case v1_8_R3:
+                oldLegacy = true;
+        }
+        if (oldLegacy) {
+            skull.setOwner(Bukkit.getOfflinePlayer(uuid).getName());
+        } else {
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        }
     }
 }
