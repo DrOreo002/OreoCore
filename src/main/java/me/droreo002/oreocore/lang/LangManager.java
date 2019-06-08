@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class LangManager extends CustomConfig {
+public class LangManager extends CustomConfig {
 
     @Getter
     private final Map<String, Object> values = new HashMap<>();
@@ -24,7 +24,7 @@ public abstract class LangManager extends CustomConfig {
     private String pluginPrefix;
 
     public LangManager(JavaPlugin plugin, String langFileName, String pluginPrefix) {
-        super(plugin, new File(plugin.getDataFolder(), langFileName + ".yml"));
+        super(plugin, new File(plugin.getDataFolder(), (langFileName.contains(".yml")) ? langFileName.replace(".yml", "") + ".yml" : langFileName + ".yml"));
         this.pluginPrefix = pluginPrefix;
     }
 

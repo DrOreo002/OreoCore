@@ -32,6 +32,16 @@ public class TextPlaceholder {
         placeholders.add(this);
     }
 
+    public TextPlaceholder(String from, String to) {
+        this.type = ItemMetaType.NONE;
+        this.from = from;
+        this.to = to;
+        this.lorePlaceholder = false;
+        this.placeholders = new ArrayList<>();
+
+        placeholders.add(this);
+    }
+
     public TextPlaceholder(ItemMetaType type, String from, String to, boolean lorePlaceholder) {
         this.type = type;
         this.from = from;
