@@ -47,7 +47,7 @@ public final class StringUtils {
     public static boolean isUUID(String toCheck) {
         try {
             UUID.fromString(toCheck); // Declare to remove that stupid yellow warning (IntelliJ)
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
             return false;
         }
         return true;

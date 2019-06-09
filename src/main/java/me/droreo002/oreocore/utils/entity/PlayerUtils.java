@@ -6,6 +6,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
 import com.google.common.base.Stopwatch;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import net.minecraft.server.v1_14_R1.PacketPlayOutSetSlot;
@@ -20,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -94,19 +97,52 @@ public final class PlayerUtils {
         chain.asyncFirst(() -> Bukkit.getOfflinePlayer(name)).asyncLast(callback).execute();
     }
 
+    /**
+     * Check if the player's inventory is full
+     *
+     * @param player The player to check
+     * @return true if full, false otherwise
+     */
     public static boolean isInventoryFull(Player player) {
         return InventoryUtils.isInventoryFull(player.getInventory());
     }
 
-    public static ItemStack getSkull(Player player) {
-        return CustomSkull.getHead(player.getUniqueId());
-    }
-
+    /**
+     * Close player's inventory with duplication bug fix
+     *
+     * @param player The target player
+     */
     public static void closeInventory(Player player) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
     }
 
+    /**
+     * Open inventory with duplication bug fix
+     *
+     * @param player The target player
+     * @param inventory The inventory to open
+     */
     public static void openInventory(Player player, Inventory inventory) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+    }
+
+    /**
+     * Check if player has the expected amount of the target item
+     *
+     * @param expected The expected amount
+     * @param playerInventory Player's inventory
+     * @param item The item to check
+     * @return true if amount is greater than expected, false otherwise
+     */
+    public static boolean has(int expected, Inventory playerInventory, ItemStack item) {
+        int amount = 0;
+        final List<ItemStack> items = new ArrayList<>(Arrays.asList(playerInventory.getContents()));
+        for (ItemStack i : items) {
+            if (CustomItem.isSimilar(i, item)) {
+                amount += i.getAmount();
+            }
+        }
+
+        return amount > expected;
     }
 }

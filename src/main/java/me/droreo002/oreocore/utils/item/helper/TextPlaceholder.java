@@ -6,7 +6,10 @@ import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class TextPlaceholder {
@@ -55,6 +58,18 @@ public class TextPlaceholder {
     /**
      * Add a text placeholder object
      *
+     * @param from : From x string
+     * @param to : To x string
+     * @return the TextPlaceholder object
+     */
+    public TextPlaceholder add(String from, String to) {
+        placeholders.add(new TextPlaceholder(from, to));
+        return this;
+    }
+
+    /**
+     * Add a text placeholder object
+     *
      * @param type : The meta type
      * @param from : From x string
      * @param to : To x string
@@ -86,5 +101,28 @@ public class TextPlaceholder {
      */
     public void addAll(TextPlaceholder textPlaceholder) {
         this.placeholders.addAll(textPlaceholder.getPlaceholders());
+    }
+
+    /**
+     * Format the string
+     *
+     * @param s The string to format
+     */
+    public String format(String s) {
+        for (TextPlaceholder p : placeholders) {
+            s = s.replace(p.getFrom(), p.getTo());
+        }
+        return s;
+    }
+
+    /**
+     * Format the list
+     *
+     * @param list The list
+     */
+    public void format(List<String> list) {
+        for (TextPlaceholder p : placeholders) {
+            list.replaceAll(s -> s.replace(p.getFrom(), p.getTo()));
+        }
     }
 }

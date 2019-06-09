@@ -312,14 +312,14 @@ public class JsonItemStack {
                     }
                     for (String clazz : BYPASS_CLASS) {
                         if (meta.getClass().getSimpleName().equals(clazz)) {
+                            itemStack.setItemMeta(meta);
                             return itemStack;
                         }
                     }
 
                     JsonElement extrametaElement = metaJson.get("extra-meta");
 
-                    if (extrametaElement != null
-                            && extrametaElement.isJsonObject()) {
+                    if (extrametaElement != null && extrametaElement.isJsonObject()) {
                         try {
                             JsonObject extraJson = extrametaElement.getAsJsonObject();
                             if (meta instanceof SkullMeta) {

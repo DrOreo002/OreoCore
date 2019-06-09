@@ -219,30 +219,48 @@ public class CustomItem extends ItemStack {
     /**
      * Check if the item is similar, the isSimilar method is buggy so we use this
      *
-     * @param first: The item 1
-     * @param second : The item 2
+     * @param one: The item 1
+     * @param two : The item 2
      * @return true if both item is the same, false otherwise
      */
-    public static boolean isSimilar(ItemStack first,ItemStack second) {
+    public static boolean isSimilar(ItemStack one, ItemStack two) {
 
-        boolean similar = false;
-
-        if (first == null || second == null) return false;
-        boolean sameType = (first.getType() == second.getType());
-        boolean sameDurability = (first.getDurability() == second.getDurability());
-        boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
-        boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
-        boolean sameItemMeta = true;
-
-        if (sameHasItemMeta) {
-            sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
+        if (one == null || two == null) {
+            return one == two;
+        }
+        if (one.isSimilar(two)) {
+            return true;
         }
 
-        if (sameType && sameDurability && sameHasItemMeta && sameEnchantments && sameItemMeta){
-            similar = true;
-        }
+        // Additional checks as serialisation and de-serialisation might lead to different item meta
+        // This would only be done if the items share the same item meta type so it shouldn't be too inefficient
+        // Special check for books as their pages might change when serialising (See SPIGOT-3206)
+        // Special check for explorer maps/every item with a localised name (See SPIGOT-4672)
+        return one.getType() == two.getType()
+                && one.getDurability() == two.getDurability()
+                && one.getData().equals(two.getData())
+                && one.hasItemMeta() && two.hasItemMeta()
+                && one.getItemMeta().getClass() == two.getItemMeta().getClass()
+                && one.getItemMeta().serialize().equals(two.getItemMeta().serialize());
 
-        return similar;
+//        boolean similar = false;
+//
+//        if (first == null || second == null) return false;
+//        boolean sameType = (first.getType() == second.getType());
+//        boolean sameDurability = (first.getDurability() == second.getDurability());
+//        boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
+//        boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
+//        boolean sameItemMeta = true;
+//
+//        if (sameHasItemMeta) {
+//            sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
+//        }
+//
+//        if (sameType && sameDurability && sameHasItemMeta && sameEnchantments && sameItemMeta){
+//            similar = true;
+//        }
+//
+//        return similar;
     }
 
     /**
@@ -441,5 +459,15 @@ public class CustomItem extends ItemStack {
             }
         }
         config.set(path + ".glow", false);
+    }
+
+    /**
+     * Check if item is empty or not
+     *
+     * @param item Item to check
+     * @return true if empty, false otherwise
+     */
+    public static boolean isEmpty(ItemStack item) {
+        return (item == null) || item.getType().equals(UMaterial.AIR.getMaterial());
     }
 }
