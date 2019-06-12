@@ -24,22 +24,22 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                         if (argument != null) {
                             if (commandSender instanceof Player) {
                                 if (argument.isConsoleOnly()) {
+                                    cmd.sendMessage(commandSender, argument.getConsoleOnlyMessage());
                                     argument.error(commandSender);
-                                    commandSender.sendMessage(color(argument.getConsoleOnlyMessage()));
                                     return true;
                                 }
                                 if (argument.getPermission() != null) {
                                     Player player = (Player) commandSender;
                                     if (!player.hasPermission(argument.getPermission())) {
-                                        player.sendMessage(color(argument.getNoPermissionMessage()));
+                                        cmd.sendMessage(commandSender, argument.getNoPermissionMessage());
                                         argument.error(player);
                                         return true;
                                     }
                                 }
                             } else {
                                 if (argument.isPlayerOnly()) {
+                                    cmd.sendMessage(commandSender, argument.getPlayerOnlyMessage());
                                     argument.error(commandSender);
-                                    commandSender.sendMessage(color(argument.getPlayerOnlyMessage()));
                                     return true;
                                 }
                             }
@@ -47,7 +47,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                             return true;
                         } else {
                             if (cmd.getArgumentNotFoundMessage() != null) {
-                                commandSender.sendMessage(color(cmd.getArgumentNotFoundMessage()));
+                                cmd.sendMessage(commandSender, cmd.getArgumentNotFoundMessage());
                                 if (commandSender instanceof Player) cmd.errorSound(commandSender);
                             }
                             return true;

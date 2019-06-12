@@ -15,11 +15,47 @@ import java.util.List;
 
 public final class LocationUtils {
 
+    /**
+     * Convert the list of strings into a list of locations
+     *
+     * @param strings The list of strings
+     * @return List of locations
+     */
+    public static List<Location> toLocations(List<String> strings) {
+        final List<Location> res = new ArrayList<>();
+        strings.forEach(s -> res.add(toLocation(s)));
+        return res;
+    }
+
+    /**
+     * Convert the list of locations into a list of strings
+     *
+     * @param locs The list of locations
+     * @return List of strings
+     */
+    public static List<String> convertToStrings(List<Location> locs) {
+        final List<String> res = new ArrayList<>();
+        locs.forEach(location -> res.add(convertToString(location)));
+        return res;
+    }
+
+    /**
+     * Convert the Location into a readable string
+     *
+     * @param location The location to convert
+     * @return The converted location as string
+     */
     public static String convertToString(Location location) {
         Validate.notNull(location, "Location cannot be null!");
         return "Location;" + location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ();
     }
 
+    /**
+     * Convert the string into a location
+     *
+     * @param format The string
+     * @return the Location object if successful, null otherwise
+     */
     public static Location toLocation(String format) {
         String[] sp = format.split(";");
         if (!sp[0].equalsIgnoreCase("Location")) return null;
@@ -30,6 +66,14 @@ public final class LocationUtils {
         return new Location(Bukkit.getWorld(world), x, y, z);
     }
 
+    /**
+     * Make a circle, will return a list of locations
+     *
+     * @param center The center location of the circle
+     * @param radius The radius of the circle
+     * @param amount The amount of point to create
+     * @return a list of locations
+     */
     public static List<Location> getCircle(Location center, double radius, int amount) {
         List<Location> locations = new ArrayList<>();
         World world = center.getWorld();
@@ -43,6 +87,15 @@ public final class LocationUtils {
         return locations;
     }
 
+    /**
+     * Make a spiral circle (Up)
+     *
+     * @param center The center location of the circle
+     * @param radius The radius of the circle
+     * @param amount The amount of point to create
+     * @param upIncrement The up increment of the circle a.k.a up speed
+     * @return a list of locations
+     */
     public static List<Location> getUpCircle(Location center, double radius, int amount, double upIncrement) {
         List<Location> locations = new ArrayList<>();
         World world = center.getWorld();
@@ -59,6 +112,14 @@ public final class LocationUtils {
         return locations;
     }
 
+    /**
+     * Make a reverse circle
+     *
+     * @param center The center location of the circle
+     * @param radius The radius of the circle
+     * @param amount The amount of point to create
+     * @return a list of locations
+     */
     public static List<Location> getCircleReverse(Location center, double radius, int amount) {
         World world = center.getWorld();
         double increment = (2 * Math.PI) / amount;
