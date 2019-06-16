@@ -273,7 +273,7 @@ public class CustomItem extends ItemStack {
      *  lore > The item lore (List String)
      *  glow > Set the item glow or not (bool)
      *  texture > The head texture, will only work if the material is player skull or head (String)
-     *
+     *  hide-att > Should we hide the item's attribute?. Default is true. This will ide enchant, attribute, and unbreakable tag
      *
      * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
      *                    into the specified string from the TextPlaceholder class
@@ -289,11 +289,12 @@ public class CustomItem extends ItemStack {
         int materialDurr = section.getInt("itemID", -1);
         int amount = section.getInt("amount", 1);
         boolean glow = section.getBoolean("glow", false);
+        boolean hideAtt = section.getBoolean("hide-att", true);
         String texture = section.getString("texture");
         String displayName = section.getString("name");
-        List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
+        List<String> lore = section.getStringList("lore");
 
-        if (placeholder != null) {
+        if (placeholder != null && displayName != null && lore.isEmpty()) {
             for (TextPlaceholder place : placeholder.getPlaceholders()) {
                 switch (place.getType()) {
                     case DISPLAY_NAME:
@@ -360,7 +361,7 @@ public class CustomItem extends ItemStack {
         if (displayName != null) meta.setDisplayName(color(displayName));
         meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
         if (glow) meta.setUnbreakable(true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+        if (hideAtt) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
         res.setItemMeta(meta);
 
         return res;
