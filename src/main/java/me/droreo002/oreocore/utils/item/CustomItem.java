@@ -294,13 +294,15 @@ public class CustomItem extends ItemStack {
         String displayName = section.getString("name");
         List<String> lore = section.getStringList("lore");
 
-        if (placeholder != null && displayName != null && lore.isEmpty()) {
+        if (placeholder != null) {
             for (TextPlaceholder place : placeholder.getPlaceholders()) {
                 switch (place.getType()) {
                     case DISPLAY_NAME:
-                        for (TextPlaceholder t : place.getPlaceholders()) {
-                            if (displayName.contains(t.getFrom())) {
-                                displayName = displayName.replace(t.getFrom(), t.getTo());
+                        if (displayName != null) {
+                            for (TextPlaceholder t : place.getPlaceholders()) {
+                                if (displayName.contains(t.getFrom())) {
+                                    displayName = displayName.replace(t.getFrom(), t.getTo());
+                                }
                             }
                         }
                         break;
