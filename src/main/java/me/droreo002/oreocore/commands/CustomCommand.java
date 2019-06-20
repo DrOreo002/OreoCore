@@ -25,7 +25,9 @@ public abstract class CustomCommand {
     @Getter @Setter
     private String argumentNotFoundMessage, commandBase;
     @Getter
-    private String tabCompletePermission, tabCompleteNoPermissionMessage;
+    private String tabCompletePermission, tabCompleteNoPermissionMessage, permission, noPermissionMessage, consoleOnlyMessage, playerOnlyMessage;;
+    @Getter
+    private boolean consoleOnly, playerOnly;
     @Getter
     private String[] aliases;
     @Getter
@@ -95,6 +97,39 @@ public abstract class CustomCommand {
     public void setTabCompletePermission(String tabCompletePermission, String tabCompleteNoPermissionMessage) {
         this.tabCompletePermission = tabCompletePermission;
         this.tabCompleteNoPermissionMessage = tabCompleteNoPermissionMessage;
+    }
+
+    /**
+     * Set the required permission for this argument
+     *
+     * @param permission : The permission
+     * @param noPermissionMessage : The message that will throw if player doesn't have that permission
+     */
+    public void setPermission(String permission, String noPermissionMessage) {
+        this.permission = permission;
+        this.noPermissionMessage = noPermissionMessage;
+    }
+
+    /**
+     * Set if this argument is player only or not
+     *
+     * @param playerOnly : Player only?
+     * @param playerOnlyMessage : The message that will throw if non player tried to execute a player only command
+     */
+    public void setPlayerOnly(boolean playerOnly, String playerOnlyMessage) {
+        this.playerOnly = playerOnly;
+        this.playerOnlyMessage = playerOnlyMessage;
+    }
+
+    /**
+     * Set if this argument is console only or not
+     *
+     * @param consoleOnly : Console only?
+     * @param consoleOnlyMessage : The message that will throw if non console tried to execute a console only command
+     */
+    public void setConsoleOnly(boolean consoleOnly, String consoleOnlyMessage) {
+        this.consoleOnly = consoleOnly;
+        this.consoleOnlyMessage = consoleOnlyMessage;
     }
 
     /**

@@ -13,53 +13,72 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class CommandHandler implements CommandExecutor, TabCompleter {
 
+    private final CustomCommand cmd;
+
+    CommandHandler(CustomCommand cmd) {
+        this.cmd = cmd;
+    }
+
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        Map<JavaPlugin, List<CustomCommand>> commandsMap = CustomCommandManager.getCommands();
-        for (List<CustomCommand> cmds : commandsMap.values()) {
-            for (CustomCommand cmd : cmds) {
-                if (cmd.isCommand(command.getName())) {
-                    if (args.length > 0) {
-                        CommandArg argument = cmd.getArgument(args[0]);
-                        if (argument != null) {
-                            if (commandSender instanceof Player) {
-                                if (argument.isConsoleOnly()) {
-                                    cmd.sendMessage(commandSender, argument.getConsoleOnlyMessage());
-                                    argument.error(commandSender);
-                                    return true;
-                                }
-                                if (argument.getPermission() != null) {
-                                    Player player = (Player) commandSender;
-                                    if (!player.hasPermission(argument.getPermission())) {
-                                        cmd.sendMessage(commandSender, argument.getNoPermissionMessage());
-                                        argument.error(player);
-                                        return true;
-                                    }
-                                }
-                            } else {
-                                if (argument.isPlayerOnly()) {
-                                    cmd.sendMessage(commandSender, argument.getPlayerOnlyMessage());
-                                    argument.error(commandSender);
-                                    return true;
-                                }
-                            }
-                            argument.execute(commandSender, args);
-                            return true;
-                        } else {
-                            if (cmd.getArgumentNotFoundMessage() != null) {
-                                cmd.sendMessage(commandSender, cmd.getArgumentNotFoundMessage());
-                                if (commandSender instanceof Player) cmd.errorSound(commandSender);
-                            }
+    public boolean onCommand(CommandSender commandSender, Command vanillaCommand, String s, String[] args) {
+        if (args.length > 0) {
+            CommandArg argument = cmd.getArgument(args[0]);
+            if (argument != null) {
+                if (commandSender instanceof Player) {
+                    if (argument.isConsoleOnly()) {
+                        cmd.sendMessage(commandSender, argument.getConsoleOnlyMessage());
+                        argument.error(commandSender);
+                        return true;
+                    }
+                    if (argument.getPermission() != null) {
+                        Player player = (Player) commandSender;
+                        if (!player.hasPermission(argument.getPermission())) {
+                            cmd.sendMessage(commandSender, argument.getNoPermissionMessage());
+                            argument.error(player);
                             return true;
                         }
-                    } else {
-                        cmd.execute(commandSender, args);
+                    }
+                } else {
+                    if (argument.isPlayerOnly()) {
+                        cmd.sendMessage(commandSender, argument.getPlayerOnlyMessage());
+                        argument.error(commandSender);
                         return true;
                     }
                 }
+                argument.execute(commandSender, args);
+                return true;
+            } else {
+                if (cmd.getArgumentNotFoundMessage() != null) {
+                    cmd.sendMessage(commandSender, cmd.getArgumentNotFoundMessage());
+                    if (commandSender instanceof Player) cmd.errorSound(commandSender);
+                }
+                return true;
             }
+        } else {
+            if (commandSender instanceof Player) {
+                if (cmd.isConsoleOnly()) {
+                    cmd.sendMessage(commandSender, cmd.getConsoleOnlyMessage());
+                    cmd.errorSound(commandSender);
+                    return true;
+                }
+                if (cmd.getPermission() != null) {
+                    Player player = (Player) commandSender;
+                    if (!player.hasPermission(cmd.getPermission())) {
+                        cmd.sendMessage(commandSender, cmd.getNoPermissionMessage());
+                        cmd.errorSound(player);
+                        return true;
+                    }
+                }
+            } else {
+                if (cmd.isPlayerOnly()) {
+                    cmd.sendMessage(commandSender, cmd.getPlayerOnlyMessage());
+                    cmd.errorSound(commandSender);
+                    return true;
+                }
+            }
+            cmd.execute(commandSender, args);
+            return true;
         }
-        return false;
     }
 
     /**
@@ -74,25 +93,16 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        Map<JavaPlugin, List<CustomCommand>> commandsMap = CustomCommandManager.getCommands();
-        for (List<CustomCommand> cmds : commandsMap.values()) {
-            for (CustomCommand cmd : cmds) {
-                if (cmd.isCommand(command.getName())) {
-                    // Is the correct command
-                    if (!cmd.getTabCompletePermission().equals("")) {
-                        if (sender instanceof Player) {
-                            final Player player = (Player) sender;
-                            if (!player.hasPermission(cmd.getTabCompletePermission())) {
-                                cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());
-                                cmd.errorSound(sender);
-                                return null;
-                            }
-                        }
-                    }
-                    return cmd.onTabComplete(sender, command, alias, args);
+        if (!cmd.getTabCompletePermission().equals("")) {
+            if (sender instanceof Player) {
+                final Player player = (Player) sender;
+                if (!player.hasPermission(cmd.getTabCompletePermission())) {
+                    cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());
+                    cmd.errorSound(sender);
+                    return null;
                 }
             }
         }
-        return null;
+        return cmd.onTabComplete(sender, command, alias, args);
     }
 }
