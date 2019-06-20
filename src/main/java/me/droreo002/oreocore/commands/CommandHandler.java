@@ -21,7 +21,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command vanillaCommand, String s, String[] args) {
-        if (args.length > 0) {
+        if (args.length > 0 && !cmd.getArgs().isEmpty()) {
             CommandArg argument = cmd.getArgument(args[0]);
             if (argument != null) {
                 if (commandSender instanceof Player) {
