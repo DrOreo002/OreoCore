@@ -81,14 +81,14 @@ public final class ServerUtils {
      *
      * @param command The command to unregister
      */
-    public static void forceUnregisterCommand(CustomCommand command) {
+    public static void forceUnregisterCommand(String command) {
         try {
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
             bukkitCommandMap.setAccessible(true);
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-            commandMap.getCommand(command.getCommandBase()).unregister(commandMap);
+            commandMap.getCommand(command).unregister(commandMap);
         } catch (NoSuchFieldException | IllegalAccessException | NullPointerException e) {
             e.printStackTrace();
         }

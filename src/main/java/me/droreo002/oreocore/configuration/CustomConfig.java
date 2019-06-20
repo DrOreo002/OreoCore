@@ -26,7 +26,7 @@ public class CustomConfig {
     @Getter
     private String filePath;
     @Getter
-    private ConfigMemory memory;
+    private ConfigMemory registeredMemory;
 
     /**
      * Extend this class into another class. And cache it somewhere as a field
@@ -43,6 +43,9 @@ public class CustomConfig {
         setupConfig();
     }
 
+    /**
+     * Setup the config
+     */
     private void setupConfig() {
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdir();
@@ -62,31 +65,46 @@ public class CustomConfig {
         this.config = YamlConfiguration.loadConfiguration(yamlFile);
     }
 
-    public void saveConfig() {
+    /**
+     * Save the config
+     *
+     * @param updateMemory Should we update the memory?
+     */
+    public void saveConfig(boolean updateMemory) {
         try {
             config.save(yamlFile);
         } catch (IOException e) {
             e.printStackTrace();
             Debug.log("Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
         }
-        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
+        if (updateMemory) {
+            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+        }
     }
 
+    /**
+     * Reload the config, will also keep the comments!
+     */
     public void reloadConfig() {
         yamlFile = new File(filePath);
         if (!yamlFile.exists()) {
             setupConfig();
         }
         config = YamlConfiguration.loadConfiguration(yamlFile);
-        if (memory != null) ConfigMemoryManager.updateMemory(getPlugin(), memory);
+        if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
 
-        saveConfig();
+        saveConfig(false);
         InputStream configData = plugin.getResource(getFileName());
         if (configData != null) ConfigUpdater.update(yamlFile, configData);
     }
 
+    /**
+     * Register a memory
+     *
+     * @param memory The memory to register
+     */
     public void registerMemory(ConfigMemory memory) {
-        this.memory = memory;
+        this.registeredMemory = memory;
         ConfigMemoryManager.registerMemory(getPlugin(), memory);
     }
 }
