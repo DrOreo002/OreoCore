@@ -5,6 +5,7 @@ import me.droreo002.oreocore.utils.misc.MathUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -176,5 +177,21 @@ public final class StringUtils {
      */
     public static String createID() {
         return String.valueOf(idCounter.getAndIncrement());
+    }
+
+    /**
+     * Check if the string is a valid url
+     *
+     * @param string The string to check
+     * @return true if url, false otherwise
+     */
+    public static boolean isUrl(String string) {
+        try {
+            URL url = new URL(string);
+            url.toURI();
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
     }
 }

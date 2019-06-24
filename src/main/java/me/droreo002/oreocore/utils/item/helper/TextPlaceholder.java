@@ -107,12 +107,31 @@ public class TextPlaceholder {
      * Format the string
      *
      * @param s The string to format
+     * @return the formatted string
      */
     public String format(String s) {
         for (TextPlaceholder p : placeholders) {
             s = s.replace(p.getFrom(), p.getTo());
         }
         return s;
+    }
+
+    /**
+     * Format the string one by one
+     * @param s The string
+     * @param separator The string's separator
+     * @return the formatted string
+     */
+    public String formatOneByOne(String s, String separator) {
+        final String[] args = s.split(separator);
+        final StringBuilder builder = new StringBuilder();
+        for (String arg : args) {
+            for (TextPlaceholder p : placeholders) {
+                arg = arg.replace(p.getFrom(), p.getTo());
+            }
+            builder.append(arg).append(" ");
+        }
+        return builder.toString().substring(0, builder.toString().lastIndexOf(" "));
     }
 
     /**

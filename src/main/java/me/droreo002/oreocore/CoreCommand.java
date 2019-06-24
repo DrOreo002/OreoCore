@@ -47,6 +47,11 @@ public class CoreCommand implements CommandExecutor {
                     sound(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("test-config-comment")) {
+                    sendMessage(player, "Testing. Please check file after this!");
+                    plugin.getPluginConfig().reloadConfig();
+                    return true;
+                }
                 if (args[0].equalsIgnoreCase("title-memory")) {
                     sendMessage(player, "This is the title!");
                     sound(player);

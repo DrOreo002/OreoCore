@@ -23,12 +23,6 @@ public class PluginConfig extends CustomConfig {
         ConfigMemoryManager.registerMemory(plugin, memory);
     }
 
-    public void reload() {
-        super.reloadConfig();
-        memory = new Memory(this);
-        ConfigMemoryManager.reloadMemory(getPlugin(), memory);
-    }
-
     public class Memory implements ConfigMemory {
 
         @Getter

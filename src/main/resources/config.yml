@@ -9,3 +9,5 @@ Title:
     fade-out: 20
 Enum:
   test: 'HEAD'
+# This is a test comment!
+TestValue: 'Hello World, I''d like to lick you!'

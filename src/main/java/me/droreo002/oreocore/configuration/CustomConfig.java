@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.configuration;
 
+import com.google.common.base.Charsets;
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.Debug;
 import org.apache.commons.lang.Validate;
@@ -8,10 +9,21 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomConfig {
 
@@ -95,7 +107,13 @@ public class CustomConfig {
 
         saveConfig(false);
         InputStream configData = plugin.getResource(getFileName());
-        if (configData != null) ConfigUpdater.update(yamlFile, configData);
+        if (configData != null) {
+            try {
+                updateComments(yamlFile, new InputStreamReader(configData, Charsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -106,5 +124,74 @@ public class CustomConfig {
     public void registerMemory(ConfigMemory memory) {
         this.registeredMemory = memory;
         ConfigMemoryManager.registerMemory(getPlugin(), memory);
+    }
+
+    /**
+     * Update config comments, currently private usage only
+     *
+     * @param toUpdate Config to update
+     * @param baseReader Config comment source
+     * @throws IOException If there's something bad happens
+     */
+    private void updateComments(File toUpdate, Reader baseReader) throws IOException {
+        if (!toUpdate.exists()) throw new NullPointerException("File cannot be null!");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(toUpdate);
+        BufferedReader reader = baseReader instanceof BufferedReader ? (BufferedReader) baseReader : new BufferedReader(baseReader);
+
+        final Writer writer = new OutputStreamWriter(new FileOutputStream(toUpdate), Charsets.UTF_8);
+        final List<String> checked = new ArrayList<>();
+        String line;
+        outer: while ((line = reader.readLine()) != null) {
+
+            if (line.startsWith("#")) {
+                write(writer, line);
+                continue;
+            }
+
+            for (String key : config.getKeys(true)) {
+                if (checked.contains(key)) continue;
+                String[] keyArray = key.split("\\.");
+                String keyString = keyArray[keyArray.length - 1];
+
+                if (line.trim().startsWith(keyString + ":")) {
+                    checked.add(key);
+                    if (config.isConfigurationSection(key)) {
+                        write(writer, line);
+                        continue outer;
+                    }
+
+                    String[] array = line.split(": ");
+
+                    if (array.length > 1) {
+                        if (array[1].startsWith("\"") || array[1].startsWith("'")) {
+                            char c = array[1].charAt(0);
+                            String s = config.getString(key);
+                            if (s.contains("'")) {
+                                s = s.replace("'", "''");
+                            }
+                            line = array[0] + ": " + c + s + c;
+                        } else {
+                            line = array[0] + ": " + config.get(key);
+                        }
+                    }
+                    write(writer, line);
+                    continue outer;
+                }
+            }
+            write(writer, line);
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    /**
+     * Write to file
+     *
+     * @param writer The writer
+     * @param line Line to write
+     * @throws IOException If there's something bad happens
+     */
+    private void write(Writer writer, String line) throws IOException {
+        writer.write(line + System.lineSeparator());
     }
 }
