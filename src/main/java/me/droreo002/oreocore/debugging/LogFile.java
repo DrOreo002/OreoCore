@@ -38,9 +38,9 @@ public abstract class LogFile {
         this.logger = Logger.getLogger(getLoggerName());
         this.currentLogFileName = getNextLogName();
         setup();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(getOwner(), new LogFileUpdater(), 0L, 20L * getLogUpdateTime());
-
-        Debug.log("Log file from plugin &e" + owner.getName() + "&f has been created!", true);
+        if (getLogUpdateTime() != -1) {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(getOwner(), new LogFileUpdater(), 0L, 20L * getLogUpdateTime());
+        }
     }
 
     /**
@@ -56,6 +56,7 @@ public abstract class LogFile {
             try {
                 currentLogFile.createNewFile();
             } catch (IOException e) {
+                System.out.println("Current log file name " + currentLogFileName + " This might be invalid. Please check!");
                 e.printStackTrace();
                 return;
             }
@@ -66,7 +67,7 @@ public abstract class LogFile {
             e.printStackTrace();
             return;
         }
-        logHandler.setFormatter(new CSLFormatter());
+        logHandler.setFormatter(new LogFormat());
         logger.setLevel(Level.ALL);
         logger.setUseParentHandlers(false);
         for (Handler handler : logger.getHandlers()) {
@@ -107,7 +108,7 @@ public abstract class LogFile {
         return currentFileName + "_" + (currentNumber + 1);
     }
 
-    private class CSLFormatter extends Formatter {
+    private class LogFormat extends Formatter {
 
         private final String logFormat = getLogFormat();
 
@@ -164,7 +165,7 @@ public abstract class LogFile {
     public abstract String getLoggerName();
 
     /**
-     * Get the log update time (in second)
+     * Get the log update time (in second) set to -1 to disable
      *
      * @return : The update time
      */
