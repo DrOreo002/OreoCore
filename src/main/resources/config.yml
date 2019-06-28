@@ -10,4 +10,6 @@ Title:
 Enum:
   test: 'HEAD'
 # This is a test comment!
-TestValue: 'Hello World, I''d like to lick you!'
+TestValue: 'Hello World'
+Settings:
+  disable-notification-on-join: false # Should we disable the notification on join?. Keep in mind that notification is only available for player who have oreocore.admin permission

@@ -40,6 +40,10 @@ public class PluginConfig extends CustomConfig {
         @Getter
         private ArmorStandBody body;
 
+        @ConfigVariable(path = "Settings.disable-notification-on-join")
+        @Getter
+        private boolean disableNotif;
+
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;
         }

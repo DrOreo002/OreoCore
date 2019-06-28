@@ -17,6 +17,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         if (!player.hasPermission("oreocore.admin")) return;
+        if (plugin.getPluginConfig().getMemory().isDisableNotif()) return;
         player.sendMessage(plugin.getPrefix() + StringUtils.color("&fThis server is currently running on &eOreoCore &7(&c" + plugin.getDescription().getVersion() + "&7)&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7) &fplugin"));
     }
 
