@@ -109,7 +109,7 @@ public class CustomConfig {
         InputStream configData = plugin.getResource(getFileName());
         if (configData != null) {
             try {
-                updateComments(yamlFile, new InputStreamReader(configData, Charsets.UTF_8));
+                updateComments(configData);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -129,14 +129,15 @@ public class CustomConfig {
     /**
      * Update config comments, currently private usage only
      *
-     * @param toUpdate Config to update
-     * @param baseReader Config comment source
+     * @param commentSource Config comment source
      * @throws IOException If there's something bad happens
      */
-    private void updateComments(File toUpdate, Reader baseReader) throws IOException {
+    private void updateComments(InputStream commentSource) throws IOException {
+        final File toUpdate = getYamlFile();
         if (!toUpdate.exists()) throw new NullPointerException("File cannot be null!");
+        Reader baseReader = new InputStreamReader(commentSource, Charsets.UTF_8);
         FileConfiguration config = YamlConfiguration.loadConfiguration(toUpdate);
-        BufferedReader reader = baseReader instanceof BufferedReader ? (BufferedReader) baseReader : new BufferedReader(baseReader);
+        BufferedReader reader = new BufferedReader(baseReader);
 
         final Writer writer = new OutputStreamWriter(new FileOutputStream(toUpdate), Charsets.UTF_8);
         final List<String> checked = new ArrayList<>();
@@ -182,6 +183,7 @@ public class CustomConfig {
         }
         writer.flush();
         writer.close();
+        reader.close();
     }
 
     /**

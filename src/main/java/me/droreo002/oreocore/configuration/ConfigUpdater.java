@@ -1,12 +1,18 @@
 package me.droreo002.oreocore.configuration;
 
+import com.google.common.base.Charsets;
+import com.google.common.primitives.Chars;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A class to update/add new sections/keys to your config
@@ -16,69 +22,41 @@ import java.util.List;
  */
 public class ConfigUpdater {
 
-    /**
-     * Update a yml file from another yml file
-     * @param toUpdate The yml file to update
-     * @param updateFrom The yml file to update from
-     */
-    public static void update(File toUpdate, File updateFrom) {
-        try {
-            BufferedReader reader = getBufferedReader(updateFrom);
-            update(toUpdate, reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
-     * Update a yml file from an InputStream
-     * This is useful for default configs (config saved in jar) using {@link org.bukkit.plugin.java.JavaPlugin#getResource(String)}
-     * @param toUpdate The yml file to update
-     * @param updateFrom The InputStream to update from
-     */
-    public static void update(File toUpdate, InputStream updateFrom) {
-        BufferedReader reader = getBufferedReader(updateFrom);
-        try {
-            update(toUpdate, reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Update the config
-     *
+     * Update config comments, currently private usage only
+     *vp
      * @param toUpdate Config to update
-     * @param reader Then update source
+     * @param plugin The JavaPlugin
+     * @param fileSourceName The source file name
      * @throws IOException If there's something bad happens
      */
-    private static void update(File toUpdate, BufferedReader reader) throws IOException {
+    public static void update(File toUpdate, JavaPlugin plugin, String fileSourceName) throws IOException {
+        if (!toUpdate.exists()) throw new NullPointerException("File cannot be null!");
         FileConfiguration config = YamlConfiguration.loadConfiguration(toUpdate);
-        FileConfiguration source = YamlConfiguration.loadConfiguration(reader);
+        FileConfiguration updateSource = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(fileSourceName), Charsets.UTF_8));
 
-        if (!toUpdate.exists()) {
-            config.save(toUpdate);
-            return;
-        }
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(plugin.getResource(fileSourceName), Charsets.UTF_8));
+        final Writer writer = new OutputStreamWriter(new FileOutputStream(toUpdate), Charsets.UTF_8);
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(toUpdate), StandardCharsets.UTF_8));
+        final List<String> checked = new ArrayList<>();
+        final List<String> updateSourceKeys = new ArrayList<>(updateSource.getKeys(true));
 
         String line;
         outer: while ((line = reader.readLine()) != null) {
 
             if (line.startsWith("#")) {
-                writer.write(line);
-                writer.newLine();
+                write(writer, line);
                 continue;
             }
 
-            boolean contains = false;
-
-            for (String key : source.getKeys(true)) {
+            for (String key : updateSourceKeys) {
+                if (checked.contains(key)) continue;
                 String[] keyArray = key.split("\\.");
                 String keyString = keyArray[keyArray.length - 1];
 
                 if (line.trim().startsWith(keyString + ":")) {
+                    checked.add(key);
                     if (config.isConfigurationSection(key)) {
                         write(writer, line);
                         continue outer;
@@ -89,9 +67,13 @@ public class ConfigUpdater {
                     if (array.length > 1) {
                         if (array[1].startsWith("\"") || array[1].startsWith("'")) {
                             char c = array[1].charAt(0);
-                            line = array[0] + ": " + c + config.get(key) + c;
+                            String s = config.getString(key, (String) updateSource.get(key));
+                            if (s.contains("'")) {
+                                s = s.replace("'", "''");
+                            }
+                            line = array[0] + ": " + c + s + c;
                         } else {
-                            line = array[0] + ": " + config.get(key);
+                            line = array[0] + ": " + config.get(key, updateSource.get(key));
                         }
                     }
                     write(writer, line);
@@ -100,20 +82,19 @@ public class ConfigUpdater {
             }
             write(writer, line);
         }
-
+        writer.flush();
+        writer.close();
+        reader.close();
     }
 
-
-    private static BufferedReader getBufferedReader(InputStream inputStream) {
-        return new BufferedReader(new InputStreamReader(inputStream));
-    }
-
-    private static BufferedReader getBufferedReader(File file) throws FileNotFoundException {
-        return new BufferedReader(new FileReader(file));
-    }
-
-    private static void write(BufferedWriter writer, String line) throws IOException {
-        writer.write(line);
-        writer.newLine();
+    /**
+     * Write to file
+     *
+     * @param writer The writer
+     * @param line Line to write
+     * @throws IOException If there's something bad happens
+     */
+    private static void write(Writer writer, String line) throws IOException {
+        writer.write(line + System.lineSeparator());
     }
 }
