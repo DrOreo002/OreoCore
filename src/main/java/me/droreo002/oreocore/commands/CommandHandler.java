@@ -1,5 +1,7 @@
 package me.droreo002.oreocore.commands;
 
+import me.droreo002.oreocore.enums.MinecraftVersion;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -97,6 +99,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 final Player player = (Player) sender;
                 if (!player.hasPermission(cmd.getTabCompletePermission())) {
+                    // Fix spam message
+                    switch (ServerUtils.getServerVersion()) {
+                        case v1_13_R1:
+                        case v1_13_R2:
+                        case v1_14_R1:
+                            return null;
+                    }
                     cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());
                     cmd.errorSound(sender);
                     return null;

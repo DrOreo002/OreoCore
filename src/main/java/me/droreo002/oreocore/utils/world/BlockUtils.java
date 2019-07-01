@@ -1,5 +1,7 @@
 package me.droreo002.oreocore.utils.world;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -7,6 +9,8 @@ import org.bukkit.util.Vector;
 
 @SuppressWarnings("deprecation")
 public final class BlockUtils {
+
+    private static final BlockFace[] FACES = { BlockFace.DOWN, BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
 
     /**
      * Get the block facing, only support for those block faces (See code)
@@ -43,5 +47,28 @@ public final class BlockUtils {
             direction.normalize();
         }
         return direction;
+    }
+
+    /**
+     * Get the faced block's location
+     *
+     * @param block The block source
+     * @param target The block target
+     * @param checkTopAndBottom Should we also check for the top?
+     * @return the location of the faced block
+     */
+    public static Location getFacedLocation(Block block, Material target, boolean checkTopAndBottom) {
+        for (BlockFace face : FACES) {
+            if (!checkTopAndBottom) {
+                switch (face) {
+                    case UP:
+                    case DOWN:
+                        continue;
+                }
+            }
+            Block possible = block.getRelative(face);
+            if (possible.getType().equals(target)) return possible.getLocation();
+        }
+        return null;
     }
 }

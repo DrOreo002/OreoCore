@@ -71,4 +71,14 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         config.set(path + ".stay", stay);
         config.set(path + ".fade-out", fadeIn);
     }
+
+    /**
+     * Get from config (Static)
+     *
+     * @param section The ConfigSection containing the data
+     * @return the TitleObject
+     */
+    public static TitleObject fromConfig(ConfigurationSection section) {
+        return new TitleObject().getFromConfig(section);
+    }
 }
