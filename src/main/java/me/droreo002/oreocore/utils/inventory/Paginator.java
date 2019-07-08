@@ -1,50 +1,60 @@
 package me.droreo002.oreocore.utils.inventory;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Paginator<GUIButton> {
+/**
+ * A paginator class, made by Septogeddon useful for making
+ * paginated GUI or text message
+ *
+ * @param <T> object def
+ */
+public class Paginator<T> {
 
-    private List<GUIButton> list;
+    @Getter
+    private List<T> list;
+    @Getter
     private int tot;
 
-    public Paginator(List<GUIButton> lists, int totalitem) {
+    public Paginator(List<T> lists, int totalItem) {
         list = lists;
-        tot = totalitem;
+        tot = totalItem;
     }
 
-    public String toString() {
-        return list.toString();
-    }
-
-    public Paginator(List<GUIButton> lists) {
+    public Paginator(List<T> lists) {
         list = lists;
         tot = lists.size();
     }
 
-    public List<List<GUIButton>> paginates() {
-        return paginates(tot);
-    }
-
-    public List<List<GUIButton>> paginates(int itemPerPage) {
+    /**
+     * Paginate the list
+     *
+     * @param itemPerPage Item per page
+     * @return the List of paginated pages
+     */
+    public List<List<T>> paginates(int itemPerPage) {
         if (itemPerPage <= 0) throw new IllegalArgumentException("Invalid item per page : " + itemPerPage);
-        ArrayList<List<GUIButton>> paged = new ArrayList<>();
+        ArrayList<List<T>> paged = new ArrayList<>();
         int totalPage = 0;
         for (int i = 0; i < list.size(); i += itemPerPage)
             totalPage++;
         int page = 0;
         while (page < totalPage) {
-            paged.add(paginate(page,itemPerPage));
+            paged.add(paginate(page, itemPerPage));
             page++;
         }
         return paged;
     }
 
-    public int totalPage() {
-        return totalPage(tot);
-    }
-
+    /**
+     * Get the total page will be
+     *
+     * @param itemPerPage Item per page
+     * @return the total page
+     */
     public int totalPage(int itemPerPage) {
         if (itemPerPage < 0) return 0;
         int totalPage = 1;
@@ -53,7 +63,13 @@ public class Paginator<GUIButton> {
         return totalPage;
     }
 
-    public List<GUIButton> paginate(int page) {
+    /**
+     * Paginate the list
+     *
+     * @param page Page to get
+     * @return the List of resulted pagination
+     */
+    public List<T> paginate(int page) {
         if (tot < 0 || page < 0) {
             return new ArrayList<>();
         }
@@ -66,15 +82,27 @@ public class Paginator<GUIButton> {
         return list.subList(fromIndex, Math.min(fromIndex + tot, list.size()));
     }
 
-    public List<GUIButton> paginate(int page, int itemperpage) {
-        if (itemperpage < 0 || page < 0) {
+    /**
+     * Paginate the list
+     *
+     * @param page Page to get
+     * @param itemPerPage Item per page
+     * @return the List of resulted pagination
+     */
+    private List<T> paginate(int page, int itemPerPage) {
+        if (itemPerPage < 0 || page < 0) {
             return new ArrayList<>();
         }
 
-        int fromIndex = (page) * itemperpage;
+        int fromIndex = (page) * itemPerPage;
         if (list == null || list.size() < fromIndex) {
             return Collections.emptyList();
         }
-        return list.subList(fromIndex, Math.min(fromIndex + itemperpage, list.size()));
+        return list.subList(fromIndex, Math.min(fromIndex + itemPerPage, list.size()));
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }

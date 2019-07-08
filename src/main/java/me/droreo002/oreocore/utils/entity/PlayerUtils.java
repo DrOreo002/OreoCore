@@ -3,6 +3,9 @@ package me.droreo002.oreocore.utils.entity;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainTasks;
 import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.base.Stopwatch;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
@@ -20,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +32,13 @@ import java.util.UUID;
 
 public final class PlayerUtils {
 
+    /**
+     * Get block's location that the player's looking at
+     *
+     * @param player The player to check
+     * @param distance The distance
+     * @return the Location of block the player's looking at
+     */
     public static Location getPlayerLooking(Player player, int distance) {
         ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight(null, distance);
         ArrayList<Location> sight = new ArrayList<Location>();
@@ -38,6 +49,12 @@ public final class PlayerUtils {
         return sight.get(sight.size() - 1);
     }
 
+    /**
+     * Get player name by UUID
+     *
+     * @param uuid The UUID
+     * @return the player name if succeeded, empty string otherwise
+     */
     public static String getPlayerName(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
@@ -47,6 +64,15 @@ public final class PlayerUtils {
         } else {
             return player.getName();
         }
+    }
+
+    /**
+     * Clear player's chat
+     *
+     * @param player Target player
+     */
+    public static void clearChat(Player player) {
+        for (int i = 0; i < 40; i++) player.sendMessage(" ");
     }
 
     /**
@@ -144,5 +170,22 @@ public final class PlayerUtils {
         }
 
         return amount > expected;
+    }
+
+    /**
+     * Send a ResourcePack to player
+     *
+     * @param player The target player
+     * @param link The ResourcePack direct download link
+     * @param sha The ResourcePack's sha
+     *
+     * @throws InvocationTargetException If something bad happens
+     */
+    public static void sendResourcepack(Player player, String link, String sha) throws InvocationTargetException {
+        PacketContainer pac = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.RESOURCE_PACK_SEND);
+        pac.getStrings().write(0, link);
+        pac.getStrings().write(1, sha.toLowerCase());
+
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, pac);
     }
 }

@@ -57,6 +57,7 @@ public final class LocationUtils {
      * @return the Location object if successful, null otherwise
      */
     public static Location toLocation(String format) {
+        if (format.isEmpty()) return null;
         String[] sp = format.split(";");
         if (!sp[0].equalsIgnoreCase("Location")) return null;
         String world = sp[1];

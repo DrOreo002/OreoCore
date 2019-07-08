@@ -2,13 +2,11 @@ package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.debugging.Debug;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -65,11 +63,19 @@ public final class ConfigMemoryManager {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 if (!f.isAccessible()) f.setAccessible(true);
                 final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
-                if (configVariable.isUpdateAbleObject()) {
+                if (memory.isUpdatable()) {
                     try {
                         config.set(configVariable.path(), f.get(memory));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
+                    }
+                } else {
+                    if (configVariable.isUpdateAbleObject()) {
+                        try {
+                            config.set(configVariable.path(), f.get(memory));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
