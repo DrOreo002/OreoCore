@@ -1,12 +1,15 @@
 package me.droreo002.oreocore.utils.bridge;
 
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.commands.CustomCommand;
 import me.droreo002.oreocore.enums.MinecraftVersion;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 
@@ -79,19 +82,34 @@ public final class ServerUtils {
     /**
      * Force unregister the command from bukkit's command map
      *
-     * @param command The command to unregister
+     * @param commands The commands to unregister
+     * @param fromPlugin The plugin source
+     * @param callback Callback, will get called if execution is complete
      */
-    public static void forceUnregisterCommand(String command) {
-        try {
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+    @SuppressWarnings("deprecation")
+    public static void forceUnregisterCommand(String fromPlugin, SimpleCallback<Void> callback, String... commands) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (ServerUtils.getPlugin(fromPlugin) != null) {
+                    try {
+                        for (String command : commands) {
+                            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
-            bukkitCommandMap.setAccessible(true);
-            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+                            bukkitCommandMap.setAccessible(true);
+                            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-            commandMap.getCommand(command).unregister(commandMap);
-        } catch (NoSuchFieldException | IllegalAccessException | NullPointerException e) {
-            e.printStackTrace();
-        }
+                            commandMap.getCommand(command).unregister(commandMap);
+                        }
+                        cancel();
+                        callback.success(null);
+                    } catch (NoSuchFieldException | IllegalAccessException | NullPointerException e) {
+                        callback.error(e);
+                        cancel();
+                    }
+                }
+            }
+        }.runTaskTimer(OreoCore.getInstance(), 20L, 20L * 20L);
     }
 
     /**

@@ -2,10 +2,8 @@ package me.droreo002.oreocore;
 
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChainFactory;
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.earth2me.essentials.Essentials;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
@@ -42,8 +40,6 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private String prefix;
     @Getter
-    private Essentials essentials;
-    @Getter
     private ProtocolManager protocolManager;
     @Getter
     private DatabaseFlatFile flatFileData;
@@ -63,7 +59,6 @@ public final class OreoCore extends JavaPlugin {
         taskChainFactory = BukkitTaskChainFactory.create(this);
         metrics = new Metrics(this);
         prefix = StringUtils.color("&7[ &bOreoCore &7]&f ");
-        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         protocolManager = ProtocolLibrary.getProtocolManager();
         HookUtils.getInstance(); // Initialize
         ConfigurationSerialization.registerClass(CustomItem.class);
