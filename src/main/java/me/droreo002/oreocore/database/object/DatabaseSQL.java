@@ -38,8 +38,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
 
     public DatabaseSQL(JavaPlugin plugin, String databaseName, File databaseFolder, SQLType sqlType) {
         super(DatabaseType.SQL, plugin);
-        if (databaseName.contains(".db")) throw new IllegalStateException("Database name cannot have database extension in it!");
-        this.databaseName = databaseName;
+        this.databaseName = databaseName.replace(".db", "");
         this.databaseFolder = databaseFolder;
         this.sqlType = sqlType;
         if (!databaseFolder.exists()) databaseFolder.mkdir();

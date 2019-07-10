@@ -6,16 +6,12 @@ import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.base.Stopwatch;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
-import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
-import net.minecraft.server.v1_14_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -27,8 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 public final class PlayerUtils {
 
@@ -64,6 +60,16 @@ public final class PlayerUtils {
         } else {
             return player.getName();
         }
+    }
+
+    /**
+     * Get player's uuid by name (Not recommended for server that had 1k+ offline player data tho)
+     *
+     * @param playerName Player name
+     * @return Player's uuid
+     */
+    public static Future<UUID> getPlayerUuid(String playerName) {
+        return ThreadingUtils.makeFuture(() -> UUID.nameUUIDFromBytes(("Offline:" + playerName).getBytes()));
     }
 
     /**

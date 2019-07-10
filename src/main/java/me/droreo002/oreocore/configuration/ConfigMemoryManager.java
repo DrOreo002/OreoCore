@@ -49,14 +49,14 @@ public final class ConfigMemoryManager {
             boolean match = mem.stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
             if (match) {
                 // Update
-                update(memory);
+                saveToFile(memory);
                 // Reload
                 reloadMemory(plugin, memory);
             }
         }
     }
 
-    private static void update(ConfigMemory memory) {
+    private static void saveToFile(ConfigMemory memory) {
         final FileConfiguration config = memory.getParent().getConfig();
         Class<? extends ConfigMemory> obj = memory.getClass();
         for (Field f : obj.getDeclaredFields()) {
@@ -92,7 +92,15 @@ public final class ConfigMemoryManager {
                 Object configValue = config.get(path);
                 if (configVariable.isSerializableObject()) {
                     ConfigurationSection cs = config.getConfigurationSection(path);
-                    if (cs == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get ConfigurationSection on path " + path);
+                    if (cs == null) {
+                        if (configVariable.errorWhenNull()) {
+                            throw new NullPointerException("Failed to get config value on path " + path);
+                        } else {
+                            Debug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                            continue; // We ignore the null value
+                        }
+                    }
+
                     if (!f.isAccessible()) f.setAccessible(true);
                     if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
                     try {
@@ -105,7 +113,15 @@ public final class ConfigMemoryManager {
                     }
                     continue;
                 }
-                if (configValue == null && configVariable.errorWhenNull()) throw new NullPointerException("Failed to get config value on path " + path);
+                if (configValue == null) {
+                    if (configVariable.errorWhenNull()) {
+                        throw new NullPointerException("Failed to get config value on path " + path);
+                    } else {
+                        Debug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                        continue; // We ignore the null value
+                    }
+                }
+
                 if (!f.isAccessible()) f.setAccessible(true);
                 if (f.getType().isEnum()) {
                     try {
@@ -115,7 +131,7 @@ public final class ConfigMemoryManager {
                     } catch (Exception e) {
                         // handle error here
                         e.printStackTrace();
-                        Debug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName());
+                        Debug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
                         continue;
                     }
                     continue;

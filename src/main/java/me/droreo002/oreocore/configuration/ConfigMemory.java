@@ -18,7 +18,7 @@ public interface ConfigMemory {
      * if this true then every value will try to change the config value
      * as the value they have.
      *
-     * @return true or false
+     * @return default is false
      */
     @NonNull
     default boolean isUpdatable() {

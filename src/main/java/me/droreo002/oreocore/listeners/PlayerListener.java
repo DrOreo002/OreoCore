@@ -5,6 +5,7 @@ import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,9 +14,13 @@ public class PlayerListener implements Listener {
 
     private final OreoCore plugin = OreoCore.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        if (plugin.getPluginConfig().getMemory().isCachePlayerInformation()) {
+            plugin.getPlayerInformationDatabase().loadPlayer(player);
+        }
+
         if (!player.hasPermission("oreocore.admin")) return;
         if (plugin.getPluginConfig().getMemory().isDisableNotif()) return;
         player.sendMessage(plugin.getPrefix() + StringUtils.color("&fThis server is currently running on &eOreoCore &7(&c" + plugin.getDescription().getVersion() + "&7)&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7) &fplugin"));

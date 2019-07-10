@@ -20,7 +20,7 @@ public final class ThreadingUtils {
      * @param <T> : Object type
      * @return a CompletableFuture with specified type
      */
-    public static  <T> CompletableFuture<T> makeFuture(Callable<T> supplier) {
+    public static <T> CompletableFuture<T> makeFuture(Callable<T> supplier) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return supplier.call();

@@ -6,12 +6,14 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
+import me.droreo002.oreocore.configuration.ConfigUpdater;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.object.DatabaseFlatFile;
 import me.droreo002.oreocore.database.object.DatabaseMySQL;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
+import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
 import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
 import me.droreo002.oreocore.inventory.listener.CustomInventoryListener;
 import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
@@ -25,6 +27,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public final class OreoCore extends JavaPlugin {
@@ -42,11 +46,7 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private ProtocolManager protocolManager;
     @Getter
-    private DatabaseFlatFile flatFileData;
-    @Getter
-    private DatabaseMySQL mysqlData;
-    @Getter
-    private DatabaseSQL sqlData;
+    private PlayerInformationDatabase playerInformationDatabase;
     @Getter
     private PluginConfig pluginConfig;
     @Getter
@@ -69,13 +69,19 @@ public final class OreoCore extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
-        
-        //new ExampleCommand();
-        //flatFileData = new FlatFileDebug();
-        //sqlData = new SqlDebug()
-        //mysqlData = new MySqlDebug();
         pluginConfig = new PluginConfig(this);
+        playerInformationDatabase = new PlayerInformationDatabase(this);
 
+        // For config updating
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            try {
+                ConfigUpdater.update(new File(getDataFolder(), "config.yml"), this, "config.yml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            pluginConfig.reloadConfig();
+        }, 40L);
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {
