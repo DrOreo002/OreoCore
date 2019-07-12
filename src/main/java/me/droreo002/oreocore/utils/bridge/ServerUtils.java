@@ -127,4 +127,29 @@ public final class ServerUtils {
         }
         return version;
     }
+
+    /**
+     * Check if the server is legacy version or not. Legacy are < 1.13
+     *
+     * @return true if legacy, false otherwise
+     */
+    public static boolean isLegacyVersion() {
+        switch (getServerVersion()) {
+            case v1_8_R1:
+            case v1_8_R2:
+            case v1_8_R3:
+            case v1_9_R1:
+            case v1_9_R2:
+            case v1_10_R1:
+            case v1_11_R1:
+            case v1_12_R1:
+                return true;
+            case v1_13_R1:
+            case v1_13_R2:
+            case v1_14_R1:
+            case FAILED_TO_GET:
+                return false;
+        }
+        return false;
+    }
 }

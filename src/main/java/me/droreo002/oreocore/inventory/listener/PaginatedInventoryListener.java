@@ -1,8 +1,10 @@
 package me.droreo002.oreocore.inventory.listener;
 
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -96,13 +98,20 @@ public class PaginatedInventoryListener implements Listener {
         if (inventory.getHolder() instanceof PaginatedInventory) {
             if (!main.getOpening().containsKey(player.getUniqueId())) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(main, player::closeInventory, 1L);
-                Bukkit.getLogger().warning("Player (" + player.getName() + ") is opening a paginated inventory. But there's no player with that unique id on the opening list!. Inventory is now force closed!");
+                Debug.log("&cPlayer (" + player.getName() + ") is opening a paginated inventory. But there's no player with that unique id on the opening list!. Inventory is now force closed!");
                 return;
             }
             PaginatedInventory pagi = main.getOpening().get(player.getUniqueId());
             pagi.getOpenSound().send(player);
             pagi.onOpen(e);
-            if (pagi.isHasAnimation()) pagi.startAnimation();
+
+            if (pagi.isHasOpenAnimation()) {
+                pagi.getOpenAnimation().start(aVoid -> {
+                    if (pagi.isHasButtonAnimation()) pagi.startAnimation();
+                });
+            } else {
+                if (pagi.isHasButtonAnimation()) pagi.startAnimation();
+            }
         }
     }
 
@@ -112,14 +121,16 @@ public class PaginatedInventoryListener implements Listener {
         Player player = (Player) e.getPlayer();
         if (inventory.getHolder() instanceof PaginatedInventory) {
             if (!main.getOpening().containsKey(player.getUniqueId())) {
-                Bukkit.getLogger().warning("Player (" + player.getName() + ") is closing a paginated inventory. But there's no player with that unique id on the opening list!. Inventory is now force closed!");
+                Debug.log("&cPlayer (" + player.getName() + ") is opening a paginated inventory. But there's no player with that unique id on the opening list!. Inventory is now force closed!");
                 return;
             }
             PaginatedInventory pagi = main.getOpening().get(player.getUniqueId());
             pagi.getCloseSound().send(player);
             main.getOpening().remove(player.getUniqueId());
             pagi.onClose(e);
-            if (pagi.isHasAnimation() && !pagi.isKeepAnimation()) pagi.stopAnimation();
+
+            if (pagi.isHasButtonAnimation() && !pagi.isKeepButtonAnimation()) pagi.stopAnimation();
+            if (pagi.isHasOpenAnimation()) pagi.getOpenAnimation().stop(false);
         }
     }
 }

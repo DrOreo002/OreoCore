@@ -10,6 +10,7 @@ import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.inventory.api.animation.IAnimatedInventory;
 import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
+import me.droreo002.oreocore.inventory.api.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
@@ -55,13 +56,15 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Getter @Setter
     private SoundObject openSound, closeSound, clickSound;
     @Getter @Setter
-    private boolean hasAnimation;
+    private boolean hasButtonAnimation, hasOpenAnimation;
     @Getter @Setter
-    private  int animationUpdateId;
+    private int animationUpdateId;
     @Getter @Setter
     private long animationUpdateTime;
     @Getter @Setter
-    private boolean keepAnimation;
+    private boolean keepButtonAnimation;
+    @Getter @Setter
+    private OpenAnimation openAnimation;
 
     @Getter
     private Paginator<GUIButton> paginator;
@@ -157,7 +160,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      * @param button : The button object
      */
     public void addPaginatedButton(GUIButton button) {
-        if (button.isAnimated()) this.hasAnimation = true;
+        if (button.isAnimated()) this.hasButtonAnimation = true;
         paginatedButton.add(button);
     }
 
@@ -169,7 +172,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      */
     @Override
     public void addButton(GUIButton button, boolean replaceIfExist) {
-        if (button.isAnimated()) this.hasAnimation = true;
+        if (button.isAnimated()) this.hasButtonAnimation = true;
         int slot = button.getInventorySlot();
         if (replaceIfExist) {
             if (isHasButton(slot)) {
@@ -300,6 +303,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
             inventoryButton.forEach(but -> inventory.setItem(but.getInventorySlot(), but.getItem()));
         }
 
+        if (openAnimation != null) this.hasOpenAnimation = true;
         updateInformationButton();
     }
 

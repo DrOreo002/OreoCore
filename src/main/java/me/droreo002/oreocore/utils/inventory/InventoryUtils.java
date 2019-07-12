@@ -2,6 +2,9 @@ package me.droreo002.oreocore.utils.inventory;
 
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.misc.SoundObject;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,14 +17,32 @@ import java.util.Map;
 
 public final class InventoryUtils {
 
+    /**
+     * Check if player's inventory is full
+     *
+     * @param inventory The inventory to check
+     * @return true if full, false otherwise
+     */
     public static boolean isInventoryFull(Inventory inventory) {
         return inventory.firstEmpty() == -1;
     }
 
+    /**
+     * Check if player's inventory is empty
+     *
+     * @param inventory The inventory to check
+     * @return true if empty, false otherwise
+     */
     public static boolean isInventoryEmpty(Inventory inventory) {
         return inventory.firstEmpty() == 0;
     }
 
+    /**
+     * Get the content of the inventory
+     *
+     * @param inventory Inventory to check
+     * @return the content
+     */
     public static List<ItemStack> getContent(Inventory inventory) {
         final List<ItemStack> items = new ArrayList<>();
         for (ItemStack i : inventory.getContents()) {
@@ -421,5 +442,45 @@ public final class InventoryUtils {
             }
         }
         return stackedItems.toArray(new ItemStack[stackedItems.size()]);
+    }
+
+    /**
+     * Update the inventory viewer
+     *
+     * @param inventory The inventory to update
+     */
+    public static void updateInventoryViewer(Inventory inventory) {
+        for (HumanEntity entity : inventory.getViewers()) {
+            if (entity instanceof Player) {
+                ((Player) entity).updateInventory();
+            }
+        }
+    }
+
+    /**
+     * Play sound to inventory viewer
+     *
+     * @param inventory The inventory
+     * @param soundObject The sound to play
+     */
+    public static void playSoundToViewer(Inventory inventory, SoundObject soundObject) {
+        for (HumanEntity entity : inventory.getViewers()) {
+            if (entity instanceof Player) {
+                soundObject.send((Player) entity);
+            }
+        }
+    }
+
+    /**
+     * Get the item as a HashMap
+     *
+     * @return The item as a HashMap, where key is the slot and value is the item
+     */
+    public static Map<Integer, ItemStack> getItemAsHashMap(Inventory inventory) {
+        final Map<Integer, ItemStack> items = new HashMap<>();
+        for (int i = 0; i < inventory.getSize(); i++) {
+            items.put(i, inventory.getItem(i));
+        }
+        return items;
     }
 }

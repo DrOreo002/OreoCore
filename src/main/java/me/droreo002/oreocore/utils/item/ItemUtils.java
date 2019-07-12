@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.item;
 
+import me.droreo002.oreocore.inventory.api.CustomInventory;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -85,5 +86,16 @@ public final class ItemUtils {
         } else {
             return meta.getLore();
         }
+    }
+
+    /**
+     * Check if the item is similar or not
+     *
+     * @param one First item
+     * @param two Second item
+     * @return true if similar, false otherwise
+     */
+    public static boolean isSimilar(ItemStack one, ItemStack two) {
+        return CustomItem.isSimilar(one, two);
     }
 }

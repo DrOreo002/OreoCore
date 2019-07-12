@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.misc.SoundObject;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +38,7 @@ public class GUIButton {
     @Getter
     private final List<IButtonFrame> frames;
     @Getter
-    private final Map<ItemMetaType, Object> firstState;
+    private final Map<String, Object> firstState;
 
     public GUIButton(ItemStack item) {
         this.item = item;
@@ -47,9 +49,10 @@ public class GUIButton {
         this.firstState = new HashMap<>();
 
         if (item.hasItemMeta()) {
-            if (item.getItemMeta().hasDisplayName()) firstState.put(ItemMetaType.DISPLAY_NAME, item.getItemMeta().getDisplayName());
-            if (item.getItemMeta().hasLore()) firstState.put(ItemMetaType.LORE, item.getItemMeta().getLore());
+            if (item.getItemMeta().hasDisplayName()) firstState.put(ItemMetaType.DISPLAY_NAME.name(), item.getItemMeta().getDisplayName());
+            if (item.getItemMeta().hasLore()) firstState.put(ItemMetaType.LORE.name(), item.getItemMeta().getLore());
         }
+        firstState.put("MATERIAL", item.getType().toString());
     }
 
     public GUIButton(ItemStack item, int inventorySlot) {
@@ -61,9 +64,10 @@ public class GUIButton {
         this.firstState = new HashMap<>();
 
         if (item.hasItemMeta()) {
-            if (item.getItemMeta().hasDisplayName()) firstState.put(ItemMetaType.DISPLAY_NAME, item.getItemMeta().getDisplayName());
-            if (item.getItemMeta().hasLore()) firstState.put(ItemMetaType.LORE, item.getItemMeta().getLore());
+            if (item.getItemMeta().hasDisplayName()) firstState.put(ItemMetaType.DISPLAY_NAME.name(), item.getItemMeta().getDisplayName());
+            if (item.getItemMeta().hasLore()) firstState.put(ItemMetaType.LORE.name(), item.getItemMeta().getLore());
         }
+        firstState.put("MATERIAL", item.getType());
     }
 
     /**
@@ -94,31 +98,42 @@ public class GUIButton {
         return frames.get(nextFrame);
     }
 
+    /**
+     * Add a frame into the Button
+     *
+     * @param buttonFrame the Button frame to add
+     */
     public void addFrame(IButtonFrame buttonFrame) {
         if (!animated) this.animated = true;
         if (frames.isEmpty()) { // If first add, append this one first
-            if (!firstState.isEmpty()) { // If not empty, we proceed
+            if (!firstState.isEmpty()) { // If not empty, we proceed adding default value first
                 frames.add(new IButtonFrame() {
                     @Override
                     public String nextDisplayName(String prev) {
-                        return (String) firstState.get(ItemMetaType.DISPLAY_NAME);
+                        return (String) firstState.get(ItemMetaType.DISPLAY_NAME.name());
                     }
 
                     @Override
                     public List<String> nextLore(List<String> prev) {
-                        return (List<String>) firstState.get(ItemMetaType.LORE);
+                        return (List<String>) firstState.get(ItemMetaType.LORE.name());
                     }
 
                     @Override
                     public ItemMetaType toUpdate() {
-                        if (firstState.containsKey(ItemMetaType.LORE) && firstState.containsKey(ItemMetaType.DISPLAY_NAME)) return ItemMetaType.DISPLAY_AND_LORE;
-                        if (firstState.containsKey(ItemMetaType.LORE)) return ItemMetaType.LORE;
-                        if (firstState.containsKey(ItemMetaType.DISPLAY_NAME)) return ItemMetaType.DISPLAY_NAME;
+                        if (firstState.containsKey(ItemMetaType.LORE.name()) && firstState.containsKey(ItemMetaType.DISPLAY_NAME.name())) return ItemMetaType.DISPLAY_AND_LORE;
+                        if (firstState.containsKey(ItemMetaType.LORE.name())) return ItemMetaType.LORE;
+                        if (firstState.containsKey(ItemMetaType.DISPLAY_NAME.name())) return ItemMetaType.DISPLAY_NAME;
                         return ItemMetaType.NONE;
+                    }
+
+                    @Override
+                    public Material nextMaterial() {
+                        return (Material) firstState.get("MATERIAL");
                     }
                 });
             }
         }
+        // And then add the next one
         frames.add(buttonFrame);
     }
 

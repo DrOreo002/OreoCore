@@ -1,8 +1,9 @@
 package me.droreo002.oreocore.inventory.listener;
 
-import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.CustomInventory;
 import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +28,7 @@ public class CustomInventoryListener implements Listener {
         int slot = e.getSlot();
         if (inven == null) return;
         if (e.getClickedInventory() == null) return;
-        if (item == null || item.getType().equals(Material.AIR)) return;
+        if (item == null || item.getType().equals(UMaterial.AIR.getMaterial())) return;
 
         if (inven.getHolder() instanceof CustomInventory) {
             CustomInventory custom = (CustomInventory) inven.getHolder();
@@ -80,7 +81,13 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnOpen() != null) {
                 custom.getSoundOnOpen().send((Player) e.getPlayer());
             }
-            if (custom.isContainsAnimation()) custom.startAnimation();
+            if (custom.isContainsOpenAnimation()) {
+                custom.getOpenAnimation().start(aVoid -> {
+                    if (custom.isContainsButtonAnimation()) custom.startAnimation();
+                });
+            } else {
+                if (custom.isContainsButtonAnimation()) custom.startAnimation();
+            }
         }
     }
 
@@ -88,8 +95,8 @@ public class CustomInventoryListener implements Listener {
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().getHolder() instanceof CustomInventory) {
             Player player = (Player) e.getPlayer();
-            if (XMaterial.isNewVersion()) {
-                if (!player.getItemOnCursor().getType().equals(XMaterial.AIR.parseMaterial()) && player.isSneaking()) { // Anti cheat
+            if (!ServerUtils.isLegacyVersion()) {
+                if (!player.getItemOnCursor().getType().equals(UMaterial.AIR.getMaterial()) && player.isSneaking()) { // Anti cheat
                     player.setItemOnCursor(new ItemStack(Material.AIR));
                 }
             } else {
@@ -103,7 +110,9 @@ public class CustomInventoryListener implements Listener {
             if (custom.getSoundOnClose() != null) {
                 custom.getSoundOnClose().send(player);
             }
-            if (custom.isContainsAnimation() && !custom.isKeepAnimation()) custom.stopAnimation();
+
+            if (custom.isContainsButtonAnimation() && !custom.isKeepButtonAnimation()) custom.stopAnimation();
+            if (custom.isContainsOpenAnimation()) custom.getOpenAnimation().stop(false);
         }
     }
 }

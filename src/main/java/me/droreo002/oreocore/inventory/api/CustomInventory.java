@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.Sounds;
-import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.inventory.api.animation.IAnimatedInventory;
 import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
-import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
+import me.droreo002.oreocore.inventory.api.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
-import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -49,7 +47,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Getter
     private String title;
     @Getter
-    private boolean containsAnimation;
+    private boolean containsButtonAnimation, containsOpenAnimation;
 
     @Getter @Setter
     private int animationUpdateId;
@@ -62,7 +60,9 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Getter @Setter
     private long animationUpdateTime;
     @Getter @Setter
-    private boolean keepAnimation;
+    private boolean keepButtonAnimation;
+    @Getter @Setter
+    private OpenAnimation openAnimation;
 
     private int animationId;
     private IAnimationRunnable animationRunnable;
@@ -75,6 +75,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
         this.inventory = Bukkit.createInventory(this, size, title);
         this.cancelPlayerInventoryClickEvent = true; // Default are true
         this.shouldProcessButton = true;
+        this.keepButtonAnimation = false;
         this.noClickCancel = new ArrayList<>();
         this.soundOnClick = new SoundObject(Sounds.CLICK);
         this.soundOnClose = new SoundObject(Sounds.CHEST_CLOSE);
@@ -160,7 +161,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Override
     public void setup() {
         for (GUIButton button : buttons) {
-            if (button.isAnimated()) containsAnimation = true;
+            if (button.isAnimated()) containsButtonAnimation = true;
             inventory.setItem(button.getInventorySlot(), button.getItem());
         }
 
@@ -169,7 +170,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
                 InventoryPanel panel = (InventoryPanel) ent.getValue();
                 if (panel.isShouldOverrideOtherButton()) { // Remove every single thing inside
                     for (int i : panel.getSlots()) {
-                        inventory.setItem(i, XMaterial.AIR.parseItem(false));
+                        inventory.setItem(i, UMaterial.AIR.getItemStack());
                     }
                 }
                 for (GUIButton button : panel.getButtons()) {
@@ -185,6 +186,8 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
                 }
             }
         }
+
+        if (openAnimation != null) containsOpenAnimation = true;
     }
 
     /**

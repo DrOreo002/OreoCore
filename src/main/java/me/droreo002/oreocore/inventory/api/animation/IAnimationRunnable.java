@@ -7,6 +7,7 @@ import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -133,5 +134,7 @@ public class IAnimationRunnable implements Runnable {
                 }
                 break;
         }
+        final Material material = frm.nextMaterial();
+        if (material != null) button.getItem().setType(material);
     }
 }

@@ -11,60 +11,159 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public interface OreoInventory {
+
     /**
      * Called when click event is called, will only be called if its a valid custom inventory
      *
      * @param e : The click event object
      */
-     void onClick(InventoryClickEvent e);
+    void onClick(InventoryClickEvent e);
 
     /**
      * Called when close event is called, will only be called if its a valid custom inventory
      *
      * @param e : The close event object
      */
-     void onClose(InventoryCloseEvent e);
+    void onClose(InventoryCloseEvent e);
 
     /**
      * Called when the open event is called, will only be called if its a valid custom inventory
      *
      * @param e : The open event object
      */
-     void onOpen(InventoryOpenEvent e);
+    void onOpen(InventoryOpenEvent e);
 
-     void closeInventory(Player player);
+    /**
+     * Close player's inventory
+     *
+     * @param player The target player
+     */
+    void closeInventory(Player player);
 
-     void closeInventory(Player player, SoundObject closeSound);
+    /**
+     * Close player's inventoru with sound
+     *
+     * @param player The target player
+     * @param closeSound The sound to play
+     */
+    void closeInventory(Player player, SoundObject closeSound);
 
-     void openInventory(Player player, Inventory inventory);
+    /**
+     * Open the inventory
+     *
+     * @param player The target player
+     * @param inventory The inventory to open
+     */
+    void openInventory(Player player, Inventory inventory);
 
-     void openInventory(Player player, Inventory inventory, SoundObject openSound);
+    /**
+     * Open the inventory with sound
+     *
+     * @param player The target player
+     * @param inventory The inventory to open
+     * @param openSound The sound to play
+     */
+    void openInventory(Player player, Inventory inventory, SoundObject openSound);
 
-     void open(Player player);
+    /**
+     * Open the custom inventory
+     *
+     * @param player The target player
+     */
+    void open(Player player);
 
-     void openAsync(Player player);
+    /**
+     * Open the custom inventory via async way
+     *
+     * @param player The target player
+     */
+    void openAsync(Player player);
 
-     void openAsync(Player player, int delayInSecond);
+    /**
+     * Open the custom inventory via async way but with delay
+     *
+     * @param player The player
+     * @param delayInSecond The delay in second
+     */
+    void openAsync(Player player, int delayInSecond);
 
-     void addButton(GUIButton guiButton, boolean replace);
+    /**
+     * Add a button into the inventory
+     *
+     * @param guiButton The button to add
+     * @param replace Should we replace if it exists already?
+     */
+    void addButton(GUIButton guiButton, boolean replace);
 
-     GUIButton getButton(int slot);
+    /**
+     * Get the GUIButton on that slot
+     *
+     * @param slot The inventory slot
+     * @return the GUIButton
+     */
+    GUIButton getButton(int slot);
 
-     boolean isHasButton(int slot);
+    /**
+     * Check if the slot has a button
+     *
+     * @param slot The slot to check
+     * @return true if it has, false otherwise
+     */
+    boolean isHasButton(int slot);
 
-     void removeButton(int slot);
+    /**
+     * Remove the button on that slot
+     *
+     * @param slot The slot
+     */
+    void removeButton(int slot);
 
-     void addBorder(int row, ItemStack border, boolean replace);
+    /**
+     * Add a border
+     *
+     * @param row The row
+     * @param border The border item
+     * @param replace Should we replace item on the border line?
+     */
+    void addBorder(int row, ItemStack border, boolean replace);
 
-     void addBorder(int[] rows, ItemStack border, boolean replace);
+    /**
+     * Add a border
+     *
+     * @param rows The rows to add
+     * @param border the border item
+     * @param replace Should we replace item on the border line?
+     */
+    void addBorder(int[] rows, ItemStack border, boolean replace);
 
-     void setup();
+    /**
+     * Setup the inventory
+     */
+    void setup();
 
-     int getAnimationTaskId();
+    /**
+     * Get the animation task id
+     *
+     * @return the task id
+     */
+    int getAnimationTaskId();
 
-     void setAnimationTaskId(int newId);
+    /**
+     * Set the animation task id
+     *
+     * @param newId The new id
+     */
+    void setAnimationTaskId(int newId);
 
-     void refreshInventory();
+    /**
+     * Refresh the inventory a.k.a re setup
+     */
+    void refreshInventory();
 
-     IAnimationRunnable getAnimationRunnable();
+    /**
+     * Get the animation runnable for the inventory
+     *
+     * @return The animation runnable
+     */
+    IAnimationRunnable getAnimationRunnable();
 }
