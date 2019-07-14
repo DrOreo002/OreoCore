@@ -363,6 +363,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
 
     @Override
     public void stopAnimation() {
+        if (animationRunnable == null) return;
         Bukkit.getScheduler().cancelTask(animationId);
         Bukkit.getScheduler().cancelTask(animationUpdateId);
         animationRunnable.getSingleButtonRunnable().forEach(Bukkit.getScheduler()::cancelTask);

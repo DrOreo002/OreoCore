@@ -28,9 +28,9 @@ public class GUIButton {
     @Getter @Setter
     private boolean repeatingAnimation;
     @Getter @Setter
-    private int nextFrame;
-    @Getter @Setter
     private int inventorySlot;
+    @Setter
+    private int nextFrame;
     @Getter
     private ButtonListener listener;
     @Getter

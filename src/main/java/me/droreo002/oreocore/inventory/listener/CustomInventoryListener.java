@@ -112,7 +112,11 @@ public class CustomInventoryListener implements Listener {
             }
 
             if (custom.isContainsButtonAnimation() && !custom.isKeepButtonAnimation()) custom.stopAnimation();
-            if (custom.isContainsOpenAnimation()) custom.getOpenAnimation().stop(false);
+            if (custom.isContainsOpenAnimation()) {
+                if (custom.getOpenAnimation().getRunnableId() != 0) {
+                    custom.getOpenAnimation().stop(false);
+                }
+            }
         }
     }
 }

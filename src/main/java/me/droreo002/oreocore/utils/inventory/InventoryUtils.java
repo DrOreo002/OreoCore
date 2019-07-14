@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.inventory;
 
+import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,6 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 public final class InventoryUtils {
+
+    private static final List<Integer> END_SLOT = new ArrayList<>(Arrays.asList(
+            8,
+            17,
+            26,
+            35,
+            44,
+            53
+    ));
+
 
     /**
      * Check if player's inventory is full
@@ -482,5 +494,76 @@ public final class InventoryUtils {
             items.put(i, inventory.getItem(i));
         }
         return items;
+    }
+
+    /**
+     * Get the 'end' slot of inventory
+     *
+     * @return The end slot of inventory
+     */
+    public static List<Integer> getEndSlot() {
+        return END_SLOT;
+    }
+
+    /**
+     * Get the inventory rows available plus the slots of it
+     *
+     * @param inventory The inventory
+     * @return The rows starting from slot 0 to 1, etc
+     */
+    public static Map<Integer, List<Integer>> getInventoryRows(Inventory inventory) {
+        final Map<Integer, List<Integer>> rows = new HashMap<>();
+
+        int row = 0;
+        List<Integer> integers = new ArrayList<>();
+        for (int i = 0; i <= inventory.getSize(); i++) {
+            integers.add(i);
+
+            if (i == 0) continue;
+            if (((i + 1) % 9) == 0) {
+                rows.put(row, new ArrayList<>(integers));
+                integers.clear();
+                row++; // Goto next row
+            }
+        }
+
+        return rows;
+    }
+
+    /**
+     * Get the row by slot
+     *
+     * @param slot The slot of inventory
+     * @param inventory The inventory
+     * @return The row, will return -1 if nothing found!
+     */
+    public static int getRowBySlot(int slot, Inventory inventory) {
+        if (slot < 0) throw new IllegalStateException("Slot cannot be less than 0!");
+        if (slot > 53) throw new IllegalStateException("Slot cannot be greater than 53!");
+        final Map<Integer, List<Integer>> rows = getInventoryRows(inventory);
+        for (Map.Entry ent : rows.entrySet()) {
+            int s = (int) ent.getKey();
+            List<Integer> slots = (List<Integer>) ent.getValue();
+            if (slots.contains(slot)) return s;
+        }
+        return -1;
+    }
+
+    /**
+     * Get the row by slot
+     *
+     * @param slot The slot of inventory
+     * @param rows The rows
+     * @return The row, will return -1 if nothing found!
+     */
+    public static int getRowBySlot(int slot, Map<Integer, List<Integer>> rows) {
+        if (slot < 0) throw new IllegalStateException("Slot cannot be less than 0!");
+        if (slot > 53) throw new IllegalStateException("Slot cannot be greater than 53!");
+        for (Map.Entry ent : rows.entrySet()) {
+            int s = (int) ent.getKey();
+            List<Integer> slots = (List<Integer>) ent.getValue();
+            if (slots.contains(slot)) return s;
+        }
+        return -1;
     }
 }

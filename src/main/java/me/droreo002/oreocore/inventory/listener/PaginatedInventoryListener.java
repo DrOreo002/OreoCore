@@ -130,7 +130,11 @@ public class PaginatedInventoryListener implements Listener {
             pagi.onClose(e);
 
             if (pagi.isHasButtonAnimation() && !pagi.isKeepButtonAnimation()) pagi.stopAnimation();
-            if (pagi.isHasOpenAnimation()) pagi.getOpenAnimation().stop(false);
+            if (pagi.isHasOpenAnimation()) {
+                if (pagi.getOpenAnimation().getRunnableId() != 0) {
+                    pagi.getOpenAnimation().stop(false);
+                }
+            }
         }
     }
 }
