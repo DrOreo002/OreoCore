@@ -1,7 +1,8 @@
-# OreoCore
-The core api for my plugins. If you're willing to use this api, feel free to ask me thru discord
-I'm currently to lazy to make the wiki for tutorials. Maybe later...
+# ⚡️OreoCore
+The core api for my plugins. If you're willing to use this api, feel free to ask me thru discord!
 
-**Plugin that using this api**
+## 📽 Documentation
+Documentation are not hosted online, but all the useful class is well documented already. Check it out!
 
-> ChestShopLimiter [Premium]
+## 🛠 Building
+To build please use gradle. Commands are `build shadowJar processResources copyJarToServer publishToMavenLocal`
