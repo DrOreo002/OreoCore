@@ -11,6 +11,9 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.apache.tools.ant.filters.ReplaceTokens
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -38,13 +41,11 @@ repositories {
     maven {
         url = 'http://repo.maven.apache.org/maven2'
     }
-
-    flatDir {
-        dirs 'kontol'
-    }
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+
     compile 'co.aikar:taskchain-bukkit:3.7.2'
     compile 'com.zaxxer:HikariCP:3.3.1'
     compileOnly 'net.ess3:EssentialsX:2.16.0'
@@ -54,10 +55,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
+group = 'me.droreo002'
+version = '8.1'
+description = 'OreoCore plugin!'
+targetCompatibility = '1.8'
+
 shadowJar {
-    baseName = 'Backend'
+    archiveName = 'OreoCore-' + project.version + '.jar'
     classifier = null
-    version = '1.0'
 
     mergeServiceFiles()
     dependencies {
@@ -66,11 +71,24 @@ shadowJar {
     }
 }
 
-group = 'me.droreo002'
-version = '1.0'
-description = 'OreoCore'
-targetCompatibility = '1.8'
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+tasks.withType(ShadowJar) {
+    destinationDir = file("$rootDir/out/")
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+        filter(ReplaceTokens, tokens: [$VERSION: project.version])
+    }
+}
+
+task copyJarToServer {
+    copy {
+        from "$rootDir/out/OreoCore-" + project.version + ".jar"
+        into "C:\\Users\\Anom\\Desktop\\Spigot 1.13\\plugins"
+    }
 }
