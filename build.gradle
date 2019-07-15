@@ -10,6 +10,8 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'maven-publish'
+apply plugin: "maven"
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -61,8 +63,7 @@ description = 'OreoCore plugin!'
 targetCompatibility = '1.8'
 
 shadowJar {
-    archiveName = 'OreoCore-' + project.version + '.jar'
-    classifier = null
+    archiveFileName = 'OreoCore-' + project.version + '.jar'
 
     mergeServiceFiles()
     dependencies {
@@ -76,7 +77,7 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(ShadowJar) {
-    destinationDir = file("$rootDir/out/")
+    destinationDirectory = file("$rootDir/out/")
 }
 
 processResources {
