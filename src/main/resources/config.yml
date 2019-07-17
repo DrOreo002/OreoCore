@@ -4,6 +4,9 @@ Settings:
   # This will create a sql database. (playerdata.db) it's useful for cracked server to find
   # player uuid easily by name. Recommended to keep this to true if your server is a cracked server a.k.a offline mode is true
   cache-player-information: true
+  # For fast player head getting. This is async, and will not cause that much impact
+  # if the server is lagging when player joining simply disable this and restart the server
+  cache-player-head: true
 # Debug value do not modify
 Annotation:
   test: 'Working!'

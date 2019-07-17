@@ -125,7 +125,7 @@ public interface OreoInventory {
      * @param border The border item
      * @param replace Should we replace item on the border line?
      */
-    void addBorder(int row, ItemStack border, boolean replace);
+    void addBorder(ItemStack border, boolean replace, int row);
 
     /**
      * Add a border
@@ -134,7 +134,7 @@ public interface OreoInventory {
      * @param border the border item
      * @param replace Should we replace item on the border line?
      */
-    void addBorder(int[] rows, ItemStack border, boolean replace);
+    void addBorder(ItemStack border, boolean replace, int... rows);
 
     /**
      * Setup the inventory

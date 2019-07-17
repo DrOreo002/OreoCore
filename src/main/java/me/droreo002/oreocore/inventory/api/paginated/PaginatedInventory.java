@@ -56,7 +56,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
     @Getter @Setter
     private SoundObject openSound, closeSound, clickSound;
     @Getter @Setter
-    private boolean hasButtonAnimation, hasOpenAnimation;
+    private boolean hasButtonAnimation, hasOpenAnimation, hasCustomHead;
     @Getter @Setter
     private int animationUpdateId;
     @Getter @Setter
@@ -128,7 +128,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      *
      * @param rows : The rows
      */
-    public void setItemRow(Integer... rows) {
+    public void setItemRow(int... rows) {
         for (int i : rows) {
             setItemRow(i);
         }
@@ -253,13 +253,8 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      * @param replaceIfExist : Replace the item on that slot if there's any?
      */
     @Override
-    public void addBorder(int row, ItemStack item, boolean replaceIfExist) {
-        for (int i = 9 * row; i < row + 9; i++) {
-            if (replaceIfExist) {
-                final GUIButton but = new GUIButton(item, i);
-                addButton(but, true);
-            }
-        }
+    public void addBorder(ItemStack item, boolean replaceIfExist, int row) {
+        addBorder(item, replaceIfExist, new int[]{row});
     }
 
     /**
@@ -270,7 +265,7 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      * @param replaceIfExist : Replace the item on that slot if there's any?
      */
     @Override
-    public void addBorder(int[] rows, ItemStack item, boolean replaceIfExist) {
+    public void addBorder(ItemStack item, boolean replaceIfExist, int... rows) {
         for (int row : rows) {
             for (int i = 9 * row; i < row + 9; i++) {
                 if (replaceIfExist) {
@@ -289,8 +284,6 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
         if (paginatedButton.isEmpty()) {
             this.currentPage = 0;
             this.totalPage = 1;
-
-            inventoryButton.forEach(but -> inventory.setItem(but.getInventorySlot(), but.getItem()));
         } else {
             // Paginate
             this.paginator = new Paginator<>(new ArrayList<>(paginatedButton));
@@ -300,9 +293,12 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
             this.totalPage = paginator.totalPage(itemSlot.size()) - 1; // Somehow returned <original + 1> not sure why.
 
             setupPaginatedButtons();
-            inventoryButton.forEach(but -> inventory.setItem(but.getInventorySlot(), but.getItem()));
         }
 
+        inventoryButton.forEach(but -> {
+            if (but.getItem().getType().equals(UMaterial.PLAYER_HEAD_ITEM.getMaterial())) PaginatedInventory.this.hasCustomHead = true;
+            inventory.setItem(but.getInventorySlot(), but.getItem());
+        });
         if (openAnimation != null) this.hasOpenAnimation = true;
         updateInformationButton();
     }
@@ -348,19 +344,6 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
         Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> openInventory(player, inventory), 1L);
     }
 
-    @Override
-    public void openAsync(Player player) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
-            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-            chain.asyncFirst(() -> {
-                setup();
-                main.getOpening().remove(player.getUniqueId());
-                main.getOpening().put(player.getUniqueId(), this);
-                return getInventory();
-            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
-        }, 1L);
-    }
-
     /**
      * Open the inventory for the specified player
      *
@@ -369,15 +352,30 @@ public abstract class PaginatedInventory implements InventoryHolder, IAnimatedIn
      */
     @Override
     public void openAsync(Player player, int delayInSecond) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
-            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-            chain.delay(delayInSecond, TimeUnit.SECONDS).asyncFirst(() -> {
-                setup();
-                main.getOpening().remove(player.getUniqueId());
-                main.getOpening().put(player.getUniqueId(), this);
-                return getInventory();
-            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> openAsync(player), delayInSecond * 20L);
+    }
+
+    /**
+     * Open the custom inventory via async way
+     *
+     * @param player : Target player
+     */
+    @Override
+    public void openAsync(Player player) {
+        TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+        chain.asyncFirst(() -> {
+            setup();
+            main.getOpening().remove(player.getUniqueId());
+            main.getOpening().put(player.getUniqueId(), this);
+            return getInventory();
+        }).asyncLast((inventory) -> {
+            if (isHasOpenAnimation() && isHasCustomHead()) {
+                // Add some delay after completion
+                Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 20L);
+            } else {
+                player.openInventory(inventory); // Directly open the inventory
+            }
+        }).execute((e, task) -> e.printStackTrace());
     }
 
     /**

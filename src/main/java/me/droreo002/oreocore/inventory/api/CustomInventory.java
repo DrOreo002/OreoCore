@@ -47,7 +47,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Getter
     private String title;
     @Getter
-    private boolean containsButtonAnimation, containsOpenAnimation;
+    private boolean containsButtonAnimation, containsOpenAnimation, containsCustomHead;
 
     @Getter @Setter
     private int animationUpdateId;
@@ -162,6 +162,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     public void setup() {
         for (GUIButton button : buttons) {
             if (button.isAnimated()) containsButtonAnimation = true;
+            if (button.getItem().getType().equals(UMaterial.PLAYER_HEAD_ITEM.getMaterial())) containsCustomHead = true;
             inventory.setItem(button.getInventorySlot(), button.getItem());
         }
 
@@ -176,6 +177,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
                 for (GUIButton button : panel.getButtons()) {
                     final int slot = button.getInventorySlot();
 
+                    if (button.getItem().getType().equals(UMaterial.PLAYER_HEAD_ITEM.getMaterial())) containsCustomHead = true;
                     if (panel.isShouldOverrideOtherButton()) {
                         inventory.setItem(slot, button.getItem());
                     } else {
@@ -244,13 +246,16 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
      * @param replaceIfExist : Replace if there's something on the row?
      */
     @Override
-    public void addBorder(int row, ItemStack border, boolean replaceIfExist) {
-        if (row < 0) throw new IllegalStateException("Row cannot be 0!");
-        for (int i = row * 9; i < (row * 9) + 9; i++) {
-            addButton(new GUIButton(border, i).setListener(GUIButton.CLOSE_LISTENER), replaceIfExist);
-        }
+    public void addBorder(ItemStack border, boolean replaceIfExist, int row) {
+        addBorder(border, replaceIfExist, new int[] {row});
     }
 
+    /**
+     * Get a GUI button on that slot
+     *
+     * @param slot The inventory slot
+     * @return The gui button if there's any, null otherwise
+     */
     @Override
     public GUIButton getButton(int slot) {
         return buttons.stream().filter(but -> but.getInventorySlot() == slot)
@@ -265,13 +270,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
      */
     @Override
     public void openAsync(Player player, int delayInSecond) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
-            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-            chain.delay(delayInSecond, TimeUnit.SECONDS).asyncFirst(() -> {
-                setup();
-                return getInventory();
-            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> openAsync(player), delayInSecond * 20L);
     }
 
     /**
@@ -281,13 +280,18 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
      */
     @Override
     public void openAsync(Player player) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> {
-            TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-            chain.asyncFirst(() -> {
-                setup();
-                return getInventory();
-            }).asyncLast(player::openInventory).execute((e, task) -> e.printStackTrace());
-        }, 1L);
+        TaskChain<Inventory> chain = ThreadingUtils.makeChain();
+        chain.asyncFirst(() -> {
+            setup();
+            return getInventory();
+        }).asyncLast((inventory) -> {
+            if (isContainsOpenAnimation() && isContainsCustomHead()) {
+                // Add some delay after completion
+                Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 20L);
+            } else {
+                player.openInventory(inventory); // Directly open the inventory
+            }
+        }).execute((e, task) -> e.printStackTrace());
     }
 
     /**
@@ -298,7 +302,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
      * @param replaceIfExist : Replace if there's something on the row?
      */
     @Override
-    public void addBorder(int[] rows, ItemStack border, boolean replaceIfExist) {
+    public void addBorder(ItemStack border, boolean replaceIfExist, int... rows) {
         for (int row : rows) {
             if (row < 0) throw new IllegalStateException("Row cannot be 0!");
             for (int i = row * 9; i < (row * 9) + 9; i++) {

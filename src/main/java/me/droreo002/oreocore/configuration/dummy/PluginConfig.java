@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Documented;
 
 public class PluginConfig extends CustomConfig {
 
@@ -55,6 +56,10 @@ public class PluginConfig extends CustomConfig {
         @ConfigVariable(path = "Settings.cache-player-information")
         @Getter
         private boolean cachePlayerInformation;
+
+        @ConfigVariable(path = "Settings.cache-player-head")
+        @Getter
+        private boolean cachePlayerHead;
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;
