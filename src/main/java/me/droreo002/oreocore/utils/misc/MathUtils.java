@@ -45,4 +45,8 @@ public final class MathUtils {
     public static boolean isNumber(String text) {
         return NumberUtils.isNumber(text);
     }
+
+    public static double getPercentage(double first, double second) {
+        return (first / second) * 100;
+    }
 }

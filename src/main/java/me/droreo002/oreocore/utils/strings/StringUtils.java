@@ -280,4 +280,35 @@ public final class StringUtils {
         return s;
     }
 
+    /**
+     * Generate a horizontal loading bar (from left to right)
+     *
+     * @param max The max value of the bar
+     * @param current The current value of the bar
+     * @param baseLoadingColor The loading bar base color
+     * @param loadingColor The loading bar progress color
+     * @param percent Should we use percentage for indicator?
+     * @return The loading bar
+     */
+    public static String generateLoadingBar(int current, int max, String baseLoadingColor, String loadingColor, boolean percent) {
+        String progress;
+        if (percent) {
+            progress = String.format("&e%f", MathUtils.getPercentage(current, max)) + "%";
+        } else {
+            progress = String.format("&e%d&6/&e%d", current, max);
+        }
+
+        final char defaultChar = '-';
+        final String icon = loadingColor + "-";
+        int maxBarSize = 20;
+
+        int loading = Math.abs(Math.round(((100 * current) / max) / 10)) * 2; // Round and absolute it. We don't want negative value
+        String barString = new String(new char[maxBarSize]).replace('\0', defaultChar);
+        StringBuilder barDone = new StringBuilder();
+        for (int i = 0; i < loading; i++) {
+            barDone.append(icon);
+        }
+        String barRemain = barString.substring(loading);
+        return color(barDone + baseLoadingColor + barRemain + "&r " + progress);
+    }
 }

@@ -1,5 +1,5 @@
 name: OreoCore
-version: $VERSION # Please change from build.gradle instead!
+version: @version@
 main: me.droreo002.oreocore.OreoCore
 depend: [ProtocolLib]
 softdepend: [Essentials]

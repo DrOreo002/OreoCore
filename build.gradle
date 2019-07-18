@@ -69,10 +69,6 @@ shadowJar {
     }
 }
 
-clean.doFirst {
-    delete "$rootDir/out/"
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -80,7 +76,7 @@ tasks.withType(JavaCompile) {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.yml'
-        filter(ReplaceTokens, tokens: [$VERSION: project.version])
+        filter(ReplaceTokens, tokens: [version: project.version])
     }
 }
 
