@@ -264,38 +264,6 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     }
 
     /**
-     * Open the inventory for the specified player
-     *
-     * @param player : The targeted player
-     * @param delayInSecond : The delay in second before opening the inventory
-     */
-    @Override
-    public void openAsync(Player player, int delayInSecond) {
-        Bukkit.getScheduler().runTaskLater(OreoCore.getInstance(), () -> openAsync(player), delayInSecond * 20L);
-    }
-
-    /**
-     * Open the custom inventory via async way
-     *
-     * @param player : Target player
-     */
-    @Override
-    public void openAsync(Player player) {
-        TaskChain<Inventory> chain = ThreadingUtils.makeChain();
-        chain.asyncFirst(() -> {
-            setup();
-            return getInventory();
-        }).asyncLast((inventory) -> {
-            if (isContainsOpenAnimation() && isContainsCustomHead()) {
-                // Add some delay after completion
-                Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 20L);
-            } else {
-                player.openInventory(inventory); // Directly open the inventory
-            }
-        }).execute((e, task) -> e.printStackTrace());
-    }
-
-    /**
      * Add a border, will fill the row with the specified item
      *
      * @param rows : The rows

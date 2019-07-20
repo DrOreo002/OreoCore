@@ -7,9 +7,11 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.utils.bridge.CrackedServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -68,8 +70,15 @@ public final class PlayerUtils {
      * @param playerName Player name
      * @return Player's uuid
      */
+    @SuppressWarnings("deprecation")
     public static Future<UUID> getPlayerUuid(String playerName) {
-        return ThreadingUtils.makeFuture(() -> UUID.nameUUIDFromBytes(("Offline:" + playerName).getBytes()));
+        return ThreadingUtils.makeFuture(() -> {
+            UUID uuid = Bukkit.getOfflinePlayer(playerName).getUniqueId();
+            if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()) {
+                return CrackedServerUtils.getPlayerUuid(playerName);
+            }
+            return uuid;
+        });
     }
 
     /**
@@ -193,5 +202,15 @@ public final class PlayerUtils {
         pac.getStrings().write(1, sha.toLowerCase());
 
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, pac);
+    }
+
+    /**
+     * Send message to the player
+     *
+     * @param player The target player
+     * @param msg The message to send (color code supported)
+     */
+    public static void sendMessage(Player player, String msg) {
+        player.sendMessage(StringUtils.color(msg));
     }
 }

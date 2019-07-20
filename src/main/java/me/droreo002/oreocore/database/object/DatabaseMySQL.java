@@ -505,7 +505,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     @Override
     public Future<Map<String, List<Object>>> queryMultipleRowsAsync(String statement, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture((Callable<Map<String, List<Object>>>) () -> {
+        return ThreadingUtils.makeFuture(() -> {
             PreparedStatement ps = null;
             ResultSet rs = null;
             Connection con = getNewConnection();

@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.inventory.api.helper;
 
+import lombok.Data;
 import me.droreo002.oreocore.inventory.api.GUIButton;
 import me.droreo002.oreocore.inventory.api.animation.IAnimationRunnable;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -71,21 +72,6 @@ public interface OreoInventory {
      * @param player The target player
      */
     void open(Player player);
-
-    /**
-     * Open the custom inventory via async way
-     *
-     * @param player The target player
-     */
-    void openAsync(Player player);
-
-    /**
-     * Open the custom inventory via async way but with delay
-     *
-     * @param player The player
-     * @param delayInSecond The delay in second
-     */
-    void openAsync(Player player, int delayInSecond);
 
     /**
      * Add a button into the inventory
