@@ -110,20 +110,14 @@ public class GUIButton {
                 frames.add(new IButtonFrame() {
                     @Override
                     public String nextDisplayName(String prev) {
-                        return (String) firstState.get(ItemMetaType.DISPLAY_NAME.name());
+                        String next = (String) firstState.get(ItemMetaType.DISPLAY_NAME.name());
+                        return (next == null || next.isEmpty()) ? null : next;
                     }
 
                     @Override
                     public List<String> nextLore(List<String> prev) {
-                        return (List<String>) firstState.get(ItemMetaType.LORE.name());
-                    }
-
-                    @Override
-                    public ItemMetaType toUpdate() {
-                        if (firstState.containsKey(ItemMetaType.LORE.name()) && firstState.containsKey(ItemMetaType.DISPLAY_NAME.name())) return ItemMetaType.DISPLAY_AND_LORE;
-                        if (firstState.containsKey(ItemMetaType.LORE.name())) return ItemMetaType.LORE;
-                        if (firstState.containsKey(ItemMetaType.DISPLAY_NAME.name())) return ItemMetaType.DISPLAY_NAME;
-                        return ItemMetaType.NONE;
+                        List<String> next = (List<String>) firstState.get(ItemMetaType.LORE.name());
+                        return (next == null || next.isEmpty()) ? null : next;
                     }
 
                     @Override

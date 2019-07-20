@@ -95,6 +95,17 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
+     * Check if the data file exists or not
+     *
+     * @param fileName The file name
+     * @return true if exists, false otherwise
+     */
+    public boolean isDataFileExists(String fileName) {
+        if (!fileName.contains(".yml")) fileName += ".yml";
+        return new File(dataFolder, fileName).exists();
+    }
+
+    /**
      * Setup the FileConfiguration, this will also call the SetupCallback method. This is different from the load data
      *
      * @param fileName : The file name

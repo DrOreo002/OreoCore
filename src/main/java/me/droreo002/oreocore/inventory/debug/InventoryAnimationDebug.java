@@ -21,16 +21,6 @@ public class InventoryAnimationDebug extends CustomInventory {
                 public String nextDisplayName(String prev) {
                     return prev + c;
                 }
-
-                @Override
-                public List<String> nextLore(List<String> prev) {
-                    return null;
-                }
-
-                @Override
-                public ItemMetaType toUpdate() {
-                    return ItemMetaType.DISPLAY_NAME;
-                }
             });
         }
         setAnimationUpdateTime(5L);

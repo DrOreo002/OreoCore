@@ -58,7 +58,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
     @Getter @Setter
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
     @Getter @Setter
-    private long animationUpdateTime;
+    private long animationUpdateTime, inventoryUpdateTime;
     @Getter @Setter
     private boolean keepButtonAnimation;
     @Getter @Setter
@@ -81,6 +81,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
         this.soundOnClose = new SoundObject(Sounds.CHEST_CLOSE);
         this.soundOnOpen = new SoundObject(Sounds.CHEST_OPEN);
         this.animationUpdateTime = 1L;
+        this.inventoryUpdateTime = 1L;
     }
 
     /**
@@ -362,7 +363,7 @@ public abstract class CustomInventory implements InventoryHolder, IAnimatedInven
             public void run() {
                 inventory.getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
             }
-        }.runTaskTimer(OreoCore.getInstance(), 0L, 1L).getTaskId();
+        }.runTaskTimer(OreoCore.getInstance(), 0L, this.inventoryUpdateTime).getTaskId();
     }
 
     @Override

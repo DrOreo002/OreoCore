@@ -9,6 +9,7 @@ import me.droreo002.oreocore.utils.item.CustomItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -46,9 +47,7 @@ public class IAnimationRunnable implements Runnable {
             if (button.isAnimated()) {
                 final IButtonFrame frm = button.getNextFrame();
                 if (frm == null) continue;
-                final boolean hasMeta = button.getItem().hasItemMeta();
-                final ItemMeta meta = button.getItem().getItemMeta();
-                update(frm, hasMeta, meta, button);
+                update(frm, button);
 
                 if (frm.getNextFrameUpdateSpeed() != -1L) {
                     // Add to single runnable
@@ -84,9 +83,7 @@ public class IAnimationRunnable implements Runnable {
                 singleButtonRunnable.remove(slot);
                 return; // Return will basically cancel the task
             }
-            final boolean hasMeta = button.getItem().hasItemMeta();
-            final ItemMeta meta = button.getItem().getItemMeta();
-            update(frm, hasMeta, meta, button);
+            update(frm, button);
 
             inventory.setItem(slot, button.getItem()); // Update the item
 
@@ -100,41 +97,30 @@ public class IAnimationRunnable implements Runnable {
         }
     }
 
-    private void update(IButtonFrame frm, boolean hasMeta, ItemMeta meta, GUIButton button) {
-        switch (frm.toUpdate()) {
-            case DISPLAY_NAME:
-                if (hasMeta && meta.hasDisplayName()) {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextDisplayName(meta.getDisplayName())));
-                } else {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextDisplayName("")));
-                }
-                break;
-            case LORE:
-                if (hasMeta && meta.hasLore()) {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextLore(meta.getLore())));
-                } else {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextLore(new ArrayList<>())));
-                }
-                break;
-            case DISPLAY_AND_LORE:
-                if (hasMeta && meta.hasDisplayName()) {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextDisplayName(meta.getDisplayName())));
-                } else {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextDisplayName("")));
-                }
+    /**
+     * Update the button
+     *
+     * @param button The button
+     */
+    private void update(IButtonFrame frm, GUIButton button) {
+        ItemStack item = button.getItem().clone();
+        frm.run();
 
-                if (hasMeta && meta.hasLore()) {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextLore(meta.getLore())));
-                } else {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextLore(new ArrayList<>())));
-                }
-
-                if (hasMeta && meta.hasDisplayName() && meta.hasLore()) {
-                    button.setItem(new CustomItem(button.getItem(), frm.nextDisplayName(meta.getDisplayName()), frm.nextLore(meta.getLore())));
-                }
-                break;
-        }
+        final ItemMeta meta = item.getItemMeta();
         final Material material = frm.nextMaterial();
         if (material != null) button.getItem().setType(material);
+
+        String nextDisplayName = frm.nextDisplayName(meta.getDisplayName());
+        List<String> nextLore = frm.nextLore(meta.getLore());
+
+        if (nextDisplayName != null) {
+            item = new CustomItem(item, nextDisplayName);
+        }
+
+        if (nextLore != null) {
+            item = new CustomItem(item, nextLore);
+        }
+
+        button.setItem(item);
     }
 }

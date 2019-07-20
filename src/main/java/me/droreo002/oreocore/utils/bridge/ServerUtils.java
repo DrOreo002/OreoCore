@@ -1,9 +1,10 @@
 package me.droreo002.oreocore.utils.bridge;
 
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.commands.CustomCommand;
 import me.droreo002.oreocore.enums.MinecraftVersion;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
+import me.droreo002.oreocore.utils.misc.SoundObject;
+import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.Event;
@@ -151,5 +152,18 @@ public final class ServerUtils {
                 return false;
         }
         return false;
+    }
+
+    /**
+     * Broadcast a message
+     *
+     * @param message The message to broadcast
+     * @param soundObject The sound to play
+     */
+    public static void broadcast(String message, SoundObject soundObject) {
+        Bukkit.getOnlinePlayers().forEach(o -> {
+            if (soundObject != null) soundObject.send(o);
+            o.sendMessage(StringUtils.color(message));
+        });
     }
 }

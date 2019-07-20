@@ -1,9 +1,8 @@
 package me.droreo002.oreocore.inventory.api.animation;
 
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IButtonFrame {
@@ -15,7 +14,9 @@ public interface IButtonFrame {
      *
      * @return next display name
      */
-    String nextDisplayName(String prevDisplayName);
+    default String nextDisplayName(String prevDisplayName) {
+        return null;
+    }
 
     /**
      * Get the next lore
@@ -24,14 +25,9 @@ public interface IButtonFrame {
      *
      * @return next lore
      */
-    List<String> nextLore(List<String> prevLore);
-
-    /**
-     * Get that kind of ItemMeta to update
-     *
-     * @return the item meta to update
-     */
-    ItemMetaType toUpdate();
+    default List<String> nextLore(List<String> prevLore) {
+        return null;
+    }
 
     /**
      * Get the next Material for the button
@@ -39,7 +35,7 @@ public interface IButtonFrame {
      * @return the Material, default is null (disabled)
      */
     default Material nextMaterial() {
-        return  null;
+        return null;
     }
 
     /**
@@ -50,5 +46,13 @@ public interface IButtonFrame {
      */
     default long getNextFrameUpdateSpeed() {
         return -1L;
+    }
+
+    /**
+     * This will get called when the animation frame
+     * is executed
+     */
+    default void run() {
+
     }
 }

@@ -25,16 +25,6 @@ public class PInventoryAnimationDebug extends PaginatedInventory {
                 public String nextDisplayName(String prev) {
                     return prev + c;
                 }
-
-                @Override
-                public List<String> nextLore(List<String> prev) {
-                    return null;
-                }
-
-                @Override
-                public ItemMetaType toUpdate() {
-                    return ItemMetaType.DISPLAY_NAME;
-                }
             });
         }
         button.setRepeatingAnimation(true);
