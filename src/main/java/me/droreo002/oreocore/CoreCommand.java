@@ -2,10 +2,15 @@ package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.enums.XMaterial;
+import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.api.linked.LinkedInventory;
+import me.droreo002.oreocore.inventory.api.linked.LinkedInventoryHandler;
 import me.droreo002.oreocore.inventory.debug.InventoryAnimationDebug;
 import me.droreo002.oreocore.inventory.debug.PInventoryAnimationDebug;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
@@ -13,6 +18,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CoreCommand implements CommandExecutor {
 
@@ -85,6 +93,30 @@ public class CoreCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {
                     sendMessage(player, "Please select the type (CustomInventory, PaginatedInventory)");
                     sound(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-linked-inventory")) {
+                    final LinkedInventoryHandler linkedInventoryHandler = new LinkedInventoryHandler();
+
+                    // First inventory
+                    linkedInventoryHandler.addInventory(null, GUIButton.DEFAULT_NEXT_BUTTON, new LinkedInventory(27, "First") {
+                        @Override
+                        public Map<String, Object> requestData() {
+                            HashMap<String, Object> o = new HashMap<>();
+                            o.put("Hello", "Data from other inventory!");
+                            return o;
+                        }
+                    });
+
+                    linkedInventoryHandler.addInventory(GUIButton.DEFAULT_BACK_BUTTON, null, new LinkedInventory(45, "Second") {
+                        @Override
+                        public void onOpen(Player player, Map<String, Object> linkedData) {
+                            System.out.println("Opened last inventory. Prev data are " + linkedData.get("Hello"));
+                        }
+                    });
+
+                    linkedInventoryHandler.open(player);
+                    // Second inventory
                     return true;
                 }
             }

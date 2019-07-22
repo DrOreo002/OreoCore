@@ -242,25 +242,6 @@ public class CustomItem extends ItemStack {
                 && one.hasItemMeta() && two.hasItemMeta()
                 && one.getItemMeta().getClass() == two.getItemMeta().getClass()
                 && one.getItemMeta().serialize().equals(two.getItemMeta().serialize());
-
-//        boolean similar = false;
-//
-//        if (first == null || second == null) return false;
-//        boolean sameType = (first.getType() == second.getType());
-//        boolean sameDurability = (first.getDurability() == second.getDurability());
-//        boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
-//        boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
-//        boolean sameItemMeta = true;
-//
-//        if (sameHasItemMeta) {
-//            sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
-//        }
-//
-//        if (sameType && sameDurability && sameHasItemMeta && sameEnchantments && sameItemMeta){
-//            similar = true;
-//        }
-//
-//        return similar;
     }
 
     /**
@@ -319,7 +300,7 @@ public class CustomItem extends ItemStack {
                                         }
                                     }
 
-                                    List<String> lores = ListUtils.toList(t.getTo());
+                                    List<String> lores = ListUtils.toList(t.getTo(), ListUtils.DEFAULT_SPLIT_MARK);
                                     for (int i : index) {
                                         int start = i+1;
                                         try {
@@ -407,7 +388,7 @@ public class CustomItem extends ItemStack {
                                         }
                                     }
 
-                                    List<String> lores = ListUtils.toList(t.getTo());
+                                    List<String> lores = ListUtils.toList(t.getTo(), ListUtils.DEFAULT_SPLIT_MARK);
                                     for (int i : index) {
                                         int start = i+1;
                                         try {

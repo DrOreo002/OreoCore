@@ -90,7 +90,7 @@ public class TextPlaceholder {
      */
     public TextPlaceholder add(ItemMetaType type, String from, List<String> to) {
         if (type != ItemMetaType.LORE) throw new IllegalStateException("Trying to add list placeholder to non lore");
-        placeholders.add(new TextPlaceholder(type, from, ListUtils.toString(to), true));
+        placeholders.add(new TextPlaceholder(type, from, ListUtils.toString(to, ListUtils.DEFAULT_SPLIT_MARK), true));
         return this;
     }
 

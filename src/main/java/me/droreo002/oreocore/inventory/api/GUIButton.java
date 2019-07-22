@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class GUIButton {
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
+    public static final GUIButton DEFAULT_BACK_BUTTON = new GUIButton(new CustomItem(UMaterial.ARROW.getItemStack(), "&aBack"));
+    public static final GUIButton DEFAULT_NEXT_BUTTON = new GUIButton(new CustomItem(UMaterial.ARROW.getItemStack(), "&aNext"));
 
     @Getter @Setter
     private ItemStack item;

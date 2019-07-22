@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public final class ListUtils {
 
-    public static final String END_LINE = "</end>";
+    public static final String DEFAULT_SPLIT_MARK = "<end>";
 
     public static List<String> color(List<String> list) {
         return list.stream().map(StringUtils::color).collect(Collectors.toList());
@@ -21,17 +21,17 @@ public final class ListUtils {
         return list.stream().map(ChatColor::stripColor).collect(Collectors.toList());
     }
 
-    public static String toString(List<String> list) {
+    public static String toString(List<String> list, String end) {
         final StringBuilder builder = new StringBuilder();
         for (String s : list) {
-            builder.append(s).append(END_LINE);
+            builder.append(s).append(end);
         }
         return builder.toString();
     }
 
-    public static List<String> toList(String s) {
-        if (!s.contains(END_LINE)) return new ArrayList<>();
-        String[] sp = s.split(END_LINE);
+    public static List<String> toList(String s, String end) {
+        if (!s.contains(end)) return new ArrayList<>();
+        String[] sp = s.split(end);
         return new ArrayList<>(Arrays.asList(sp));
     }
 }

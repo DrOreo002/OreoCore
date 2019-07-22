@@ -30,3 +30,4 @@ build
 src/test/
 .idea
 *.iml
+*.xml

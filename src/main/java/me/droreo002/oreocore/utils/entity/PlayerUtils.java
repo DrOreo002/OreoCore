@@ -48,6 +48,22 @@ public final class PlayerUtils {
     }
 
     /**
+     * Get the player ping (Via reflection)
+     *
+     * @param player The target player
+     * @return the player ping
+     */
+    public static int getPing(Player player) {
+        try {
+            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
+            return (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
      * Get player name by UUID
      *
      * @param uuid The UUID
@@ -213,4 +229,6 @@ public final class PlayerUtils {
     public static void sendMessage(Player player, String msg) {
         player.sendMessage(StringUtils.color(msg));
     }
+
+
 }
