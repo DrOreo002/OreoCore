@@ -1,21 +1,22 @@
-package me.droreo002.oreocore.inventory.debug;
+package me.droreo002.oreocore.inventory.test.animation;
 
-import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
-import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
+import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.inventory.animation.IButtonFrame;
+import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 
-import java.util.List;
+/**
+ * Animation test for PaginatedInventory
+ */
+public class PInventoryAnimationTest extends PaginatedInventory {
 
-public class PInventoryAnimationDebug extends PaginatedInventory {
-
-    public PInventoryAnimationDebug() {
+    public PInventoryAnimationTest() {
         super(27, "Hello World");
 
         setItemRow(0, 1);
-        setSearchRow(2, true, UMaterial.BLACK_STAINED_GLASS_PANE.getItemStack());
+        setSearchRow(2, false, null);
 
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
         button.setListener(GUIButton.CLOSE_LISTENER);
@@ -28,7 +29,7 @@ public class PInventoryAnimationDebug extends PaginatedInventory {
             });
         }
         button.setRepeatingAnimation(true);
-
+        setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
         for (int i = 0; i < 50; i++) {
             if (i == 10) {
                 addPaginatedButton(button);

@@ -1,8 +1,7 @@
-package me.droreo002.oreocore.inventory.api.animation;
+package me.droreo002.oreocore.inventory.animation;
 
 import org.bukkit.Material;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IButtonFrame {

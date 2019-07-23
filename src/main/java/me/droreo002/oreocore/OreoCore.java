@@ -10,14 +10,10 @@ import me.droreo002.oreocore.configuration.ConfigUpdater;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
-import me.droreo002.oreocore.database.object.DatabaseFlatFile;
-import me.droreo002.oreocore.database.object.DatabaseMySQL;
-import me.droreo002.oreocore.database.object.DatabaseSQL;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
-import me.droreo002.oreocore.inventory.api.paginated.PaginatedInventory;
-import me.droreo002.oreocore.inventory.listener.CustomInventoryListener;
-import me.droreo002.oreocore.inventory.listener.PaginatedInventoryListener;
-import me.droreo002.oreocore.listeners.PlayerListener;
+import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
+import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
+import me.droreo002.oreocore.listeners.player.PlayerListener;
 import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
@@ -25,7 +21,6 @@ import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -65,8 +60,7 @@ public final class OreoCore extends JavaPlugin {
         ConfigurationSerialization.registerClass(CustomItem.class);
 
         // Registering
-        Bukkit.getPluginManager().registerEvents(new CustomInventoryListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PaginatedInventoryListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new MainInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));

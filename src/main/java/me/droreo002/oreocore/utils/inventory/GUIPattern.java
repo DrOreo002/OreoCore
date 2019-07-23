@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.utils.inventory;
 
 import lombok.Getter;
-import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.button.GUIButton;
 
 public class GUIPattern {
 

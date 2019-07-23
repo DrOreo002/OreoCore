@@ -1,9 +1,8 @@
-package me.droreo002.oreocore.inventory.api.animation.open;
+package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -13,18 +12,27 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-@Getter @Setter
 public abstract class OpenAnimation {
 
+    @Getter
+    private final Inventory inventory;
+    @Getter
+    private final String animationName;
+    @Getter @Setter
     private boolean clearOnStart;
+    @Getter @Setter
     private long animationSpeed;
+    @Getter @Setter
     private long startAfter;
+    @Getter @Setter
     private int runnableId;
-    private String animationName;
+    @Getter @Setter
     private SimpleCallback<Void> whenDone;
-    private Inventory inventory;
+    @Getter @Setter
     private Map<Integer, ItemStack> inventoryItems;
+    @Getter @Setter
     private SoundObject loopingSound;
+    @Getter @Setter
     private SoundObject endSound;
 
     public OpenAnimation(String animationName, Inventory inventory) {
@@ -56,6 +64,9 @@ public abstract class OpenAnimation {
         if (endSound != null) InventoryUtils.playSoundToViewer(getInventory(), endSound);
     }
 
+    /**
+     * Update the inventory
+     */
     public void updateInventory() {
         InventoryUtils.updateInventoryViewer(getInventory());
         if (loopingSound != null) {

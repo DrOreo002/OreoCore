@@ -1,29 +1,23 @@
-package me.droreo002.oreocore.inventory.api.animation;
+package me.droreo002.oreocore.inventory.animation;
 
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.inventory.api.CustomInventory;
-import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.net.Inet4Address;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class IAnimationRunnable implements Runnable {
 
     @Getter
-    private final Set<GUIButton> buttons;
+    private final List<GUIButton> buttons;
     @Getter
     private final Inventory inventory;
     @Getter
@@ -31,7 +25,7 @@ public class IAnimationRunnable implements Runnable {
     @Getter
     private final List<Integer> singleButtonRunnable;
 
-    public IAnimationRunnable(Set<GUIButton> buttons, Inventory inventory, OreoInventory oreoInventory) {
+    public IAnimationRunnable(List<GUIButton> buttons, Inventory inventory, OreoInventory oreoInventory) {
         this.buttons = buttons;
         this.oreoInventory = oreoInventory;
         this.inventory = inventory;
@@ -55,9 +49,9 @@ public class IAnimationRunnable implements Runnable {
                     new SingleButtonRunnable(button, inventory).runTaskLater(OreoCore.getInstance(), frm.getNextFrameUpdateSpeed());
                     continue;
                 }
-            }
 
-            inventory.setItem(slot, button.getItem()); // Update the item
+                inventory.setItem(slot, button.getItem()); // Update the item
+            }
         }
     }
 

@@ -1,14 +1,14 @@
 package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.enums.Sounds;
-import me.droreo002.oreocore.enums.XMaterial;
-import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.inventory.api.linked.LinkedInventory;
-import me.droreo002.oreocore.inventory.api.linked.LinkedInventoryHandler;
-import me.droreo002.oreocore.inventory.debug.InventoryAnimationDebug;
-import me.droreo002.oreocore.inventory.debug.PInventoryAnimationDebug;
+import me.droreo002.oreocore.inventory.CustomInventory;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.inventory.linked.LinkedInventoryHandler;
+import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
+import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
+import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
+import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -44,8 +44,8 @@ public class CoreCommand implements CommandExecutor {
         }
         if (args.length > 0) {
             if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("plugin-list")) {
-                   sendMessage(player, "&fThis server is currently running on &bOreoCore &fversion &b" + plugin.getDescription().getVersion() + "&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7)");
+                if (args[0].equalsIgnoreCase("plugins")) {
+                   sendMessage(player, "Currently handling in total of &7(&c" + plugin.getHookedPlugin().size() + "&7) &fplugins");
                    sound(player);
                    return true;
                 }
@@ -81,7 +81,7 @@ public class CoreCommand implements CommandExecutor {
                     sendMessage(player, "Testing get-texture on server version " + ServerUtils.getServerVersion());
                     sound(player);
                     ItemStack item = player.getInventory().getItemInMainHand();
-                    if (item == null || !item.getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
+                    if (item == null || !item.getType().equals(UMaterial.PLAYER_HEAD.getItemStack())) {
                         sound(player);
                         sendMessage(commandSender, "Please put the head on your main hand");
                         return true;
@@ -99,7 +99,7 @@ public class CoreCommand implements CommandExecutor {
                     final LinkedInventoryHandler linkedInventoryHandler = new LinkedInventoryHandler();
 
                     // First inventory
-                    linkedInventoryHandler.addInventory(null, GUIButton.DEFAULT_NEXT_BUTTON, new LinkedInventory(27, "First") {
+                    linkedInventoryHandler.addInventory(null, GUIButton.DEFAULT_NEXT_BUTTON, new CustomInventory(27, "First") {
                         @Override
                         public Map<String, Object> requestData() {
                             HashMap<String, Object> o = new HashMap<>();
@@ -108,7 +108,7 @@ public class CoreCommand implements CommandExecutor {
                         }
                     });
 
-                    linkedInventoryHandler.addInventory(GUIButton.DEFAULT_BACK_BUTTON, null, new LinkedInventory(45, "Second") {
+                    linkedInventoryHandler.addInventory(GUIButton.DEFAULT_BACK_BUTTON, null, new CustomInventory(45, "Second") {
                         @Override
                         public void onOpen(Player player, Map<String, Object> linkedData) {
                             System.out.println("Opened last inventory. Prev data are " + linkedData.get("Hello"));
@@ -128,12 +128,31 @@ public class CoreCommand implements CommandExecutor {
                         case "custominventory":
                             sendMessage(player, "Testing animated-inventory on server version " + ServerUtils.getServerVersion());
                             sound(player);
-                            new InventoryAnimationDebug().open(player);
+                            new CInventoryAnimationTest().open(player);
                             return true;
                         case "paginatedinventory":
                             sendMessage(player, "Testing animated-inventory on server version " + ServerUtils.getServerVersion());
                             sound(player);
-                            new PInventoryAnimationDebug().open(player);
+                            new PInventoryAnimationTest().open(player);
+                            return true;
+                    }
+                    return true;
+                }
+            }
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("test-inventory")) {
+                    String type = args[1];
+
+                    switch (type.toLowerCase()) {
+                        case "custominventory":
+                            sendMessage(player, "Testing CustomInventory on server version " + ServerUtils.getServerVersion());
+                            sound(player);
+                            new CustomInventoryTest().open(player);
+                            return true;
+                        case "paginatedinventory":
+                            sendMessage(player, "Testing PaginatedInventory on server version " + ServerUtils.getServerVersion());
+                            sound(player);
+                            new PaginatedInventoryTest().open(player);
                             return true;
                     }
                     return true;

@@ -1,26 +1,22 @@
-package me.droreo002.oreocore.inventory.api;
+package me.droreo002.oreocore.inventory.button;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class InventoryPanel {
+public class GroupedButton {
 
-    @Getter
-    private final String panelId;
     @Getter @Setter
-    private HashSet<Integer> slots;
+    private List<Integer> slots;
     @Getter @Setter
-    private Set<GUIButton> buttons;
+    private List<GUIButton> buttons;
     @Getter @Setter
     private boolean shouldOverrideOtherButton;
 
-    public InventoryPanel(String panelId, HashSet<Integer> slots, boolean shouldOverrideOtherButton) {
-        this.panelId = panelId;
-        this.slots = slots;
-        this.buttons = new HashSet<>();
+    public GroupedButton(boolean shouldOverrideOtherButton, Integer... slots) {
+        this.slots = new ArrayList<>(Arrays.asList(slots));
+        this.buttons = new ArrayList<>();
         this.shouldOverrideOtherButton = shouldOverrideOtherButton;
     }
 

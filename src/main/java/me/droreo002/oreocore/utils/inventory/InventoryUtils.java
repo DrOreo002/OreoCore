@@ -1,11 +1,8 @@
 package me.droreo002.oreocore.utils.inventory;
 
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-import me.droreo002.oreocore.inventory.api.helper.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

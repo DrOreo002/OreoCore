@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.listeners;
+package me.droreo002.oreocore.listeners.player;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;

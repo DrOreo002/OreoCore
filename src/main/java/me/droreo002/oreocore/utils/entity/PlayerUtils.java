@@ -120,7 +120,7 @@ public final class PlayerUtils {
     }
 
     /**
-     * Update the player's inventory
+     * Update the player's inventory via packet way
      *
      * @param player : Target player
      */
@@ -141,6 +141,15 @@ public final class PlayerUtils {
 
             packet.sendPacket(player);
         }
+    }
+
+    /**
+     * Update the player's inventory (non packet)
+     *
+     * @param player The target player
+     */
+    public static void updateInventory(Player player) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::updateInventory, 1L);
     }
 
     /**

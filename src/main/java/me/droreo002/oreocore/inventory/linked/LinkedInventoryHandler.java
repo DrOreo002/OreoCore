@@ -1,9 +1,9 @@
-package me.droreo002.oreocore.inventory.api.linked;
+package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.inventory.api.CustomInventory;
-import me.droreo002.oreocore.inventory.api.GUIButton;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ import java.util.List;
 public class LinkedInventoryHandler {
 
     @Getter @Setter
-    private List<LinkedInventory> inventories;
+    private List<OreoInventory> inventories;
     @Getter @Setter
     private int currentInventorySlot;
     @Getter @Setter
@@ -32,7 +32,7 @@ public class LinkedInventoryHandler {
     public void open(Player player) {
         if (inventories.isEmpty()) throw new NullPointerException("No inventory available!");
         if (onOpenOtherInventory != null) onOpenOtherInventory.send(player);
-        LinkedInventory target = inventories.get(0);
+        OreoInventory target = inventories.get(0);
         target.onOpen(player, new HashMap<>());
         target.open(player);
     }
@@ -43,7 +43,7 @@ public class LinkedInventoryHandler {
      * @param backButton The back button
      * @param inventory The inventory to add
      */
-    public void addInventory(GUIButton backButton, GUIButton nextButton, LinkedInventory inventory) {
+    public void addInventory(GUIButton backButton, GUIButton nextButton, OreoInventory inventory) {
         setupButton(backButton, nextButton);
 
         if (backButton != null) inventory.addButton(backButton, true);

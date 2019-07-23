@@ -1,17 +1,20 @@
-package me.droreo002.oreocore.inventory.debug;
+package me.droreo002.oreocore.inventory.test.animation;
 
-import me.droreo002.oreocore.inventory.api.CustomInventory;
-import me.droreo002.oreocore.inventory.api.GUIButton;
-import me.droreo002.oreocore.inventory.api.animation.IButtonFrame;
+import me.droreo002.oreocore.inventory.CustomInventory;
+import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.inventory.animation.IButtonFrame;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 
-import java.util.List;
+/**
+ * Animation test for CustomInventory
+ *
+ * Status [Success]
+ */
+public class CInventoryAnimationTest extends CustomInventory {
 
-public class InventoryAnimationDebug extends CustomInventory {
-
-    public InventoryAnimationDebug() {
+    public CInventoryAnimationTest() {
         super(9, "Animation Debug");
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
         button.setListener(GUIButton.CLOSE_LISTENER);
@@ -23,7 +26,7 @@ public class InventoryAnimationDebug extends CustomInventory {
                 }
             });
         }
-        setAnimationUpdateTime(5L);
+        setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
         button.setRepeatingAnimation(true);
         addButton(button, true);
     }

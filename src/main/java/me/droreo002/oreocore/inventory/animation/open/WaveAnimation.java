@@ -1,13 +1,11 @@
-package me.droreo002.oreocore.inventory.api.animation.open;
+package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.MathUtils;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
