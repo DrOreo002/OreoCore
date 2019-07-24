@@ -1,38 +1,14 @@
 package me.droreo002.oreocore.inventory;
 
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.inventory.button.GroupedButton;
+import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.item.CustomItem;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomInventory extends OreoInventory {
+public abstract class CustomInventory extends OreoInventory implements Linkable {
 
     public CustomInventory(int size, String title) {
         super(size, title);
-    }
-
-    @Override
-    public void setup() {
-        getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
-        if (!getGroupedButtons().isEmpty()) {
-            for (GroupedButton groupedButton : getGroupedButtons()) {
-                if (groupedButton.isShouldOverrideOtherButton()) { // Remove every single thing inside
-                    for (int i : groupedButton.getSlots()) {
-                        getInventory().setItem(i, UMaterial.AIR.getItemStack());
-                    }
-                }
-
-                for (GUIButton button : groupedButton.getButtons()) {
-                    final int slot = button.getInventorySlot();
-                    if (groupedButton.isShouldOverrideOtherButton()) {
-                        getInventory().setItem(slot, button.getItem());
-                    } else {
-                        if (getInventory().getItem(slot) != null) getInventory().setItem(slot, button.getItem());
-                    }
-                }
-            }
-        }
     }
 
     /**

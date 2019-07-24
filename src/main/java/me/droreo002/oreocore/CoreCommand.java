@@ -3,10 +3,11 @@ package me.droreo002.oreocore;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.inventory.CustomInventory;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.inventory.linked.LinkedInventoryHandler;
+import me.droreo002.oreocore.inventory.linked.LinkedInventory;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
+import me.droreo002.oreocore.inventory.test.normal.LinkedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
@@ -96,27 +97,8 @@ public class CoreCommand implements CommandExecutor {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {
-                    final LinkedInventoryHandler linkedInventoryHandler = new LinkedInventoryHandler();
-
-                    // First inventory
-                    linkedInventoryHandler.addInventory(null, GUIButton.DEFAULT_NEXT_BUTTON, new CustomInventory(27, "First") {
-                        @Override
-                        public Map<String, Object> requestData() {
-                            HashMap<String, Object> o = new HashMap<>();
-                            o.put("Hello", "Data from other inventory!");
-                            return o;
-                        }
-                    });
-
-                    linkedInventoryHandler.addInventory(GUIButton.DEFAULT_BACK_BUTTON, null, new CustomInventory(45, "Second") {
-                        @Override
-                        public void onOpen(Player player, Map<String, Object> linkedData) {
-                            System.out.println("Opened last inventory. Prev data are " + linkedData.get("Hello"));
-                        }
-                    });
-
-                    linkedInventoryHandler.open(player);
-                    // Second inventory
+                    final LinkedInventoryTest test = new LinkedInventoryTest();
+                    test.open(player);
                     return true;
                 }
             }

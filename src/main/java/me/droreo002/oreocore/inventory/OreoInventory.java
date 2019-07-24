@@ -5,10 +5,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
-import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
-import me.droreo002.oreocore.inventory.linked.LinkedInventory;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
@@ -30,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class OreoInventory implements InventoryHolder, LinkedInventory {
+public abstract class OreoInventory implements InventoryHolder {
 
     private Inventory inventory;
 
@@ -314,7 +312,27 @@ public abstract class OreoInventory implements InventoryHolder, LinkedInventory 
     /**
      * Setup the inventory
      */
-    public abstract void setup();
+    public void setup() {
+        getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
+        if (!getGroupedButtons().isEmpty()) {
+            for (GroupedButton groupedButton : getGroupedButtons()) {
+                if (groupedButton.isShouldOverrideOtherButton()) { // Remove every single thing inside
+                    for (int i : groupedButton.getSlots()) {
+                        getInventory().setItem(i, UMaterial.AIR.getItemStack());
+                    }
+                }
+
+                for (GUIButton button : groupedButton.getButtons()) {
+                    final int slot = button.getInventorySlot();
+                    if (groupedButton.isShouldOverrideOtherButton()) {
+                        getInventory().setItem(slot, button.getItem());
+                    } else {
+                        if (getInventory().getItem(slot) != null) getInventory().setItem(slot, button.getItem());
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Disable the click listener on that slot
