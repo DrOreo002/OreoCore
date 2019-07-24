@@ -190,11 +190,8 @@ public final class CustomSkull {
      */
     private static void setOwningPlayer(SkullMeta skull, UUID uuid) {
         boolean oldLegacy = false;
-        switch (ServerUtils.getServerVersion()) {
-            case v1_8_R1:
-            case v1_8_R2:
-            case v1_8_R3:
-                oldLegacy = true;
+        if (ServerUtils.getServerVersion().getBaseVersion().equals("V1_8")) {
+            oldLegacy = true;
         }
         if (oldLegacy) {
             skull.setOwner(Bukkit.getOfflinePlayer(uuid).getName());

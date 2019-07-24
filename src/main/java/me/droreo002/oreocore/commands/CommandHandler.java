@@ -100,10 +100,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                 final Player player = (Player) sender;
                 if (!player.hasPermission(cmd.getTabCompletePermission())) {
                     // Fix spam message
-                    switch (ServerUtils.getServerVersion()) {
-                        case v1_13_R1:
-                        case v1_13_R2:
-                        case v1_14_R1:
+                    switch (ServerUtils.getServerVersion().getBaseVersion()) {
+                        case "V1_13":
+                        case "V1_14":
                             return null;
                     }
                     cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());

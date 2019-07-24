@@ -4,8 +4,9 @@ import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.enums.Sounds;
-import org.apache.commons.lang.Validate;
+import me.droreo002.oreocore.utils.bridge.OSound;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,15 +14,15 @@ import org.bukkit.entity.Player;
 public class SoundObject implements SerializableConfigVariable<SoundObject> {
 
     // Pre - Initialized
-    public static final SoundObject SUCCESS_SOUND = new SoundObject(Sounds.ORB_PICKUP);
-    public static final SoundObject ERROR_SOUND = new SoundObject(Sounds.ORB_PICKUP);
+    public static final SoundObject SUCCESS_SOUND = new SoundObject(OSound.ENTITY_EXPERIENCE_ORB_PICKUP);
+    public static final SoundObject ERROR_SOUND = new SoundObject(OSound.BLOCK_ANVIL_FALL);
 
     @Getter
     private float volume;
     @Getter
     private float pitch;
     @Getter
-    private Sounds sounds;
+    private OSound sound;
 
     /**
      * Allow null for @ConfigVariable support
@@ -33,14 +34,27 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     public SoundObject(Sounds sound, float volume, float pitch) {
         this.volume = volume;
         this.pitch = pitch;
-        this.sounds = sound;
+        this.sound = OSound.match(sound.toString());
     }
 
     public SoundObject(Sounds sound) {
         this.volume = 1.0f;
         this.pitch = 1.0f;
-        this.sounds = sound;
+        this.sound = OSound.match(sound.toString());
     }
+
+    public SoundObject(OSound sound, float volume, float pitch) {
+        this.volume = volume;
+        this.pitch = pitch;
+        this.sound = sound;
+    }
+
+    public SoundObject(OSound sound) {
+        this.volume = 1.0f;
+        this.pitch = 1.0f;
+        this.sound = sound;
+    }
+
 
     /**
      * Parsing from (volume,pitch,sound). Recommended if you want fast data saving
@@ -55,8 +69,8 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
         String[] contains = toParse.split(",");
         this.volume = Float.parseFloat(contains[1]);
         this.pitch = Float.parseFloat(contains[2]);
-        this.sounds = Sounds.fromString(contains[0]);
-        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + contains[0]);
+        this.sound = OSound.match(toParse);
+        if (sound == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + contains[0]);
     }
 
     /**
@@ -65,7 +79,9 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
      * @param player : The target player
      */
     public void send(Player player) {
-        player.playSound(player.getLocation(), sounds.bukkitSound(), volume, pitch);
+        Sound s = sound.parseSound();
+        if (s == null) throw new NullPointerException("Sound is invalid!");
+        player.playSound(player.getLocation(), s, volume, pitch);
     }
 
     /**
@@ -81,7 +97,7 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     public static SoundObject fromConfig(ConfigurationSection section) {
         float volume = (float) section.getDouble("volume", 1.0f);
         float pitch = (float) section.getDouble("pitch", 1.0f);
-        Sounds sounds = Sounds.fromString(section.getString("sound"));
+        OSound sounds = OSound.match(section.getString("sound"));
         if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
         return new SoundObject(sounds, volume, pitch);
     }
@@ -90,14 +106,14 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     public SoundObject getFromConfig(ConfigurationSection section) {
         float volume = (float) section.getDouble("volume", 1.0f);
         float pitch = (float) section.getDouble("pitch", 1.0f);
-        Sounds sounds = Sounds.fromString(section.getString("sound"));
+        OSound sounds = OSound.match(section.getString("sound"));
         if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
         return new SoundObject(sounds, volume, pitch);
     }
 
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path + ".sound", sounds.toString());
+        config.set(path + ".sound", sound.toString());
         // Not default value. Then save
         if (volume != 1.0f) config.set(path + ".volume", volume);
         if (pitch != 1.0f) config.set(path + ".pitch", pitch);

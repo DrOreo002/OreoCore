@@ -29,7 +29,7 @@ public final class ServerUtils {
                 return version;
             }
         }
-        return MinecraftVersion.FAILED_TO_GET;
+        return MinecraftVersion.UNKNOWN;
     }
 
     /**
@@ -136,19 +136,19 @@ public final class ServerUtils {
      */
     public static boolean isLegacyVersion() {
         switch (getServerVersion()) {
-            case v1_8_R1:
-            case v1_8_R2:
-            case v1_8_R3:
-            case v1_9_R1:
-            case v1_9_R2:
-            case v1_10_R1:
-            case v1_11_R1:
-            case v1_12_R1:
+            case V1_8_R1:
+            case V1_8_R2:
+            case V1_8_R3:
+            case V1_9_R1:
+            case V1_9_R2:
+            case V1_10_R1:
+            case V1_11_R1:
+            case V1_12_R1:
                 return true;
-            case v1_13_R1:
-            case v1_13_R2:
-            case v1_14_R1:
-            case FAILED_TO_GET:
+            case V1_13_R1:
+            case V1_13_R2:
+            case V1_14_R1:
+            case UNKNOWN:
                 return false;
         }
         return false;

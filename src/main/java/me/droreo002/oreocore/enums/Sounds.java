@@ -1,17 +1,9 @@
 package me.droreo002.oreocore.enums;
 
-import org.bukkit.Sound;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
-* Version independent spigot sounds.
-*
-* Enum mapping to sound names for different
-* minecraft versions.
-*/
+ * Deprecated, please use OSound
+ */
+@Deprecated
 public enum Sounds {
 
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
