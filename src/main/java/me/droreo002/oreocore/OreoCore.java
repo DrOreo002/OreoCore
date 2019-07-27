@@ -69,6 +69,7 @@ public final class OreoCore extends JavaPlugin {
 
         // For config updating
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            Debug.log("&fChecking for config update...", true);
             try {
                 ConfigUpdater.update(new File(getDataFolder(), "config.yml"), this, "config.yml");
             } catch (IOException e) {
@@ -77,14 +78,15 @@ public final class OreoCore extends JavaPlugin {
 
             pluginConfig.reloadConfig();
         }, 40L);
+
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {
-                Debug.log("&fAPI is currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
+                Debug.log("&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
                 for (Map.Entry ent : hookedPlugin.entrySet()) {
                     JavaPlugin pl = (JavaPlugin) ent.getKey();
                     boolean isPremium = (boolean) ent.getValue();
-                    Debug.log("     &f> &e" + pl.getName() + " version " + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
+                    Debug.log("     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
                 }
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
                     final Map<String, Integer> res = new HashMap<>();
@@ -95,7 +97,7 @@ public final class OreoCore extends JavaPlugin {
                     return res;
                 }));
             } else {
-                Debug.log("&fAPI is currently handling 0 plugin", true);
+                Debug.log("&fI'm currently handling &7(&c0&7) plugin", true);
             }
         }, 20L * 15L); // 15 Seconds
         Debug.log("OreoCore has been enabled successfully!", true);

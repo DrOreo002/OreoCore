@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.item;
 
+import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
@@ -217,6 +218,29 @@ public class CustomItem extends ItemStack {
     }
 
     /**
+     * Convert this CustomItem to a section
+     *
+     * @param config : The config target
+     * @param path : The path to save
+     */
+    public void toSection(FileConfiguration config, String path) {
+        config.set(path + ".material", this.getType().toString());
+        config.set(path + ".itemID", this.getDurability());
+        config.set(path + ".amount", this.getAmount());
+        if (getItemMeta() != null) {
+            if (getItemMeta().hasDisplayName()) config.set(path + ".name", getItemMeta().getDisplayName());
+            if (getItemMeta().hasLore()) config.set(path + ".lore", getItemMeta().getLore());
+        }
+        if (getType().equals(UMaterial.PLAYER_HEAD.getMaterial())) {
+            String texture = CustomSkull.getTexture(this);
+            if (!texture.equals("")) {
+                config.set(path + ".texture", texture);
+            }
+        }
+        config.set(path + ".glow", false);
+    }
+
+    /**
      * Check if the item is similar, the isSimilar method is buggy so we use this
      *
      * @param one: The item 1
@@ -420,29 +444,6 @@ public class CustomItem extends ItemStack {
         item.setItemMeta(meta);
 
         return item;
-    }
-
-    /**
-     * Convert this CustomItem to a section
-     *
-     * @param config : The config target
-     * @param path : The path to save
-     */
-    public void toSection(FileConfiguration config, String path) {
-        config.set(path + ".material", this.getType().toString());
-        config.set(path + ".itemID", this.getDurability());
-        config.set(path + ".amount", this.getAmount());
-        if (getItemMeta() != null) {
-            if (getItemMeta().hasDisplayName()) config.set(path + ".name", getItemMeta().getDisplayName());
-            if (getItemMeta().hasLore()) config.set(path + ".lore", getItemMeta().getLore());
-        }
-        if (getType().equals(UMaterial.PLAYER_HEAD.getMaterial())) {
-            String texture = CustomSkull.getTexture(this);
-            if (!texture.equals("")) {
-                config.set(path + ".texture", texture);
-            }
-        }
-        config.set(path + ".glow", false);
     }
 
     /**

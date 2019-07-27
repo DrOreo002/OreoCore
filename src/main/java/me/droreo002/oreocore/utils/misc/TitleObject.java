@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.misc;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.enums.Sounds;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,17 +12,17 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class TitleObject implements SerializableConfigVariable<TitleObject> {
 
-    @Getter
+    @Getter @Setter
     private String title;
-    @Getter
+    @Getter @Setter
     private String subTitle;
-    @Getter
+    @Getter @Setter
     private int fadeIn;
-    @Getter
+    @Getter @Setter
     private int stay;
-    @Getter
+    @Getter @Setter
     private int fadeOut;
-    @Getter
+    @Getter @Setter
     private SoundObject soundOnSend;
 
     public TitleObject() {
@@ -46,7 +47,6 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         if (soundOnSend != null) soundOnSend.send(player);
         player.sendTitle(color(title), color(subTitle), fadeIn, stay, fadeOut);
     }
-
 
     @Override
     public TitleObject getFromConfig(ConfigurationSection section) {
@@ -79,6 +79,6 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
      * @return the TitleObject
      */
     public static TitleObject fromConfig(ConfigurationSection section) {
-        return new TitleObject().getFromConfig(section);
+        return new TitleObject().getFromConfig(section); // We don't need config because we'll not use it anyway
     }
 }

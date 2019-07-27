@@ -15,62 +15,62 @@ public final class ConfigMemoryManager {
 
     private static final Map<JavaPlugin, List<ConfigMemory>> CONFIG_MEMORY = new HashMap<>();
 
+    /**
+     * Register the memory
+     *
+     * @param plugin Owner of this memory
+     * @param memory The memory
+     */
     public static void registerMemory(JavaPlugin plugin, ConfigMemory memory) {
-        if (CONFIG_MEMORY.containsKey(plugin)) {
-            List<ConfigMemory> mem = CONFIG_MEMORY.get(plugin);
-            if (mem.contains(memory)) return;
-            process(memory);
-            mem.add(memory);
-            CONFIG_MEMORY.put(plugin, mem);
-            Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
-        } else {
-            process(memory);
-            CONFIG_MEMORY.put(plugin, new ArrayList<>(Collections.singletonList(memory)));
-            Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
-        }
+        if (isLoaded(plugin, memory)) return;
+        List<ConfigMemory> arr = new ArrayList<>();
+        if (CONFIG_MEMORY.containsKey(plugin)) arr = CONFIG_MEMORY.get(plugin);
+        process(memory);
+
+        arr.add(memory);
+        CONFIG_MEMORY.put(plugin, arr);
+        Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
     }
 
-    public static void reloadMemory(JavaPlugin plugin, ConfigMemory memory) {
-        if (CONFIG_MEMORY.containsKey(plugin)) {
-            List<ConfigMemory> mem = CONFIG_MEMORY.get(plugin);
-            boolean match = mem.stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
-            if (match) {
-                mem.remove(memory);
-                process(memory);
-                mem.add(memory);
-                CONFIG_MEMORY.put(plugin, mem);
-            }
-        }
-    }
-
+    /**
+     * Update the memory (Will remove and replace)
+     *
+     * @param plugin Owner of this memory
+     * @param memory The memory
+     */
     public static void updateMemory(JavaPlugin plugin, ConfigMemory memory) {
         if (CONFIG_MEMORY.containsKey(plugin)) {
-            List<ConfigMemory> mem = CONFIG_MEMORY.get(plugin);
-            boolean match = mem.stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
-            if (match) {
-                // Update
+            if (isLoaded(plugin, memory)) {
+                CONFIG_MEMORY.get(plugin).remove(memory);
                 saveToFile(memory);
-                // Reload
-                reloadMemory(plugin, memory);
+                memory.getParent().saveConfig(false);
+                process(memory);
+                CONFIG_MEMORY.get(plugin).add(memory);
             }
         }
     }
 
+    /**
+     * Save memory to file
+     *
+     * @param memory The memory
+     */
     private static void saveToFile(ConfigMemory memory) {
         final FileConfiguration config = memory.getParent().getConfig();
-        Class<? extends ConfigMemory> obj = memory.getClass();
-        for (Field f : obj.getDeclaredFields()) {
+        for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 if (!f.isAccessible()) f.setAccessible(true);
                 final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
-                if (memory.isUpdatable()) {
-                    try {
-                        config.set(configVariable.path(), f.get(memory));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    if (configVariable.isUpdateAbleObject()) {
+                if (memory.isUpdatable() || configVariable.isUpdateAbleObject()) {
+                    if (SerializableConfigVariable.class.isAssignableFrom(f.getType())) {
+                        // Use different saving
+                        try {
+                            SerializableConfigVariable seri = (SerializableConfigVariable) f.get(memory);
+                            seri.saveToConfig(configVariable.path(), config);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
                         try {
                             config.set(configVariable.path(), f.get(memory));
                         } catch (IllegalAccessException e) {
@@ -82,10 +82,14 @@ public final class ConfigMemoryManager {
         }
     }
 
+    /**
+     * Process the memory
+     *
+     * @param memory The config memory
+     */
     private static void process(ConfigMemory memory) {
-        Class<? extends ConfigMemory> obj = memory.getClass();
-        FileConfiguration config = memory.getParent().getConfig();
-        for (Field f : obj.getDeclaredFields()) {
+        final FileConfiguration config = memory.getParent().getConfig();
+        for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
                 String path = configVariable.path();
@@ -227,12 +231,42 @@ public final class ConfigMemoryManager {
             }
         }
     }
-    
+
+    /**
+     * Check if memory is loaded or not
+     *
+     * @param plugin The owner of the memory
+     * @param memory The memory
+     * @return true if loaded, false otherwise
+     */
+    private static boolean isLoaded(JavaPlugin plugin, ConfigMemory memory) {
+        if (CONFIG_MEMORY.get(plugin) == null) return false;
+       return CONFIG_MEMORY.get(plugin).stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
+    }
+
+    /**
+     * Set field value
+     *
+     * @param f The field
+     * @param memory The memory
+     * @param v The object to set
+     */
     private static void set(Field f, ConfigMemory memory, Object v) {
         try {
             f.set(memory, v);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get the declared fields of the memory
+     *
+     * @param memory The memory
+     * @return the declared fields as array
+     */
+    private static Field[] getDeclaredFields(ConfigMemory memory) {
+        Class<? extends ConfigMemory> obj = memory.getClass();
+        return obj.getDeclaredFields();
     }
 }

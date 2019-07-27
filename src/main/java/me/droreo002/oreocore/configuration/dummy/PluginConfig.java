@@ -2,19 +2,16 @@ package me.droreo002.oreocore.configuration.dummy;
 
 import lombok.Getter;
 import lombok.NonNull;
-import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.ConfigMemory;
 import me.droreo002.oreocore.configuration.ConfigMemoryManager;
-import me.droreo002.oreocore.configuration.ConfigUpdater;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
 import me.droreo002.oreocore.enums.ArmorStandBody;
+import me.droreo002.oreocore.inventory.InventoryData;
 import me.droreo002.oreocore.utils.misc.TitleObject;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Documented;
 
 public class PluginConfig extends CustomConfig {
 
@@ -24,12 +21,7 @@ public class PluginConfig extends CustomConfig {
     public PluginConfig(JavaPlugin plugin) {
         super(plugin, new File(plugin.getDataFolder(), "config.yml"));
         memory = new Memory(this);
-        ConfigMemoryManager.registerMemory(plugin, memory);
-    }
-
-    @Override
-    public void reloadConfig() {
-        super.reloadConfig();
+        registerMemory(memory);
     }
 
     public class Memory implements ConfigMemory {
@@ -41,7 +33,7 @@ public class PluginConfig extends CustomConfig {
         @Getter
         private String working;
 
-        @ConfigVariable(path = "Title.test", isSerializableObject = true)
+        @ConfigVariable(path = "Title.test", isSerializableObject = true, isUpdateAbleObject = true)
         @Getter
         private TitleObject titleObject = new TitleObject();
 
@@ -60,6 +52,10 @@ public class PluginConfig extends CustomConfig {
         @ConfigVariable(path = "Settings.cache-player-head")
         @Getter
         private boolean cachePlayerHead;
+
+        @ConfigVariable(path = "Inventory.Test", isSerializableObject = true, isUpdateAbleObject = true)
+        @Getter
+        private InventoryData testInventory = new InventoryData();
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;

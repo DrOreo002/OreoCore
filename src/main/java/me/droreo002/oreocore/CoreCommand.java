@@ -9,6 +9,7 @@ import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.LinkedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
+import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
@@ -17,13 +18,14 @@ import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CoreCommand implements CommandExecutor {
+public class CoreCommand implements CommandExecutor, TabCompleter {
 
     private OreoCore plugin;
 
@@ -68,6 +70,13 @@ public class CoreCommand implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("enum-memory")) {
                     sendMessage(player, "Debug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
+                    sound(player);
+                    return true;
+                }
+                if (args[0].equals("test-config-update")) {
+                    sendMessage(player, "Testing...");
+                    plugin.getPluginConfig().getMemory().getTitleObject().setTitle("Hello World!");
+                    plugin.getPluginConfig().saveConfig(true);
                     sound(player);
                     return true;
                 }
@@ -153,6 +162,23 @@ public class CoreCommand implements CommandExecutor {
     }
 
     private void sound(Player player) {
-        new SoundObject(Sounds.CLICK).send(player);
+        new SoundObject(OSound.UI_BUTTON_CLICK).send(player);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        return null;
+    }
+
+    public List<String> createReturnList(List<String> list, String string) {
+        if (string.equals("")) return list;
+
+        List<String> returnList = new ArrayList<>();
+        for (String item : list) {
+            if (item.toLowerCase().startsWith(string.toLowerCase())) {
+                returnList.add(item);
+            }
+        }
+        return returnList;
     }
 }

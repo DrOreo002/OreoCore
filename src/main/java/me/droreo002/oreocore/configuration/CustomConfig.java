@@ -78,19 +78,20 @@ public class CustomConfig {
     }
 
     /**
-     * Save the config
+     * Save the config, after saving the config comments will get updated also
      *
      * @param updateMemory Should we update the memory?
      */
     public void saveConfig(boolean updateMemory) {
+        if (updateMemory) {
+            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+        }
         try {
             config.save(yamlFile);
+            updateComments(plugin.getResource(getFileName()));
         } catch (IOException e) {
             e.printStackTrace();
             Debug.log("Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
-        }
-        if (updateMemory) {
-            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
         }
     }
 

@@ -34,7 +34,7 @@ public class LangManager extends CustomConfig {
      * @param s : The path
      */
     public void addPath(String s) {
-        if (paths.contains(s)) throw new IllegalStateException("Path already inside the list");
+        if (paths.contains(s)) return;
         paths.add(s);
     }
 
@@ -52,10 +52,31 @@ public class LangManager extends CustomConfig {
     /**
      * Get the lang string
      *
-     * @param path : The lang path
-     * @param placeholder : The placeholder (null if there's none)
-     * @param addPrefix : Should we add the plugin prefix to it?
-     * @return the String if succeeded, null otherwise
+     * @param path The lang path
+     * @return the String if there's any, null otherwise
+     */
+    public String getLang(String path) {
+        return getLang(path, false);
+    }
+
+    /**
+     * Get the lang string
+     *
+     * @param path The lang path
+     * @param addPrefix Should we add prefix?
+     * @return the String if there's any null otherwise
+     */
+    public String getLang(String path, boolean addPrefix) {
+        return getLang(path, null, addPrefix);
+    }
+
+    /**
+     * Get the lang string
+     *
+     * @param path The lang path
+     * @param placeholder The placeholder (null if there's none)
+     * @param addPrefix Should we add prefix?
+     * @return the String if there's any, null otherwise
      */
     public String getLang(String path, TextPlaceholder placeholder, boolean addPrefix) {
         if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
@@ -73,10 +94,20 @@ public class LangManager extends CustomConfig {
     }
 
     /**
+     * Get the lang as list
+     *
+     * @param path The lang path
+     * @return List containing the string if there's any, null otherwise
+     */
+    public List<String> getLangList(String path) {
+        return getLangList(path, null);
+    }
+
+    /**
      * Get the lang as a list
      *
-     * @param path : The path to the list
-     * @param placeholder : The placeholder, null if there's none
+     * @param path The lang path
+     * @param placeholder The placeholder, null if there's none
      * @return List containing the string if there's any, null otherwise
      */
     public List<String> getLangList(String path, TextPlaceholder placeholder) {
@@ -101,7 +132,7 @@ public class LangManager extends CustomConfig {
     /**
      * Get the path as a ConfigurationSection object
      *
-     * @param path : The path enum
+     * @param path The lang path
      * @return a ConfigurationSection if there's any, null otherwise
      */
     public ConfigurationSection asSection(String path) {

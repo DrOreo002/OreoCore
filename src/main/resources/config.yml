@@ -19,3 +19,17 @@ Title:
     fade-out: 20
 Enum:
   test: 'HEAD'
+Inventory:
+  Test:
+    title: 'Test layout'
+    size: 27
+    layout:
+      - 'XXXXXXXXX'
+      - 'XXXXAXXXX'
+    layout-item:
+      X:
+        material: 'GRAY_STAINED_GLASS_PANE'
+        name: '&fHello World'
+      A:
+        material: 'DIRT'
+        name: '&aImma lonely dirt :('
