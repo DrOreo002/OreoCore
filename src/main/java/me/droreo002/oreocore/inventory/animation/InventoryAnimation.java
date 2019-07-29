@@ -34,11 +34,21 @@ public class InventoryAnimation {
     }
 
     /**
+     * Get default inventory animation
+     *
+     * @return The default inventory animation
+     */
+    public static InventoryAnimation getDefault() {
+        return InventoryAnimation.builder().build();
+    }
+
+    /**
      * Start the animation
      *
      * @param oreoInventory The source inventory of this animation
      */
     public void startAnimation(OreoInventory oreoInventory) {
+        System.out.println("Starting animation");
         // Setup the animation handler, last spaghetti code here xD
         // Here we handle as normal inventory
         if (oreoInventory.getButtons().stream().anyMatch(GUIButton::isAnimated)) {
@@ -48,7 +58,7 @@ public class InventoryAnimation {
         if (oreoInventory instanceof PaginatedInventory) {
             PaginatedInventory paginatedInventory = (PaginatedInventory) oreoInventory;
             if (paginatedInventory.getCurrentPageButtons().stream().anyMatch(GUIButton::isAnimated)) {
-                List<GUIButton> toHandle = new ArrayList<>(paginatedInventory.getPaginatedButtons());
+                List<GUIButton> toHandle = new ArrayList<>(paginatedInventory.getCurrentPageButtons());
                 toHandle.addAll(paginatedInventory.getButtons()); // Also handle normal buttons
                 animationHandler = new IAnimationRunnable(toHandle, oreoInventory.getInventory(), oreoInventory);
             }

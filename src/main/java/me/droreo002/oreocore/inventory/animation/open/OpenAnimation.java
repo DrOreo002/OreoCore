@@ -15,9 +15,9 @@ import java.util.Map;
 public abstract class OpenAnimation {
 
     @Getter
-    private final Inventory inventory;
-    @Getter
     private final String animationName;
+    @Getter
+    private Inventory inventory;
     @Getter @Setter
     private boolean clearOnStart;
     @Getter @Setter
@@ -35,13 +35,11 @@ public abstract class OpenAnimation {
     @Getter @Setter
     private SoundObject endSound;
 
-    public OpenAnimation(String animationName, Inventory inventory) {
+    public OpenAnimation(String animationName) {
         this.animationSpeed = 2L;
         this.startAfter = 0L;
         this.animationName = animationName;
-        this.inventory = inventory;
         this.clearOnStart = false;
-        this.inventoryItems = InventoryUtils.getItemAsHashMap(inventory);
     }
 
     /**
@@ -75,7 +73,23 @@ public abstract class OpenAnimation {
     }
 
     /**
+     * Set the inventory (Will automatically called after setup)
+     *
+     * @param inventory The inventory
+     */
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+        this.inventoryItems = InventoryUtils.getItemAsHashMap(inventory);
+        this.onInit();
+    }
+
+    /**
      * Run the animation
      */
     public abstract void run();
+
+    /**
+     * Called when inventory is successfully initialized
+     */
+    public abstract void onInit();
 }

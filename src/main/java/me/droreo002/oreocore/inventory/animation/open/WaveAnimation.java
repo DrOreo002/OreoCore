@@ -1,7 +1,9 @@
 package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.enums.Sounds;
+import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.MathUtils;
@@ -31,37 +33,28 @@ public class WaveAnimation extends OpenAnimation {
     /**
      * Get the default WaveAnimation
      *
-     * @param inventory The inventory
      * @return the WaveAnimation
      */
-    public static WaveAnimation getDefault(Inventory inventory) {
-        final WaveAnimation waveAnimation = new WaveAnimation(inventory,
-                UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(Sounds.DIG_STONE));
-        waveAnimation.setEndSound(new SoundObject(Sounds.ANVIL_LAND));
+    public static WaveAnimation getDefault() {
+        final WaveAnimation waveAnimation = new WaveAnimation(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_HIT));
+        waveAnimation.setEndSound(new SoundObject(OSound.BLOCK_ANVIL_FALL));
         return waveAnimation;
     }
 
     /**
      * Construct new WaveAnimation
      *
-     * @param inventory The inventory
      * @param waveHeader The header of the wave
      * @param fillEmpty Item to fill empty gaps
      * @param waveSound The wave sound
      */
-    public WaveAnimation(Inventory inventory, ItemStack waveHeader, ItemStack fillEmpty, SoundObject waveSound) {
-        super("WaveAnimation", inventory);
+    public WaveAnimation(ItemStack waveHeader, ItemStack fillEmpty, SoundObject waveSound) {
+        super("WaveAnimation");
         this.waveHeader = waveHeader;
         this.startingPoint = new ArrayList<>();
         this.endSlot = new ArrayList<>();
-        this.rows = InventoryUtils.getInventoryRows(inventory);
         this.reached = new ArrayList<>();
         this.fillEmpty = fillEmpty;
-
-        for (int i = 0; i < inventory.getSize(); i += 9) {
-            int increment = MathUtils.random(0, 3, false);
-            startingPoint.add(i + increment);
-        }
 
         for (int i : InventoryUtils.getEndSlot()) {
             endSlot.add(i + 1);
@@ -72,13 +65,24 @@ public class WaveAnimation extends OpenAnimation {
     }
 
     @Override
+    public void onInit() {
+        Inventory inventory = getInventory();
+        this.rows = InventoryUtils.getInventoryRows(inventory);
+        for (int i = 0; i < inventory.getSize(); i += 9) {
+            int increment = MathUtils.random(0, 3, false);
+            startingPoint.add(i + increment);
+        }
+    }
+
+    @Override
     public void run() {
+        for (int i : reached) {
+            getInventory().setItem(i, getInventoryItems().get(i));
+        }
+
         if (reached.size() >= rows.size()) {
             stop(true);
             return;
-        }
-        for (int i : reached) {
-            getInventory().setItem(i, getInventoryItems().get(i));
         }
 
         for (int i : startingPoint) {

@@ -18,15 +18,19 @@ public class FillAnimation extends OpenAnimation {
     @Getter @Setter
     private int addPerRun;
 
-    public FillAnimation(Inventory inventory, SoundObject fillSound, SoundObject endSound) {
-        super( "FillAnimation", inventory);
+    public FillAnimation(SoundObject fillSound, SoundObject endSound) {
+        super( "FillAnimation");
         this.slotAdded = new ArrayList<>();
         this.firstRun = true;
 
         setClearOnStart(true);
         setEndSound(endSound);
         setLoopingSound(fillSound);
+    }
 
+    @Override
+    public void onInit() {
+        Inventory inventory = getInventory();
         switch (inventory.getSize()) {
             case 9:
             case 18:

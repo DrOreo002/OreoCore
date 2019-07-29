@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
@@ -157,8 +158,9 @@ public abstract class OreoInventory implements InventoryHolder {
         if (inventoryAnimation != null) {
             if (inventoryAnimation.getOpenAnimation() != null) {
                 inventoryAnimation.getOpenAnimation().start(aVoid -> inventoryAnimation.startAnimation(oreoInventory));
+            } else {
+                inventoryAnimation.startAnimation(oreoInventory);
             }
-            inventoryAnimation.startAnimation(oreoInventory);
         }
     }
 
@@ -242,6 +244,13 @@ public abstract class OreoInventory implements InventoryHolder {
      */
     public void open(Player player) {
         setup();
+        // Some basic setup with animations
+        if (getInventoryAnimation() != null) {
+            OpenAnimation openAnimation = getInventoryAnimation().getOpenAnimation();
+            if (openAnimation != null) {
+                openAnimation.setInventory(getInventory());
+            }
+        }
         openInventory(player, getInventory());
     }
 
