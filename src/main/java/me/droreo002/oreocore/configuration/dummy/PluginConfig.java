@@ -3,11 +3,10 @@ package me.droreo002.oreocore.configuration.dummy;
 import lombok.Getter;
 import lombok.NonNull;
 import me.droreo002.oreocore.configuration.ConfigMemory;
-import me.droreo002.oreocore.configuration.ConfigMemoryManager;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
 import me.droreo002.oreocore.enums.ArmorStandBody;
-import me.droreo002.oreocore.inventory.InventoryData;
+import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.utils.misc.TitleObject;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,7 +54,7 @@ public class PluginConfig extends CustomConfig {
 
         @ConfigVariable(path = "Inventory.Test", isSerializableObject = true, isUpdateAbleObject = true)
         @Getter
-        private InventoryData testInventory = new InventoryData();
+        private InventoryTemplate testTemplate = new InventoryTemplate();
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;

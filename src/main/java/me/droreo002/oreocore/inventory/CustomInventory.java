@@ -11,6 +11,10 @@ public class CustomInventory extends OreoInventory implements Linkable {
         super(size, title);
     }
 
+    public CustomInventory(InventoryTemplate template) {
+        super(template);
+    }
+
     /**
      * Find the item slot
      *

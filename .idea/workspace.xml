@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleAnimation.java" afterDir="false" />
+    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="Sound changes!">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/InventoryTemplateTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/SerializableConfigVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/SerializableConfigVariable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/MySqlConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/MySqlConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/lang/LangManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/lang/LangManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/SoundObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/SoundObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/CustomInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/CustomInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/classes/" />
-    <ignored path="$PROJECT_DIR$/target/" />
-    <ignored path="$PROJECT_DIR$/.gradle/" />
-    <ignored path="$PROJECT_DIR$/build/" />
-    <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="isMigrated" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -44,61 +32,6 @@
         <projects_view />
       </state>
     </system>
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleAnimation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1035#1036#0" expanded="true" />
-                <element signature="e#1072#1073#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
-              <folding>
-                <element signature="method#set#0;class#ConfigMemoryManager#0" />
-                <element signature="method#getDeclaredFields#0;class#ConfigMemoryManager#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="514">
-              <caret line="78" column="29" lean-forward="true" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-895">
-              <caret line="41" column="45" selection-start-line="41" selection-start-column="45" selection-end-line="41" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3463#3464#0" expanded="true" />
-                <element signature="e#3512#3513#0" expanded="true" />
-                <element signature="class#ButtonData#0;class#InventoryData#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -149,62 +82,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/api/animation/InventoryAnimation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/api/OreoInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/api/InventoryHandler.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/api/CustomInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/GUIButton.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GroupedButton.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/entity/PlayerUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/inventory/PaginatedInventoryListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/inventory/MainInventoryListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/OpenAnimation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/debug/InventoryAnimationDebug.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/PInventoryAnimationDebug.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/CustomInventoryTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/PaginatedInventoryTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/PInventoryAnimationTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/InventoryAnimation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventoryHandler.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/Linkable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/LinkedInventoryTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/CustomInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/Sounds.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/MinecraftVersion.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/OSound.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/lang/LangManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleAnimation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/GUILayout.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/GUIData.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/SoundObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/MySqlConnection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/config.yml" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigUpdater.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/SerializableConfigVariable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryData.java" />
-      </list>
-    </option>
+  <component name="InvalidFacetManager">
+    <ignored-facets>
+      <facet id="OreoCore.main/invalid/Minecraft" />
+      <facet id="OreoCore.test/invalid/Minecraft" />
+    </ignored-facets>
   </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
@@ -213,125 +95,14 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1096" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-              <item name="droreo002" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-              <item name="droreo002" type="462c0819:PsiDirectoryNode" />
-              <item name="oreocore" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-              <item name="droreo002" type="462c0819:PsiDirectoryNode" />
-              <item name="oreocore" type="462c0819:PsiDirectoryNode" />
-              <item name="configuration" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-              <item name="droreo002" type="462c0819:PsiDirectoryNode" />
-              <item name="oreocore" type="462c0819:PsiDirectoryNode" />
-              <item name="configuration" type="462c0819:PsiDirectoryNode" />
-              <item name="dummy" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="me" type="462c0819:PsiDirectoryNode" />
-              <item name="droreo002" type="462c0819:PsiDirectoryNode" />
-              <item name="oreocore" type="462c0819:PsiDirectoryNode" />
-              <item name="inventory" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="OreoCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="OreoCore" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
+  <component name="ProjectId" id="1OdYNYTcrYYq8yP2Km3thmm1Pak" />
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RunDashboard">
@@ -480,45 +251,18 @@
       <option name="project" value="LOCAL" />
       <updated>1563965756109</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Sound changes!">
+      <created>1564242898679</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1564242898679</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21908316" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Designer" order="2" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="UI Designer" order="6" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32977587" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.28815368" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32977587" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053304" side_tool="true" weight="0.32977587" />
-      <window_info anchor="bottom" id="Build" order="9" weight="0.21664888" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.32977587" />
-      <window_info anchor="bottom" id="Flutter Performance" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Tail" order="12" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Maven" order="3" />
-      <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="right" id="Flutter Inspector" order="5" />
-      <window_info anchor="right" id="Flutter Outline" order="6" />
-      <window_info anchor="right" id="Gradle" order="7" />
-      <window_info anchor="right" id="Palette&#9;" order="8" />
-      <window_info anchor="right" id="Theme Preview" order="9" />
-      <window_info anchor="right" id="Capture Analysis" order="10" />
-    </layout>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.facetType" implementationName="minecraft" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -526,12 +270,7 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -566,472 +305,6 @@
     <MESSAGE value="More change!" />
     <MESSAGE value="Sound changes!" />
     <option name="LAST_COMMIT_MESSAGE" value="Sound changes!" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/api/animation/IAnimatedInventory.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot/1.14.2-R0.1-SNAPSHOT/spigot-1.14.2-R0.1-SNAPSHOT.jar!/org/bukkit/inventory/InventoryHolder.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/player/PlayerListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GroupedButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/OpenAnimation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/entity/PlayerUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/complex/UMaterial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="220" column="29" lean-forward="true" selection-start-line="220" selection-start-column="29" selection-end-line="220" selection-end-column="29" />
-          <folding>
-            <element signature="e#104106#104107#0" expanded="true" />
-            <element signature="e#104159#104160#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/inventory/MainInventoryListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onClick#0;class#MainInventoryListener#0" />
-            <element signature="method#onOpen#0;class#MainInventoryListener#0" />
-            <element signature="method#onClose#0;class#MainInventoryListener#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IButtonFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-207">
-          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#750#751#0" expanded="true" />
-            <element signature="e#777#778#0" expanded="true" />
-            <element signature="method#run#0;class#IButtonFrame#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="68" column="39" selection-start-line="68" selection-start-column="39" selection-end-line="68" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#GUIButton#0;class#GUIButton#0" />
-            <element signature="method#GUIButton#1;class#GUIButton#0" />
-            <element signature="method#GUIButton#2;class#GUIButton#0" />
-            <element signature="method#getNextFrame#0;class#GUIButton#0" />
-            <element signature="e#6034#6035#0" expanded="true" />
-            <element signature="e#6126#6127#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/PaginatedInventoryTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/CustomInventoryTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/inventory/PaginatedInventoryListener.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="14" column="62" lean-forward="true" selection-start-line="14" selection-start-column="62" selection-end-line="14" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/PInventoryAnimationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
-          <folding>
-            <element signature="e#856#1032#0" expanded="true" />
-            <element signature="e#1031#1032#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
-          <folding>
-            <element signature="class#SingleButtonRunnable#0;class#IAnimationRunnable#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/CustomInventory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="5" column="38" lean-forward="true" selection-start-line="5" selection-start-column="38" selection-end-line="5" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/Linkable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="19" column="82" selection-start-line="19" selection-start-column="82" selection-end-line="19" selection-end-column="82" />
-          <folding>
-            <element signature="method#setItemRow#0;class#PaginatedInventory#0" />
-            <element signature="method#setItemRow#1;class#PaginatedInventory#0" />
-            <element signature="method#setSearchRow#0;class#PaginatedInventory#0" />
-            <element signature="method#addPatternButton#0;class#PaginatedInventory#0" />
-            <element signature="method#setup#0;class#PaginatedInventory#0" />
-            <element signature="method#setupPaginatedButtons#0;class#PaginatedInventory#0" />
-            <element signature="method#onClickHandler#0;class#PaginatedInventory#0" />
-            <element signature="method#prevPage#0;class#PaginatedInventory#0" />
-            <element signature="method#updateAttributes#0;class#PaginatedInventory#0" />
-            <element signature="method#updateInformationButton#0;class#PaginatedInventory#0" />
-            <element signature="method#getCurrentPageButtons#0;class#PaginatedInventory#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-794">
-          <caret line="8" column="60" selection-start-line="8" selection-start-column="60" selection-end-line="8" selection-end-column="60" />
-          <folding>
-            <element signature="method#OreoInventory#0;class#OreoInventory#0" />
-            <element signature="method#onClickHandler#0;class#OreoInventory#0" />
-            <element signature="method#onCloseHandler#0;class#OreoInventory#0" />
-            <element signature="method#onOpenHandler#0;class#OreoInventory#0" />
-            <element signature="method#closeInventory#1;class#OreoInventory#0" />
-            <element signature="method#openInventory#1;class#OreoInventory#0" />
-            <element signature="method#addButton#0;class#OreoInventory#0" />
-            <element signature="method#addBorder#1;class#OreoInventory#0" />
-            <element signature="method#setup#0;class#OreoInventory#0" />
-            <element signature="method#disableClickListenerOn#0;class#OreoInventory#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="23" column="55" lean-forward="true" selection-start-line="23" selection-start-column="55" selection-end-line="23" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/MinecraftVersion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/Sounds.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="106" column="21" lean-forward="true" selection-start-line="106" selection-start-column="21" selection-end-line="106" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/OSound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="834" column="48" lean-forward="true" selection-start-line="834" selection-start-column="48" selection-end-line="834" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="197" column="16" selection-start-line="197" selection-start-column="16" selection-end-line="197" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="13" column="80" selection-start-line="13" selection-start-column="80" selection-end-line="13" selection-end-column="80" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/LinkedInventoryTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ValueType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/annotations/ConfigVariable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-113">
-          <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5359">
-          <caret line="288" column="99" selection-start-line="288" selection-start-column="99" selection-end-line="288" selection-end-column="99" />
-          <folding>
-            <element signature="method#toSection#0;class#CustomItem#0" />
-            <element signature="method#isSimilar#0;class#CustomItem#0" />
-            <element signature="method#fromSection#0;class#CustomItem#0" />
-            <element signature="method#applyFromSection#0;class#CustomItem#0" />
-            <element signature="method#isEmpty#0;class#CustomItem#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="44" lean-forward="true" selection-start-column="44" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/lang/LangManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="830">
-          <caret line="73" column="26" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
-          <folding>
-            <element signature="method#addPath#0;class#LangManager#0" />
-            <element signature="method#loadData#0;class#LangManager#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot/1.14.2-R0.1-SNAPSHOT/spigot-1.14.2-R0.1-SNAPSHOT.jar!/org/bukkit/configuration/ConfigurationSection.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="172" column="25" selection-start-line="172" selection-start-column="25" selection-end-line="172" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/InventoryAnimation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="830">
-          <caret line="55" selection-start-line="55" selection-end-line="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3567#3568#0" expanded="true" />
-            <element signature="e#3610#3611#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2417">
-          <caret line="161" column="5" lean-forward="true" selection-start-line="161" selection-start-column="5" selection-end-line="161" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#7775#7776#0" expanded="true" />
-            <element signature="e#7833#7834#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/MySqlConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="37" column="95" selection-start-line="37" selection-start-column="95" selection-end-line="37" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-66">
-          <caret line="75" column="31" lean-forward="true" selection-start-line="75" selection-start-column="31" selection-end-line="75" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/plugin.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/SoundObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="104" selection-start-line="104" selection-end-line="104" />
-          <folding>
-            <element signature="method#send#1;class#SoundObject#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="186" column="37" selection-start-line="186" selection-start-column="37" selection-end-line="186" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="25" column="11" lean-forward="true" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/TitleAnimation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1035#1036#0" expanded="true" />
-            <element signature="e#1072#1073#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
-          <folding>
-            <element signature="method#set#0;class#ConfigMemoryManager#0" />
-            <element signature="method#getDeclaredFields#0;class#ConfigMemoryManager#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="78" column="29" lean-forward="true" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="131" column="6" lean-forward="true" selection-start-line="131" selection-start-column="6" selection-end-line="131" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/SerializableConfigVariable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="10" column="47" lean-forward="true" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigUpdater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-895">
-          <caret line="41" column="45" selection-start-line="41" selection-start-column="45" selection-end-line="41" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3463#3464#0" expanded="true" />
-            <element signature="e#3512#3513#0" expanded="true" />
-            <element signature="class#ButtonData#0;class#InventoryData#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
   </component>
   <component name="masterDetails">
     <states>

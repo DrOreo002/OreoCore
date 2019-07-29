@@ -22,14 +22,25 @@ Enum:
 Inventory:
   Test:
     title: 'Test layout'
-    size: 27
+    size: 18
+    paginated: true # If paginated X will be used as item slot
     layout:
-      - 'XXXXXXXXX'
-      - 'XXXXAXXXX'
+      - '!-------!'
+      - 'xPxxIxxNx'
     layout-item:
-      X:
+      # The border
+      x:
         material: 'GRAY_STAINED_GLASS_PANE'
         name: '&fHello World'
-      A:
-        material: 'DIRT'
-        name: '&aImma lonely dirt :('
+      # Prev page button
+      P:
+        material: 'ARROW'
+        name: '&aPrev Page'
+      # Information button
+      I:
+        material: 'PAPER'
+        name: '&bInformation'
+      # Next button
+      N:
+        material: 'ARROW'
+        name: '&aNext Page'

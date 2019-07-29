@@ -2,12 +2,13 @@ package me.droreo002.oreocore.inventory.paginated;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.Linkable;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import org.bukkit.entity.Player;
@@ -16,6 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+
+import static me.droreo002.oreocore.utils.item.CustomItem.fromSection;
+import static me.droreo002.oreocore.inventory.InventoryTemplate.*;
 
 public abstract class PaginatedInventory extends OreoInventory implements Linkable {
 
@@ -26,13 +30,13 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
     private static final String PREV_ARROW = "http://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9";
 
     @Getter @Setter
-    private GUIButton informationButton, nextButton, backButton;
+    private GUIButton informationButton, nextPageButton, previousPageButton;
     @Getter @Setter
     private int totalPage, currentPage, informationButtonSlot;
     @Getter
     private Paginator<GUIButton> buttonPaginator;
     @Getter
-    private List<List<GUIButton>> pagedButtonResult;
+    private List<List<GUIButton>> paginatedButtonResult;
     @Getter
     private List<Integer> paginatedButtonSlots;
     @Getter
@@ -42,19 +46,14 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
         super(size, title);
         this.paginatedButtons = new ArrayList<>();
         this.paginatedButtonSlots = new ArrayList<>();
+        setupDefaultButton();
+    }
 
-        informationButton = new GUIButton(new CustomItem(UMaterial.PAPER.getItemStack(), "&aInformation", new String[] {
-                "&7You're currently on page &a%currPage",
-                "&7there's in total of &a%totalPage &7pages!"
-        }));
-        this.backButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(PREV_ARROW), "&aPrevious Page", new String[] {"&7Click me!"})).setListener(event -> {
-            Player player = (Player) event.getWhoClicked();
-            prevPage(player);
-        });
-        this.nextButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(NEXT_ARROW), "&aNext Page", new String[] {"&7Click me!"})).setListener(event -> {
-            Player player = (Player) event.getWhoClicked();
-            nextPage(player);
-        });
+    public PaginatedInventory(InventoryTemplate template) {
+        super(template);
+        this.paginatedButtons = new ArrayList<>();
+        this.paginatedButtonSlots = new ArrayList<>();
+        setupDefaultButton();
     }
 
     /**
@@ -106,18 +105,19 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
      * @param addBorder : Add border into the empty slot on that row or not
      */
     public void setSearchRow(int row, boolean addBorder, ItemStack border) {
+        if (row < 0) throw new IllegalStateException("Row cannot be less than 0!");
         int backSlot = row * 9;
         int nextSlot = (row * 9) + 8;
         int informationSlot = (nextSlot + backSlot) / 2;
 
-        this.informationButtonSlot = informationSlot;
+        informationButtonSlot = informationSlot;
 
-        backButton.setInventorySlot(backSlot);
-        nextButton.setInventorySlot(nextSlot);
+        previousPageButton.setInventorySlot(backSlot);
+        nextPageButton.setInventorySlot(nextSlot);
         informationButton.setInventorySlot(informationSlot);
 
-        addButton(backButton, true);
-        addButton(nextButton, true);
+        addButton(previousPageButton, true);
+        addButton(nextPageButton, true);
         addButton(informationButton, true);
 
         if (addBorder) {
@@ -144,13 +144,39 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
      */
     @Override
     public void setup() {
+        final InventoryTemplate inventoryTemplate = getInventoryTemplate();
+        if (inventoryTemplate != null) {
+            if (!inventoryTemplate.isPaginatedInventory()) throw new IllegalStateException("Inventory data is not for PaginatedInventory!");
+            inventoryTemplate.getPaginatedItemRow().forEach(this::setItemRow);
+
+            InventoryTemplate.ButtonData nextButtonData = inventoryTemplate.getButton(PAGINATED_NB_KEY);
+            InventoryTemplate.ButtonData previousButtonData = inventoryTemplate.getButton(PAGINATED_PB_KEY);
+            InventoryTemplate.ButtonData informationButtonData = inventoryTemplate.getButton(PAGINATED_IB_KEY);
+
+            setNextPageButton(new GUIButton(fromSection(nextButtonData.getItemData(), nextButtonData.getPlaceholder()), nextButtonData.getInventorySlot())
+                    .setListener(nextButtonData.getListener()));
+            setPreviousPageButton(new GUIButton(fromSection(previousButtonData.getItemData(), previousButtonData.getPlaceholder()), previousButtonData.getInventorySlot())
+                    .setListener(previousButtonData.getListener()));
+            setInformationButton(new GUIButton(fromSection(informationButtonData.getItemData(), informationButtonData.getPlaceholder()), informationButtonData.getInventorySlot())
+                    .setListener(informationButtonData.getListener()));
+
+            if (previousButtonData.getListener() == null || nextButtonData.getListener() == null) {
+                setupDefaultButton(); // This will also setup the listener of the button
+            }
+
+            addButton(this.nextPageButton, true);
+            addButton(this.previousPageButton, true);
+            addButton(this.informationButton, true);
+        }
+
+        super.setup();
         if (paginatedButtons.isEmpty()) {
             this.currentPage = 0;
             this.totalPage = 1;
         } else {
             // Paginate
             this.buttonPaginator = new Paginator<>(new ArrayList<>(paginatedButtons));
-            this.pagedButtonResult = buttonPaginator.paginates(paginatedButtonSlots.size());
+            this.paginatedButtonResult = buttonPaginator.paginates(paginatedButtonSlots.size());
 
             // Specify more variables
             this.currentPage = 0;
@@ -275,7 +301,10 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
      */
     private void updateInformationButton() {
         ItemStack infoButtonClone = informationButton.getItem().clone();
+        if (!infoButtonClone.hasItemMeta()) return;
         ItemMeta meta = infoButtonClone.getItemMeta();
+        if (meta.getLore() == null) return;
+
         List<String> temp = new ArrayList<>();
         for (String s : meta.getLore()) {
             temp.add(s.replaceAll("%currPage", String.valueOf(currentPage + 1)).replaceAll("%totalPage", String.valueOf(totalPage)));
@@ -286,12 +315,42 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
     }
 
     /**
+     * Setup the button listener as default
+     */
+    private void setupDefaultButton() {
+        // Default buttons
+        if (this.informationButton == null) {
+            this.informationButton = new GUIButton(new CustomItem(UMaterial.PAPER.getItemStack(), "&aInformation", new String[]{
+                    "&7You're currently on page &a%currPage",
+                    "&7there's in total of &a%totalPage &7pages!"
+            }));
+        }
+
+        if (this.previousPageButton == null) {
+            this.previousPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(PREV_ARROW), "&aPrevious Page", new String[]{"&7Click me!"}));
+        }
+
+        if (this.nextPageButton == null) {
+            this.nextPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(NEXT_ARROW), "&aNext Page", new String[]{"&7Click me!"}));
+        }
+
+        this.previousPageButton.setListener(event -> {
+            Player player = (Player) event.getWhoClicked();
+            prevPage(player);
+        });
+        this.nextPageButton.setListener(event -> {
+            Player player = (Player) event.getWhoClicked();
+            nextPage(player);
+        });
+    }
+
+    /**
      * Get the current page buttons
      *
      * @return The current page buttons
      */
     public List<GUIButton> getCurrentPageButtons() {
-        if (pagedButtonResult.isEmpty()) return new ArrayList<>();
-        return pagedButtonResult.get(currentPage);
+        if (paginatedButtonResult.isEmpty()) return new ArrayList<>();
+        return paginatedButtonResult.get(currentPage);
     }
 }

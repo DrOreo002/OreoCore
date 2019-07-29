@@ -3,12 +3,13 @@ package me.droreo002.oreocore.inventory;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
+import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -36,6 +37,8 @@ public abstract class OreoInventory implements InventoryHolder {
     private int size;
     @Getter
     private String title;
+    @Getter
+    private InventoryTemplate inventoryTemplate;
     @Getter @Setter
     private List<GUIButton> buttons;
     @Getter @Setter
@@ -56,9 +59,23 @@ public abstract class OreoInventory implements InventoryHolder {
         this.disabledClickListeners = new ArrayList<>();
         this.groupedButtons = new ArrayList<>();
         this.inventory = Bukkit.createInventory(this, size, title);
-        this.soundOnClick = new SoundObject(Sounds.CLICK);
-        this.soundOnClose = new SoundObject(Sounds.CHEST_CLOSE);
-        this.soundOnOpen = new SoundObject(Sounds.CHEST_OPEN);
+        this.soundOnClick = new SoundObject(OSound.UI_BUTTON_CLICK);
+        this.soundOnClose = new SoundObject(OSound.BLOCK_CHEST_CLOSE);
+        this.soundOnOpen = new SoundObject(OSound.BLOCK_CHEST_OPEN);
+        this.shouldProcessButtonClickEvent = true;
+    }
+
+    public OreoInventory(InventoryTemplate template) {
+        this.inventoryTemplate = template;
+        this.size = template.getSize();
+        this.title = StringUtils.color(template.getTitle());
+        this.buttons = new ArrayList<>();
+        this.disabledClickListeners = new ArrayList<>();
+        this.groupedButtons = new ArrayList<>();
+        this.inventory = Bukkit.createInventory(this, size, title);
+        this.soundOnClick = new SoundObject(OSound.UI_BUTTON_CLICK);
+        this.soundOnClose = new SoundObject(OSound.BLOCK_CHEST_CLOSE);
+        this.soundOnOpen = new SoundObject(OSound.BLOCK_CHEST_OPEN);
         this.shouldProcessButtonClickEvent = true;
     }
 
@@ -244,9 +261,7 @@ public abstract class OreoInventory implements InventoryHolder {
                 getButtons().add(guiButton);
             }
         } else {
-            if (isHasButton(guiButton.getInventorySlot())) {
-                throw new IllegalStateException("Slot " + guiButton.getInventorySlot() + " already occupied");
-            }
+            if (isHasButton(guiButton.getInventorySlot())) return;
             getButtons().add(guiButton);
         }
     }
@@ -313,6 +328,13 @@ public abstract class OreoInventory implements InventoryHolder {
      * Setup the inventory
      */
     public void setup() {
+        final InventoryTemplate template = getInventoryTemplate();
+        if (template != null) {
+            // Don't force replace, not needed
+            template.getButtonDatas().forEach(buttonData ->
+                    addButton(new GUIButton(CustomItem.fromSection(buttonData.getItemData(), buttonData.getPlaceholder()), buttonData.getInventorySlot()), false));
+        }
+
         getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
         if (!getGroupedButtons().isEmpty()) {
             for (GroupedButton groupedButton : getGroupedButtons()) {

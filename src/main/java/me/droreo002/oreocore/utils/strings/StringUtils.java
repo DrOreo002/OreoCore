@@ -137,12 +137,13 @@ public final class StringUtils {
 
     /**
      * Check if the string has a special character inside
+     * (Special char is currently other than a to z / A to Z / 0 - 9)
      *
      * @param text : The string to check
      * @return true if it has a special character, false otherwise
      */
     public static boolean hasSpecialCharacter(String text) {
-        Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("[^a-zA-Z0-9]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(text);
         return m.find();
     }

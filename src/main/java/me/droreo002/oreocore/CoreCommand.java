@@ -1,11 +1,8 @@
 package me.droreo002.oreocore;
 
-import me.droreo002.oreocore.enums.Sounds;
-import me.droreo002.oreocore.inventory.CustomInventory;
-import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.inventory.linked.LinkedInventory;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
+import me.droreo002.oreocore.inventory.test.normal.InventoryTemplateTest;
 import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.LinkedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
@@ -108,6 +105,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {
                     final LinkedInventoryTest test = new LinkedInventoryTest();
                     test.open(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-template-inventory")) {
+                    new InventoryTemplateTest(plugin.getPluginConfig().getMemory().getTestTemplate()).open(player);
                     return true;
                 }
             }
