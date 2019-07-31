@@ -22,34 +22,20 @@ public class TextPlaceholder {
     private final String to;
     @Getter
     private final ItemMetaType type;
-    @Getter @Setter
-    private boolean lorePlaceholder;
 
-    public TextPlaceholder(ItemMetaType type, String from, String to) {
-        this.type = type;
-        this.from = from;
-        this.to = to;
-        this.lorePlaceholder = false;
-        this.placeholders = new ArrayList<>();
-
-        placeholders.add(this);
-    }
-
-    public TextPlaceholder(String from, String to) {
+    public TextPlaceholder(String from, Object to) {
         this.type = ItemMetaType.NONE;
         this.from = from;
-        this.to = to;
-        this.lorePlaceholder = false;
+        this.to = (to instanceof String) ? (String) to : ListUtils.toString((List<String>) to);
         this.placeholders = new ArrayList<>();
 
         placeholders.add(this);
     }
 
-    public TextPlaceholder(ItemMetaType type, String from, String to, boolean lorePlaceholder) {
+    public TextPlaceholder(ItemMetaType type, String from, Object to) {
         this.type = type;
         this.from = from;
-        this.to = to;
-        this.lorePlaceholder = lorePlaceholder;
+        this.to = (to instanceof String) ? (String) to : ListUtils.toString((List<String>) to);
         this.placeholders = new ArrayList<>();
 
         placeholders.add(this);
@@ -62,7 +48,7 @@ public class TextPlaceholder {
      * @param to : To x string
      * @return the TextPlaceholder object
      */
-    public TextPlaceholder add(String from, String to) {
+    public TextPlaceholder add(String from, Object to) {
         placeholders.add(new TextPlaceholder(from, to));
         return this;
     }
@@ -75,22 +61,8 @@ public class TextPlaceholder {
      * @param to : To x string
      * @return the TextPlaceholder object
      */
-    public TextPlaceholder add(ItemMetaType type, String from, String to) {
+    public TextPlaceholder add(ItemMetaType type, String from, Object to) {
         placeholders.add(new TextPlaceholder(type, from, to));
-        return this;
-    }
-
-    /**
-     * Add a text placeholder object, but using list
-     *
-     * @param type : The type
-     * @param from : From x string
-     * @param to : To x list (Will fill)
-     * @return the TextPlaceholder object
-     */
-    public TextPlaceholder add(ItemMetaType type, String from, List<String> to) {
-        if (type != ItemMetaType.LORE) throw new IllegalStateException("Trying to add list placeholder to non lore");
-        placeholders.add(new TextPlaceholder(type, from, ListUtils.toString(to, ListUtils.DEFAULT_SPLIT_MARK), true));
         return this;
     }
 
