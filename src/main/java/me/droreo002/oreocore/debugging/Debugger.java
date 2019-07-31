@@ -23,15 +23,13 @@ public abstract class Debugger {
      * @param logToFile : Should we log it to file?
      */
     public void log(String msg, Level logLevel, boolean addPrefix, boolean logToFile) {
-        if (addPrefix) {
-            msg = getPrefix() + msg;
-        }
+        sendConsoleMessage((addPrefix) ? getPrefix() + msg : msg);
+
         if (logToFile) {
             if (getLogFile() == null) return;
             if (!usePrefixLogFile()) msg = msg.replace(getPrefix(), "");
             getLogFile().getLogger().log(logLevel, StringUtils.stripColor(msg));
         }
-        sendConsoleMessage(msg);
     }
 
     /**

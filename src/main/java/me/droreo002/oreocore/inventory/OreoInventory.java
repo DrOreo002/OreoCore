@@ -30,16 +30,18 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.droreo002.oreocore.utils.strings.StringUtils.color;
+
 public abstract class OreoInventory implements InventoryHolder {
 
     private Inventory inventory;
 
     @Getter
-    private int size;
+    private final int size;
+    @Getter
+    private final InventoryTemplate inventoryTemplate;
     @Getter
     private String title;
-    @Getter
-    private InventoryTemplate inventoryTemplate;
     @Getter @Setter
     private List<GUIButton> buttons;
     @Getter @Setter
@@ -55,7 +57,26 @@ public abstract class OreoInventory implements InventoryHolder {
 
     public OreoInventory(int size, String title) {
         this.size = size;
-        this.title = StringUtils.color(title);
+        this.title = color(title);
+        this.inventoryTemplate = null;
+        setupDefault();
+    }
+
+    public OreoInventory(InventoryTemplate template) {
+        this.size = template.getSize();
+        this.title = color(template.getTitle());
+        this.inventoryTemplate = template;
+        setupDefault();
+    }
+
+    public OreoInventory(int size) {
+        this.size = size;
+        this.title = "Inventory";
+        this.inventoryTemplate = null;
+        setupDefault();
+    }
+
+    private void setupDefault() {
         this.buttons = new ArrayList<>();
         this.disabledClickListeners = new ArrayList<>();
         this.groupedButtons = new ArrayList<>();
@@ -66,18 +87,14 @@ public abstract class OreoInventory implements InventoryHolder {
         this.shouldProcessButtonClickEvent = true;
     }
 
-    public OreoInventory(InventoryTemplate template) {
-        this.inventoryTemplate = template;
-        this.size = template.getSize();
-        this.title = StringUtils.color(template.getTitle());
-        this.buttons = new ArrayList<>();
-        this.disabledClickListeners = new ArrayList<>();
-        this.groupedButtons = new ArrayList<>();
-        this.inventory = Bukkit.createInventory(this, size, title);
-        this.soundOnClick = new SoundObject(OSound.UI_BUTTON_CLICK);
-        this.soundOnClose = new SoundObject(OSound.BLOCK_CHEST_CLOSE);
-        this.soundOnOpen = new SoundObject(OSound.BLOCK_CHEST_OPEN);
-        this.shouldProcessButtonClickEvent = true;
+    /**
+     * Set the inventory title (Will also update the inventory)
+     *
+     * @param title The title
+     */
+    public void setTitle(String title) {
+        this.title = color(title);
+        this.inventory = Bukkit.createInventory(this, this.size, this.title);
     }
 
     /**
