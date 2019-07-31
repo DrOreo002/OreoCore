@@ -48,7 +48,6 @@ public class InventoryAnimation {
      * @param oreoInventory The source inventory of this animation
      */
     public void startAnimation(OreoInventory oreoInventory) {
-        System.out.println("Starting animation");
         // Setup the animation handler, last spaghetti code here xD
         // Here we handle as normal inventory
         if (oreoInventory.getButtons().stream().anyMatch(GUIButton::isAnimated)) {
