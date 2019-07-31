@@ -300,7 +300,6 @@ public class CustomItem extends ItemStack {
         List<String> lore = section.getStringList("lore");
 
         applyPlaceholder(placeholder, displayName, lore);
-        System.out.println("Result " + displayName);
 
         UMaterial uMaterial = UMaterial.match(material);
         if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
