@@ -36,11 +36,14 @@ Inventory:
       P:
         material: 'ARROW'
         name: '&aPrev Page'
+        animated: false
       # Information button
       I:
         material: 'PAPER'
         name: '&bInformation'
+        animated: false
       # Next button
       N:
         material: 'ARROW'
         name: '&aNext Page'
+        animated: false

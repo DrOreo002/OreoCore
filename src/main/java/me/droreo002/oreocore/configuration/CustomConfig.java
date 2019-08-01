@@ -3,7 +3,9 @@ package me.droreo002.oreocore.configuration;
 import com.google.common.base.Charsets;
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,7 +40,11 @@ public class CustomConfig {
     @Getter
     private String filePath;
     @Getter
+    private String latestVersion;
+    @Getter
     private ConfigMemory registeredMemory;
+    @Getter
+    private boolean updateAble;
 
     /**
      * Extend this class into another class. And cache it somewhere as a field
@@ -115,6 +121,30 @@ public class CustomConfig {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Mark the config as UpdateAble config
+     *
+     * @param configVersionPath The config version yaml path
+     * @param latestVersion The latest version of the config
+     */
+    public void setUpdateAble(String configVersionPath, String latestVersion, SimpleCallback<Void> onUpdate) {
+        this.updateAble = true;
+        this.latestVersion = latestVersion;
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            if (!getConfig().getString(configVersionPath, "0.0").equals(latestVersion)) {
+                try {
+                    ConfigUpdater.update(yamlFile, plugin, fileName);
+                    getConfig().set(configVersionPath, latestVersion);
+                    saveConfig(false);
+                    onUpdate.success(null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 20L * 10L); // After 15 seconds, update the config
     }
 
     /**

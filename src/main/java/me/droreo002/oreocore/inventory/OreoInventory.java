@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.animation.open.FillAnimation;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
+import me.droreo002.oreocore.inventory.animation.open.WaveAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
@@ -66,6 +68,19 @@ public abstract class OreoInventory implements InventoryHolder {
         this.size = template.getSize();
         this.title = color(template.getTitle());
         this.inventoryTemplate = template;
+
+        if (!template.getOpenAnimationName().equals("none")) {
+            InventoryAnimation.InventoryAnimationBuilder animation = InventoryAnimation.builder();
+            switch (template.getOpenAnimationName().toLowerCase()) {
+                case "fillanimation":
+                    animation.openAnimation(new FillAnimation(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
+                    break;
+                case "waveanimation":
+                    animation.openAnimation(new WaveAnimation(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
+                    break;
+            }
+            setInventoryAnimation(animation.build());
+        }
         setupDefault();
     }
 

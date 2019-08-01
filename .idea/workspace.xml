@@ -3,6 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -244,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564547517356</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Remove debug message">
+      <created>1564586504378</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1564586504378</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="UnknownFeatures">

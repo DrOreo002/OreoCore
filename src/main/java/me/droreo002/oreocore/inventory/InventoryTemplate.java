@@ -37,6 +37,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
     @Getter
     private List<ButtonData> buttonDatas; // The item definition, where string is the button 'id' and item definition is the item data
+    @Getter
+    private String openAnimationName;
 
     /**
      * For default initializer, do not remove
@@ -56,6 +58,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.size = layoutDatabase.getInt("size");
         this.title = layoutDatabase.getString("title");
         this.rawLayout = layoutDatabase.getStringList("layout");
+        this.openAnimationName = layoutDatabase.getString("openAnimation", "none");
 
         int slot = 0;
         for (String s : rawLayout) {
@@ -85,6 +88,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             data.setItemData(itemSection);
             data.setInventorySlot(buttonSlot);
             data.setButtonKey(buttonKey);
+            data.setAnimated(itemSection.getBoolean("animated"));
 
             buttonDatas.add(data);
         }
@@ -166,5 +170,6 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         private TextPlaceholder placeholder;
         private GUIButton.ButtonListener listener;
         private int inventorySlot;
+        private boolean animated;
     }
 }

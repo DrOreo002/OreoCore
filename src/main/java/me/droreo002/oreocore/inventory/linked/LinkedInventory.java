@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
@@ -21,6 +22,12 @@ public abstract class LinkedInventory extends OreoInventory implements Linkable 
     private SoundObject onOpenOtherInventory;
     @Getter @Setter
     private GUIButton mainNextButton;
+
+    public LinkedInventory(InventoryTemplate template) {
+        super(template);
+        this.currentInventorySlot = 0;
+        this.inventories = new ArrayList<>();
+    }
 
     public LinkedInventory(int size, String title) {
         super(size, title);
