@@ -8,6 +8,7 @@ import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -65,13 +66,14 @@ public class InventoryAnimation {
 
         if (animationHandler == null) return;
         if (animationTaskId != 0) Bukkit.getScheduler().cancelTask(animationTaskId);
-        animationTaskId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationHandler, 0L, animationUpdateSpeed).getTaskId();
+        InventoryUtils.updateInventoryViewer(oreoInventory.getInventory());
+        animationTaskId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), animationHandler, 5L, animationUpdateSpeed).getTaskId();
         animationUpdaterTaskId = new BukkitRunnable() {
             @Override
             public void run() {
-                oreoInventory.getInventory().getViewers().forEach(humanEntity -> ((Player) humanEntity).updateInventory());
+                InventoryUtils.updateInventoryViewer(oreoInventory.getInventory());
             }
-        }.runTaskTimer(OreoCore.getInstance(), 0L, animationUpdaterSpeed).getTaskId();
+        }.runTaskTimer(OreoCore.getInstance(), 5L, animationUpdaterSpeed).getTaskId();
     }
 
     /**

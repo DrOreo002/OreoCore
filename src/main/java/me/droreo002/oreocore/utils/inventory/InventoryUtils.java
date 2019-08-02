@@ -565,4 +565,15 @@ public final class InventoryUtils {
         }
         return -1;
     }
+
+    /**
+     * Clear the inventory
+     *
+     * @param inventory The inventory to clear
+     */
+    public static void clearInventory(Inventory inventory) {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, UMaterial.AIR.getItemStack());
+        }
+    }
 }

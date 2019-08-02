@@ -5,9 +5,10 @@ import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,12 +85,14 @@ public abstract class LinkedInventory extends OreoInventory implements Linkable 
                 final Player player = (Player) e.getWhoClicked();
                 final Linkable targetInventory = inventories.get(page);
                 final Linkable prevInventory = inventories.get(currentInventorySlot);
-                PlayerUtils.closeInventory(player);
-                if (onOpenOtherInventory != null) onOpenOtherInventory.send(player);
-                ((OreoInventory) inventories.get(page)).open(player);
 
-                targetInventory.onOpen(player, prevInventory.onLinkRequestData());
-                this.currentInventorySlot = page;
+                this.onPreChangeInventory(e, targetInventory, aVoid -> {
+                    if (onOpenOtherInventory != null) onOpenOtherInventory.send(player);
+                    ((OreoInventory) inventories.get(page)).open(player);
+
+                    targetInventory.onOpen(player, prevInventory.onLinkRequestData());
+                    LinkedInventory.this.currentInventorySlot = page;
+                });
             });
         }
         if (nextButton != null) {
@@ -100,13 +103,26 @@ public abstract class LinkedInventory extends OreoInventory implements Linkable 
                 final Player player = (Player) e.getWhoClicked();
                 final Linkable targetInventory = inventories.get(page);
                 final Linkable prevInventory = inventories.get(currentInventorySlot);
-                PlayerUtils.closeInventory(player);
-                if (onOpenOtherInventory != null) onOpenOtherInventory.send(player);
-                ((OreoInventory) inventories.get(page)).open(player);
 
-                targetInventory.onOpen(player, prevInventory.onLinkRequestData());
-                this.currentInventorySlot = page;
+                this.onPreChangeInventory(e, targetInventory, aVoid -> {
+                    if (onOpenOtherInventory != null) onOpenOtherInventory.send(player);
+                    ((OreoInventory) inventories.get(page)).open(player);
+
+                    targetInventory.onOpen(player, prevInventory.onLinkRequestData());
+                    LinkedInventory.this.currentInventorySlot = page;
+                });
             });
         }
+    }
+
+    /**
+     * On pre change inventory
+     *
+     * @param event The event (ignoreCancelled = true)
+     * @param targetInventory The target inventory
+     * @param onExecuted When this method is executed, the plugin will execute the default listener
+     */
+    public void onPreChangeInventory(InventoryClickEvent event, Linkable targetInventory, SimpleCallback<Void> onExecuted) {
+        onExecuted.success(null);
     }
 }

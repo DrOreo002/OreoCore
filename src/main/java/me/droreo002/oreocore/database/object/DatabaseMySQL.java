@@ -154,14 +154,12 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     @Override
     public boolean isExists(String column, String data, String table) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        table = "`" + table + "`";
-        column = "`" + column + "`";
         PreparedStatement pre = null;
         Connection con = null;
         ResultSet res = null;
         try {
             con = getConnection();
-            pre = con.prepareStatement("SELECT * FROM " + table + " WHERE " + column + " = ?");
+            pre = con.prepareStatement("SELECT * FROM `" + table + "` WHERE `" + column + "` = ?");
             pre.setString(1, data);
             res = pre.executeQuery();
             return res.next();
@@ -362,258 +360,38 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     @Override
     public Future<Boolean> executeAsync(String sql) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture(() -> {
-            Connection con = getNewConnection();
-            PreparedStatement statement = null;
-            try {
-                statement = con.prepareStatement(sql);
-                statement.execute();
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        });
+        return ThreadingUtils.makeFuture(() -> execute(sql));
     }
 
     @Override
     public Future<Object> queryValueAsync(String statement, String row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture(() -> {
-            Connection con = getNewConnection();
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                if (rs.next()) {
-                    return rs.getObject(row);
-                }
-            } catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        con.close();
-                    }
-                    ex.printStackTrace();
-                    return null;
-                } catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            } finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            }
-            return null;
-        });
+        return ThreadingUtils.makeFuture(() -> queryValue(statement, row));
     }
 
     @Override
     public Future<Object> queryRowAsync(String statement, String... toSelect) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture(() -> {
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            Connection con = getNewConnection();
-            List<Object> values = new ArrayList<>();
-            try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    for (String s : toSelect) {
-                        values.add(rs.getObject(s));
-                    }
-                }
-                return values;
-            } catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        con.close();
-                    }
-                    ex.printStackTrace();
-                    return null;
-                } catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            }
-            finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            }
-        });
+        return ThreadingUtils.makeFuture(() -> queryRow(statement, toSelect));
     }
 
     @Override
     public Future<Map<String, List<Object>>> queryMultipleRowsAsync(String statement, String... row) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        return ThreadingUtils.makeFuture(() -> {
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            Connection con = getNewConnection();
-            final List<Object> objects = new ArrayList<>();
-            final Map<String, List<Object>> map = new HashMap<>();
-            try {
-                ps = con.prepareStatement(statement);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    for (final String singleRow : row) {
-                        objects.add(rs.getObject(singleRow));
-                    }
-                    for (final String singleRow : row) {
-                        map.put(singleRow, objects);
-                    }
-                }
-                return map;
-            }
-            catch (SQLException ex) {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        con.close();
-                    }
-                    ex.printStackTrace();
-                    return null;
-                }
-                catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            }
-            finally {
-                try {
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (!sqlType.equals(SQLType.SQL_BASED)) {
-                        // Close if not normal sql
-                        if (con != null) {
-                            con.close();
-                        }
-                    }
-                }
-                catch (SQLException ex2) {
-                    ex2.printStackTrace();
-                    return null;
-                }
-            }
-        });
+        return ThreadingUtils.makeFuture(() -> queryMultipleRow(statement, row));
     }
 
     @Override
     public Future<Boolean> isExistsAsync(String column, String data, String table) {
         if (!checkConnection()) throw new IllegalStateException("Cannot connect into the database!");
-        final String tableFixed = "`" + table + "`";
-        final String columnFixed = "`" + column + "`";
-        return ThreadingUtils.makeFuture(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                PreparedStatement pre = null;
-                Connection con = null;
-                ResultSet res = null;
-                try {
-                    con = getConnection();
-                    pre = con.prepareStatement("SELECT * FROM " + tableFixed + " WHERE " + columnFixed + " = ?");
-                    pre.setString(1, data);
-                    res = pre.executeQuery();
-                    return res.next();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                } finally {
-                    try {
-                        if (pre != null) {
-                            pre.close();
-                        }
-                        if (res != null) {
-                            res.close();
-                        }
-                        if (!sqlType.equals(SQLType.SQL_BASED)) {
-                            // Close if not normal sql
-                            if (con != null) {
-                                con.close();
-                            }
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                }
-            }
-        });
+        return ThreadingUtils.makeFuture(() -> isExists(column, data, table));
     }
 
     /*
     Misc
      */
 
+    @Override
     public boolean checkConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -627,6 +405,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
         return true;
     }
 
+    @Override
     public Connection getNewConnection() {
         switch (sqlType) {
             case SQL_BASED:

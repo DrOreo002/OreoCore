@@ -37,7 +37,7 @@ public abstract class OpenAnimation {
 
     public OpenAnimation(String animationName) {
         this.animationSpeed = 2L;
-        this.startAfter = 0L;
+        this.startAfter = 5L; // Default, preventing the glitch
         this.animationName = animationName;
         this.clearOnStart = false;
     }

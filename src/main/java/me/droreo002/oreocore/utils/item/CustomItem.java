@@ -296,9 +296,10 @@ public class CustomItem extends ItemStack {
         boolean glow = section.getBoolean("glow", false);
         boolean hideAtt = section.getBoolean("hide-att", true);
         String texture = section.getString("texture");
-        StringBuilder displayName = new StringBuilder(section.getString("name"));
+        StringBuilder displayName = new StringBuilder(section.getString("name", " "));
         List<String> lore = section.getStringList("lore");
 
+        if (material.equals(UMaterial.AIR.getMaterial().toString())) return new ItemStack(UMaterial.AIR.getMaterial());
         applyPlaceholder(placeholder, displayName, lore);
 
         UMaterial uMaterial = UMaterial.match(material);
@@ -341,6 +342,28 @@ public class CustomItem extends ItemStack {
 
         StringBuilder displayName = new StringBuilder(section.getString("name"));
         List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
+        applyPlaceholder(placeholder, displayName, lore);
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+        if (displayName != null) meta.setDisplayName(color(displayName.toString()));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    /**
+     * Apply placeholder to item
+     *
+     * @param item The item
+     * @param placeholder The placeholder
+     * @return The modified item
+     */
+    public static ItemStack applyPlaceholder(ItemStack item, TextPlaceholder placeholder) {
+        StringBuilder displayName = new StringBuilder(ItemUtils.getName(item, true));
+        List<String> lore = ItemUtils.getLore(item, false);
         applyPlaceholder(placeholder, displayName, lore);
 
         ItemMeta meta = item.getItemMeta();

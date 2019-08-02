@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.color;
@@ -371,9 +372,7 @@ public abstract class OreoInventory implements InventoryHolder {
     public void setup() {
         final InventoryTemplate template = getInventoryTemplate();
         if (template != null) {
-            // Don't force replace, not needed
-            template.getButtonDatas().forEach(buttonData ->
-                    addButton(new GUIButton(CustomItem.fromSection(buttonData.getItemData(), buttonData.getPlaceholder()), buttonData.getInventorySlot()), false));
+            buttons.addAll(template.getAllGUIButtons());
         }
 
         getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));

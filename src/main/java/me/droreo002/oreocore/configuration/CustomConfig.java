@@ -40,7 +40,7 @@ public class CustomConfig {
     @Getter
     private String filePath;
     @Getter
-    private String latestVersion;
+    private String version;
     @Getter
     private ConfigMemory registeredMemory;
     @Getter
@@ -89,15 +89,15 @@ public class CustomConfig {
      * @param updateMemory Should we update the memory?
      */
     public void saveConfig(boolean updateMemory) {
-        if (updateMemory) {
-            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
-        }
         try {
             config.save(yamlFile);
             updateComments(plugin.getResource(getFileName()));
         } catch (IOException e) {
             e.printStackTrace();
             Debug.log("Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
+        }
+        if (updateMemory) {
+            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
         }
     }
 
@@ -128,23 +128,26 @@ public class CustomConfig {
      *
      * @param configVersionPath The config version yaml path
      * @param latestVersion The latest version of the config
+     * @return true if successfully updated, false otherwise
      */
-    public void setUpdateAble(String configVersionPath, String latestVersion, SimpleCallback<Void> onUpdate) {
+    public boolean tryUpdate(String configVersionPath, String latestVersion) {
         this.updateAble = true;
-        this.latestVersion = latestVersion;
+        this.version = getConfig().getString(configVersionPath, "0.0");
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if (!getConfig().getString(configVersionPath, "0.0").equals(latestVersion)) {
-                try {
-                    ConfigUpdater.update(yamlFile, plugin, fileName);
-                    getConfig().set(configVersionPath, latestVersion);
-                    saveConfig(false);
-                    onUpdate.success(null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (!version.equals(latestVersion)) {
+            try {
+                ConfigUpdater.update(yamlFile, plugin, fileName);
+                getConfig().set(configVersionPath, latestVersion);
+                saveConfig(true);
+
+                this.version = latestVersion;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
             }
-        }, 20L * 10L); // After 15 seconds, update the config
+            return true;
+        }
+        return false;
     }
 
     /**

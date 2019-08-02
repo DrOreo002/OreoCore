@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.misc.MathUtils;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.inventory.Inventory;
@@ -48,32 +49,32 @@ public class FillAnimation extends OpenAnimation {
                 this.addPerRun = 2;
                 break;
         }
+        InventoryUtils.clearInventory(inventory);
     }
 
     @Override
     public void run() {
-        if (firstRun) {
-            firstRun = false;
-            if (addPerRun > 2) { // Ultra speed
-                for (int i : getInventoryItems().keySet()) {
-                    int random = MathUtils.random(0, 1, false);
-                    boolean shouldAdd = random == 0;
-                    if (shouldAdd) {
-                        getInventory().setItem(i, getInventoryItems().get(i));
-                        slotAdded.add(i);
-                    }
-                }
-            }
-            updateInventory();
-            return;
-        }
+//        if (firstRun) {
+//            firstRun = false;
+//            if (addPerRun > 2) { // Ultra speed
+//                for (int i : getInventoryItems().keySet()) {
+//                    int random = MathUtils.random(0, 1, false);
+//                    boolean shouldAdd = random == 0;
+//                    if (shouldAdd) {
+//                        getInventory().setItem(i, getInventoryItems().get(i));
+//                        slotAdded.add(i);
+//                    }
+//                }
+//            }
+//            updateInventory();
+//            return;
+//        }
         for (int i = 0; i < addPerRun; i++) {
             // All item has been added
             if (slotAdded.size() >= getInventoryItems().size()) {
                 stop(true);
                 return;
             }
-
             int randomSlot = randomize();
             getInventory().setItem(randomSlot, getInventoryItems().get(randomSlot));
             slotAdded.add(randomSlot);

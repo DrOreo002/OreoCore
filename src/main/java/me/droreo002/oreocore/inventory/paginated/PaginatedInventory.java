@@ -149,24 +149,21 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
             if (!inventoryTemplate.isPaginatedInventory()) throw new IllegalStateException("Inventory data is not for PaginatedInventory!");
             inventoryTemplate.getPaginatedItemRow().forEach(this::setItemRow);
 
-            InventoryTemplate.ButtonData nextButtonData = inventoryTemplate.getButton(PAGINATED_NB_KEY);
-            InventoryTemplate.ButtonData previousButtonData = inventoryTemplate.getButton(PAGINATED_PB_KEY);
-            InventoryTemplate.ButtonData informationButtonData = inventoryTemplate.getButton(PAGINATED_IB_KEY);
+            GUIButton nextPageButton = inventoryTemplate.getGUIButtons(PAGINATED_NB_KEY).get(0);
+            GUIButton previousPageButton = inventoryTemplate.getGUIButtons(PAGINATED_PB_KEY).get(0);
+            GUIButton informationButton = inventoryTemplate.getGUIButtons(PAGINATED_IB_KEY).get(0);
 
-            setNextPageButton(new GUIButton(fromSection(nextButtonData.getItemData(), nextButtonData.getPlaceholder()), nextButtonData.getInventorySlot())
-                    .setListener(nextButtonData.getListener()));
-            setPreviousPageButton(new GUIButton(fromSection(previousButtonData.getItemData(), previousButtonData.getPlaceholder()), previousButtonData.getInventorySlot())
-                    .setListener(previousButtonData.getListener()));
-            setInformationButton(new GUIButton(fromSection(informationButtonData.getItemData(), informationButtonData.getPlaceholder()), informationButtonData.getInventorySlot())
-                    .setListener(informationButtonData.getListener()));
+            setNextPageButton(nextPageButton);
+            setPreviousPageButton(previousPageButton);
+            setInformationButton(informationButton);
 
-            if (previousButtonData.getListener() == null || nextButtonData.getListener() == null) {
-                setupDefaultButton(); // This will also setup the listener of the button
-            }
+            setupDefaultButton(); // Setup the listener
 
             addButton(this.nextPageButton, true);
             addButton(this.previousPageButton, true);
             addButton(this.informationButton, true);
+
+            setInformationButtonSlot(informationButton.getInventorySlot());
         }
 
         super.setup();

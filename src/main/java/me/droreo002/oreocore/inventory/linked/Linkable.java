@@ -23,4 +23,13 @@ public interface Linkable {
     default Map<String, Object> onLinkRequestData() {
         return new HashMap<>();
     }
+
+    /**
+     * Get the inventory name
+     *
+     * @return The inventory name
+     */
+    default String getInventoryName() {
+        return "";
+    }
 }

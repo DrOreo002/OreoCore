@@ -24,7 +24,7 @@ public class CInventoryAnimationTest extends CustomInventory {
                 public String nextDisplayName(String prev) {
                     return prev + c;
                 }
-            });
+            }, false);
         }
         setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
         button.setRepeatingAnimation(true);

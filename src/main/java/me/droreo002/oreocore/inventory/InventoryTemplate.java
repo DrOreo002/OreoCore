@@ -2,14 +2,19 @@ package me.droreo002.oreocore.inventory;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemUtils;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +41,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     @Getter
     private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
     @Getter
-    private List<ButtonData> buttonDatas; // The item definition, where string is the button 'id' and item definition is the item data
+    private Map<String, List<GUIButton>> guiButtons;
     @Getter
     private String openAnimationName;
 
@@ -54,7 +59,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.paginatedInventory = layoutDatabase.getBoolean("paginated");
         this.rawLayout = new ArrayList<>();
         this.layout = new HashMap<>();
-        this.buttonDatas = new ArrayList<>();
+        this.guiButtons = new HashMap<>();
         this.size = layoutDatabase.getInt("size");
         this.title = layoutDatabase.getString("title");
         this.rawLayout = layoutDatabase.getStringList("layout");
@@ -81,16 +86,15 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         for (Map.Entry ent : layout.entrySet()) {
             int buttonSlot = (int) ent.getKey();
             String buttonKey = (String) ent.getValue();
+            if (!guiButtons.containsKey(buttonKey)) guiButtons.put(buttonKey, new ArrayList<>());
 
             ConfigurationSection itemSection = layoutItemDatabase.getConfigurationSection(buttonKey);
             if (itemSection == null) throw new NullPointerException("Item section with the id of " + buttonKey + " is not exists!");
-            final ButtonData data = new ButtonData();
-            data.setItemData(itemSection);
-            data.setInventorySlot(buttonSlot);
-            data.setButtonKey(buttonKey);
-            data.setAnimated(itemSection.getBoolean("animated"));
-
-            buttonDatas.add(data);
+            final ItemStack buttonItem = CustomItem.fromSection(itemSection, null);
+            if (ItemUtils.isEmpty(buttonItem)) continue;
+            final GUIButton guiButton = new GUIButton(buttonItem, buttonSlot);
+            guiButton.setAnimated(itemSection.getBoolean("animated", false));
+            guiButtons.get(buttonKey).add(guiButton);
         }
     }
 
@@ -101,8 +105,9 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @param textPlaceholder The placeholder
      */
     public void applyPlaceholder(String buttonKey, TextPlaceholder textPlaceholder) {
-        if (getButton(buttonKey) == null) return;
-        getButton(buttonKey).setPlaceholder(textPlaceholder);
+        for (GUIButton button : guiButtons.get(buttonKey)) {
+            button.applyTextPlaceholder(textPlaceholder);
+        }
     }
 
     /**
@@ -112,8 +117,25 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @param listener The listener
      */
     public void applyListener(String buttonKey, GUIButton.ButtonListener listener) {
-        if (getButton(buttonKey) == null) return;
-        getButton(buttonKey).setListener(listener);
+        for (GUIButton button : guiButtons.get(buttonKey)) {
+            button.setListener(listener);
+        }
+    }
+
+    /**
+     * Update the GUIButton
+     *
+     * @param newButton The new button
+     * @param buttonKey The button key
+     */
+    public void updateGUIButton(GUIButton newButton, String buttonKey) {
+        if (!isKeyAvailable(buttonKey)) return;
+        List<GUIButton> buttons = getGUIButtons(buttonKey);
+        for (int i = 0; i < buttons.size(); i++) {
+            System.out.println("Updating " + i);
+            buttons.set(i, newButton);
+        }
+        guiButtons.put(buttonKey, buttons);
     }
 
     /**
@@ -137,13 +159,37 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     }
 
     /**
-     * Get the button data
+     * Get the final GUIButton from key
      *
      * @param key The button key
-     * @return The button data if exists, null otherwise
+     * @return The GUIButton as array because it's possible to have more than one. Nullable also
      */
-    public ButtonData getButton(String key) {
-        return buttonDatas.stream().filter(buttonData -> buttonData.getButtonKey().equalsIgnoreCase(key)).findAny().orElse(null);
+    public List<GUIButton> getGUIButtons(String key) {
+        if (!isKeyAvailable(key)) return null;
+        return guiButtons.get(key);
+    }
+
+    /**
+     * Get all GUIButtons
+     *
+     * @return The GUIButtons as list
+     */
+    public List<GUIButton> getAllGUIButtons() {
+        List<GUIButton> all = new ArrayList<>();
+        for (Map.Entry ent : guiButtons.entrySet()) {
+            all.addAll((Collection<? extends GUIButton>) ent.getValue());
+        }
+        return all;
+    }
+
+    /**
+     * Check if the key is available or not
+     *
+     * @param key The key
+     * @return true if available, false otherwise
+     */
+    public boolean isKeyAvailable(String key) {
+        return guiButtons.containsKey(key);
     }
 
     @Override
@@ -157,19 +203,5 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         config.set(path + ".size", getSize());
         config.set(path + ".layout", getRawLayout());
         config.set(path + ".paginated", isPaginatedInventory());
-
-        for (ButtonData data : buttonDatas) {
-            config.set(path + ".layout-item." + data.getButtonKey(), data.getItemData());
-        }
-    }
-
-    @Data
-    public class ButtonData {
-        private String buttonKey;
-        private ConfigurationSection itemData;
-        private TextPlaceholder placeholder;
-        private GUIButton.ButtonListener listener;
-        private int inventorySlot;
-        private boolean animated;
     }
 }

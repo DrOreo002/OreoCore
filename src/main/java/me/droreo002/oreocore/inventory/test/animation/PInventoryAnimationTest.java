@@ -26,7 +26,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
                 public String nextDisplayName(String prev) {
                     return prev + c;
                 }
-            });
+            }, false);
         }
         button.setRepeatingAnimation(true);
         setInventoryAnimation(InventoryAnimation.builder().build()); // Default value

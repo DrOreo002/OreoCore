@@ -97,4 +97,15 @@ public final class ItemUtils {
     public static boolean isSimilar(ItemStack one, ItemStack two) {
         return CustomItem.isSimilar(one, two);
     }
+
+    /**
+     * Check if the item is empty or air
+     *
+     * @param itemStack The item to check
+     * @return True if empty, false otherwise
+     */
+    public static boolean isEmpty(ItemStack itemStack) {
+        if (itemStack == null) return true;
+        return itemStack.getType() == UMaterial.AIR.getMaterial();
+    }
 }
