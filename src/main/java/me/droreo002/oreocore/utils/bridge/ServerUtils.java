@@ -25,7 +25,8 @@ public final class ServerUtils {
         for (MinecraftVersion version : MinecraftVersion.values()) {
             String currentVersion = getVersion();
             if (currentVersion == null) continue;
-            if (currentVersion.equals(version.toString())) {
+            currentVersion = currentVersion.toLowerCase();
+            if (currentVersion.equals(version.toString().toLowerCase())) {
                 return version;
             }
         }

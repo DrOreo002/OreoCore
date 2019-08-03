@@ -143,7 +143,7 @@ public final class StringUtils {
      * @return true if it has a special character, false otherwise
      */
     public static boolean hasSpecialCharacter(String text) {
-        Pattern p = Pattern.compile("[^a-zA-Z0-9]", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("[^a-zA-Z0-9_-]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(text);
         return m.find();
     }

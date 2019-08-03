@@ -4,7 +4,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ public class SqlDebug extends DatabaseSQL {
 
     @Override
     public void loadData() {
-        Debug.log("Loading data....", true);
+        ODebug.log("Loading data....", true);
     }
 
     @Override

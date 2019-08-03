@@ -182,16 +182,16 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	}
 
 	/**
-	 * Retrieve Reduced Debug Info.
+	 * Retrieve Reduced ODebug Info.
 	 * 
-	 * @return The current Reduced Debug Info
+	 * @return The current Reduced ODebug Info
 	 */
 	public boolean getReducedDebugInfo() {
 		return handle.getBooleans().read(0);
 	}
 
 	/**
-	 * Set Reduced Debug Info.
+	 * Set Reduced ODebug Info.
 	 * 
 	 * @param value - new value.
 	 */

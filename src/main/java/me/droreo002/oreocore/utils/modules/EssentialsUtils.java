@@ -4,8 +4,8 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.hook.PluginHooker;
-import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -42,12 +42,12 @@ public class EssentialsUtils implements PluginHooker {
 
     @Override
     public void hookSuccess() {
-        Debug.log("Successfully hooked to plugin &e" + getRequiredPlugin(), true);
+        ODebug.log("Successfully hooked to plugin &e" + getRequiredPlugin(), true);
     }
 
     @Override
     public void hookFailed() {
-        Debug.log("&cCannot hook to plugin &e" + getRequiredPlugin() + "&c because its not installed on the server!", true);
+        ODebug.log("&cCannot hook to plugin &e" + getRequiredPlugin() + "&c because its not installed on the server!", true);
     }
 
     @Override

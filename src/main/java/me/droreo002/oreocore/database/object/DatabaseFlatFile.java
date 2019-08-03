@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.utils.io.FileUtils;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,7 +59,7 @@ public abstract class DatabaseFlatFile extends Database {
     @Override
     public void onDisable() {
         dataCache.clear();
-        Debug.log("Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
+        ODebug.log("Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
     }
 
     /**

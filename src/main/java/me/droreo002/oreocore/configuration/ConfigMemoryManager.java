@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +29,7 @@ public final class ConfigMemoryManager {
 
         arr.add(memory);
         CONFIG_MEMORY.put(plugin, arr);
-        Debug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
+        ODebug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
     }
 
     /**
@@ -100,7 +100,7 @@ public final class ConfigMemoryManager {
                         if (configVariable.errorWhenNull()) {
                             throw new NullPointerException("Failed to get config value on path " + path);
                         } else {
-                            Debug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                            ODebug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
                             continue; // We ignore the null value
                         }
                     }
@@ -121,7 +121,7 @@ public final class ConfigMemoryManager {
                     if (configVariable.errorWhenNull()) {
                         throw new NullPointerException("Failed to get config value on path " + path);
                     } else {
-                        Debug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                        ODebug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
                         continue; // We ignore the null value
                     }
                 }
@@ -135,7 +135,7 @@ public final class ConfigMemoryManager {
                     } catch (Exception e) {
                         // handle error here
                         e.printStackTrace();
-                        Debug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
+                        ODebug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
                         continue;
                     }
                     continue;

@@ -68,7 +68,6 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         int slot = 0;
         for (String s : rawLayout) {
             if (!paginatedInventory) {
-                if (StringUtils.hasSpecialCharacter(s)) throw new IllegalStateException("Invalid character at inventory layout!");
                 if (s.length() != 9) throw new IllegalStateException("Invalid layout length! " + s.length() + " expected are 9");
             } else {
                 if (s.equalsIgnoreCase(PAGINATED_ITEM_ROW_KEY)) {
@@ -76,6 +75,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
                     continue; // Ignore this
                 }
             }
+            if (StringUtils.hasSpecialCharacter(s)) throw new IllegalStateException("Invalid character at inventory layout!");
             for (char c : s.toCharArray()) {
                 String str = String.valueOf(c);
                 layout.put(slot, str);

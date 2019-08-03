@@ -11,10 +11,10 @@ import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
+import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
 import me.droreo002.oreocore.listeners.player.PlayerListener;
-import me.droreo002.oreocore.debugging.Debug;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -69,7 +69,7 @@ public final class OreoCore extends JavaPlugin {
 
         // For config updating
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            Debug.log("&fChecking for config update...", true);
+            ODebug.log("&fChecking for config update...", true);
             try {
                 ConfigUpdater.update(new File(getDataFolder(), "config.yml"), this, "config.yml");
             } catch (IOException e) {
@@ -82,11 +82,11 @@ public final class OreoCore extends JavaPlugin {
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {
-                Debug.log("&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
+                ODebug.log("&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
                 for (Map.Entry ent : hookedPlugin.entrySet()) {
                     JavaPlugin pl = (JavaPlugin) ent.getKey();
                     boolean isPremium = (boolean) ent.getValue();
-                    Debug.log("     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
+                    ODebug.log("     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
                 }
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
                     final Map<String, Integer> res = new HashMap<>();
@@ -97,10 +97,10 @@ public final class OreoCore extends JavaPlugin {
                     return res;
                 }));
             } else {
-                Debug.log("&fI'm currently handling &7(&c0&7) plugin", true);
+                ODebug.log("&fI'm currently handling &7(&c0&7) plugin", true);
             }
         }, 20L * 15L); // 15 Seconds
-        Debug.log("OreoCore has been enabled successfully!", true);
+        ODebug.log("OreoCore has been enabled successfully!", true);
     }
 
     @Override

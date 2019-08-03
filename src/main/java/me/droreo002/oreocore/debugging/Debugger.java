@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import java.util.logging.Level;
 
 /*
-This class is for management only, so I don't need to copy and paste Debug class
+This class is for management only, so I don't need to copy and paste ODebug class
  */
 public abstract class Debugger {
 

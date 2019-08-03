@@ -7,7 +7,7 @@ import me.droreo002.oreocore.database.SQLDatabase;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.utils.ConnectionPoolManager;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public abstract class DatabaseMySQL extends Database implements SQLDatabase {
@@ -53,9 +52,9 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand())) {
-                Debug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
+                ODebug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
             } else {
-                Debug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
+                ODebug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
         } else {
             throw new IllegalStateException("MySQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
@@ -68,7 +67,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     public void onDisable() {
         try {
             close();
-            Debug.log("&fDatabase &rMySQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
+            ODebug.log("&fDatabase &rMySQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -436,7 +435,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     private class CheckConnection extends BukkitRunnable {
 
         private CheckConnection() {
-            Debug.log("&bMySQL Connection &fchecker for plugin &b" + getOwningPlugin().getName() + "&f has been started!", true);
+            ODebug.log("&bMySQL Connection &fchecker for plugin &b" + getOwningPlugin().getName() + "&f has been started!", true);
         }
 
         @Override

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 // Private class, copy and paste this instead
-public final class Debug {
+public final class ODebug {
 
     public static void log(String text, boolean addPrefix) {
         if (addPrefix) {

@@ -15,7 +15,7 @@ import me.droreo002.oreocore.utils.item.complex.UMaterial;
 public class CInventoryAnimationTest extends CustomInventory {
 
     public CInventoryAnimationTest() {
-        super(9, "Animation Debug");
+        super(9, "Animation ODebug");
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
         button.setListener(GUIButton.CLOSE_LISTENER);
         for (char c : "World".toCharArray()) {

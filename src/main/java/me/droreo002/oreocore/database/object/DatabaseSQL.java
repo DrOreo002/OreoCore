@@ -6,7 +6,7 @@ import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.database.SQLDatabase;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.utils.ConnectionPoolManager;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public abstract class DatabaseSQL extends Database implements SQLDatabase {
@@ -51,9 +50,9 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
         if (!databaseFile.exists()) {
             try {
                 if (databaseFile.createNewFile())
-                    Debug.log("&fDatabase &b" + databaseName + ".db &fon &e" + databaseFile.getAbsolutePath() + "&f from plugin &e" + getOwningPlugin().getName() + "&f has been created successfully!", true);
+                    ODebug.log("&fDatabase &b" + databaseName + ".db &fon &e" + databaseFile.getAbsolutePath() + "&f from plugin &e" + getOwningPlugin().getName() + "&f has been created successfully!", true);
             } catch (IOException e) {
-                Debug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                ODebug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
                 Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
                 return;
             }
@@ -64,9 +63,9 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
         
         if (checkConnection()) {
             if (execute(getFirstCommand())) {
-                Debug.log("&eSQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db &f, database type is currently &e" + sqlType, true);
+                ODebug.log("&eSQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db &f, database type is currently &e" + sqlType, true);
             } else {
-                Debug.log("&cFailed to initialize the SQL connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
+                ODebug.log("&cFailed to initialize the SQL connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }
         } else {
             throw new IllegalStateException("SQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
@@ -77,7 +76,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     public void onDisable() {
         try {
             close();
-            Debug.log("&fDatabase &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
+            ODebug.log("&fDatabase &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -420,7 +419,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
                     }
                     return this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
                 } catch (SQLException e) {
-                    Debug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                    ODebug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
                     Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
                     return null;
                 }

@@ -3,7 +3,7 @@ package me.droreo002.oreocore.database.debug;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.object.DatabaseFlatFile;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class FlatFileDebug extends DatabaseFlatFile {
@@ -15,9 +15,9 @@ public class FlatFileDebug extends DatabaseFlatFile {
 
     @Override
     public void loadData() {
-        Debug.log("Data loading...", true);
+        ODebug.log("Data loading...", true);
         if (getDataFolder().listFiles() == null) {
-            Debug.log("Cannot load data because the data folder is empty!", true);
+            ODebug.log("Cannot load data because the data folder is empty!", true);
             return;
         }
     }

@@ -50,7 +50,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                    return true;
                 }
                 if (args[0].equalsIgnoreCase("config-memory")) {
-                    sendMessage(player,"Debug value : " + plugin.getPluginConfig().getMemory().getWorking());
+                    sendMessage(player,"ODebug value : " + plugin.getPluginConfig().getMemory().getWorking());
                     sound(player);
                     return true;
                 }
@@ -66,7 +66,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("enum-memory")) {
-                    sendMessage(player, "Debug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
+                    sendMessage(player, "ODebug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
                     sound(player);
                     return true;
                 }

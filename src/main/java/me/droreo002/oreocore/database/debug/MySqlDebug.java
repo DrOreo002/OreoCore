@@ -5,7 +5,7 @@ import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseMySQL;
 import me.droreo002.oreocore.database.utils.MySqlConnection;
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 
 public class MySqlDebug extends DatabaseMySQL {
 
@@ -16,7 +16,7 @@ public class MySqlDebug extends DatabaseMySQL {
 
     @Override
     public void loadData() {
-        Debug.log("Loading data!", true);
+        ODebug.log("Loading data!", true);
     }
 
     @Override

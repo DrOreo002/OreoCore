@@ -1,6 +1,6 @@
 package me.droreo002.oreocore.database;
 
-import me.droreo002.oreocore.debugging.Debug;
+import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -17,7 +17,7 @@ public final class DatabaseManager {
         } else {
             DATABASES.put(plugin, new ArrayList<>(Collections.singletonList(database)));
         }
-        Debug.log("Database with the type of &c" + database.getDatabaseType() + "&f. From plugin &e" + plugin.getName() + "&f, has been registered!", true);
+        ODebug.log("Database with the type of &c" + database.getDatabaseType() + "&f. From plugin &e" + plugin.getName() + "&f, has been registered!", true);
     }
 
     public static boolean isDatabaseRegistered(JavaPlugin plugin, DatabaseType type) {
