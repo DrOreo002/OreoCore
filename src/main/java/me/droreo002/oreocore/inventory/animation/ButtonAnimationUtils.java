@@ -78,7 +78,7 @@ public class ButtonAnimationUtils {
      * @param stringBaseColor The wave base color or string base color
      * @return the animation as array strings
      */
-    private static String[] colorWaveString(String text, String waveColor, String stringBaseColor) {
+    public static String[] colorWaveString(String text, String waveColor, String stringBaseColor) {
         final List<String> s = new ArrayList<>();
         text = stripColor(text);
         // Clone the list
@@ -114,7 +114,7 @@ public class ButtonAnimationUtils {
      * @param stringBaseColor Base color
      * @return the animation as array strings
      */
-    private static String[] colorFillString(String text, String fillColor, String stringBaseColor) {
+    public static String[] colorFillString(String text, String fillColor, String stringBaseColor) {
         final List<String> s = new ArrayList<>();
         text = stripColor(text);
         // Clone the list

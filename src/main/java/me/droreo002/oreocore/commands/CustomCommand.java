@@ -17,7 +17,7 @@ import java.util.*;
 public abstract class CustomCommand {
 
     @Getter
-    private JavaPlugin owner;
+    private final JavaPlugin owner;
     @Getter @Setter
     private SoundObject successSound, errorSound;
     @Getter @Setter
@@ -41,26 +41,12 @@ public abstract class CustomCommand {
     }
 
     /**
-     * Check if the given argument is equals to aliases or base command
-     *
-     * @param argument : Given argument
-     * @return true if correct, false otherwise
-     */
-    public boolean isCommand(String argument) {
-        for (String s : aliases) {
-            if (s.equalsIgnoreCase(argument)) return true;
-        }
-        // Or
-        return commandBase.equalsIgnoreCase(argument);
-    }
-
-    /**
      * Add a argument into the command
      *
      * @param arg : The argument class
      */
     public void addArgument(CommandArg arg) {
-        if (isArgumentRegistered(arg.getTrigger())) return;
+        if (getArgument(arg.getTrigger()) != null) return;
         args.add(arg);
     }
 
@@ -131,30 +117,13 @@ public abstract class CustomCommand {
     }
 
     /**
-     * Check if the argument is registered or not
-     *
-     * @param arg : The argument class
-     * @return true if registered, false otherwise
-     */
-    public boolean isArgumentRegistered(String arg) {
-        for (CommandArg ar : args) {
-            if (ar.getTrigger().equalsIgnoreCase(arg)) return true;
-        }
-        return false;
-    }
-
-    /**
      * Get the command argument by name
      *
      * @param arg : The command argument name or trigger
      * @return the CommandArg class if found, null otherwise
      */
     public CommandArg getArgument(String arg) {
-        if (!isArgumentRegistered(arg)) return null;
-        for (CommandArg ar : args) {
-            if (ar.getTrigger().equalsIgnoreCase(arg)) return ar;
-        }
-        return null;
+        return args.stream().filter(cmd -> cmd.getTrigger().equalsIgnoreCase(arg)).findAny().orElse(null);
     }
 
     /**
@@ -164,11 +133,11 @@ public abstract class CustomCommand {
      * @param message : The message
      */
     public void sendMessage(CommandSender sender, String message) {
-        if (sender.equals(Bukkit.getConsoleSender())) {
-            ODebug.log(message);
-            return;
+        if (sender instanceof Player) {
+            sender.sendMessage(StringUtils.color(message));
+        } else {
+            ODebug.log(message); // So color code will work
         }
-        sender.sendMessage(StringUtils.color(message));
     }
 
     /**

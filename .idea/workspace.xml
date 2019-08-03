@@ -3,29 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommandManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/FlatFileDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/FlatFileDebug.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/MySqlDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/MySqlDebug.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/SqlDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/SqlDebug.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseFlatFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseFlatFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseSQL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseSQL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/debugging/Debug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/debugging/ODebug.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/debugging/Debugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/debugging/Debugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/modules/EssentialsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/modules/EssentialsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -308,7 +288,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564757242716</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Update version">
+      <created>1564829995973</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1564829995973</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="UnknownFeatures">

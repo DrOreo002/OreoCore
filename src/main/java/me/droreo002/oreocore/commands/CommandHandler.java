@@ -1,17 +1,13 @@
 package me.droreo002.oreocore.commands;
 
-import me.droreo002.oreocore.enums.MinecraftVersion;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
-
-import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class CommandHandler implements CommandExecutor, TabCompleter {
 
@@ -23,8 +19,14 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command vanillaCommand, String s, String[] args) {
-        if (args.length > 0 && !cmd.getArgs().isEmpty()) {
-            CommandArg argument = cmd.getArgument(args[0]);
+        /*
+        Some spaget code here but
+        don't change it. Too much work heh
+        also we treat CommandArg and CustomCommand as a different object already
+        changing it will require a recode on dependent plugin
+         */
+        if (args.length > 0) {
+            CommandArg argument = cmd.getArgument(args[0]); // Base command are not counted as args
             if (argument != null) {
                 if (commandSender instanceof Player) {
                     if (argument.isConsoleOnly()) {
