@@ -20,7 +20,7 @@ public class LinkedInventoryTest extends LinkedInventory {
         addLinkedInventory(null, null, new CustomInventory(9, "Another Inventory!") {
             @Override
             public void onOpen(Player player, Map<String, Object> linkedData) {
-                System.out.println("Data from first inventory is " + linkedData.get("Hello"));
+                System.out.println("DataCache from first inventory is " + linkedData.get("Hello"));
             }
         });
     }

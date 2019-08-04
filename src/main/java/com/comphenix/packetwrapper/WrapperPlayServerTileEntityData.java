@@ -75,18 +75,18 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	}
 
 	/**
-	 * Retrieve NBT Data.
+	 * Retrieve NBT DataCache.
 	 * <p>
 	 * Notes: if not present then its TAG_END (0)
 	 * 
-	 * @return The current NBT Data
+	 * @return The current NBT DataCache
 	 */
 	public NbtBase<?> getNbtData() {
 		return handle.getNbtModifier().read(0);
 	}
 
 	/**
-	 * Set NBT Data.
+	 * Set NBT DataCache.
 	 * 
 	 * @param value - new value.
 	 */

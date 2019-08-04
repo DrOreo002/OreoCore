@@ -1,5 +1,7 @@
 package me.droreo002.oreocore.database.object;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.database.Database;
@@ -13,7 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class DatabaseFlatFile extends Database {
 
@@ -26,12 +30,12 @@ public abstract class DatabaseFlatFile extends Database {
      * Where the string is the file name
      */
     @Getter
-    private Map<String, Data> dataCache;
+    private Set<DataCache> dataCaches;
 
     public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
         this.dataFolder = databaseFolder;
-        this.dataCache = new HashMap<>();
+        this.dataCaches = new HashSet<>();
         this.loadDataOnStartup = loadDataOnStartup;
         init(); // You have to call this first!
     }
@@ -51,32 +55,38 @@ public abstract class DatabaseFlatFile extends Database {
             if (files == null) return;
             for (File f : files) {
                 FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
-                addData(new DatabaseFlatFile.Data(fileConfig, f));
+                addData(new DataCache(fileConfig, f));
             }
         }
     }
 
     @Override
     public void onDisable() {
-        dataCache.clear();
+        dataCaches.clear();
         ODebug.log("Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
     }
 
     /**
      * Load the data on first startup. Only recommended to call it at that time useful for 'final' data
      */
-    public abstract void loadData();
+    public void loadData() {}
+
+    /**
+     * Add defaults data into the data
+     *
+     * @param config Then config
+     */
     public abstract void addDefaults(FileConfiguration config);
 
     /**
-     * Add a new data entry into the cache!
+     * Add a new dataCache entry into the cache!
      *
-     * @param data : The data class
+     * @param dataCache : The dataCache class
      */
-    private void addData(Data data) {
-        String name = FileUtils.getFileName(data.getDataFile(), false);
-        if (dataCache.containsKey(name)) return;
-        dataCache.put(name, data);
+    private void addData(DataCache dataCache) {
+        String name = dataCache.getDataFileName();
+        if (isDataCached(name)) return;
+        dataCaches.add(dataCache);
     }
 
     /**
@@ -90,7 +100,7 @@ public abstract class DatabaseFlatFile extends Database {
         File file = new File(dataFolder, fileName);
         if (!file.exists()) return false;
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        addData(new Data(config, file));
+        addData(new DataCache(config, file));
         return true;
     }
 
@@ -111,10 +121,12 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName : The file name
      */
     public void setup(String fileName, boolean addDefault, SetupCallback callback) {
-        File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
+        fileName = validateName(fileName);
+        File file = new File(dataFolder, fileName);
         if (file.exists()) {
+            if (isDataCached(fileName)) return;
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            addData(new Data(config, file));
+            addData(new DataCache(config, file));
             callback.callBack(SetupCallbackType.LOADED);
             return;
         }
@@ -133,7 +145,7 @@ public abstract class DatabaseFlatFile extends Database {
                 return;
             }
         }
-        addData(new Data(config, file));
+        addData(new DataCache(config, file));
         callback.callBack(SetupCallbackType.CREATED_AND_LOADED);
     }
 
@@ -146,7 +158,7 @@ public abstract class DatabaseFlatFile extends Database {
         File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
         if (file.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            addData(new Data(config, file));
+            addData(new DataCache(config, file));
             return;
         }
         try {
@@ -164,7 +176,7 @@ public abstract class DatabaseFlatFile extends Database {
                 return;
             }
         }
-        addData(new Data(config, file));
+        addData(new DataCache(config, file));
     }
 
     /**
@@ -173,66 +185,74 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName : The data file name
      * @return the data class if there's any. Null otherwise
      */
-    public Data getDataClass(String fileName) {
-        return dataCache.get(fileName);
+    public DataCache getDataCache(String fileName) {
+        String newName = validateName(fileName);
+        if (!isDataCached(newName)) return null;
+        return dataCaches.stream().filter(dataCache -> dataCache.getDataFileName().equals(newName)).findAny().orElse(null);
     }
 
     /**
-     * Save the data with that specified name
+     * Save the dataCache with that specified name
      *
-     * @param data : The data object
+     * @param dataCache : The dataCache object
      */
-    public void saveData(Data data) {
-        FileConfiguration config = data.getConfig();
-        File file = data.getDataFile();
-        String fileName = FileUtils.getFileName(file, false);
+    public void saveData(DataCache dataCache) {
+        FileConfiguration config = dataCache.getConfig();
+        File file = dataCache.getDataFile();
         try {
             config.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        dataCache.put(fileName, new Data(config, file));
+        removeData(dataCache, false);
+        addData(dataCache);
     }
 
     /**
-     * Remove the data from the cache or delete it permanently
+     * Remove the dataCache from the cache or delete it permanently
      *
-     * @param data : The data object
+     * @param dataCache : The dataCache object
      * @param delete : Should we delete it?
      */
-    public void removeData(Data data, boolean delete) {
+    public void removeData(DataCache dataCache, boolean delete) {
         if (delete) {
-            File file = data.getDataFile();
+            File file = dataCache.getDataFile();
             if (!file.exists()) throw new IllegalStateException("File is not exist!. Cannot delete it!, file path is " + file.getAbsolutePath());
             file.delete();
-            dataCache.remove(FileUtils.getFileName(data.getDataFile(), false));
-        } else {
-            dataCache.remove(FileUtils.getFileName(data.getDataFile(), false));
         }
+        dataCaches.removeIf(cache -> cache.getDataFileName().equals(dataCache.getDataFileName()));
     }
 
     /**
      * Check if the data is cached
      *
-     * @param dataName : The file name
+     * @param fileName The file name
      * @return true if its cached, false otherwise
      */
-    public boolean isDataCached(String dataName) {
-        return dataCache.containsKey(dataName);
+    public boolean isDataCached(String fileName) {
+        return dataCaches.stream().filter(dataCache -> dataCache.getDataFileName().equals(validateName(fileName))).findAny().orElse(null) != null;
     }
 
-    public class Data {
+    /**
+     * Validate the name
+     *
+     * @param fileName The file name
+     * @return The validated file name
+     */
+    private String validateName(String fileName) {
+        return (fileName.contains(".yml")) ? fileName : fileName + ".yml";
+    }
 
-        @Getter
-        @Setter
+    @Data
+    public class DataCache {
         private FileConfiguration config;
-        @Getter
-        @Setter
         private File dataFile;
+        private String dataFileName;
 
-        public Data(FileConfiguration config, File dataFile) {
+        public DataCache(FileConfiguration config, File dataFile) {
             this.config = config;
             this.dataFile = dataFile;
+            this.dataFileName = FileUtils.getFileName(dataFile, true);
         }
     }
 

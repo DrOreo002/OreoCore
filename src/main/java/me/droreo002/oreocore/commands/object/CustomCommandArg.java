@@ -36,7 +36,7 @@ public class CustomCommandArg extends CommandArg {
 //            error(player);
 //            return;
 //        }
-//        config.set("Data.working", true);
+//        config.set("DataCache.working", true);
 //        data.saveData(player.getUniqueId().toString());
     }
 }

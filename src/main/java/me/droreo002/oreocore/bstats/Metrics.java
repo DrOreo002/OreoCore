@@ -324,7 +324,7 @@ public class Metrics {
      */
     private static void sendData(Plugin plugin, JsonObject data) throws Exception {
         if (data == null) {
-            throw new IllegalArgumentException("Data cannot be null!");
+            throw new IllegalArgumentException("DataCache cannot be null!");
         }
         if (Bukkit.isPrimaryThread()) {
             throw new IllegalAccessException("This method must not be called from the main thread!");

@@ -41,7 +41,7 @@ public final class ConnectionPoolManager {
         if (mysql) {
             Validate.notNull(addressData, "MySQLConnection cannot be null!");
             config.setJdbcUrl(jdbcUrl);
-            config.setPoolName(owningPlugin.getName() + " : Data Pool");
+            config.setPoolName(owningPlugin.getName() + " : DataCache Pool");
 
             config.addDataSourceProperty("useUnicode", "true");
             config.addDataSourceProperty("characterEncoding", "utf8");
@@ -54,7 +54,7 @@ public final class ConnectionPoolManager {
             config.setUsername(addressData.getUser());
         } else {
             config.setJdbcUrl(jdbcUrl);
-            config.setPoolName(owningPlugin.getName() + " : Data Pool");
+            config.setPoolName(owningPlugin.getName() + " : DataCache Pool");
 
             config.addDataSourceProperty("useUnicode", "true");
             config.addDataSourceProperty("characterEncoding", "utf8");

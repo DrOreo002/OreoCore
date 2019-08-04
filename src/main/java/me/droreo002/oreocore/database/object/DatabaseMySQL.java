@@ -52,7 +52,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     public void init() {
         if (checkConnection()) {
             if (execute(getFirstCommand())) {
-                ODebug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Data address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
+                ODebug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. DataCache address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
             } else {
                 ODebug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
             }

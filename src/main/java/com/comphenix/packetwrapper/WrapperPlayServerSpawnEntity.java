@@ -353,19 +353,19 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	 * </tr>
 	 * <tr>
 	 * <td>Splash Potions</td>
-	 * <td>Data Value</td>
+	 * <td>DataCache Value</td>
 	 * <td>Potion data value.</td>
 	 * </tr>
 	 * </table>
 	 * 
-	 * @return The current wrapper Data
+	 * @return The current wrapper DataCache
 	 */
 	public int getObjectData() {
 		return handle.getIntegers().read(7);
 	}
 
 	/**
-	 * Set wrapper Data.
+	 * Set wrapper DataCache.
 	 * <p>
 	 * The content depends on the wrapper type. See {@link #getObjectData()} for
 	 * more information.

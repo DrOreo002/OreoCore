@@ -69,16 +69,16 @@ public class WrapperPlayServerBlockChange extends AbstractPacket {
 	}
 
 	/**
-	 * Retrieve Block Data.
+	 * Retrieve Block DataCache.
 	 * 
-	 * @return The current Block Data
+	 * @return The current Block DataCache
 	 */
 	public WrappedBlockData getBlockData() {
 		return handle.getBlockData().read(0);
 	}
 
 	/**
-	 * Set Block Data.
+	 * Set Block DataCache.
 	 * 
 	 * @param value - new value.
 	 */

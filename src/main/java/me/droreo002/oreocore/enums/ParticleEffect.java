@@ -625,7 +625,7 @@ public enum ParticleEffect {
          * Construct a new particle data
          *
          * @param material Material of the item/block
-         * @param data     Data value of the item/block
+         * @param data     DataCache value of the item/block
          */
         @SuppressWarnings ("deprecation")
         ParticleData(Material material, byte data) {
@@ -684,7 +684,7 @@ public enum ParticleEffect {
          * Construct a new item data
          *
          * @param material Material of the item
-         * @param data     Data value of the item
+         * @param data     DataCache value of the item
          * @see ParticleData#ParticleData(Material, byte)
          */
         public ItemData(Material material, byte data) {
@@ -705,7 +705,7 @@ public enum ParticleEffect {
          * Construct a new block data
          *
          * @param material Material of the block
-         * @param data     Data value of the block
+         * @param data     DataCache value of the block
          * @throws IllegalArgumentException If the material is not a block
          * @see ParticleData#ParticleData(Material, byte)
          */
@@ -1019,7 +1019,7 @@ public enum ParticleEffect {
          * @param speed        Display speed of the particles
          * @param amount       Amount of particles
          * @param longDistance Indicates whether the maximum distance is increased from 256 to 65536
-         * @param data         Data of the effect
+         * @param data         DataCache of the effect
          * @throws IllegalArgumentException If the speed or amount is lower than 0
          * @see #initialize()
          */
@@ -1048,7 +1048,7 @@ public enum ParticleEffect {
          * @param direction    Direction of the particle
          * @param speed        Display speed of the particle
          * @param longDistance Indicates whether the maximum distance is increased from 256 to 65536
-         * @param data         Data of the effect
+         * @param data         DataCache of the effect
          * @throws IllegalArgumentException If the speed is lower than 0
          */
         public ParticlePacket(ParticleEffect effect, Vector direction, float speed, boolean longDistance, ParticleData data) throws IllegalArgumentException {

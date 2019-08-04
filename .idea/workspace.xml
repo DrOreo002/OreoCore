@@ -3,9 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/CustomCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerBlockChange.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerBlockChange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerMapChunk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerMapChunk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerSpawnEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerSpawnEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerTileEntityData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerTileEntityData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerWorldEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/comphenix/packetwrapper/WrapperPlayServerWorldEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/bstats/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/bstats/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/object/CustomCommandArg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/commands/object/CustomCommandArg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/FlatFileDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/FlatFileDebug.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseFlatFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseFlatFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/ConnectionPoolManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/ConnectionPoolManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/ParticleEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/ParticleEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/LinkedInventoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/LinkedInventoryTest.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -295,7 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564829995973</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Some command fix">
+      <created>1564840113873</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1564840113873</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -347,7 +366,8 @@
     <MESSAGE value="Added auto config updater" />
     <MESSAGE value="Massive changes!" />
     <MESSAGE value="Update version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update version" />
+    <MESSAGE value="Some command fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some command fix" />
   </component>
   <component name="masterDetails">
     <states>

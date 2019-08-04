@@ -15,7 +15,7 @@ public class FlatFileDebug extends DatabaseFlatFile {
 
     @Override
     public void loadData() {
-        ODebug.log("Data loading...", true);
+        ODebug.log("DataCache loading...", true);
         if (getDataFolder().listFiles() == null) {
             ODebug.log("Cannot load data because the data folder is empty!", true);
             return;
@@ -25,6 +25,6 @@ public class FlatFileDebug extends DatabaseFlatFile {
     @Override
     public void addDefaults(FileConfiguration config) {
         // Default value
-        config.set("Data.bangsat", true);
+        config.set("DataCache.bangsat", true);
     }
 }

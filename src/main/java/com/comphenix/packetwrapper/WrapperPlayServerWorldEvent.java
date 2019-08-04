@@ -75,18 +75,18 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	}
 
 	/**
-	 * Retrieve Data.
+	 * Retrieve DataCache.
 	 * <p>
 	 * Notes: extra data for certain effects, see below.
 	 * 
-	 * @return The current Data
+	 * @return The current DataCache
 	 */
 	public int getData() {
 		return handle.getIntegers().read(1);
 	}
 
 	/**
-	 * Set Data.
+	 * Set DataCache.
 	 * 
 	 * @param value - new value.
 	 */
