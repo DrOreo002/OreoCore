@@ -48,10 +48,12 @@ public class ButtonAnimationUtils {
      * @param repeating Is this a repeating animation?
      */
     public static void addFrames(GUIButton button, String[] frames, int duplicatesPerFrame, boolean repeating) {
+        button.setAnimated(true);
+        ButtonAnimation animation = button.getButtonAnimation();
         for (String s : frames) {
             if (duplicatesPerFrame > 0) {
                 for (int i = 0; i < duplicatesPerFrame; i++) {
-                    button.addFrame(new IButtonFrame() {
+                    animation.addFrame(new IButtonFrame() {
                         @Override
                         public String nextDisplayName(String prevDisplayName) {
                             return s;
@@ -59,7 +61,7 @@ public class ButtonAnimationUtils {
                     }, false);
                 }
             } else {
-                button.addFrame(new IButtonFrame() {
+                animation.addFrame(new IButtonFrame() {
                     @Override
                     public String nextDisplayName(String prevDisplayName) {
                         return s;
@@ -67,7 +69,7 @@ public class ButtonAnimationUtils {
                 }, false);
             }
         }
-        button.setRepeatingAnimation(repeating);
+        animation.setRepeatingAnimation(repeating);
     }
 
     /**
@@ -150,5 +152,22 @@ public class ButtonAnimationUtils {
             slot++;
         }
         return s.toArray(new String[0]);
+    }
+
+    /**
+     * Add animation via default value
+     *
+     * @param button The button
+     * @param animation The animation
+     */
+    public static void addAnimation(GUIButton button, DefaultButtonAnimation animation) {
+        switch (animation) {
+            case FILL_ANIMATION:
+                addFillAnimation(button, "&b&l", "&f&l", 0);
+                break;
+            case WAVE_ANIMATION:
+                addWaveAnimation(button, "&b&l", "&f&l", 0);
+                break;
+        }
     }
 }

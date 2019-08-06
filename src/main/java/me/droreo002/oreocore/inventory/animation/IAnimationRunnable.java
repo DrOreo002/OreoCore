@@ -39,7 +39,7 @@ public class IAnimationRunnable implements Runnable {
             if (singleButtonRunnable.contains(slot)) continue; // Skip this button
 
             if (button.isAnimated()) {
-                final IButtonFrame frm = button.getNextFrame();
+                final IButtonFrame frm = button.getButtonAnimation().getNextFrame();
                 if (frm == null) continue;
                 update(frm, button);
 
@@ -72,7 +72,7 @@ public class IAnimationRunnable implements Runnable {
                 singleButtonRunnable.remove(slot);
                 return; // Return will basically cancel the task
             }
-            final IButtonFrame frm = button.getNextFrame();
+            final IButtonFrame frm = button.getButtonAnimation().getNextFrame();
             if (frm == null) {
                 singleButtonRunnable.remove(slot);
                 return; // Return will basically cancel the task

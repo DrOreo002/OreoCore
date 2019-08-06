@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.inventory.test.animation;
 
+import me.droreo002.oreocore.inventory.animation.ButtonAnimation;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.animation.IButtonFrame;
@@ -20,15 +21,18 @@ public class PInventoryAnimationTest extends PaginatedInventory {
 
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
         button.setListener(GUIButton.CLOSE_LISTENER);
+        button.setAnimated(true);
+
+        ButtonAnimation animation = button.getButtonAnimation();
         for (char c : "World".toCharArray()) {
-            button.addFrame(new IButtonFrame() {
+            animation.addFrame(new IButtonFrame() {
                 @Override
                 public String nextDisplayName(String prev) {
                     return prev + c;
                 }
-            }, false);
+            }, true);
         }
-        button.setRepeatingAnimation(true);
+        animation.setRepeatingAnimation(true);
         setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
         for (int i = 0; i < 50; i++) {
             if (i == 10) {

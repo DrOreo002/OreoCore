@@ -10,7 +10,6 @@ import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
