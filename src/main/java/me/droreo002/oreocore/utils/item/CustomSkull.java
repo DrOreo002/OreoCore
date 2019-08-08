@@ -125,7 +125,11 @@ public final class CustomSkull {
     public static ItemStack toHead(ItemStack item, UUID uuid) {
         validate(item);
 
-        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
+        if (CACHE.containsKey(uuid.toString())) {
+            if (ItemUtils.isSimilar(item, CACHE.get(uuid.toString()))) {
+                return CACHE.get(uuid.toString());
+            }
+        }
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -147,7 +151,11 @@ public final class CustomSkull {
     public static ItemStack setTexture(ItemStack item, String texture) {
         validate(item);
 
-        if (CACHE.containsKey(texture)) return CACHE.get(texture);
+        if (CACHE.containsKey(texture)) {
+            if (ItemUtils.isSimilar(item, CACHE.get(texture))) {
+                return CACHE.get(texture);
+            }
+        }
         final ItemMeta meta = item.getItemMeta();
         final Object skin = createGameProfile(texture, UUID.randomUUID());
         try {

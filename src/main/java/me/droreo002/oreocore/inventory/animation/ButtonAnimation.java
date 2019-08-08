@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.animation;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -62,6 +63,7 @@ public class ButtonAnimation {
      * @param buttonItem The button item
      */
     public void updateButtonMetaData(ItemStack buttonItem) {
+        buttonMetaData.clear();
         if (buttonItem.hasItemMeta()) {
             if (buttonItem.getItemMeta().hasDisplayName()) buttonMetaData.put(ItemMetaType.DISPLAY_NAME.name(), buttonItem.getItemMeta().getDisplayName());
             if (buttonItem.getItemMeta().hasLore()) buttonMetaData.put(ItemMetaType.LORE.name(), buttonItem.getItemMeta().getLore());
@@ -129,5 +131,17 @@ public class ButtonAnimation {
         }
         // And then add the next one
         frames.add(buttonFrame);
+    }
+
+    /**
+     * Setup animation with default values (will be taken from getButtonAnimationName)
+     *
+     * @param parent The button parent
+     */
+    public void setupDefault(GUIButton parent) {
+        DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(getButtonAnimationName());
+        if (animation != null) {
+            ButtonAnimationUtils.addAnimation(parent, animation);
+        }
     }
 }

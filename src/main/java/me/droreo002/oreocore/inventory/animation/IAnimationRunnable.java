@@ -115,6 +115,6 @@ public class IAnimationRunnable implements Runnable {
             item = new CustomItem(item, nextLore);
         }
 
-        button.setItem(item, false);
+        button.setItem(item, false, false);
     }
 }

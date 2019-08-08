@@ -19,7 +19,7 @@ public class ButtonAnimationUtils {
      */
     public static void addWaveAnimation(GUIButton button, String waveColor, String waveBaseColor, int duplicatesPerFrame) {
         String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(new CustomItem(button.getItem(), waveBaseColor + displayName), true);
+        button.setItem(new CustomItem(button.getItem(), waveBaseColor + displayName), true, false);
         String[] wave = colorWaveString(displayName,waveColor, waveBaseColor);
         addFrames(button, wave, duplicatesPerFrame, true);
     }
@@ -34,7 +34,7 @@ public class ButtonAnimationUtils {
      */
     public static void addFillAnimation(GUIButton button, String fillColor, String fillBaseColor, int duplicatesPerFrame) {
         String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(new CustomItem(button.getItem(), fillBaseColor + displayName), true);
+        button.setItem(new CustomItem(button.getItem(), fillBaseColor + displayName), true, false);
         String[] wave = colorFillString(displayName, fillColor, fillBaseColor);
         addFrames(button, wave, duplicatesPerFrame, true);
     }
@@ -50,6 +50,7 @@ public class ButtonAnimationUtils {
     public static void addFrames(GUIButton button, String[] frames, int duplicatesPerFrame, boolean repeating) {
         if (!button.isAnimated()) throw new IllegalStateException("Button is not an animated button!");
         ButtonAnimation animation = button.getButtonAnimation();
+        animation.getFrames().clear();
         for (String s : frames) {
             if (duplicatesPerFrame > 0) {
                 for (int i = 0; i < duplicatesPerFrame; i++) {

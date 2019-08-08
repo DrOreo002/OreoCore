@@ -180,8 +180,6 @@ public abstract class PaginatedInventory extends OreoInventory implements Linkab
 
             setupPaginatedButtons();
         }
-
-        getButtons().forEach(but -> getInventory().setItem(but.getInventorySlot(), but.getItem()));
         updateInformationButton();
     }
 

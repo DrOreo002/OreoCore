@@ -443,7 +443,7 @@ public class CustomItem extends ItemStack {
                         for (TextPlaceholder t : place.getPlaceholders()) {
                             displayAsString = displayAsString.replace(t.getFrom(), t.getTo());
                         }
-                        displayName.delete(0, displayName.length());
+                        displayName.delete(0, displayName.length()); // Clear the StringBuilder
                         displayName.append(displayAsString);
                     }
                 }

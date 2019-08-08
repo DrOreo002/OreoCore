@@ -87,12 +87,16 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
      *
      * @param item The new item
      * @param updateMetaData Should we update the meta data?
+     * @param updateAnimationFrames Should we update the animation frames?
      */
-    public void setItem(ItemStack item, boolean updateMetaData) {
+    public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
         this.item = item;
         if (updateMetaData) {
             if (animated) {
                 buttonAnimation.updateButtonMetaData(item);
+                if (updateAnimationFrames) {
+                    buttonAnimation.setupDefault(this);
+                }
             }
         }
     }
@@ -105,9 +109,9 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
     public void applyTextPlaceholder(TextPlaceholder textPlaceholder) {
         this.textPlaceholder = textPlaceholder;
         if (item == null) {
-            setItem(CustomItem.fromSection(itemDataSection, textPlaceholder), true);
+            setItem(CustomItem.fromSection(itemDataSection, textPlaceholder), true, true);
         } else {
-            setItem(CustomItem.applyPlaceholder(item, textPlaceholder), true);
+            setItem(CustomItem.applyPlaceholder(item, textPlaceholder), true, true);
         }
     }
 
@@ -146,12 +150,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
             } else {
                 this.buttonAnimation = new ButtonAnimation(item);
             }
-
-            System.out.println("Setting animation " + buttonAnimation.getButtonAnimationName());
-            DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(buttonAnimation.getButtonAnimationName());
-            if (animation != null) {
-                ButtonAnimationUtils.addAnimation(this, animation);
-            }
+            this.buttonAnimation.setupDefault(this);
         } else {
             this.buttonAnimation = null;
         }
