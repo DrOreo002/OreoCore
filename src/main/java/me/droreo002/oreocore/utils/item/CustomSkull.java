@@ -127,7 +127,11 @@ public final class CustomSkull {
 
         if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
         SkullMeta skull = (SkullMeta) item.getItemMeta();
+        ItemMeta itemMeta = item.getItemMeta();
+
         setOwningPlayer(skull, uuid);
+        if (itemMeta.hasDisplayName()) skull.setDisplayName(itemMeta.getDisplayName());
+        if (itemMeta.hasLore()) skull.setLore(itemMeta.getLore());
         item.setItemMeta(skull);
         addToCache(item, uuid.toString());
         return item;

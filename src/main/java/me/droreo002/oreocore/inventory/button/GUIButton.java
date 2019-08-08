@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 public class GUIButton implements SerializableConfigVariable<GUIButton> {
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
@@ -60,15 +62,13 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
      */
     public GUIButton(ConfigurationSection section, TextPlaceholder textPlaceholder) {
         this.item = CustomItem.fromSection(section, textPlaceholder);
-        this.inventorySlot = section.getInt("slot");
+        this.inventorySlot = section.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
         this.itemDataSection = section;
-        this.animated = section.getBoolean("animated", false);
+        setAnimated(section.getBoolean("animated", false));
 
         if (section.getConfigurationSection("soundOnClick") != null)
             this.soundOnClick = new SoundObject().getFromConfig(section.getConfigurationSection("soundOnClick"));
-        if (this.animated)
-            this.buttonAnimation = new ButtonAnimation(section, item);
     }
 
     /**
@@ -147,6 +147,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
                 this.buttonAnimation = new ButtonAnimation(item);
             }
 
+            System.out.println("Setting animation " + buttonAnimation.getButtonAnimationName());
             DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(buttonAnimation.getButtonAnimationName());
             if (animation != null) {
                 ButtonAnimationUtils.addAnimation(this, animation);
@@ -163,10 +164,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
 
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path, itemDataSection);
-        config.set(path + ".animated", animated);
-        if (soundOnClick != null) soundOnClick.saveToConfig(path + ".soundOnClick", config);
-        // TODO: 06/08/2019 Saving to config
+        // TODO: 08/08/2019 Save to config
     }
 
     public interface ButtonListener {

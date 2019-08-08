@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-import static me.droreo002.oreocore.utils.item.CustomItem.fromSection;
 import static me.droreo002.oreocore.inventory.InventoryTemplate.*;
 
 public abstract class PaginatedInventory extends OreoInventory implements Linkable {

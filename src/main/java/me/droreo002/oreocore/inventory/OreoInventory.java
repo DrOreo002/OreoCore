@@ -30,7 +30,6 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.color;

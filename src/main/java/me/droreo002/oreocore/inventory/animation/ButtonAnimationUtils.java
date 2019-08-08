@@ -48,7 +48,7 @@ public class ButtonAnimationUtils {
      * @param repeating Is this a repeating animation?
      */
     public static void addFrames(GUIButton button, String[] frames, int duplicatesPerFrame, boolean repeating) {
-        button.setAnimated(true);
+        if (!button.isAnimated()) throw new IllegalStateException("Button is not an animated button!");
         ButtonAnimation animation = button.getButtonAnimation();
         for (String s : frames) {
             if (duplicatesPerFrame > 0) {

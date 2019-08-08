@@ -90,10 +90,9 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
 
             ConfigurationSection itemSection = layoutItemDatabase.getConfigurationSection(buttonKey);
             if (itemSection == null) throw new NullPointerException("Item section with the id of " + buttonKey + " is not exists!");
-            final ItemStack buttonItem = CustomItem.fromSection(itemSection, null);
-            if (ItemUtils.isEmpty(buttonItem)) continue;
-            final GUIButton guiButton = new GUIButton(buttonItem, buttonSlot);
-            guiButton.setAnimated(itemSection.getBoolean("animated", false));
+            final GUIButton guiButton = new GUIButton(itemSection, null);
+            if (ItemUtils.isEmpty(guiButton.getItem())) continue; // Skip this button
+            guiButton.setInventorySlot(buttonSlot);
             guiButtons.get(buttonKey).add(guiButton);
         }
     }
