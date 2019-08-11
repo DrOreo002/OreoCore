@@ -19,6 +19,7 @@ public final class CrackedServerUtils {
      * @return the UUID if exists, null otherwise
      */
     public static UUID getPlayerUuid(String name) {
+        if (database == null) return null;
         return database.getPlayerInformation(name).getPlayerUuid();
     }
 
@@ -29,6 +30,7 @@ public final class CrackedServerUtils {
      * @return the player name if exists, null otherwise
      */
     public static String getPlayerName(UUID uuid) {
+        if (database == null) return null;
         return database.getPlayerInformation(uuid).getPlayerName();
     }
 }

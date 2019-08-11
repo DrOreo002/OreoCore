@@ -65,7 +65,9 @@ public final class OreoCore extends JavaPlugin {
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
         pluginConfig = new PluginConfig(this);
-        playerInformationDatabase = new PlayerInformationDatabase(this);
+        if (pluginConfig.getMemory().isCachePlayerInformation()) {
+            playerInformationDatabase = new PlayerInformationDatabase(this);
+        }
 
         // For config updating
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {

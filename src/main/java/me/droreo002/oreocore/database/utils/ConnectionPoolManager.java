@@ -40,30 +40,20 @@ public final class ConnectionPoolManager {
     public void setup() {
         if (mysql) {
             Validate.notNull(addressData, "MySQLConnection cannot be null!");
-            config.setJdbcUrl(jdbcUrl);
-            config.setPoolName(owningPlugin.getName() + " : DataCache Pool");
-
-            config.addDataSourceProperty("useUnicode", "true");
-            config.addDataSourceProperty("characterEncoding", "utf8");
-            config.setMaximumPoolSize(10);
-            config.setMinimumIdle(10);
-            config.setConnectionInitSql("SELECT 1;");
-            config.setMaxLifetime(1800000);
-            config.setConnectionTimeout(5000);
             config.setPassword(addressData.getPassword());
             config.setUsername(addressData.getUser());
-        } else {
-            config.setJdbcUrl(jdbcUrl);
-            config.setPoolName(owningPlugin.getName() + " : DataCache Pool");
-
-            config.addDataSourceProperty("useUnicode", "true");
-            config.addDataSourceProperty("characterEncoding", "utf8");
-            config.setMaximumPoolSize(10);
-            config.setMinimumIdle(10);
-            config.setConnectionInitSql("SELECT 1;");
-            config.setMaxLifetime(1800000);
-            config.setConnectionTimeout(5000);
         }
+        config.setJdbcUrl(jdbcUrl);
+        config.setPoolName(owningPlugin.getName() + " : DataCache Pool");
+
+        config.addDataSourceProperty("useUnicode", "true");
+        config.addDataSourceProperty("characterEncoding", "utf8");
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(10);
+        config.setConnectionInitSql("SELECT 1;");
+        config.setMaxLifetime(1800000);
+        config.setConnectionTimeout(5000);
+
         dataSource = new HikariDataSource(config);
     }
 
