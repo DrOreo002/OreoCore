@@ -59,11 +59,8 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     public void loadPlayer(Player player) {
         if (!player.isOnline()) return;
         if (getPlayerInformation(player.getUniqueId()) != null) return;
-        try {
-            executeAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');").get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        executeAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
+        playerInformation.add(new PlayerInformation(player));
     }
 
     /**

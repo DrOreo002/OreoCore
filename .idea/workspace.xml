@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="More update">
+    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/ButtonAnimationUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformationDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformationDatabase.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -329,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565258224577</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="More update">
+      <created>1565274040215</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1565274040216</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -384,7 +385,8 @@
     <MESSAGE value="Some command fix" />
     <MESSAGE value="Yaya data changes" />
     <MESSAGE value="More changes on buttons!" />
-    <option name="LAST_COMMIT_MESSAGE" value="More changes on buttons!" />
+    <MESSAGE value="More update" />
+    <option name="LAST_COMMIT_MESSAGE" value="More update" />
   </component>
   <component name="masterDetails">
     <states>
