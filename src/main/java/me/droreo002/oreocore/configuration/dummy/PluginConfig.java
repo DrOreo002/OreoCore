@@ -5,6 +5,7 @@ import lombok.NonNull;
 import me.droreo002.oreocore.configuration.ConfigMemory;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
+import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.utils.misc.TitleObject;
@@ -14,11 +15,17 @@ import java.io.File;
 
 public class PluginConfig extends CustomConfig {
 
+    private static final String LATEST_VERSION = "10.1";
+
     @Getter
     private Memory memory;
 
     public PluginConfig(JavaPlugin plugin) {
         super(plugin, new File(plugin.getDataFolder(), "config.yml"));
+        if (tryUpdate("ConfigVersion", LATEST_VERSION)) {
+            ODebug.log("Successfully updated &7config.yml &fto version &c" + LATEST_VERSION);
+        }
+
         memory = new Memory(this);
         registerMemory(memory);
     }

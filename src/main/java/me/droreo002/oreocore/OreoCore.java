@@ -69,18 +69,6 @@ public final class OreoCore extends JavaPlugin {
             playerInformationDatabase = new PlayerInformationDatabase(this);
         }
 
-        // For config updating
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            ODebug.log("&fChecking for config update...", true);
-            try {
-                ConfigUpdater.update(new File(getDataFolder(), "config.yml"), this, "config.yml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            pluginConfig.reloadConfig();
-        }, 40L);
-
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {

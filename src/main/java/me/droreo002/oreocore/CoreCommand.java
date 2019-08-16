@@ -1,11 +1,13 @@
 package me.droreo002.oreocore;
 
+import me.droreo002.oreocore.inventory.linked.LinkedInventoryManager;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.normal.InventoryTemplateTest;
 import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
-import me.droreo002.oreocore.inventory.test.normal.LinkedInventoryTest;
+import me.droreo002.oreocore.inventory.test.normal.FirstLinkedInventory;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
+import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
@@ -103,8 +105,11 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {
-                    final LinkedInventoryTest test = new LinkedInventoryTest();
-                    test.open(player);
+                    final LinkedInventoryManager manager = new LinkedInventoryManager(
+                            new FirstLinkedInventory(),
+                            new SecondLinkedInventory()
+                    );
+                    manager.openInventory(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-template-inventory")) {

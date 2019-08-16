@@ -1,4 +1,5 @@
 # Setting for plugin
+ConfigVersion: '10.1'
 Settings:
   disable-notification-on-join: false # Should we disable the notification on join?. Keep in mind that notification is only available for player who have oreocore.admin permission
   # This will create a sql database. (playerdata.db) it's useful for cracked server to find

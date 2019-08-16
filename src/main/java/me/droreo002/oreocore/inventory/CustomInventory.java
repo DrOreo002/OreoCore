@@ -5,7 +5,7 @@ import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomInventory extends OreoInventory implements Linkable {
+public class CustomInventory extends OreoInventory {
 
     public CustomInventory(int size, String title) {
         super(size, title);

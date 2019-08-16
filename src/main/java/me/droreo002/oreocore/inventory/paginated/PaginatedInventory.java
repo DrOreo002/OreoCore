@@ -5,7 +5,6 @@ import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
-import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomItem;
@@ -20,7 +19,7 @@ import java.util.*;
 
 import static me.droreo002.oreocore.inventory.InventoryTemplate.*;
 
-public abstract class PaginatedInventory extends OreoInventory implements Linkable {
+public abstract class PaginatedInventory extends OreoInventory {
 
     /*
     Variables

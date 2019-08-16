@@ -9,6 +9,7 @@ import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.animation.open.WaveAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
+import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
@@ -126,15 +127,19 @@ public abstract class OreoInventory implements InventoryHolder {
         final OreoInventory oreoInventory = (OreoInventory) inventory.getHolder();
         if (oreoInventory == null) return;
 
-        oreoInventory.onClick(e);
         e.setCancelled(!oreoInventory.getDisabledClickListeners().contains(slot));
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
                 if (button.getListener() != null) button.getListener().onClick(e);
+                if (button instanceof LinkedButton) {
+                    LinkedButton linkedButton = (LinkedButton) button;
+                    linkedButton.getExtraListeners().forEach(buttonListener -> buttonListener.onClick(e));
+                }
             }
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
+        oreoInventory.onClick(e); // After process we call
     }
 
     /**
