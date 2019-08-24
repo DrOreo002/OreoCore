@@ -104,6 +104,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @param textPlaceholder The placeholder
      */
     public void applyPlaceholder(String buttonKey, TextPlaceholder textPlaceholder) {
+        if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
             button.applyTextPlaceholder(textPlaceholder);
         }
@@ -116,8 +117,23 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @param listener The listener
      */
     public void applyListener(String buttonKey, GUIButton.ButtonListener listener) {
+        if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
             button.setListener(listener);
+        }
+    }
+
+    /**
+     * Apply the item into the button
+     *
+     * @param buttonKey The button key or identifier
+     * @param item The new item
+     * @param updateMeta Should we update the item meta?
+     */
+    public void applyItem(String buttonKey, ItemStack item, boolean updateMeta, boolean updateFrame) {
+        if (!guiButtons.containsKey(buttonKey)) return;
+        for (GUIButton button : guiButtons.get(buttonKey)) {
+            button.setItem(item, updateMeta, updateFrame);
         }
     }
 
@@ -131,7 +147,6 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         if (!isKeyAvailable(buttonKey)) return;
         List<GUIButton> buttons = getGUIButtons(buttonKey);
         for (int i = 0; i < buttons.size(); i++) {
-            System.out.println("Updating " + i);
             buttons.set(i, newButton);
         }
         guiButtons.put(buttonKey, buttons);

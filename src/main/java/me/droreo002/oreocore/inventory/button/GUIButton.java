@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.inventory.animation.ButtonAnimation;
-import me.droreo002.oreocore.inventory.animation.ButtonAnimationUtils;
-import me.droreo002.oreocore.inventory.animation.DefaultButtonAnimation;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
@@ -15,8 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class GUIButton implements SerializableConfigVariable<GUIButton> {
 
@@ -24,10 +21,10 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
 
     @Getter @Setter
     private int inventorySlot;
+    @Getter @Setter
+    private ButtonAnimation buttonAnimation;
     @Getter
     private boolean animated;
-    @Getter
-    private ButtonAnimation buttonAnimation;
     @Getter
     private TextPlaceholder textPlaceholder;
     @Getter
@@ -86,19 +83,22 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
      * Set the item for this button
      *
      * @param item The new item
-     * @param updateMetaData Should we update the meta data?
+     * @param updateMetaData Should we update the meta data?, meta data will be changed
+     *                       and will use the new item's meta data
      * @param updateAnimationFrames Should we update the animation frames?
      */
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
-        this.item = item;
-        if (updateMetaData) {
-            if (animated) {
-                buttonAnimation.updateButtonMetaData(item);
-                if (updateAnimationFrames) {
-                    buttonAnimation.setupDefault(this);
-                }
+        ItemMeta lastMeta = this.item.getItemMeta();
+        if (animated) {
+            buttonAnimation.updateButtonMetaData(item);
+            if (updateAnimationFrames) {
+                buttonAnimation.setupAnimation(this, true);
             }
         }
+        if (!updateMetaData) {
+            item.setItemMeta(lastMeta);
+        }
+        this.item = item;
     }
 
     /**
@@ -150,7 +150,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
             } else {
                 this.buttonAnimation = new ButtonAnimation(item);
             }
-            this.buttonAnimation.setupDefault(this);
+            this.buttonAnimation.setupAnimation(this, true);
         } else {
             this.buttonAnimation = null;
         }

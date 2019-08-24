@@ -134,14 +134,19 @@ public class ButtonAnimation {
     }
 
     /**
-     * Setup animation with default values (will be taken from getButtonAnimationName)
+     * Setup the button animation
      *
+     * @param def Should we use default value
      * @param parent The button parent
      */
-    public void setupDefault(GUIButton parent) {
-        DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(getButtonAnimationName());
-        if (animation != null) {
-            ButtonAnimationUtils.addAnimation(parent, animation);
+    public void setupAnimation(GUIButton parent, boolean def) {
+        if (def) {
+            DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(getButtonAnimationName());
+            if (animation != null) {
+                ButtonAnimationUtils.addAnimation(parent, animation);
+            }
+        } else {
+            // TODO: 22/08/2019 Non default value maybe?
         }
     }
 }

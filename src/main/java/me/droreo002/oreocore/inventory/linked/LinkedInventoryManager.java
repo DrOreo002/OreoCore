@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +53,9 @@ public class LinkedInventoryManager {
         if (linkable.getInventoryOwner() == null) throw new NullPointerException("InventoryOwner of Linkable cannot be null!");
 
         OreoInventory inventory = linkable.getInventoryOwner();
-        if (linkable.getNextInventoryButton() != null) {
-            setupNavigationButton(linkable.getNextInventoryButton());
-            inventory.addButton(linkable.getNextInventoryButton(), true);
-        }
-        if (linkable.getPreviousInventoryButton() != null) {
-            setupNavigationButton(linkable.getPreviousInventoryButton());
-            inventory.addButton(linkable.getPreviousInventoryButton(), true);
+        for (LinkedButton linkedButton : linkable.getLinkedButtons()) {
+            setupNavigationButton(linkedButton, linkable.getDefaultListenerClickType());
+            inventory.addButton(linkedButton, true);
         }
         inventories.add(linkable);
     }
@@ -68,14 +65,16 @@ public class LinkedInventoryManager {
      *
      * @param button The linked button
      */
-    private void setupNavigationButton(LinkedButton button) {
-        button.setListener(e -> {
+    private void setupNavigationButton(LinkedButton button, ClickType clickType) {
+        button.addListener(clickType, e -> {
             final Player player = (Player) e.getWhoClicked();
             final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
             final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
 
-            targetInventory.getInventoryOwner().open(player);
+            prevInventory.onPreOpenOtherInventory(e, targetInventory);
             targetInventory.onLinkAcceptData(prevInventory.onLinkRequestData(), prevInventory);
+
+            targetInventory.getInventoryOwner().open(player);
             setCurrentInventory(targetInventory.getInventoryName());
         });
     }

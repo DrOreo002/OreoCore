@@ -13,10 +13,9 @@ import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,7 +41,7 @@ public abstract class OreoInventory implements InventoryHolder {
     @Getter
     private final int size;
     @Getter
-    private final InventoryTemplate inventoryTemplate;
+    private InventoryTemplate inventoryTemplate;
     @Getter
     private String title;
     @Getter @Setter
@@ -131,11 +130,13 @@ public abstract class OreoInventory implements InventoryHolder {
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
-                if (button.getListener() != null) button.getListener().onClick(e);
                 if (button instanceof LinkedButton) {
                     LinkedButton linkedButton = (LinkedButton) button;
-                    linkedButton.getExtraListeners().forEach(buttonListener -> buttonListener.onClick(e));
+                    List<GUIButton.ButtonListener> loadedListeners = linkedButton.getButtonListeners().get(e.getClick());
+                    if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                    return;
                 }
+                if (button.getListener() != null) button.getListener().onClick(e);
             }
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
@@ -398,6 +399,19 @@ public abstract class OreoInventory implements InventoryHolder {
                 }
             }
         }
+    }
+
+    /**
+     * Update the template
+     *
+     * @param newTemplate The new / updated template
+     */
+    public void updateTemplate(InventoryTemplate newTemplate) {
+        this.inventoryTemplate = newTemplate;
+        buttons.clear();
+        if (inventoryTemplate != null) buttons.addAll(inventoryTemplate.getAllGUIButtons());
+        getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
+        InventoryUtils.updateInventoryViewer(getInventory());
     }
 
     /**
