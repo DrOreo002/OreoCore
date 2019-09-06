@@ -31,6 +31,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     @Getter
     private final ConfigurationSection layoutItemDatabase;
     @Getter
+    private final Map<String, List<GUIButton>> guiButtons;
+    @Getter
     private int size;
     @Getter
     private boolean paginatedInventory;
@@ -41,8 +43,6 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     @Getter
     private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
     @Getter
-    private Map<String, List<GUIButton>> guiButtons;
-    @Getter
     private String openAnimationName;
 
     /**
@@ -51,6 +51,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     public InventoryTemplate() {
         this.layoutDatabase = null;
         this.layoutItemDatabase = null;
+        this.guiButtons = new HashMap<>();
     }
 
     public InventoryTemplate(ConfigurationSection layoutDatabase) {
@@ -191,7 +192,9 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     public List<GUIButton> getAllGUIButtons() {
         List<GUIButton> all = new ArrayList<>();
         for (Map.Entry ent : guiButtons.entrySet()) {
-            all.addAll((Collection<? extends GUIButton>) ent.getValue());
+            for (GUIButton g : ((List<? extends GUIButton>) ent.getValue())) {
+                all.add(g.clone());
+            }
         }
         return all;
     }

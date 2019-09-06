@@ -3,9 +3,7 @@ package me.droreo002.oreocore.inventory.animation;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
-import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +21,8 @@ public class ButtonAnimation {
     private final String buttonAnimationName;
     @Setter
     private int nextFrame;
+    @Getter
+    private int animationSpeed;
     @Getter @Setter
     private Map<String, Object> buttonMetaData;
     @Getter @Setter
@@ -34,6 +34,7 @@ public class ButtonAnimation {
         if (!buttonDataSection.isSet("animationData")) throw new NullPointerException("Button animation data cannot be null!");
         this.buttonAnimationData = buttonDataSection.getConfigurationSection("animationData");
         this.nextFrame = 0;
+        this.animationSpeed = 1;
         this.repeatingAnimation = false;
         this.frames = new ArrayList<>();
         this.buttonAnimationName = buttonAnimationData.getString("animationName", "none");
@@ -50,6 +51,7 @@ public class ButtonAnimation {
         this.buttonAnimationName = "none";
         this.buttonAnimationData = null;
         this.nextFrame = 0;
+        this.animationSpeed = 1;
         this.repeatingAnimation = false;
         this.frames = new ArrayList<>();
         this.buttonMetaData = new HashMap<>();
@@ -129,8 +131,29 @@ public class ButtonAnimation {
                 }
             }
         }
-        // And then add the next one
-        frames.add(buttonFrame);
+        // Animation speed are basically frame duplicates
+        for (int i = 0; i < this.animationSpeed; i++) {
+            // And then add the next one
+            frames.add(buttonFrame);
+        }
+    }
+
+    /**
+     * Set the animation speed or frame duplicates
+     *
+     * @param animationSpeed The animation speed, the greater the longer animation you get
+     */
+    public void setAnimationSpeed(int animationSpeed) {
+        if (animationSpeed == 0) throw new IllegalStateException("Animation speed cannot be null!");
+        this.animationSpeed = animationSpeed;
+        List<IButtonFrame> newFrame = new ArrayList<>();
+        for (IButtonFrame frame : this.frames) {
+            for (int i = 0; i < animationSpeed; i++) {
+                newFrame.add(frame);
+            }
+        }
+        this.frames.clear();
+        this.frames.addAll(newFrame);
     }
 
     /**

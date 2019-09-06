@@ -66,9 +66,9 @@ public final class CustomSkull {
     }
 
     /**
-     * Get the skull (Warning, will freeze the server if its loaded more than 10 at one time)
+     * Get the skull, can freeze the server
      *
-     * @param url :  The texture URL
+     * @param url The texture URL
      * @return an player head with that texture applied
      */
     public static ItemStack getSkullUrl(final String url) {

@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
+import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomItem;
@@ -234,8 +235,14 @@ public abstract class PaginatedInventory extends OreoInventory {
             }
 
             if (buttons.containsKey(slot)) {
-                GUIButton.ButtonListener lis = buttons.get(slot).getListener();
-                if (lis != null) lis.onClick(e);
+                final GUIButton button = buttons.get(slot);
+                if (button instanceof LinkedButton) {
+                    LinkedButton linkedButton = (LinkedButton) button;
+                    List<GUIButton.ButtonListener> loadedListeners = linkedButton.getButtonListeners().get(e.getClick());
+                    if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                    return;
+                }
+                if (button.getListener() != null) button.getListener().onClick(e);
             }
         }
     }
@@ -300,7 +307,7 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         List<String> temp = new ArrayList<>();
         for (String s : meta.getLore()) {
-            temp.add(s.replaceAll("%currPage", String.valueOf(currentPage + 1)).replaceAll("%totalPage", String.valueOf(totalPage)));
+            temp.add(s.replaceAll("%currPage%", String.valueOf(currentPage + 1)).replaceAll("%totalPage%", String.valueOf(totalPage)));
         }
         meta.setLore(temp);
         infoButtonClone.setItemMeta(meta);
@@ -314,8 +321,8 @@ public abstract class PaginatedInventory extends OreoInventory {
         // Default buttons
         if (this.informationButton == null) {
             this.informationButton = new GUIButton(new CustomItem(UMaterial.PAPER.getItemStack(), "&aInformation", new String[]{
-                    "&7You're currently on page &a%currPage",
-                    "&7there's in total of &a%totalPage &7pages!"
+                    "&7You're currently on page &a%currPage%",
+                    "&7there's in total of &a%totalPage% &7pages!"
             }));
         }
 

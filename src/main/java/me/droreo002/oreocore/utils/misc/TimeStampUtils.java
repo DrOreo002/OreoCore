@@ -238,21 +238,14 @@ public class TimeStampUtils {
 
         long elapsedSeconds = different / secondsInMilli;
 
-        if (addColor) {
-            diffFormat = diffFormat
-                    .replace("%elapsedDays", String.valueOf(elapsedDays))
-                    .replace("%elapsedHours", String.valueOf(elapsedHours))
-                    .replace("%elapsedMinutes", String.valueOf(elapsedMinutes))
-                    .replace("%elapsedSeconds", String.valueOf(elapsedSeconds));
-            return StringUtils.color(diffFormat);
-        } else {
-            diffFormat = diffFormat
-                    .replace("%elapsedDays", String.valueOf(elapsedDays))
-                    .replace("%elapsedHours", String.valueOf(elapsedHours))
-                    .replace("%elapsedMinutes", String.valueOf(elapsedMinutes))
-                    .replace("%elapsedSeconds", String.valueOf(elapsedSeconds));
-            return diffFormat;
-        }
+        diffFormat = diffFormat
+                .replace("%elapsedDays", String.valueOf(elapsedDays))
+                .replace("%elapsedHours", String.valueOf(elapsedHours))
+                .replace("%elapsedMinutes", String.valueOf(elapsedMinutes))
+                .replace("%elapsedSeconds", String.valueOf(elapsedSeconds));
+
+        if (addColor) diffFormat = StringUtils.color(diffFormat);
+        return diffFormat;
     }
 
     public enum Clock {

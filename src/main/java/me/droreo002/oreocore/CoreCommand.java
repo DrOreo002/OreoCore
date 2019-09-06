@@ -6,6 +6,7 @@ import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.normal.InventoryTemplateTest;
 import me.droreo002.oreocore.inventory.test.normal.CustomInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.FirstLinkedInventory;
+import me.droreo002.oreocore.inventory.test.normal.LagInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
 import me.droreo002.oreocore.utils.bridge.OSound;
@@ -114,6 +115,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("test-template-inventory")) {
                     new InventoryTemplateTest(plugin.getPluginConfig().getMemory().getTestTemplate()).open(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-lag-inventory")) {
+                    new LagInventoryTest().open(player);
                     return true;
                 }
             }

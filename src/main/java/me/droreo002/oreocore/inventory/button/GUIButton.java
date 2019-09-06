@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.inventory.button;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
@@ -15,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class GUIButton implements SerializableConfigVariable<GUIButton> {
+public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneable {
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
 
@@ -111,7 +112,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
         if (item == null) {
             setItem(CustomItem.fromSection(itemDataSection, textPlaceholder), true, true);
         } else {
-            setItem(CustomItem.applyPlaceholder(item, textPlaceholder), true, true);
+            setItem(textPlaceholder.format(item), true, true);
         }
     }
 
@@ -164,6 +165,17 @@ public class GUIButton implements SerializableConfigVariable<GUIButton> {
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
         // TODO: 08/08/2019 Save to config
+    }
+
+    @Override
+    public GUIButton clone() {
+        try {
+            GUIButton b = (GUIButton) super.clone();
+            b.setItem(b.getItem().clone(), true, true);
+            return b;
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
+        }
     }
 
     public interface ButtonListener {

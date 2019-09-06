@@ -70,7 +70,7 @@ public class LinkedButton extends GUIButton {
      * @param owner The owner
      */
     public LinkedButton(GUIButton button, String targetInventory, Linkable owner) {
-        super(button.getItem(), button.getInventorySlot());
+        super(button.getItem().clone(), button.getInventorySlot());
         this.buttonListeners = new HashMap<>();
         this.targetInventory = targetInventory;
         this.belongsTo = owner.getInventoryName();

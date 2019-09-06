@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory.linked;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.OreoInventory;
+import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -15,14 +16,21 @@ public class LinkedInventoryManager {
     private final List<Linkable> inventories;
     @Getter @Setter
     private String currentInventory;
-    @Getter @Setter
-    private String firstInventory;
 
     public LinkedInventoryManager(Linkable... linkables) {
         this.inventories = new ArrayList<>();
         this.currentInventory = "";
-        this.firstInventory = "";
         for (Linkable l : linkables) addLinkedInventory(l);
+    }
+
+    /**
+     * Open inventory without specifying inventory
+     * to open
+     *
+     * @param player Target player
+     */
+    public void openInventory(Player player) {
+        openInventory(player, null);
     }
 
     /**
@@ -30,33 +38,48 @@ public class LinkedInventoryManager {
      *
      * @param player Target player
      */
-    public void openInventory(Player player) {
+    public void openInventory(Player player, String firstInventory) {
         if (inventories.isEmpty()) throw new NullPointerException("Inventories cannot be empty!");
-        if (!firstInventory.isEmpty()) {
-            Linkable linkable = getLinkedInventory(firstInventory);
-            setCurrentInventory(linkable.getInventoryName());
-            linkable.getInventoryOwner().open(player);
-        } else {
-            Linkable linkable = inventories.get(0);
-            setCurrentInventory(linkable.getInventoryName());
-            linkable.getInventoryOwner().open(player); // Force open on index 0
+        Linkable linkable = (firstInventory == null) ? inventories.get(0) : getLinkedInventory(firstInventory);
+        setCurrentInventory(linkable.getInventoryName());
+        linkable.getInventoryOwner().open(player);
+    }
+
+    /**
+     * Setup the buttons
+     *
+     * @param linkable The linkable inventory
+     */
+    private void setupButtons(Linkable linkable) {
+        OreoInventory inventory = linkable.getInventoryOwner();
+        for (LinkedButton linkedButton : linkable.getLinkedButtons()) {
+            setupNavigationButton(linkedButton, linkable.getDefaultListenerClickType());
+            if (inventory instanceof PaginatedInventory) {
+                ((PaginatedInventory) inventory).addPaginatedButton(linkedButton);
+            } else {
+                inventory.addButton(linkedButton, true);
+            }
         }
+    }
+
+    /**
+     * Add the inventories
+     *
+     * @param linkable The linkable inventories
+     */
+    public void addLinkedInventory(Linkable... linkable) {
+        for (Linkable l : linkable) addLinkedInventory(l);
     }
 
     /**
      * Add a inventory
      *
-     * @param linkable The inventory linkable inventory
+     * @param linkable The linkable inventory
      */
     public void addLinkedInventory(Linkable linkable) {
         if (linkable == null) throw new NullPointerException("Linkable cannot be null!");
         if (linkable.getInventoryOwner() == null) throw new NullPointerException("InventoryOwner of Linkable cannot be null!");
-
-        OreoInventory inventory = linkable.getInventoryOwner();
-        for (LinkedButton linkedButton : linkable.getLinkedButtons()) {
-            setupNavigationButton(linkedButton, linkable.getDefaultListenerClickType());
-            inventory.addButton(linkedButton, true);
-        }
+        setupButtons(linkable);
         inventories.add(linkable);
     }
 

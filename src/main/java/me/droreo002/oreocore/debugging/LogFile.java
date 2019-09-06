@@ -114,9 +114,9 @@ public abstract class LogFile {
         @Override
         public String format(LogRecord record) {
             return logFormat
-                    .replace("%date", utils.getCurrentTimestampString())
-                    .replace("%logLevel", String.valueOf(record.getLevel()))
-                    .replace("%message", formatMessage(record)) + System.lineSeparator();
+                    .replace("%date%", utils.getCurrentTimestampString())
+                    .replace("%logLevel%", String.valueOf(record.getLevel()))
+                    .replace("%message%", formatMessage(record)) + System.lineSeparator();
         }
 
         public String getHead(Handler h) {
@@ -176,6 +176,6 @@ public abstract class LogFile {
      * @return : The log format
      */
     public String getLogFormat() {
-        return "%date [LOG] %logLevel %message";
+        return "%date% [LOG] %logLevel% %message%";
     }
 }

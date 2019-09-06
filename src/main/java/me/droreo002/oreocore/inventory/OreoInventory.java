@@ -41,9 +41,9 @@ public abstract class OreoInventory implements InventoryHolder {
     @Getter
     private final int size;
     @Getter
-    private InventoryTemplate inventoryTemplate;
-    @Getter
     private String title;
+    @Getter @Setter
+    private InventoryTemplate inventoryTemplate;
     @Getter @Setter
     private List<GUIButton> buttons;
     @Getter @Setter
@@ -293,7 +293,7 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     /**
-     * Add a button into the inventory
+     * Add a button into the inventory (Will be updated when inventory is opened)
      *
      * @param guiButton The button to add
      * @param replace Should we replace if it exists already?
@@ -311,6 +311,17 @@ public abstract class OreoInventory implements InventoryHolder {
             if (isHasButton(guiButton.getInventorySlot())) return;
             getButtons().add(guiButton);
         }
+    }
+
+    /**
+     * Force set button, will force inventory to update
+     *
+     * @param guiButton The button to add
+     */
+    public void forceAddButton(GUIButton guiButton) {
+        Validate.notNull(guiButton, "Button cannot be null!");
+        addButton(guiButton, true);
+        inventory.setItem(guiButton.getInventorySlot(), guiButton.getItem());
     }
 
     /**
@@ -377,7 +388,10 @@ public abstract class OreoInventory implements InventoryHolder {
     public void setup() {
         final InventoryTemplate template = getInventoryTemplate();
         if (template != null) {
-            buttons.addAll(template.getAllGUIButtons());
+            // We ignore the already added button
+            for (GUIButton button : template.getAllGUIButtons()) {
+                addButton(button, false);
+            }
         }
 
         getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
@@ -399,19 +413,6 @@ public abstract class OreoInventory implements InventoryHolder {
                 }
             }
         }
-    }
-
-    /**
-     * Update the template
-     *
-     * @param newTemplate The new / updated template
-     */
-    public void updateTemplate(InventoryTemplate newTemplate) {
-        this.inventoryTemplate = newTemplate;
-        buttons.clear();
-        if (inventoryTemplate != null) buttons.addAll(inventoryTemplate.getAllGUIButtons());
-        getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
-        InventoryUtils.updateInventoryViewer(getInventory());
     }
 
     /**

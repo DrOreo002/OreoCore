@@ -300,7 +300,6 @@ public class CustomItem extends ItemStack {
         List<String> lore = section.getStringList("lore");
 
         if (material.equals(UMaterial.AIR.getMaterial().toString())) return new ItemStack(UMaterial.AIR.getMaterial());
-        applyPlaceholder(placeholder, displayName, lore);
 
         UMaterial uMaterial = UMaterial.match(material);
         if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
@@ -319,11 +318,13 @@ public class CustomItem extends ItemStack {
 
         ItemMeta meta = res.getItemMeta();
         if (meta == null) return res;
-        if (displayName != null) meta.setDisplayName(color(displayName.toString()));
-        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
         if (glow) meta.setUnbreakable(true);
         if (hideAtt) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+        meta.setDisplayName(color(displayName.toString()));
+        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
         res.setItemMeta(meta);
+
+       if (placeholder != null) placeholder.format(res); // Format the placeholder
 
         return res;
     }
@@ -336,13 +337,14 @@ public class CustomItem extends ItemStack {
      * @param placeholder : The placeholder, leave null for no placeholder. This will try to replace the specified editable enum
      *                     into the specified string from the TextPlaceholder class
      * @return a new ItemStack if its valid section. This is a non nullable method
+     * @deprecated Method is prolly broken. Need further testing
      */
+    @Deprecated
     public static ItemStack applyFromSection(ItemStack item, ConfigurationSection section, TextPlaceholder placeholder) {
         if (section == null) throw new NullPointerException("Section cannot be null!");
 
         StringBuilder displayName = new StringBuilder(section.getString("name"));
         List<String> lore = (section.getStringList("lore") == null) ? new ArrayList<>() : section.getStringList("lore");
-        applyPlaceholder(placeholder, displayName, lore);
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
@@ -351,104 +353,9 @@ public class CustomItem extends ItemStack {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
 
-        return item;
-    }
-
-    /**
-     * Apply placeholder to item
-     *
-     * @param item The item
-     * @param placeholder The placeholder
-     * @return The modified item
-     */
-    public static ItemStack applyPlaceholder(ItemStack item, TextPlaceholder placeholder) {
-        StringBuilder displayName = new StringBuilder(ItemUtils.getName(item, true));
-        List<String> lore = ItemUtils.getLore(item, false);
-        applyPlaceholder(placeholder, displayName, lore);
-
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return item;
-        if (displayName != null) meta.setDisplayName(color(displayName.toString()));
-        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
-        item.setItemMeta(meta);
+        placeholder.format(item);
 
         return item;
-    }
-
-    /**
-     * Apply the placeholder
-     *
-     * @param placeholder The placeholder
-     * @param displayName The item display name
-     * @param lore The item lore
-     */
-    private static void applyPlaceholder(TextPlaceholder placeholder, StringBuilder displayName, List<String> lore) {
-        if (placeholder != null) {
-            for (TextPlaceholder place : placeholder.getPlaceholders()) {
-                boolean doLore = false;
-                boolean doDisplay = false;
-
-                switch (place.getType()) {
-                    case DISPLAY_AND_LORE:
-                        doLore = true;
-                        doDisplay = true;
-                        break;
-                    case DISPLAY_NAME:
-                        doDisplay = true;
-                        break;
-                    case LORE:
-                        doLore = true;
-                        break;
-                    default: break;
-                }
-
-                if (doLore) {
-                    if (!lore.isEmpty()) {
-                        for (TextPlaceholder t : place.getPlaceholders()) {
-                            List<String> toAsLore = ListUtils.toList(t.getTo(), ListUtils.DEFAULT_SPLIT_MARK);
-                            if (!toAsLore.isEmpty()) {
-                                List<Integer> index = new ArrayList<>();
-                                for (int i = 0; i < lore.size(); i++) {
-                                    final String s = lore.get(i);
-                                    if (s.contains(t.getFrom())) {
-                                        lore.set(i, s.replace(t.getFrom(), ""));
-                                        index.add(i);
-                                    }
-                                }
-
-                                for (int i : index) {
-                                    int start = i + 1;
-                                    try {
-                                        lore.addAll(start, toAsLore);
-                                    } catch (IndexOutOfBoundsException e) {
-                                        lore.add(" ");
-                                        lore.addAll(start, toAsLore);
-                                    }
-                                }
-                            } else {
-                                List<String> def = new ArrayList<>(lore);
-                                lore.clear();
-                                lore.addAll(def.stream().map(s -> {
-                                    if (s.contains(t.getFrom())) return s.replace(t.getFrom(), t.getTo());
-                                    return s;
-                                }).collect(Collectors.toList()));
-                            }
-                        }
-                    }
-                }
-                if (doDisplay) {
-                    if (displayName != null) {
-                        String displayAsString = displayName.toString();
-                        for (TextPlaceholder t : place.getPlaceholders()) {
-                            displayAsString = displayAsString.replace(t.getFrom(), t.getTo());
-                        }
-                        displayName.delete(0, displayName.length()); // Clear the StringBuilder
-                        displayName.append(displayAsString);
-                    }
-                }
-            }
-        }
     }
 
     /**
