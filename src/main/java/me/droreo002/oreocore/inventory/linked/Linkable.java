@@ -40,17 +40,6 @@ public interface Linkable {
     default void onPreOpenOtherInventory(InventoryClickEvent event, Linkable targetInventory) {}
 
     /**
-     * Get the default listener's ClickType
-     * default are LEFT. This will change what ClickType is processed
-     * when clicking LinkedButton
-     *
-     * @return the ClickType
-     */
-    default ClickType getDefaultListenerClickType() {
-        return ClickType.LEFT;
-    }
-
-    /**
      * Get the Inventory owner
      *
      * @return The OreoInventory instance

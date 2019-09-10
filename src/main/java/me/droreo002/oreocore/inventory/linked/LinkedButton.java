@@ -16,8 +16,6 @@ import java.util.Map;
 
 public class LinkedButton extends GUIButton {
 
-    @Getter
-    private final Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter @Setter
     private String belongsTo;
     @Getter @Setter
@@ -30,7 +28,6 @@ public class LinkedButton extends GUIButton {
      */
     public LinkedButton(ItemStack item, String targetInventory, Linkable owner) {
         super(item);
-        this.buttonListeners = new HashMap<>();
         this.belongsTo = owner.getInventoryName();
         this.targetInventory = targetInventory;
     }
@@ -44,7 +41,6 @@ public class LinkedButton extends GUIButton {
      */
     public LinkedButton(ConfigurationSection section, TextPlaceholder textPlaceholder, String targetInventory, Linkable owner) {
         super(section, textPlaceholder);
-        this.buttonListeners = new HashMap<>();
         this.belongsTo = owner.getInventoryName();
         this.targetInventory = targetInventory;
     }
@@ -57,7 +53,6 @@ public class LinkedButton extends GUIButton {
      */
     public LinkedButton(ItemStack item, int inventorySlot, String targetInventory, Linkable owner) {
         super(item, inventorySlot);
-        this.buttonListeners = new HashMap<>();
         this.belongsTo = owner.getInventoryName();
         this.targetInventory = targetInventory;
     }
@@ -71,27 +66,10 @@ public class LinkedButton extends GUIButton {
      */
     public LinkedButton(GUIButton button, String targetInventory, Linkable owner) {
         super(button.getItem().clone(), button.getInventorySlot());
-        this.buttonListeners = new HashMap<>();
         this.targetInventory = targetInventory;
         this.belongsTo = owner.getInventoryName();
 
         setAnimated(button.isAnimated());
         setButtonAnimation(button.getButtonAnimation());
-    }
-
-    /**
-     * Add a new extra listener
-     *
-     * @param buttonListener The extra listener
-     */
-    public LinkedButton addListener(ClickType clickType, ButtonListener buttonListener) {
-        if (buttonListeners.containsKey(clickType)) {
-            List<ButtonListener> val = buttonListeners.get(clickType);
-            val.add(buttonListener);
-            buttonListeners.put(clickType, val);
-        } else {
-            buttonListeners.put(clickType, new ArrayList<>(Collections.singletonList(buttonListener)));
-        }
-        return this;
     }
 }

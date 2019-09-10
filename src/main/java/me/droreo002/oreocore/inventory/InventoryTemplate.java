@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.ItemUtils;
@@ -26,12 +27,12 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     public static final String PAGINATED_PB_KEY = "P"; // PreviousButton
     public static final String PAGINATED_IB_KEY = "I"; // InformationButton
 
+    private final Map<String, List<GUIButton>> guiButtons; // No getter, because GUI is not capitalized by lombok
+
     @Getter
     private final ConfigurationSection layoutDatabase;
     @Getter
     private final ConfigurationSection layoutItemDatabase;
-    @Getter
-    private final Map<String, List<GUIButton>> guiButtons;
     @Getter
     private int size;
     @Getter
@@ -117,10 +118,10 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @param buttonKey The button key or identifier
      * @param listener The listener
      */
-    public void applyListener(String buttonKey, GUIButton.ButtonListener listener) {
+    public void applyListener(String buttonKey, ButtonListener listener) {
         if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
-            button.setListener(listener);
+            button.addListener(listener);
         }
     }
 
@@ -207,6 +208,15 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      */
     public boolean isKeyAvailable(String key) {
         return guiButtons.containsKey(key);
+    }
+
+    /**
+     * Get all gui buttons map
+     *
+     * @return The gui buttons map
+     */
+    public Map<String, List<GUIButton>> getGUIButtons() {
+        return guiButtons;
     }
 
     @Override

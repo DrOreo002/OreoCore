@@ -7,6 +7,7 @@ import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.animation.open.FillAnimation;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.animation.open.WaveAnimation;
+import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
 import me.droreo002.oreocore.inventory.linked.LinkedButton;
@@ -20,6 +21,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -130,13 +132,8 @@ public abstract class OreoInventory implements InventoryHolder {
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
-                if (button instanceof LinkedButton) {
-                    LinkedButton linkedButton = (LinkedButton) button;
-                    List<GUIButton.ButtonListener> loadedListeners = linkedButton.getButtonListeners().get(e.getClick());
-                    if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
-                    return;
-                }
-                if (button.getListener() != null) button.getListener().onClick(e);
+                List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
+                if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
             }
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
@@ -377,7 +374,7 @@ public abstract class OreoInventory implements InventoryHolder {
         for (int row : rows) {
             if (row < 0) throw new IllegalStateException("Row cannot be 0!");
             for (int i = row * 9; i < (row * 9) + 9; i++) {
-                addButton(new GUIButton(border, i).setListener(GUIButton.CLOSE_LISTENER), replace);
+                addButton(new GUIButton(border, i).addListener(GUIButton.CLOSE_LISTENER), replace);
             }
         }
     }

@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory.paginated;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
+import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.LinkedButton;
@@ -11,7 +12,9 @@ import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -216,35 +219,38 @@ public abstract class PaginatedInventory extends OreoInventory {
         super.onClickHandler(e); // This will handle the normal button click
         int slot = e.getSlot();
 
-        // Paginated button listener
-        if (!getPaginatedButtons().isEmpty()) {
-            // Convert to a HashMap where key is the slot
-            Map<Integer, GUIButton> buttons = new HashMap<>();
-            List<GUIButton> list = getCurrentPageButtons();
-            int currSlot = 0;
-            for (int i : getPaginatedButtonSlots()) {
-                GUIButton b;
-                try {
-                    b = list.get(currSlot);
-                } catch (IndexOutOfBoundsException e1) {
-                    currSlot++;
-                    continue;
-                }
-                buttons.put(i, b);
-                currSlot++;
-            }
+        GUIButton button = getPaginatedButton(slot);
+        if (button != null) {
+            List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
+            if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+        }
+    }
 
-            if (buttons.containsKey(slot)) {
-                final GUIButton button = buttons.get(slot);
-                if (button instanceof LinkedButton) {
-                    LinkedButton linkedButton = (LinkedButton) button;
-                    List<GUIButton.ButtonListener> loadedListeners = linkedButton.getButtonListeners().get(e.getClick());
-                    if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
-                    return;
-                }
-                if (button.getListener() != null) button.getListener().onClick(e);
+    /**
+     * Check if the item inside the slot is a paginated button
+     *
+     * @param slot The slot to check
+     * @return true if paginated button, false otherwise
+     */
+    public boolean isPaginatedButton(int slot) {
+        return getPaginatedButton(slot) != null;
+    }
+
+    /**
+     * Get paginated button by slot
+     *
+     * @param slot The slot fo get
+     * @return the paginated button as GUIButton if found, null otherwise
+     */
+    public GUIButton getPaginatedButton(int slot) {
+        List<GUIButton> buttons = getCurrentPageButtons();
+
+        for (GUIButton button : buttons) {
+            if (button.getInventorySlot() == slot) {
+                return button;
             }
         }
+        return null;
     }
 
     /**
@@ -334,11 +340,11 @@ public abstract class PaginatedInventory extends OreoInventory {
             this.nextPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(NEXT_ARROW), "&aNext Page", new String[]{"&7Click me!"}));
         }
 
-        this.previousPageButton.setListener(event -> {
+        this.previousPageButton.addListener(event -> {
             Player player = (Player) event.getWhoClicked();
             prevPage(player);
         });
-        this.nextPageButton.setListener(event -> {
+        this.nextPageButton.addListener(event -> {
             Player player = (Player) event.getWhoClicked();
             nextPage(player);
         });

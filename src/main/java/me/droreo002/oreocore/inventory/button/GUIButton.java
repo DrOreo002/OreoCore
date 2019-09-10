@@ -12,9 +12,16 @@ import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneable {
 
@@ -24,6 +31,8 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     private int inventorySlot;
     @Getter @Setter
     private ButtonAnimation buttonAnimation;
+    @Getter @Setter
+    private Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter
     private boolean animated;
     @Getter
@@ -32,8 +41,6 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     private ConfigurationSection itemDataSection;
     @Getter
     private ItemStack item;
-    @Getter
-    private ButtonListener listener;
     @Getter
     private SoundObject soundOnClick;
 
@@ -49,6 +56,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      */
     public GUIButton(ItemStack item) {
         this.item = item;
+        this.buttonListeners = new HashMap<>();
     }
 
     /**
@@ -63,6 +71,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         this.inventorySlot = section.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
         this.itemDataSection = section;
+        this.buttonListeners = new HashMap<>();
         setAnimated(section.getBoolean("animated", false));
 
         if (section.getConfigurationSection("soundOnClick") != null)
@@ -78,6 +87,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     public GUIButton(ItemStack item, int inventorySlot) {
         this.item = item;
         this.inventorySlot = inventorySlot;
+        this.buttonListeners = new HashMap<>();
     }
 
     /**
@@ -117,17 +127,6 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     }
 
     /**
-     * Set the listener
-     *
-     * @param listener The on click listener
-     * @return The GUIButton
-     */
-    public GUIButton setListener(ButtonListener listener) {
-        this.listener = listener;
-        return this;
-    }
-
-    /**
      * Set the sound on click
      *
      * @param soundOnClick The sound
@@ -146,7 +145,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     public void setAnimated(boolean animated) {
         this.animated = animated;
         if (animated) {
-            if (itemDataSection != null) {
+            if (itemDataSection != null && itemDataSection.contains("animationData")) {
                 this.buttonAnimation = new ButtonAnimation(itemDataSection, item);
             } else {
                 this.buttonAnimation = new ButtonAnimation(item);
@@ -157,16 +156,52 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         }
     }
 
+    /**
+     * Add a listener
+     *
+     * @param buttonListener The ButtonListener to add
+     * @return GUIButton, modified.
+     */
+    public GUIButton addListener(ButtonListener buttonListener) {
+        final ClickType clickType = buttonListener.getClickType();
+        if (buttonListeners.containsKey(clickType)) {
+            List<ButtonListener> val = buttonListeners.get(clickType);
+            val.add(buttonListener);
+            buttonListeners.put(clickType, val);
+        } else {
+            buttonListeners.put(clickType, new ArrayList<>(Collections.singletonList(buttonListener)));
+        }
+        return this;
+    }
+
+
+    /**
+     * Get from config
+     *
+     * @param section The configuration section
+     * @return The GUIButton from config
+     */
     @Override
     public GUIButton getFromConfig(ConfigurationSection section) {
         return new GUIButton(section, null);
     }
 
+    /**
+     * Save button to config
+     *
+     * @param path The path
+     * @param config The config
+     */
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
         // TODO: 08/08/2019 Save to config
     }
 
+    /**
+     * Clone the GUIButton
+     *
+     * @return The GUIButton
+     */
     @Override
     public GUIButton clone() {
         try {
@@ -176,15 +211,5 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }
-    }
-
-    public interface ButtonListener {
-
-        /**
-         * Called when button is clicked
-         *
-         * @param e The inventory click event
-         */
-        void onClick(InventoryClickEvent e);
     }
 }

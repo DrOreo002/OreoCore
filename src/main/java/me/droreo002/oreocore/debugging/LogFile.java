@@ -3,13 +3,15 @@ package me.droreo002.oreocore.debugging;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.utils.io.FileUtils;
-import me.droreo002.oreocore.utils.misc.TimeStampUtils;
+import me.droreo002.oreocore.utils.misc.TimestampBuilder;
+import me.droreo002.oreocore.utils.misc.TimestampUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.logging.*;
 public abstract class LogFile {
 
     @Getter
-    private final TimeStampUtils utils;
+    private final TimestampBuilder timestampBuilder;
     @Getter
     private final Logger logger;
     @Getter
@@ -33,7 +35,7 @@ public abstract class LogFile {
 
     public LogFile(JavaPlugin owner) {
         this.owner = owner;
-        this.utils = new TimeStampUtils((getTimestampFormat().contains("/")) ? getTimestampFormat().replace("/", "-") : getTimestampFormat());
+        this.timestampBuilder = TimestampBuilder.builder(validateFormat());
         this.logger = Logger.getLogger(getLoggerName());
         this.currentLogFileName = getNextLogName();
         setup();
@@ -83,15 +85,15 @@ public abstract class LogFile {
     private String getNextLogName() {
         final File logsFolder = getLogFolder();
 
-        if (logsFolder.listFiles() == null) return utils.getDateFormat().format(new Date()) + "_0";
+        if (logsFolder.listFiles() == null) return timestampBuilder.getDateFormat().format(new Date()) + "_0";
         File[] logs = logsFolder.listFiles();
         List<File> sameFile = new ArrayList<>();
         for (File f : logs) {
             String fileName = FileUtils.getFileName(f, false);
-            String date = utils.getDateFormat().format(new Date());
+            String date = timestampBuilder.getDateFormat().format(new Date());
             if (fileName.contains(date)) sameFile.add(f);
         }
-        String currentFileName = utils.getDateFormat().format(new Date());
+        String currentFileName = timestampBuilder.getDateFormat().format(new Date());
         int currentNumber = 0;
         for (File f : sameFile) {
             String fileName = FileUtils.getFileName(f, false);
@@ -114,7 +116,7 @@ public abstract class LogFile {
         @Override
         public String format(LogRecord record) {
             return logFormat
-                    .replace("%date%", utils.getCurrentTimestampString())
+                    .replace("%date%", timestampBuilder.buildAsString())
                     .replace("%logLevel%", String.valueOf(record.getLevel()))
                     .replace("%message%", formatMessage(record)) + System.lineSeparator();
         }
@@ -132,13 +134,22 @@ public abstract class LogFile {
 
         @Override
         public void run() {
-            Timestamp before = utils.convertStringToTimestamp(currentLogFileName.split("_")[0]);
-            Timestamp now = utils.getCurrentTimestamp();
+            Timestamp before = TimestampUtils.convertStringToTimestamp(currentLogFileName.split("_")[0], new SimpleDateFormat(validateFormat()));
+            Timestamp now = timestampBuilder.build();
             if (before.after(now)) {
                 currentLogFileName = getNextLogName();
                 setup();
             }
         }
+    }
+
+    /**
+     * Validate the Timestamp format
+     *
+     * @return The validated format
+     */
+    private String validateFormat() {
+        return (getTimestampFormat().contains("/")) ? getTimestampFormat().replace("/", "-") : getTimestampFormat();
     }
 
     /**

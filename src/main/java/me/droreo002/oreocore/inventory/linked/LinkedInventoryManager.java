@@ -5,7 +5,6 @@ import lombok.Setter;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class LinkedInventoryManager {
     private void setupButtons(Linkable linkable) {
         OreoInventory inventory = linkable.getInventoryOwner();
         for (LinkedButton linkedButton : linkable.getLinkedButtons()) {
-            setupNavigationButton(linkedButton, linkable.getDefaultListenerClickType());
+            setupNavigationButton(linkedButton);
             if (inventory instanceof PaginatedInventory) {
                 ((PaginatedInventory) inventory).addPaginatedButton(linkedButton);
             } else {
@@ -88,8 +87,9 @@ public class LinkedInventoryManager {
      *
      * @param button The linked button
      */
-    private void setupNavigationButton(LinkedButton button, ClickType clickType) {
-        button.addListener(clickType, e -> {
+    private void setupNavigationButton(LinkedButton button) {
+        if (button.getTargetInventory() == null) return; // Don't setup
+        button.addListener(e -> { // Default ClickType would be left
             final Player player = (Player) e.getWhoClicked();
             final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
             final Linkable prevInventory = getLinkedInventory(getCurrentInventory());

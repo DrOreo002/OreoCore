@@ -20,7 +20,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
         setSearchRow(2, false, null);
 
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
-        button.setListener(GUIButton.CLOSE_LISTENER);
+        button.addListener(GUIButton.CLOSE_LISTENER);
         button.setAnimated(true);
 
         ButtonAnimation animation = button.getButtonAnimation();

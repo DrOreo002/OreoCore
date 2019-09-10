@@ -13,6 +13,6 @@ public class CustomInventoryTest extends CustomInventory {
 
     public CustomInventoryTest() {
         super(27, "CustomInventory");
-        addButton(new GUIButton(UMaterial.DIRT.getItemStack(), 5).setListener(e -> System.out.println("Ouch!")), true);
+        addButton(new GUIButton(UMaterial.DIRT.getItemStack(), 5).addListener(e -> System.out.println("Ouch!")), true);
     }
 }
