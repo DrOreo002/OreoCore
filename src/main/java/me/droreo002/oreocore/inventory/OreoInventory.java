@@ -391,7 +391,10 @@ public abstract class OreoInventory implements InventoryHolder {
             }
         }
 
-        getButtons().forEach(guiButton -> getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem()));
+        getButtons().forEach(guiButton -> {
+            if (getInventory().getItem(guiButton.getInventorySlot()) != null) return; // Ignore filled
+            getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
+        });
         if (!getGroupedButtons().isEmpty()) {
             for (GroupedButton groupedButton : getGroupedButtons()) {
                 if (groupedButton.isShouldOverrideOtherButton()) { // Remove every single thing inside

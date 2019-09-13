@@ -95,7 +95,7 @@ public class TimestampBuilder {
      * @return TimestampBuilder
      */
     public TimestampBuilder addTime(int value, Clock clock) {
-        if (value <= 0) throw new IllegalStateException("Value cannot be less than 0!");
+        if (value <= 0) throw new IllegalStateException("Value cannot be less or equal than 0!");
         switch (clock) {
             case SECOND:
                 this.timestamp = addSecond(value, timestamp);
@@ -121,7 +121,7 @@ public class TimestampBuilder {
      * @return TimestampBuilder
      */
     public TimestampBuilder decreaseTime(int value, Clock clock) {
-        if (value <= 0) throw new IllegalStateException("Value cannot be less than 0!");
+        if (value <= 0) throw new IllegalStateException("Value cannot be less or equal than 0!");
         value = -value; // Set to negative.
         switch (clock) {
             case SECOND:

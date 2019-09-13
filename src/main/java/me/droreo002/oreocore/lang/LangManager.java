@@ -138,4 +138,10 @@ public class LangManager extends CustomConfig {
     public ConfigurationSection asSection(String path) {
         return getConfig().getConfigurationSection(path);
     }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        loadData();
+    }
 }

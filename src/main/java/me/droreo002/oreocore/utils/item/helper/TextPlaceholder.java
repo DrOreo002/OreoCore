@@ -133,8 +133,9 @@ public class TextPlaceholder {
      * @return The modified item
      */
     public ItemStack format(ItemStack item) {
-        StringBuilder displayName = new StringBuilder(ItemUtils.getName(item, true));
-        List<String> lore = ItemUtils.getLore(item, false);
+        ItemStack cloned = item.clone();
+        StringBuilder displayName = new StringBuilder(ItemUtils.getName(cloned, true));
+        List<String> lore = ItemUtils.getLore(cloned, false);
 
         if (!getPlaceholders().isEmpty()) {
             for (TextPlaceholder place : getPlaceholders()) {
@@ -164,15 +165,15 @@ public class TextPlaceholder {
                 }
             }
 
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null) return item;
+            ItemMeta meta = cloned.getItemMeta();
+            if (meta == null) return cloned;
             if (displayName != null) meta.setDisplayName(color(displayName.toString()));
             meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
-            item.setItemMeta(meta);
+            cloned.setItemMeta(meta);
         }
 
-        return item;
+        return cloned;
     }
 
     /**

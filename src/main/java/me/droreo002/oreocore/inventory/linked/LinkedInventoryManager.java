@@ -2,8 +2,6 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.inventory.OreoInventory;
-import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -50,15 +48,20 @@ public class LinkedInventoryManager {
      * @param linkable The linkable inventory
      */
     private void setupButtons(Linkable linkable) {
-        OreoInventory inventory = linkable.getInventoryOwner();
-        for (LinkedButton linkedButton : linkable.getLinkedButtons()) {
-            setupNavigationButton(linkedButton);
-            if (inventory instanceof PaginatedInventory) {
-                ((PaginatedInventory) inventory).addPaginatedButton(linkedButton);
-            } else {
-                inventory.addButton(linkedButton, true);
-            }
-        }
+        linkable.getLinkedButtons().forEach(button -> {
+            if (button.getTargetInventory() == null) return; // Don't setup
+            button.addListener(e -> { // Default ClickType would be left
+                final Player player = (Player) e.getWhoClicked();
+                final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
+                final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
+
+                prevInventory.onPreOpenOtherInventory(e, targetInventory);
+                targetInventory.onLinkAcceptData(prevInventory.onLinkRequestData(), prevInventory);
+
+                targetInventory.getInventoryOwner().open(player);
+                setCurrentInventory(targetInventory.getInventoryName());
+            });
+        });
     }
 
     /**
@@ -80,26 +83,6 @@ public class LinkedInventoryManager {
         if (linkable.getInventoryOwner() == null) throw new NullPointerException("InventoryOwner of Linkable cannot be null!");
         setupButtons(linkable);
         inventories.add(linkable);
-    }
-
-    /**
-     * Setup the button
-     *
-     * @param button The linked button
-     */
-    private void setupNavigationButton(LinkedButton button) {
-        if (button.getTargetInventory() == null) return; // Don't setup
-        button.addListener(e -> { // Default ClickType would be left
-            final Player player = (Player) e.getWhoClicked();
-            final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
-            final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
-
-            prevInventory.onPreOpenOtherInventory(e, targetInventory);
-            targetInventory.onLinkAcceptData(prevInventory.onLinkRequestData(), prevInventory);
-
-            targetInventory.getInventoryOwner().open(player);
-            setCurrentInventory(targetInventory.getInventoryName());
-        });
     }
 
     /**
