@@ -1,9 +1,9 @@
 package me.droreo002.oreocore.inventory.test.animation;
 
-import me.droreo002.oreocore.inventory.animation.ButtonAnimation;
+import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.inventory.animation.IButtonFrame;
+import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;

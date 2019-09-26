@@ -2,22 +2,27 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LinkedInventoryManager {
 
     @Getter
     private final List<Linkable> inventories;
+    @Getter
+    private final LinkedDatas linkedDatas;
     @Getter @Setter
     private String currentInventory;
 
     public LinkedInventoryManager(Linkable... linkables) {
         this.inventories = new ArrayList<>();
         this.currentInventory = "";
-        for (Linkable l : linkables) addLinkedInventory(l);
+        this.linkedDatas = new LinkedDatas();
+        addLinkedInventory(linkables);
     }
 
     /**
@@ -55,9 +60,9 @@ public class LinkedInventoryManager {
                 final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
                 final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
 
-                prevInventory.onPreOpenOtherInventory(e, targetInventory);
-                targetInventory.onLinkAcceptData(prevInventory.onLinkRequestData(), prevInventory);
-
+                linkedDatas.addAll(prevInventory.getInventoryData());
+                targetInventory.acceptData(linkedDatas, prevInventory);
+                targetInventory.onLinkOpen(prevInventory);
                 targetInventory.getInventoryOwner().open(player);
                 setCurrentInventory(targetInventory.getInventoryName());
             });

@@ -4,24 +4,23 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
-import me.droreo002.oreocore.inventory.animation.open.FillAnimation;
+import me.droreo002.oreocore.inventory.animation.open.DiagonalFill;
+import me.droreo002.oreocore.inventory.animation.open.ItemFill;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
-import me.droreo002.oreocore.inventory.animation.open.WaveAnimation;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
+import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
-import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
-import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -73,12 +72,15 @@ public abstract class OreoInventory implements InventoryHolder {
 
         if (!template.getOpenAnimationName().equals("none")) {
             InventoryAnimation.InventoryAnimationBuilder animation = InventoryAnimation.builder();
-            switch (template.getOpenAnimationName().toLowerCase()) {
-                case "fillanimation":
-                    animation.openAnimation(new FillAnimation(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
+            switch (OpenAnimations.valueOf(template.getOpenAnimationName())) {
+                case DIAGONAL_FILL_ANIMATION:
+                    animation.openAnimation(new DiagonalFill());
                     break;
-                case "waveanimation":
-                    animation.openAnimation(new WaveAnimation(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
+                case ITEM_FILL_ANIMATION:
+                    animation.openAnimation(new ItemFill(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
+                    break;
+                case ITEM_WAVE_ANIMATION:
+                    animation.openAnimation(new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
                     break;
             }
             setInventoryAnimation(animation.build());

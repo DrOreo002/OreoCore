@@ -1,11 +1,11 @@
 package me.droreo002.oreocore.inventory.test.normal;
 
-import me.droreo002.oreocore.inventory.CustomInventory;
+import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.Linkable;
+import me.droreo002.oreocore.inventory.linked.LinkedData;
+import me.droreo002.oreocore.inventory.linked.LinkedDatas;
 
-import java.util.Map;
-
-public class SecondLinkedInventory extends CustomInventory implements Linkable {
+public class SecondLinkedInventory extends OreoInventory implements Linkable {
 
     public SecondLinkedInventory() {
         super(18, "Second Inventory");
@@ -17,7 +17,9 @@ public class SecondLinkedInventory extends CustomInventory implements Linkable {
     }
 
     @Override
-    public void onLinkAcceptData(Map<String, Object> data, Linkable previousInventory) {
-        System.out.println("Received data from inventory (" + previousInventory.getInventoryName() + ") " + data.get("Hello"));
+    public void acceptData(LinkedDatas data, Linkable previousInventory) {
+        LinkedData linkedData = data.getData("hello");
+        if (linkedData == null) return;
+        System.out.println((String) linkedData.getDataValue());
     }
 }

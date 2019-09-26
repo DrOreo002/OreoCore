@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.inventory.animation;
+package me.droreo002.oreocore.inventory.animation.button;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -164,9 +164,11 @@ public class ButtonAnimation {
      */
     public void setupAnimation(GUIButton parent, boolean def) {
         if (def) {
-            DefaultButtonAnimation animation = DefaultButtonAnimation.fromString(getButtonAnimationName());
-            if (animation != null) {
+            try {
+                DefaultButtonAnimation animation = DefaultButtonAnimation.valueOf(getButtonAnimationName());
                 ButtonAnimationUtils.addAnimation(parent, animation);
+            } catch (Exception e) {
+                // Ignored
             }
         } else {
             // TODO: 22/08/2019 Non default value maybe?

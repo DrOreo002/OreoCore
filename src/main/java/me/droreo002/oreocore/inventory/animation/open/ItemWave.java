@@ -1,8 +1,6 @@
 package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
-import lombok.Setter;
-import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class WaveAnimation extends OpenAnimation {
+public class ItemWave extends OpenAnimation {
 
     @Getter
     private ItemStack waveHeader;
@@ -31,25 +29,25 @@ public class WaveAnimation extends OpenAnimation {
     private Map<Integer, List<Integer>> rows;
 
     /**
-     * Get the default WaveAnimation
+     * Get the default ItemWave
      *
-     * @return the WaveAnimation
+     * @return the ItemWave
      */
-    public static WaveAnimation getDefault() {
-        final WaveAnimation waveAnimation = new WaveAnimation(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_HIT));
+    public static ItemWave getDefault() {
+        final ItemWave waveAnimation = new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_HIT));
         waveAnimation.setEndSound(new SoundObject(OSound.BLOCK_ANVIL_FALL));
         return waveAnimation;
     }
 
     /**
-     * Construct new WaveAnimation
+     * Construct new ItemWave
      *
      * @param waveHeader The header of the wave
      * @param fillEmpty Item to fill empty gaps
      * @param waveSound The wave sound
      */
-    public WaveAnimation(ItemStack waveHeader, ItemStack fillEmpty, SoundObject waveSound) {
-        super("WaveAnimation");
+    public ItemWave(ItemStack waveHeader, ItemStack fillEmpty, SoundObject waveSound) {
+        super(OpenAnimations.ITEM_WAVE_ANIMATION.name());
         this.waveHeader = waveHeader;
         this.startingPoint = new ArrayList<>();
         this.endSlot = new ArrayList<>();

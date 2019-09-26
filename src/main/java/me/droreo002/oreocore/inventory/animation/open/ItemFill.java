@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FillAnimation extends OpenAnimation {
+public class ItemFill extends OpenAnimation {
 
     @Getter
     private boolean firstRun;
@@ -19,8 +19,8 @@ public class FillAnimation extends OpenAnimation {
     @Getter @Setter
     private int addPerRun;
 
-    public FillAnimation(SoundObject fillSound, SoundObject endSound) {
-        super( "FillAnimation");
+    public ItemFill(SoundObject fillSound, SoundObject endSound) {
+        super( OpenAnimations.ITEM_FILL_ANIMATION.name());
         this.slotAdded = new ArrayList<>();
         this.firstRun = true;
 
@@ -54,21 +54,6 @@ public class FillAnimation extends OpenAnimation {
 
     @Override
     public void run() {
-//        if (firstRun) {
-//            firstRun = false;
-//            if (addPerRun > 2) { // Ultra speed
-//                for (int i : getInventoryItems().keySet()) {
-//                    int random = MathUtils.random(0, 1, false);
-//                    boolean shouldAdd = random == 0;
-//                    if (shouldAdd) {
-//                        getInventory().setItem(i, getInventoryItems().get(i));
-//                        slotAdded.add(i);
-//                    }
-//                }
-//            }
-//            updateInventory();
-//            return;
-//        }
         for (int i = 0; i < addPerRun; i++) {
             // All item has been added
             if (slotAdded.size() >= getInventoryItems().size()) {

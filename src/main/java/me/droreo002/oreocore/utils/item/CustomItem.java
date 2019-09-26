@@ -324,7 +324,7 @@ public class CustomItem extends ItemStack {
         meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
         res.setItemMeta(meta);
 
-       if (placeholder != null) placeholder.format(res); // Format the placeholder
+       if (placeholder != null) res = placeholder.format(res); // Format the placeholder
 
         return res;
     }

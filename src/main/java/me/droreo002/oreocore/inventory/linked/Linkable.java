@@ -1,27 +1,11 @@
 package me.droreo002.oreocore.inventory.linked;
 
 import me.droreo002.oreocore.inventory.OreoInventory;
-import me.droreo002.oreocore.utils.misc.SimpleCallback;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface Linkable {
-
-    /**
-     * Request a data from this inventory, called before closing the inventory
-     *
-     * @return The data
-     */
-    default Map<String, Object> onLinkRequestData() {
-        return new HashMap<>();
-    }
 
     /**
      * Called when data is sent from previous inventory. This will also get
@@ -30,14 +14,14 @@ public interface Linkable {
      * @param data The data from previous inventory
      * @param previousInventory The previous inventory
      */
-    default void onLinkAcceptData(Map<String, Object> data, Linkable previousInventory) {}
+    default void acceptData(LinkedDatas data, Linkable previousInventory) {}
 
     /**
-     * Called when pre opening other inventory
+     * Called when linked inventory is opened
      *
-     * @param event The inventory click event
+     * @param previousInventory The previous inventory
      */
-    default void onPreOpenOtherInventory(InventoryClickEvent event, Linkable targetInventory) {}
+    default void onLinkOpen(Linkable previousInventory) {}
 
     /**
      * Get the Inventory owner
@@ -48,9 +32,18 @@ public interface Linkable {
         return (OreoInventory) this;
     }
 
+    /**
+     * Get the inventory data
+     *
+     * @return The data
+     */
+    default List<LinkedData> getInventoryData() {
+        return new ArrayList<>();
+    }
 
     /**
-     * Get the next inventory button, nulls are allowed
+     * Get the linked buttons this will only setup the buttons and will
+     * add it into the inventory
      *
      * @return The next inventory button
      */

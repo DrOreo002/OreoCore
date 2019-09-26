@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.animation;
 
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.utils.item.CustomItem;

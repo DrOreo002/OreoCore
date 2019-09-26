@@ -141,6 +141,16 @@ public class TimestampBuilder {
     }
 
     /**
+     * Get the time
+     *
+     * @param clock The time to get
+     * @return the time value
+     */
+    public int getTime(Clock clock) {
+        return TimestampUtils.getTime(clock, timestamp);
+    }
+
+    /**
      * Represent a "Clock"
      */
     public enum Clock {

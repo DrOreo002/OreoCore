@@ -1,17 +1,18 @@
 package me.droreo002.oreocore.inventory.test.normal;
 
-import me.droreo002.oreocore.inventory.CustomInventory;
+import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.inventory.linked.LinkedButton;
+import me.droreo002.oreocore.inventory.linked.LinkedData;
+import me.droreo002.oreocore.inventory.linked.LinkedDataType;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FirstLinkedInventory extends CustomInventory implements Linkable {
+public class FirstLinkedInventory extends OreoInventory implements Linkable {
 
     private LinkedButton nextButton;
 
@@ -21,15 +22,15 @@ public class FirstLinkedInventory extends CustomInventory implements Linkable {
     }
 
     @Override
-    public Map<String, Object> onLinkRequestData() {
-        final Map<String, Object> m = new HashMap<>();
-        m.put("Hello", "World");
-        return m;
+    public String getInventoryName() {
+        return getTitle();
     }
 
     @Override
-    public String getInventoryName() {
-        return getTitle();
+    public List<LinkedData> getInventoryData() {
+        List<LinkedData> datas = new ArrayList<>();
+        datas.add(new LinkedData("hello", "Hello World", LinkedDataType.GLOBAL));
+        return datas;
     }
 
     @Override

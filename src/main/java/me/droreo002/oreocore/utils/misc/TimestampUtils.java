@@ -183,4 +183,31 @@ public final class TimestampUtils {
         cal.add(Calendar.HOUR, -hours);
         return new Timestamp(cal.getTime().getTime());
     }
+
+    /**
+     * Get the time
+     *
+     * @param clock The time to get
+     * @param timestamp The target Timestamp
+     * @return the time value
+     */
+    public static int getTime(TimestampBuilder.Clock clock, Timestamp timestamp) {
+        Date date = new Date(timestamp.getTime());
+        SimpleDateFormat format = null;
+        switch (clock) {
+            case SECOND:
+                format = new SimpleDateFormat("ss");
+                break;
+            case MINUTE:
+                format = new SimpleDateFormat("mm");
+                break;
+            case HOUR:
+                format = new SimpleDateFormat("HH");
+                break;
+            case DAY:
+                format = new SimpleDateFormat("dd");
+                break;
+        }
+        return Integer.parseInt(format.format(date));
+    }
 }

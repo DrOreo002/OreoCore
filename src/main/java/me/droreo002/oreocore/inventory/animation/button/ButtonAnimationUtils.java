@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.inventory.animation;
+package me.droreo002.oreocore.inventory.animation.button;
 
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.CustomItem;
