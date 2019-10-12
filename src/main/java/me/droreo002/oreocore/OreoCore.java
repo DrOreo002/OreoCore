@@ -101,6 +101,8 @@ public final class OreoCore extends JavaPlugin {
             if (player == null) continue;
             player.closeInventory();
         }
+        opening.clear();
+
         // Disable
         DatabaseManager.getDatabases().forEach(Database::onDisable);
     }

@@ -1,6 +1,12 @@
 package me.droreo002.oreocore.conversation;
 
 import lombok.Getter;
+import lombok.Setter;
+import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.list.ListUtils;
+import me.droreo002.oreocore.utils.misc.SoundObject;
+import org.bukkit.Bukkit;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,13 +25,14 @@ public final class ConversationManager implements ConversationAbandonedListener 
     @Getter
     private final JavaPlugin owner;
     @Getter
-    private final String conversationAbandonedMessage;
-    @Getter
     private final Map<String, Prompt> conversationMap;
+    @Getter @Setter
+    private String abandonedMessage;
+    @Getter @Setter
+    private SoundObject abandonedSound;
 
-    public ConversationManager(JavaPlugin owner, String nonPlayerMessage, String conversationAbandonedMessage) {
+    public ConversationManager(JavaPlugin owner, String nonPlayerMessage) {
         this.owner = owner;
-        this.conversationAbandonedMessage = conversationAbandonedMessage;
         this.conversations = new ArrayList<>();
         this.conversationMap = new HashMap<>();
         this.conversationFactory = new ConversationFactory(owner)
@@ -40,7 +47,15 @@ public final class ConversationManager implements ConversationAbandonedListener 
     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
         Player player = (Player) abandonedEvent.getContext().getForWhom();
         remove(player);
-        player.sendMessage(conversationAbandonedMessage);
+        if (abandonedMessage != null) {
+            if (ListUtils.isSerializedList(abandonedMessage)) {
+                List<String> converted = ListUtils.toList(abandonedMessage);
+                converted.forEach(player::sendMessage);
+            } else {
+                player.sendMessage(abandonedMessage);
+            }
+        }
+        if (abandonedSound != null) abandonedSound.send(player);
     }
 
     /**
@@ -57,7 +72,6 @@ public final class ConversationManager implements ConversationAbandonedListener 
             String key = (String) ent.getKey();
             conversation.getContext().setSessionData(key, ent.getValue());
         }
-        if (!isOnConversation(player)) conversations.add(conversation);
         conversation.begin();
     }
 
@@ -88,5 +102,16 @@ public final class ConversationManager implements ConversationAbandonedListener 
         }
         conversations.clear();
         conversations.addAll(conver);
+    }
+
+    /**
+     * Add a conversation
+     *
+     * @param name The conversation name
+     * @param conversationPrompt The conversation prompt
+     */
+    public void addConversation(String name, Prompt conversationPrompt) {
+        if (conversationMap.containsKey(name)) return;
+        conversationMap.put(name, conversationPrompt);
     }
 }
