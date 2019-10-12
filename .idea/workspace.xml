@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/OStringPrompt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/ConversationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/ConversationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -394,7 +392,14 @@
       <option name="project" value="LOCAL" />
       <updated>1569510808415</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Fix this bug?">
+      <created>1570884728242</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1570884728242</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -428,7 +433,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Some api change" />
     <MESSAGE value="Update ma boy" />
     <MESSAGE value="New inventory api!" />
     <MESSAGE value="Massive recode on Inventory api!" />
@@ -453,7 +457,8 @@
     <MESSAGE value="A lot of update" />
     <MESSAGE value="Some more updateeeee" />
     <MESSAGE value="Another massive recode, thanks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Another massive recode, thanks" />
+    <MESSAGE value="Fix this bug?" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix this bug?" />
   </component>
   <component name="masterDetails">
     <states>
