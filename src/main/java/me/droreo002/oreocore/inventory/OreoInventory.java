@@ -391,6 +391,9 @@ public abstract class OreoInventory implements InventoryHolder {
             for (GUIButton button : template.getAllGUIButtons()) {
                 addButton(button, false);
             }
+            if (template.getOpenSound() != null) setSoundOnOpen(template.getOpenSound());
+            if (template.getCloseSound() != null) setSoundOnClose(template.getCloseSound());
+            if (template.getClickSound() != null) setSoundOnClick(template.getClickSound());
         }
 
         getButtons().forEach(guiButton -> {

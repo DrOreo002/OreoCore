@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.inventory.animation.button;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -25,6 +26,16 @@ public interface IButtonFrame {
      * @return next lore
      */
     default List<String> nextLore(List<String> prevLore) {
+        return null;
+    }
+
+    /**
+     * Get the next item of this button
+     * useful if there's a lot of changes
+     *
+     * @return the next item
+     */
+    default ItemStack nextItem() {
         return null;
     }
 

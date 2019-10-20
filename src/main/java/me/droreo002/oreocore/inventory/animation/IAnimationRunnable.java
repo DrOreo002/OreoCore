@@ -101,21 +101,25 @@ public class IAnimationRunnable implements Runnable {
         ItemStack item = button.getItem().clone();
         frm.run();
 
-        final ItemMeta meta = item.getItemMeta();
-        final Material material = frm.nextMaterial();
-        if (material != null) button.getItem().setType(material);
+        if (frm.nextItem() == null) {
+            final ItemMeta meta = item.getItemMeta();
+            final Material material = frm.nextMaterial();
+            if (material != null) button.getItem().setType(material);
 
-        String nextDisplayName = frm.nextDisplayName(meta.getDisplayName());
-        List<String> nextLore = frm.nextLore(meta.getLore());
+            String nextDisplayName = frm.nextDisplayName(meta.getDisplayName());
+            List<String> nextLore = frm.nextLore(meta.getLore());
 
-        if (nextDisplayName != null) {
-            item = new CustomItem(item, nextDisplayName);
+            if (nextDisplayName != null) {
+                item = new CustomItem(item, nextDisplayName);
+            }
+
+            if (nextLore != null) {
+                item = new CustomItem(item, nextLore);
+            }
+
+            button.setItem(item, true, false);
+        } else {
+            button.setItem(frm.nextItem(), true, false);
         }
-
-        if (nextLore != null) {
-            item = new CustomItem(item, nextLore);
-        }
-
-        button.setItem(item, true, false);
     }
 }

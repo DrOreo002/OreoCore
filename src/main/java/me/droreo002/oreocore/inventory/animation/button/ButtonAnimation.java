@@ -59,6 +59,16 @@ public class ButtonAnimation {
         updateButtonMetaData(buttonItem);
     }
 
+    public ButtonAnimation() {
+        this.buttonAnimationName = "none";
+        this.buttonAnimationData = null;
+        this.nextFrame = 0;
+        this.animationSpeed = 1;
+        this.repeatingAnimation = false;
+        this.frames = new ArrayList<>();
+        this.buttonMetaData = new HashMap<>();
+    }
+
     /**
      * Update the first state of the item
      *

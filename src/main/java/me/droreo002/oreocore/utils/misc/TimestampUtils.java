@@ -17,11 +17,7 @@ public final class TimestampUtils {
      * @param startDate : Start date
      * @param endDate : End date
      * @param addColor : Should we add color to diff format message?
-     * @param diffFormat : The diff format message. This also contains placeholder, which is
-     *                   %elapsedDays
-     *                   %elapsedHours
-     *                   %elapsedMinutes
-     *                   %elapsedSeconds
+     * @param diffFormat : The diff format message
      * @return The difference format string
      */
     public static String getDifference(Date startDate, Date endDate, boolean addColor, String diffFormat) {
@@ -45,10 +41,15 @@ public final class TimestampUtils {
         long elapsedSeconds = different / secondsInMilli;
 
         diffFormat = diffFormat
-                .replace("%elapsedDays", String.valueOf(elapsedDays))
-                .replace("%elapsedHours", String.valueOf(elapsedHours))
-                .replace("%elapsedMinutes", String.valueOf(elapsedMinutes))
-                .replace("%elapsedSeconds", String.valueOf(elapsedSeconds));
+                .replace("%dd%", String.valueOf(elapsedDays))
+                .replace("%hh%", String.valueOf(elapsedHours))
+                .replace("%mm%", String.valueOf(elapsedMinutes))
+                .replace("%ss%", String.valueOf(elapsedSeconds))
+                // Or
+                .replace("%d%", String.valueOf(elapsedDays))
+                .replace("%h%", String.valueOf(elapsedHours))
+                .replace("%m%", String.valueOf(elapsedMinutes))
+                .replace("%s%", String.valueOf(elapsedSeconds));
 
         if (addColor) diffFormat = StringUtils.color(diffFormat);
         return diffFormat;

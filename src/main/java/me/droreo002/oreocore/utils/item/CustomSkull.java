@@ -7,6 +7,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
@@ -138,6 +139,39 @@ public final class CustomSkull {
         if (itemMeta.hasLore()) skull.setLore(itemMeta.getLore());
         item.setItemMeta(skull);
         addToCache(item, uuid.toString());
+        return item;
+    }
+
+    /**
+     * Convert the item into head while keeping its meta data
+     *
+     * @param item The ItemStack that will get edited
+     * @param textureUrl The texture url
+     * @return the result ItemStack if successful, null otherwise
+     */
+    public static ItemStack toHead(ItemStack item, String textureUrl) {
+        item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+
+        PropertyMap propertyMap = profile.getProperties();
+
+        if (propertyMap == null) throw new IllegalStateException("Profile doesn't contain a property map");
+
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", textureUrl).getBytes());
+
+        propertyMap.put("textures", new Property("textures", new String(encodedData)));
+
+        SkullMeta headMeta = (SkullMeta) item.getItemMeta();
+
+        try {
+            BukkitReflectionUtils.setValue(headMeta, true, "profile", profile);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        item.setItemMeta(headMeta);
         return item;
     }
 

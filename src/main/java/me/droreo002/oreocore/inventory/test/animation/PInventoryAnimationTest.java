@@ -21,7 +21,6 @@ public class PInventoryAnimationTest extends PaginatedInventory {
 
         GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
         button.addListener(GUIButton.CLOSE_LISTENER);
-        button.setAnimated(true);
 
         ButtonAnimation animation = button.getButtonAnimation();
         for (char c : "World".toCharArray()) {
@@ -33,6 +32,9 @@ public class PInventoryAnimationTest extends PaginatedInventory {
             }, true);
         }
         animation.setRepeatingAnimation(true);
+        button.setAnimated(true);
+        button.setButtonAnimation(animation);
+
         setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
         for (int i = 0; i < 50; i++) {
             if (i == 10) {

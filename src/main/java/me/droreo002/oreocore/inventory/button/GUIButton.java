@@ -97,7 +97,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      * @param updateAnimationFrames Should we update the animation frames?
      */
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
-        ItemMeta lastMeta = this.item.getItemMeta();
+        ItemMeta lastMeta = this.item.getItemMeta().clone();
         if (animated) {
             buttonAnimation.updateButtonMetaData(item);
             if (updateAnimationFrames) {

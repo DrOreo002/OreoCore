@@ -31,11 +31,11 @@ public class TextPlaceholder {
     private final String from;
     @Getter
     private final String to;
-    @Getter
-    private final ItemMetaType type;
+    @Getter @Setter
+    private ItemMetaType type;
 
     /**
-     * Construct via static useful for sortening the code
+     * Construct via static useful for shortening the code
      *
      * @param from Replace from
      * @param to Replace to
@@ -46,7 +46,7 @@ public class TextPlaceholder {
     }
 
     /**
-     * Construct via static useful for sortening the code
+     * Construct via static useful for shortening the code
      *
      * @param type What to replace
      * @param from Replace from
@@ -75,6 +75,17 @@ public class TextPlaceholder {
         this.placeholders = new ArrayList<>();
 
         placeholders.add(this);
+    }
+
+    /**
+     * Apply replace type to all
+     *
+     * @param type The replace type
+     * @return Modified TextPlaceholder
+     */
+    public TextPlaceholder applyReplaceType(ItemMetaType type) {
+        placeholders.forEach(placeholder -> placeholder.setType(type));
+        return this;
     }
 
     /**

@@ -9,6 +9,7 @@ import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.ItemUtils;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
+import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,6 +34,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     private final ConfigurationSection layoutDatabase;
     @Getter
     private final ConfigurationSection layoutItemDatabase;
+    @Getter
+    private SoundObject openSound, clickSound, closeSound;
     @Getter
     private int size;
     @Getter
@@ -66,6 +69,12 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.title = layoutDatabase.getString("title");
         this.rawLayout = layoutDatabase.getStringList("layout");
         this.openAnimationName = layoutDatabase.getString("openAnimation", "none");
+        if (layoutDatabase.isSet("openSound"))
+            this.openSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("openSound"));
+        if (layoutDatabase.isSet("closeSound"))
+            this.closeSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("closeSound"));
+        if (layoutDatabase.isSet("clickSound"))
+            this.clickSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("clickSound"));
 
         int slot = 0;
         for (String s : rawLayout) {

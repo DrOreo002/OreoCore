@@ -3,11 +3,14 @@ package me.droreo002.oreocore.utils.item;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class ItemUtils {
 
@@ -107,5 +110,39 @@ public final class ItemUtils {
     public static boolean isEmpty(ItemStack itemStack) {
         if (itemStack == null) return true;
         return itemStack.getType() == UMaterial.AIR.getMaterial();
+    }
+
+    /**
+     * Get the enchantment as a list of string
+     *
+     * @param item The item
+     * @param withLevel Should we also return the level?
+     * @return The enchantment name
+     */
+    public static List<String> getEnchantAsString(ItemStack item, boolean withLevel) {
+        final List<String> ec = new ArrayList<>();
+
+        for (Map.Entry ent : item.getEnchantments().entrySet()) {
+            String enchant = StringUtils.upperCaseFirstLetter(((Enchantment) ent.getKey()).getKey().getKey());
+            if (withLevel) enchant += "|" + (int) ent.getValue();
+            ec.add(enchant);
+        }
+
+        return ec;
+    }
+
+    /**
+     * Get the item flags
+     *
+     * @param item The item
+     * @return the flags as string
+     */
+    public static List<String> getItemFlagAsString(ItemStack item) {
+        final List<String> flags = new ArrayList<>();
+        if (!item.hasItemMeta()) return flags;
+        for (ItemFlag f : item.getItemMeta().getItemFlags()) {
+            flags.add(f.toString());
+        }
+        return flags;
     }
 }
