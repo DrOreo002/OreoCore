@@ -2,6 +2,7 @@ package me.droreo002.oreocore.commands;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -136,7 +137,7 @@ public abstract class CustomCommand {
         if (sender instanceof Player) {
             sender.sendMessage(StringUtils.color(message));
         } else {
-            ODebug.log(message); // So color code will work
+            ODebug.log(OreoCore.getInstance(), message, false); // So color code will work. We also use OreoCore as source so it wouldn't get blocked
         }
     }
 

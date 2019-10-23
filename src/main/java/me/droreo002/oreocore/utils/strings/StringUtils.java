@@ -230,4 +230,31 @@ public final class StringUtils {
         String barRemain = barString.substring(loading);
         return color(barDone + baseLoadingColor + barRemain + "&r " + progress);
     }
+
+    /**
+     * Beautify a straight line string
+     *
+     * @param oneLineStr The string
+     * @param wordSpace The word max spacing before newline
+     * @return The beautified string
+     */
+    public static List<String> beautify(String oneLineStr, int wordSpace) {
+        final List<String> ret = new ArrayList<>();
+        StringBuilder b = new StringBuilder();
+
+        int spaceFound = 0;
+        for (char c : oneLineStr.toCharArray()) {
+            if (c == ' ') spaceFound++;
+            if (spaceFound == wordSpace) {
+                ret.add(b.toString());
+                b = new StringBuilder();
+                spaceFound = 0;
+            }
+            b.append(c);
+        }
+
+        // Add the remaining or the whole string because wordSpace is not reached
+        ret.add(b.toString());
+        return ret;
+    }
 }

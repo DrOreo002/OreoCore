@@ -23,7 +23,7 @@ public class PluginConfig extends CustomConfig {
     public PluginConfig(JavaPlugin plugin) {
         super(plugin, new File(plugin.getDataFolder(), "config.yml"));
         if (tryUpdate("ConfigVersion", LATEST_VERSION)) {
-            ODebug.log("Successfully updated &7config.yml &fto version &c" + LATEST_VERSION);
+            ODebug.log(plugin, "Successfully updated &7config.yml &fto version &c" + LATEST_VERSION, true);
         }
 
         memory = new Memory(this);

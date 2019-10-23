@@ -26,7 +26,6 @@ public class PlayerInformationDatabase extends DatabaseSQL {
         super(plugin, "playerdata", plugin.getDataFolder(), SQLType.SQL_BASED);
         this.memory = plugin.getPluginConfig().getMemory();
 
-        init();
         loadData();
         DatabaseManager.registerDatabase(plugin, this);
     }

@@ -68,7 +68,7 @@ public class CustomConfig {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                ODebug.log("Failed to create custom config file! &7(&e" + getFilePath() + "&7)", true);
+                ODebug.log(plugin, "Failed to create custom config file! &7(&e" + getFilePath() + "&7)", true);
                 return;
             }
         }
@@ -86,7 +86,7 @@ public class CustomConfig {
             updateComments(plugin.getResource(getFileName()));
         } catch (IOException e) {
             e.printStackTrace();
-            ODebug.log("Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
+            ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
         }
         if (updateMemory) {
             if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);

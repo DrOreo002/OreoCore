@@ -25,12 +25,6 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
 
-    @Getter @Setter
-    private int inventorySlot;
-    @Getter @Setter
-    private ButtonAnimation buttonAnimation;
-    @Getter @Setter
-    private Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter
     private boolean animated;
     @Getter
@@ -41,11 +35,19 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     private ItemStack item;
     @Getter
     private SoundObject soundOnClick;
+    @Getter @Setter
+    private Map<ClickType, List<ButtonListener>> buttonListeners;
+    @Getter @Setter
+    private int inventorySlot;
+    @Getter @Setter
+    private ButtonAnimation buttonAnimation;
 
     /*
     For config getting
      */
-    public GUIButton() { }
+    public GUIButton() {
+        this.buttonListeners = new HashMap<>();
+    }
 
     /**
      * Construct a new gui button (without slot)
@@ -172,6 +174,12 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         return this;
     }
 
+    /**
+     * Clear the entire button listener
+     */
+    public void clearListener() {
+        this.buttonListeners.clear();
+    }
 
     /**
      * Get from config
@@ -204,7 +212,16 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     public GUIButton clone() {
         try {
             GUIButton b = (GUIButton) super.clone();
+
+            /*
+            Apparently HashMap also need tobe cloned.
+             */
+            b.setButtonListeners(new HashMap<>(buttonListeners));
             b.setItem(b.getItem().clone(), true, true);
+
+            if (this.buttonAnimation != null) {
+                b.setButtonAnimation(this.buttonAnimation.clone());
+            }
             return b;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);

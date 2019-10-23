@@ -2,12 +2,10 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LinkedInventoryManager {
 

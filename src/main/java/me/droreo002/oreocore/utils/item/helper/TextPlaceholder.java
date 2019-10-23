@@ -53,7 +53,7 @@ public class TextPlaceholder {
      * @param to Replace to
      * @return resulted object
      */
-    public static TextPlaceholder of(ItemMetaType type, String from, String to) {
+    public static TextPlaceholder of(ItemMetaType type, String from, Object to) {
         return new TextPlaceholder(type, from, to);
     }
 

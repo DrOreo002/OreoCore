@@ -16,7 +16,7 @@ public class MySqlDebug extends DatabaseMySQL {
 
     @Override
     public void loadData() {
-        ODebug.log("Loading data!", true);
+        ODebug.log(owningPlugin,"Loading data!", true);
     }
 
     @Override

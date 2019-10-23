@@ -63,7 +63,7 @@ public abstract class DatabaseFlatFile extends Database {
     @Override
     public void onDisable() {
         dataCaches.clear();
-        ODebug.log("Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!");
+        ODebug.log(owningPlugin, "Database &bFlatFile &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
     }
 
     /**

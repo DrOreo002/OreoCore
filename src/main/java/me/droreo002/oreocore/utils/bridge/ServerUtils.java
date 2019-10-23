@@ -34,6 +34,16 @@ public final class ServerUtils {
     }
 
     /**
+     * Check if the minecraft version is really old
+     * or not. Seriously, why tho
+     *
+     * @return True or false?
+     */
+    public static boolean isOldAsFuckVersion() {
+        return getServerVersion().getBaseVersion().equals(MinecraftVersion.V1_8_R1.getBaseVersion());
+    }
+
+    /**
      * Check if the plugin is installed or not
      *
      * @param plugin The plugin name to check

@@ -34,38 +34,55 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     private SQLType sqlType;
     @Getter
     private File databaseFile;
+    @Getter
+    private boolean initialized;
 
     public DatabaseSQL(JavaPlugin plugin, String databaseName, File databaseFolder, SQLType sqlType) {
         super(DatabaseType.SQL, plugin);
         this.databaseName = databaseName.replace(".db", "");
         this.databaseFolder = databaseFolder;
         this.sqlType = sqlType;
+        this.initialized = false;
+
         if (!databaseFolder.exists()) databaseFolder.mkdir();
         init();
     }
 
     @Override
     public void init() {
+        if (initialized) throw new IllegalStateException("Database is already initialized!");
+
+        initialized = true;
         databaseFile = new File(databaseFolder, databaseName + ".db");
         if (!databaseFile.exists()) {
             try {
                 if (databaseFile.createNewFile())
-                    ODebug.log("&fDatabase &b" + databaseName + ".db &fon &e" + databaseFile.getAbsolutePath() + "&f from plugin &e" + getOwningPlugin().getName() + "&f has been created successfully!", true);
+                    ODebug.log(owningPlugin, "&eSQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db &f, database type is currently &e" + sqlType, true);
             } catch (IOException e) {
-                ODebug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                ODebug.log(owningPlugin, "&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
                 Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
                 return;
             }
         }
-        
-        poolManager = new ConnectionPoolManager("jdbc:sqlite:" + databaseFile, owningPlugin);
-        poolManager.setup();
-        
+
+        switch (sqlType) {
+            case SQL_BASED:
+                getNewConnection(); // Will also load it
+                break;
+            case HIKARI_CP:
+                poolManager = new ConnectionPoolManager("jdbc:sqlite:" + databaseFile, owningPlugin);
+                poolManager.setup();
+                break;
+            case MARIA_DB:
+                // TODO: 23/10/2019 Make
+                break;
+        }
+
         if (checkConnection()) {
             if (execute(getFirstCommand())) {
-                ODebug.log("&eSQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. Database will now be stored at &e" + databaseFolder.getAbsolutePath() + "\\" + databaseName + ".db &f, database type is currently &e" + sqlType, true);
+                ODebug.log(owningPlugin, "&eSQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been initialized!", true);
             } else {
-                ODebug.log("&cFailed to initialize the SQL connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
+                ODebug.log(owningPlugin, "&cFailed to initialize the SQL connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!", false);
             }
         } else {
             throw new IllegalStateException("SQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
@@ -76,7 +93,7 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
     public void onDisable() {
         try {
             close();
-            ODebug.log("&fDatabase &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
+            ODebug.log(owningPlugin, "&fDatabase &bSQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -417,9 +434,14 @@ public abstract class DatabaseSQL extends Database implements SQLDatabase {
                     if (this.connection != null && !this.connection.isClosed()) {
                         return this.connection;
                     }
-                    return this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
-                } catch (SQLException e) {
-                    ODebug.log("&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                    Class.forName("org.sqlite.JDBC");
+
+                    this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
+                    return this.connection;
+                } catch (SQLException | ClassNotFoundException e) {
+                    ODebug.log(owningPlugin, "&fFailed to create database file on &b" + databaseFile.getAbsolutePath() + "&f. Plugin &e" + getOwningPlugin().getName() + "&f will now disabling itself!", true);
+                    e.printStackTrace();
+
                     Bukkit.getPluginManager().disablePlugin(getOwningPlugin());
                     return null;
                 }

@@ -42,12 +42,12 @@ public class EssentialsUtils implements PluginHooker {
 
     @Override
     public void hookSuccess() {
-        ODebug.log("Successfully hooked to plugin &e" + getRequiredPlugin(), true);
+        ODebug.log(getPlugin(),"Successfully hooked to plugin &e" + getRequiredPlugin(), true);
     }
 
     @Override
     public void hookFailed() {
-        ODebug.log("&cCannot hook to plugin &e" + getRequiredPlugin() + "&c because its not installed on the server!", true);
+        ODebug.log(getPlugin(),"&cCannot hook to plugin &e" + getRequiredPlugin() + "&c because its not installed on the server!", true);
     }
 
     @Override

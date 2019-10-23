@@ -198,8 +198,7 @@ public abstract class PaginatedInventory extends OreoInventory {
             try {
                 item = but.get(toGet).getItem();
             } catch (IndexOutOfBoundsException e) {
-                toGet++;
-                continue;
+                break;
             }
             toGet++;
             if (item == null) continue;

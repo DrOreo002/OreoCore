@@ -6,15 +6,21 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
-import me.droreo002.oreocore.configuration.ConfigUpdater;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
 import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.debugging.Process;
+import me.droreo002.oreocore.dependencies.DependencyManager;
+import me.droreo002.oreocore.dependencies.OCoreDependency;
+import me.droreo002.oreocore.dependencies.classloader.PluginClassLoader;
+import me.droreo002.oreocore.dependencies.classloader.ReflectionClassLoader;
+import me.droreo002.oreocore.enums.MinecraftVersion;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
 import me.droreo002.oreocore.listeners.player.PlayerListener;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -23,8 +29,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public final class OreoCore extends JavaPlugin {
@@ -34,7 +38,7 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private TaskChainFactory taskChainFactory;
     @Getter
-    private final Map<JavaPlugin, Boolean> hookedPlugin = new HashMap<>();
+    private final Map<JavaPlugin, DependedPluginProperties> hookedPlugin = new HashMap<>();
     @Getter
     private final Map<UUID, PaginatedInventory> opening = new HashMap<>();
     @Getter
@@ -47,6 +51,10 @@ public final class OreoCore extends JavaPlugin {
     private PluginConfig pluginConfig;
     @Getter
     private Metrics metrics;
+    @Getter
+    private PluginClassLoader pluginClassLoader;
+    @Getter
+    private DependencyManager dependencyManager;
 
     @Override
     public void onEnable() {
@@ -56,8 +64,30 @@ public final class OreoCore extends JavaPlugin {
         metrics = new Metrics(this);
         prefix = StringUtils.color("&7[ &bOreoCore &7]&f ");
         protocolManager = ProtocolLibrary.getProtocolManager();
+        pluginClassLoader = new ReflectionClassLoader(this);
+        dependencyManager = new DependencyManager(this, pluginClassLoader);
+
         HookUtils.getInstance(); // Initialize
         ConfigurationSerialization.registerClass(CustomItem.class);
+
+        if (ServerUtils.isOldAsFuckVersion()) {
+            ODebug.log(this, "Old minecraft version found!. Beginning loading external sql driver! This might take a while please wait...", true);
+
+            Process process = new Process();
+            /*
+            We load custom driver manually, since in 1.8 sql(s) driver are limited
+             */
+            for (OCoreDependency dependency : OCoreDependency.values()) {
+                dependencyManager.loadDependencies(dependency.getDependency());
+            }
+
+            try {
+                Class.forName("org.sqlite.jdbc4.JDBC4Connection");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            ODebug.log(this, process.stop("Dependencies successfully loaded in &e%totalTime ms!"), true);
+        }
 
         // Registering
         Bukkit.getPluginManager().registerEvents(new MainInventoryListener(), this);
@@ -72,11 +102,13 @@ public final class OreoCore extends JavaPlugin {
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             if (!hookedPlugin.isEmpty()) {
-                ODebug.log("&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
+                ODebug.log(this, "&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
                 for (Map.Entry ent : hookedPlugin.entrySet()) {
                     JavaPlugin pl = (JavaPlugin) ent.getKey();
-                    boolean isPremium = (boolean) ent.getValue();
-                    ODebug.log("     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"));
+                    DependedPluginProperties properties = (DependedPluginProperties) ent.getValue();
+
+                    boolean isPremium = properties.isPremiumPlugin();
+                    ODebug.log(this, "     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"), false);
                 }
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
                     final Map<String, Integer> res = new HashMap<>();
@@ -87,10 +119,10 @@ public final class OreoCore extends JavaPlugin {
                     return res;
                 }));
             } else {
-                ODebug.log("&fI'm currently handling &7(&c0&7) plugin", true);
+                ODebug.log(this, "&fI'm currently handling &7(&c0&7) plugin", true);
             }
         }, 20L * 15L); // 15 Seconds
-        ODebug.log("OreoCore has been enabled successfully!", true);
+        ODebug.log(this, "OreoCore has been enabled successfully!", true);
     }
 
     @Override
@@ -110,10 +142,10 @@ public final class OreoCore extends JavaPlugin {
     /**
      * Add the specified plugin as a plugin that depend on this api
      *
-     * @param plugin : The specified plugin
-     * @param premium : Determine if this plugin is a premium plugin or not
+     * @param plugin The specified plugin
+     * @param properties The plugin properties
      */
-    public void dependPlugin(JavaPlugin plugin, boolean premium) {
-        hookedPlugin.put(plugin, premium);
+    public void dependPlugin(JavaPlugin plugin, DependedPluginProperties properties) {
+        hookedPlugin.put(plugin, properties);
     }
 }

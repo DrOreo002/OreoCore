@@ -33,12 +33,15 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     private SQLType sqlType;
     @Getter
     private ConnectionPoolManager poolManager;
+    @Getter
+    private boolean initialized;
 
     public DatabaseMySQL(JavaPlugin plugin, MySqlConnection addressData, int updateTimeSecond, SQLType sqlType) {
         super(DatabaseType.MYSQL, plugin);
         this.addressData = addressData;
         this.updateTimeSecond = updateTimeSecond;
         this.sqlType = sqlType;
+        this.initialized = false;
 
         poolManager = new ConnectionPoolManager( "jdbc:mysql://" + addressData.getHost() + ":" + addressData.getPort() + "/" + addressData.getDatabaseName(), owningPlugin);
         poolManager.setMysql(true);
@@ -50,11 +53,14 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
 
     @Override
     public void init() {
+        if (initialized) throw new IllegalStateException("Database is already initialized!");
+        initialized = true;
+
         if (checkConnection()) {
             if (execute(getFirstCommand())) {
-                ODebug.log("&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. DataCache address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
+                ODebug.log(owningPlugin,"&eMySQL &fConnection for plugin &c" + getOwningPlugin().getName() + "&f has been created!. DataCache address is &e" + addressData.getHost() + ":" + addressData.getPort() + "&f data is currently stored at &e" + addressData.getDatabaseName() + " &fdatabase&f, database type is &e" + sqlType, true);
             } else {
-                ODebug.log("&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!");
+                ODebug.log(owningPlugin, "&cFailed to initialize the &bMySQL&f connection on plugin &e" + getOwningPlugin().getName() + "&c Please contact the dev!", false);
             }
         } else {
             throw new IllegalStateException("MySQL Connection for plugin " + getOwningPlugin().getName() + " cannot be proceeded!, please contact the dev!");
@@ -67,7 +73,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     public void onDisable() {
         try {
             close();
-            ODebug.log("&fDatabase &rMySQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
+            ODebug.log(owningPlugin,"&fDatabase &rMySQL &ffrom plugin &e" + owningPlugin.getName() + "&f has been disabled!", true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -435,7 +441,7 @@ public abstract class DatabaseMySQL extends Database implements SQLDatabase {
     private class CheckConnection extends BukkitRunnable {
 
         private CheckConnection() {
-            ODebug.log("&bMySQL Connection &fchecker for plugin &b" + getOwningPlugin().getName() + "&f has been started!", true);
+            ODebug.log(owningPlugin,"&bMySQL Connection &fchecker for plugin &b" + getOwningPlugin().getName() + "&f has been started!", true);
         }
 
         @Override

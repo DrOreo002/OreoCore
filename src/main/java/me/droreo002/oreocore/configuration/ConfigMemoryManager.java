@@ -29,7 +29,7 @@ public final class ConfigMemoryManager {
 
         arr.add(memory);
         CONFIG_MEMORY.put(plugin, arr);
-        ODebug.log("&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
+        ODebug.log(plugin, "&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
     }
 
     /**
@@ -100,7 +100,7 @@ public final class ConfigMemoryManager {
                         if (configVariable.errorWhenNull()) {
                             throw new NullPointerException("Failed to get config value on path " + path);
                         } else {
-                            ODebug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                            ODebug.log(memory.getParent().getPlugin(), "&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
                             continue; // We ignore the null value
                         }
                     }
@@ -121,7 +121,7 @@ public final class ConfigMemoryManager {
                     if (configVariable.errorWhenNull()) {
                         throw new NullPointerException("Failed to get config value on path " + path);
                     } else {
-                        ODebug.log("&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                        ODebug.log(memory.getParent().getPlugin(),"&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
                         continue; // We ignore the null value
                     }
                 }
@@ -135,7 +135,7 @@ public final class ConfigMemoryManager {
                     } catch (Exception e) {
                         // handle error here
                         e.printStackTrace();
-                        ODebug.log("Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
+                        ODebug.log(memory.getParent().getPlugin(), "Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
                         continue;
                     }
                     continue;

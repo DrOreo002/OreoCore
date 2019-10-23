@@ -17,7 +17,7 @@ public final class DatabaseManager {
         } else {
             DATABASES.put(plugin, new ArrayList<>(Collections.singletonList(database)));
         }
-        ODebug.log("Database with the type of &c" + database.getDatabaseType() + "&f. From plugin &e" + plugin.getName() + "&f, has been registered!", true);
+        ODebug.log(plugin,"Database with the type of &c" + database.getDatabaseType() + "&f. From plugin &e" + plugin.getName() + "&f, has been registered!", true);
     }
 
     public static boolean isDatabaseRegistered(JavaPlugin plugin, DatabaseType type) {

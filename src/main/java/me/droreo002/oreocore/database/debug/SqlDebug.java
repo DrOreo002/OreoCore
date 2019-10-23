@@ -17,7 +17,7 @@ public class SqlDebug extends DatabaseSQL {
 
     @Override
     public void loadData() {
-        ODebug.log("Loading data....", true);
+        ODebug.log(owningPlugin,"Loading data....", true);
     }
 
     @Override

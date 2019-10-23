@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ButtonAnimation {
+public class ButtonAnimation implements Cloneable {
 
     @Getter
     private final ConfigurationSection buttonAnimationData;
@@ -182,6 +182,22 @@ public class ButtonAnimation {
             }
         } else {
             // TODO: 22/08/2019 Non default value maybe?
+        }
+    }
+
+    @Override
+    public ButtonAnimation clone() {
+        try {
+            ButtonAnimation b = (ButtonAnimation) super.clone();
+
+            /*
+            Apparently HashMap also need tobe cloned.
+             */
+            b.setButtonMetaData(new HashMap<>(buttonMetaData));
+            b.setFrames(new ArrayList<>(frames));
+            return b;
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
         }
     }
 }
