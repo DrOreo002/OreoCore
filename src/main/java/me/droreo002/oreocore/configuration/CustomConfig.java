@@ -3,12 +3,15 @@ package me.droreo002.oreocore.configuration;
 import com.google.common.base.Charsets;
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.utils.io.FileUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +92,7 @@ public class CustomConfig {
             e.printStackTrace();
             ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
         }
+
         if (updateMemory) {
             if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
         }
@@ -169,7 +174,6 @@ public class CustomConfig {
         final List<String> checked = new ArrayList<>();
         String line;
         outer: while ((line = reader.readLine()) != null) {
-
             if (line.startsWith("#")) {
                 write(writer, line);
                 continue;
@@ -178,7 +182,7 @@ public class CustomConfig {
             for (String key : config.getKeys(true)) {
                 if (checked.contains(key)) continue;
                 String[] keyArray = key.split("\\.");
-                String keyString = keyArray[keyArray.length - 1];
+                String keyString = keyArray[keyArray.length - 1]; // Because last key is always a value
 
                 if (line.trim().startsWith(keyString + ":")) {
                     checked.add(key);

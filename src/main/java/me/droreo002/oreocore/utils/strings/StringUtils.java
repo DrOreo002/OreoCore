@@ -209,7 +209,7 @@ public final class StringUtils {
      * @param percent Should we use percentage for indicator?
      * @return The loading bar
      */
-    public static String generateLoadingBar(int current, int max, String baseLoadingColor, String loadingColor, boolean percent) {
+    public static String generateLoadingBar(int current, int max, String baseLoadingColor, String loadingColor, boolean percent, char barChar) {
         String progress;
         if (percent) {
             progress = String.format("&e%f", MathUtils.getPercentage(current, max)) + "%";
@@ -217,8 +217,8 @@ public final class StringUtils {
             progress = String.format("&e%d&6/&e%d", current, max);
         }
 
-        final char defaultChar = '-';
-        final String icon = loadingColor + "-";
+        final char defaultChar = (barChar == ' ') ? '-' : barChar;
+        final String icon = loadingColor + defaultChar;
         int maxBarSize = 20;
 
         int loading = Math.abs(Math.round(((100 * current) / max) / 10)) * 2; // Round and absolute it. We don't want negative value
@@ -256,5 +256,29 @@ public final class StringUtils {
         // Add the remaining or the whole string because wordSpace is not reached
         ret.add(b.toString());
         return ret;
+    }
+
+    /**
+     * Convert integer to roman number
+     *
+     * @param num The number
+     * @return The roman
+     */
+    public static String toRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        int times;
+        String[] romans = new String[] { "I", "IV", "V", "IX", "X", "XL", "L",
+                "XC", "C", "CD", "D", "CM", "M" };
+        int[] ints = new int[] { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500,
+                900, 1000 };
+        for (int i = ints.length - 1; i >= 0; i--) {
+            times = num / ints[i];
+            num %= ints[i];
+            while (times > 0) {
+                sb.append(romans[i]);
+                times--;
+            }
+        }
+        return sb.toString();
     }
 }

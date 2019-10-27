@@ -2,6 +2,7 @@ package me.droreo002.oreocore.configuration.dummy;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import me.droreo002.oreocore.configuration.ConfigMemory;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
@@ -9,13 +10,14 @@ import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.utils.misc.TitleObject;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
 public class PluginConfig extends CustomConfig {
 
-    private static final String LATEST_VERSION = "10.1";
+    private static final String LATEST_VERSION = "11.0";
 
     @Getter
     private Memory memory;
@@ -62,6 +64,10 @@ public class PluginConfig extends CustomConfig {
         @ConfigVariable(path = "Inventory.Test", isSerializableObject = true, isUpdateAbleObject = true)
         @Getter
         private InventoryTemplate testTemplate = new InventoryTemplate();
+
+        @ConfigVariable(path = "Settings.debugging", isUpdateAbleObject = true)
+        @Getter @Setter
+        private ConfigurationSection debuggingData;
 
         Memory(CustomConfig customConfig) {
             this.customConfig = customConfig;

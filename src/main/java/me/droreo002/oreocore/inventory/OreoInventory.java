@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.animation.open.DiagonalFill;
 import me.droreo002.oreocore.inventory.animation.open.ItemFill;
@@ -24,12 +25,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,8 @@ public abstract class OreoInventory implements InventoryHolder {
     private final int size;
     @Getter
     private String title;
+    @Getter @Setter
+    private InventoryType inventoryType;
     @Getter @Setter
     private InventoryTemplate inventoryTemplate;
     @Getter @Setter
@@ -69,6 +74,7 @@ public abstract class OreoInventory implements InventoryHolder {
         this.size = template.getSize();
         this.title = color(template.getTitle());
         this.inventoryTemplate = template;
+        this.inventoryType = template.getInventoryType();
 
         if (!template.getOpenAnimationName().equals("none")) {
             InventoryAnimation.InventoryAnimationBuilder animation = InventoryAnimation.builder();
@@ -92,6 +98,7 @@ public abstract class OreoInventory implements InventoryHolder {
         this.size = size;
         this.title = "Inventory";
         this.inventoryTemplate = null;
+        this.inventoryType = InventoryType.CHEST;
         setupDefault();
     }
 
@@ -113,7 +120,11 @@ public abstract class OreoInventory implements InventoryHolder {
      */
     public void setTitle(String title) {
         this.title = color(title);
-        this.inventory = Bukkit.createInventory(this, this.size, this.title);
+        if (inventoryType != InventoryType.CHEST) {
+            this.inventory = Bukkit.createInventory(this, inventoryType, title);
+        } else {
+            this.inventory = Bukkit.createInventory(this, this.size, this.title);
+        }
     }
 
     /**
@@ -122,13 +133,17 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param e : The click event object
      */
     public void onClickHandler(InventoryClickEvent e) {
+        InventoryCacheManager cacheManager = OreoCore.getInstance().getInventoryCacheManager();
         InventoryView view = e.getView();
         Inventory inventory = view.getTopInventory();
         Player player = (Player) e.getWhoClicked();
         int slot = e.getSlot();
 
-        final OreoInventory oreoInventory = (OreoInventory) inventory.getHolder();
-        if (oreoInventory == null) return;
+        OreoInventory oreoInventory = cacheManager.getInventory(player);
+        if (oreoInventory == null) {
+             oreoInventory = (OreoInventory) inventory.getHolder();
+            if (oreoInventory == null) return;
+        }
 
         e.setCancelled(!oreoInventory.getDisabledClickListeners().contains(slot));
         GUIButton button = oreoInventory.getButton(slot);
@@ -148,6 +163,7 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param e : The close event object
      */
     public void onCloseHandler(InventoryCloseEvent e) {
+        final InventoryCacheManager cacheManager = OreoCore.getInstance().getInventoryCacheManager();
         final Player player = (Player) e.getPlayer();
         final Inventory inventory = e.getInventory();
 
@@ -165,8 +181,11 @@ public abstract class OreoInventory implements InventoryHolder {
             }
         }
 
-        final OreoInventory oreoInventory = (OreoInventory) inventory.getHolder();
-        if (oreoInventory == null) return;
+        OreoInventory oreoInventory = cacheManager.getInventory(player);
+        if (oreoInventory == null) {
+            oreoInventory = (OreoInventory) inventory.getHolder();
+            if (oreoInventory == null) return;
+        }
 
         oreoInventory.onClose(e);
         if (oreoInventory.getSoundOnClose() != null) oreoInventory.getSoundOnClose().send(player);
@@ -288,6 +307,14 @@ public abstract class OreoInventory implements InventoryHolder {
                 openAnimation.setInventory(getInventory());
             }
         }
+        /*
+         * Apparently custom inventory holder
+         * in mc version greater than 1.12 will no longer work
+         * so we use Inventory caching manager to make this work
+         */
+        if (inventoryType != InventoryType.CHEST && !ServerUtils.isLegacyVersion()) {
+            OreoCore.getInstance().getInventoryCacheManager().add(player, this);
+        }
         openInventory(player, getInventory());
     }
 
@@ -386,7 +413,10 @@ public abstract class OreoInventory implements InventoryHolder {
      */
     public void setup() {
         final InventoryTemplate template = getInventoryTemplate();
+
         if (template != null) {
+            this.inventoryType = template.getInventoryType();
+
             // We ignore the already added button
             for (GUIButton button : template.getAllGUIButtons()) {
                 addButton(button, false);
@@ -396,10 +426,19 @@ public abstract class OreoInventory implements InventoryHolder {
             if (template.getClickSound() != null) setSoundOnClick(template.getClickSound());
         }
 
+        if (inventoryType != InventoryType.CHEST) {
+            this.inventory = Bukkit.createInventory(this, inventoryType, title);
+        }
+
         getButtons().forEach(guiButton -> {
-            if (getInventory().getItem(guiButton.getInventorySlot()) != null) return; // Ignore filled
-            getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
+            try {
+                if (getInventory().getItem(guiButton.getInventorySlot()) != null) return; // Ignore filled
+                getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
+            } catch (ArrayIndexOutOfBoundsException ignored) {
+
+            }
         });
+
         if (!getGroupedButtons().isEmpty()) {
             for (GroupedButton groupedButton : getGroupedButtons()) {
                 if (groupedButton.isShouldOverrideOtherButton()) { // Remove every single thing inside

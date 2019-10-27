@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.item;
 
+import jdk.nashorn.internal.objects.annotations.Setter;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -7,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,5 +146,30 @@ public final class ItemUtils {
             flags.add(f.toString());
         }
         return flags;
+    }
+
+    /**
+     * Copy the item meta (most of them)
+     *
+     * @param item1 Item source
+     * @param item2 Item target
+     */
+    public static ItemStack copyMeta(ItemStack item1, ItemStack item2) {
+        ItemMeta targetMeta = item2.getItemMeta();
+        ItemMeta sourceMeta = item1.getItemMeta();
+
+        targetMeta.setLore(sourceMeta.getLore());
+        targetMeta.setDisplayName(sourceMeta.getDisplayName());
+        targetMeta.setLocalizedName(sourceMeta.getLocalizedName());
+
+        sourceMeta.getItemFlags().forEach(targetMeta::addItemFlags);
+        for (Map.Entry ent : sourceMeta.getEnchants().entrySet()) {
+            Enchantment enchantment = (Enchantment) ent.getKey();
+            int level = (int) ent.getValue();
+            targetMeta.addEnchant(enchantment, level, false);
+        }
+
+        item2.setItemMeta(targetMeta);
+        return item2.clone();
     }
 }

@@ -6,29 +6,26 @@ import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.ItemUtils;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InventoryTemplate implements SerializableConfigVariable<InventoryTemplate> {
+public class InventoryTemplate implements SerializableConfigVariable<InventoryTemplate>, Cloneable {
 
     private static final String PAGINATED_ITEM_ROW_KEY = "!-------!";
     public static final String PAGINATED_NB_KEY = "N"; // NextButton
     public static final String PAGINATED_PB_KEY = "P"; // PreviousButton
     public static final String PAGINATED_IB_KEY = "I"; // InformationButton
-
-    private final Map<String, List<GUIButton>> guiButtons; // No getter, because GUI is not capitalized by lombok
 
     @Getter
     private final ConfigurationSection layoutDatabase;
@@ -41,13 +38,17 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     @Getter
     private boolean paginatedInventory;
     @Getter
-    private String title;
-    @Getter
-    private List<String> rawLayout; // The raw layout
-    @Getter
-    private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
-    @Getter
     private String openAnimationName;
+    @Getter
+    private InventoryType inventoryType;
+    @Setter
+    private Map<String, List<GUIButton>> guiButtons; // No getter, because GUI is not capitalized by lombok
+    @Getter @Setter
+    private String title;
+    @Getter @Setter
+    private List<String> rawLayout; // The raw layout
+    @Getter @Setter
+    private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
 
     /**
      * For default initializer, do not remove
@@ -56,6 +57,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.layoutDatabase = null;
         this.layoutItemDatabase = null;
         this.guiButtons = new HashMap<>();
+        this.inventoryType = InventoryType.CHEST;
     }
 
     public InventoryTemplate(ConfigurationSection layoutDatabase) {
@@ -65,10 +67,14 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.rawLayout = new ArrayList<>();
         this.layout = new HashMap<>();
         this.guiButtons = new HashMap<>();
-        this.size = layoutDatabase.getInt("size");
-        this.title = layoutDatabase.getString("title");
+        this.size = layoutDatabase.getInt("size", 0);
+        this.title = layoutDatabase.getString("title", "Custom Inventory");
         this.rawLayout = layoutDatabase.getStringList("layout");
         this.openAnimationName = layoutDatabase.getString("openAnimation", "none");
+        this.inventoryType = InventoryType.CHEST;
+
+        if (layoutDatabase.isSet("inventoryType"))
+            this.inventoryType = InventoryType.valueOf(layoutDatabase.getString("inventoryType"));
         if (layoutDatabase.isSet("openSound"))
             this.openSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("openSound"));
         if (layoutDatabase.isSet("closeSound"))
@@ -79,7 +85,10 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         int slot = 0;
         for (String s : rawLayout) {
             if (!paginatedInventory) {
-                if (s.length() != 9) throw new IllegalStateException("Invalid layout length! " + s.length() + " expected are 9");
+                if (inventoryType == InventoryType.CHEST) {
+                    if (s.length() != 9)
+                        throw new IllegalStateException("Invalid layout length! " + s.length() + " expected are 9");
+                }
             } else {
                 if (s.equalsIgnoreCase(PAGINATED_ITEM_ROW_KEY)) {
                     slot += 9;
@@ -176,8 +185,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         for (String s : rawLayout) {
             if (s.equalsIgnoreCase(PAGINATED_ITEM_ROW_KEY)) {
                 result.add(row);
-                row++;
             }
+            row++;
         }
 
         return result;
@@ -190,7 +199,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * @return The GUIButton as array because it's possible to have more than one. Nullable also
      */
     public List<GUIButton> getGUIButtons(String key) {
-        if (!isKeyAvailable(key)) return null;
+        if (!isKeyAvailable(key)) return new ArrayList<>();
         return guiButtons.get(key);
     }
 
@@ -239,5 +248,19 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         config.set(path + ".size", getSize());
         config.set(path + ".layout", getRawLayout());
         config.set(path + ".paginated", isPaginatedInventory());
+    }
+
+    @Override
+    public InventoryTemplate clone() {
+        try {
+            InventoryTemplate template = (InventoryTemplate) super.clone();
+            template.setLayout(new HashMap<>(this.layout));
+            template.setRawLayout(new ArrayList<>(this.rawLayout));
+            template.setGuiButtons(new HashMap<>(this.guiButtons));
+
+            return template;
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
+        }
     }
 }

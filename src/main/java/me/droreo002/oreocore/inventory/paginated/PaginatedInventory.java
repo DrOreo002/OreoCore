@@ -153,19 +153,22 @@ public abstract class PaginatedInventory extends OreoInventory {
 
             GUIButton nextPageButton = inventoryTemplate.getGUIButtons(PAGINATED_NB_KEY).get(0);
             GUIButton previousPageButton = inventoryTemplate.getGUIButtons(PAGINATED_PB_KEY).get(0);
-            GUIButton informationButton = inventoryTemplate.getGUIButtons(PAGINATED_IB_KEY).get(0);
+            List<GUIButton> info = inventoryTemplate.getGUIButtons(PAGINATED_IB_KEY);
 
             setNextPageButton(nextPageButton);
             setPreviousPageButton(previousPageButton);
-            setInformationButton(informationButton);
 
             setupDefaultButton(); // Setup the listener
 
+            if (!info.isEmpty()) {
+                GUIButton informationButton = info.get(0);
+                setInformationButton(informationButton);
+                setInformationButtonSlot(informationButton.getInventorySlot());
+                addButton(this.informationButton, true);
+            }
+
             addButton(this.nextPageButton, true);
             addButton(this.previousPageButton, true);
-            addButton(this.informationButton, true);
-
-            setInformationButtonSlot(informationButton.getInventorySlot());
         }
 
         super.setup();
@@ -305,6 +308,7 @@ public abstract class PaginatedInventory extends OreoInventory {
      * Update the information button
      */
     private void updateInformationButton() {
+        if (informationButton == null) return;
         ItemStack infoButtonClone = informationButton.getItem().clone();
         if (!infoButtonClone.hasItemMeta()) return;
         ItemMeta meta = infoButtonClone.getItemMeta();
@@ -323,14 +327,6 @@ public abstract class PaginatedInventory extends OreoInventory {
      * Setup the button listener as default
      */
     private void setupDefaultButton() {
-        // Default buttons
-        if (this.informationButton == null) {
-            this.informationButton = new GUIButton(new CustomItem(UMaterial.PAPER.getItemStack(), "&aInformation", new String[]{
-                    "&7You're currently on page &a%currPage%",
-                    "&7there's in total of &a%totalPage% &7pages!"
-            }));
-        }
-
         if (this.previousPageButton == null) {
             this.previousPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(PREV_ARROW), "&aPrevious Page", new String[]{"&7Click me!"}));
         }

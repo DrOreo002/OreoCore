@@ -1359,8 +1359,8 @@ public enum UMaterial {
     ZOMBIE_WALL_HEAD(2, "SKULL", null, null, null, null, null, "ZOMBIE_WALL_HEAD"),
     ;
 
-    private static final HashMap<String, UMaterial> inUMemory = new HashMap<>();
-    private static final HashMap<String, ItemStack> inMemory = new HashMap<>();
+    private static final Map<String, UMaterial> inUMemory = new HashMap<>();
+    private static final Map<String, ItemStack> inMemory = new HashMap<>();
     private final String version = Bukkit.getVersion();
 
     private String[] names = new String[8];

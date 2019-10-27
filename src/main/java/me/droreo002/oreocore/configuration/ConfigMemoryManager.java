@@ -2,9 +2,11 @@ package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.utils.item.CustomItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -25,7 +27,7 @@ public final class ConfigMemoryManager {
         if (isLoaded(plugin, memory)) return;
         List<ConfigMemory> arr = new ArrayList<>();
         if (CONFIG_MEMORY.containsKey(plugin)) arr = CONFIG_MEMORY.get(plugin);
-        process(memory);
+        processMemory(memory);
 
         arr.add(memory);
         CONFIG_MEMORY.put(plugin, arr);
@@ -42,9 +44,9 @@ public final class ConfigMemoryManager {
         if (CONFIG_MEMORY.containsKey(plugin)) {
             if (isLoaded(plugin, memory)) {
                 CONFIG_MEMORY.get(plugin).remove(memory);
-                saveToFile(memory);
-                memory.getParent().saveConfig(false);
-                process(memory);
+                writeChanges(memory);
+
+                processMemory(memory);
                 CONFIG_MEMORY.get(plugin).add(memory);
             }
         }
@@ -55,8 +57,8 @@ public final class ConfigMemoryManager {
      *
      * @param memory The memory
      */
-    private static void saveToFile(ConfigMemory memory) {
-        final FileConfiguration config = memory.getParent().getConfig();
+    private static void writeChanges(ConfigMemory memory) {
+        FileConfiguration config = memory.getParent().getConfig();
         for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
                 if (!f.isAccessible()) f.setAccessible(true);
@@ -87,7 +89,7 @@ public final class ConfigMemoryManager {
      *
      * @param memory The config memory
      */
-    private static void process(ConfigMemory memory) {
+    private static void processMemory(ConfigMemory memory) {
         final FileConfiguration config = memory.getParent().getConfig();
         for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
@@ -145,89 +147,93 @@ public final class ConfigMemoryManager {
                     case FLOAT:
                         configValue = (float) config.getDouble(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case BOOLEAN:
                         configValue = config.getBoolean(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case BOOLEAN_LIST:
                         configValue = config.getBooleanList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case BYTE_LIST:
                         configValue = config.getByteList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case CHARACTER_LIST:
                         configValue = config.getCharacterList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case COLOR:
                         configValue = config.getColor(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case CONFIGURATION_SECTION:
                         configValue = config.getConfigurationSection(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case DOUBLE:
                         configValue = config.getDouble(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case DOUBLE_LIST:
                         configValue = config.getDoubleList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case FLOAT_LIST:
                         configValue = config.getFloatList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case INT:
                         configValue = config.getInt(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case INTEGER_LIST:
                         configValue = config.getIntegerList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case ITEM_STACK:
                         configValue = config.getItemStack(path);
+                        if (configValue == null) {
+                            configValue = CustomItem.fromSection(config.getConfigurationSection(path), null);
+                        }
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case LIST:
                         configValue = config.getList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case LONG:
                         configValue = config.getLong(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case LONG_LIST:
                         configValue = config.getLongList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case MAP_LIST:
                         configValue = config.getMapList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case STRING:
                         configValue = config.getString(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case STRING_LIST:
                         configValue = config.getStringList(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
                     case VECTOR:
                         configValue = config.getVector(path);
                         set(f, memory, configValue);
-                        return;
+                        break;
+                    default:
+                         /*
+                        Nothing found try to set it instead
+                         */
+                        set(f, memory, configValue);
+                        break;
                 }
-
-                /*
-                Nothing found try to set it instead
-                 */
-                set(f, memory, configValue);
             }
         }
     }

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,8 +15,10 @@ public final class ODebug {
 
     public static void log(JavaPlugin source, String text, boolean addPrefix) {
         if (source != null && !source.getName().equals(OreoCore.getInstance().getName())) {
-            final Map<JavaPlugin, DependedPluginProperties> hook = OreoCore.getInstance().getHookedPlugin();
-            if (hook.containsKey(source)) if (!hook.get(source).isEnableLogging()) return;
+            final Map<String, DependedPluginProperties> hook = OreoCore.getInstance().getHookedPlugin();
+            if (hook.containsKey(source.getName())) {
+                if (!hook.get(source.getName()).isEnableLogging()) return;
+            }
         }
         if (addPrefix) {
             log("&7[ &aOreoCore &7]&f " + text);

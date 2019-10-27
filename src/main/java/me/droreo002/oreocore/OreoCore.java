@@ -17,14 +17,17 @@ import me.droreo002.oreocore.dependencies.OCoreDependency;
 import me.droreo002.oreocore.dependencies.classloader.PluginClassLoader;
 import me.droreo002.oreocore.dependencies.classloader.ReflectionClassLoader;
 import me.droreo002.oreocore.enums.MinecraftVersion;
+import me.droreo002.oreocore.inventory.InventoryCacheManager;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
 import me.droreo002.oreocore.listeners.player.PlayerListener;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,9 +41,9 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private TaskChainFactory taskChainFactory;
     @Getter
-    private final Map<JavaPlugin, DependedPluginProperties> hookedPlugin = new HashMap<>();
+    private final Map<String, DependedPluginProperties> hookedPlugin = new HashMap<>();
     @Getter
-    private final Map<UUID, PaginatedInventory> opening = new HashMap<>();
+    private InventoryCacheManager inventoryCacheManager;
     @Getter
     private String prefix;
     @Getter
@@ -66,6 +69,7 @@ public final class OreoCore extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
         pluginClassLoader = new ReflectionClassLoader(this);
         dependencyManager = new DependencyManager(this, pluginClassLoader);
+        inventoryCacheManager = new InventoryCacheManager();
 
         HookUtils.getInstance(); // Initialize
         ConfigurationSerialization.registerClass(CustomItem.class);
@@ -90,7 +94,7 @@ public final class OreoCore extends JavaPlugin {
         }
 
         // Registering
-        Bukkit.getPluginManager().registerEvents(new MainInventoryListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MainInventoryListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
@@ -101,15 +105,22 @@ public final class OreoCore extends JavaPlugin {
 
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            final ConfigurationSection dData = getPluginConfig().getMemory().getDebuggingData();
             if (!hookedPlugin.isEmpty()) {
                 ODebug.log(this, "&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
                 for (Map.Entry ent : hookedPlugin.entrySet()) {
-                    JavaPlugin pl = (JavaPlugin) ent.getKey();
+                    JavaPlugin pl = ServerUtils.getPlugin((String) ent.getKey());
                     DependedPluginProperties properties = (DependedPluginProperties) ent.getValue();
 
                     boolean isPremium = properties.isPremiumPlugin();
                     ODebug.log(this, "     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"), false);
+
+                    // Update config data
+                    dData.set(pl.getName(), properties.isEnableLogging());
                 }
+                getPluginConfig().getMemory().setDebuggingData(dData);
+                getPluginConfig().saveConfig(true);
+
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
                     final Map<String, Integer> res = new HashMap<>();
                     for (Map.Entry ent : hookedPlugin.entrySet()) {
@@ -127,13 +138,12 @@ public final class OreoCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-        for (UUID uuid : opening.keySet()) {
+        for (UUID uuid : inventoryCacheManager.getCache().keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
-            player.closeInventory();
+            PlayerUtils.closeInventory(player);
         }
-        opening.clear();
+        inventoryCacheManager.getCache().clear();
 
         // Disable
         DatabaseManager.getDatabases().forEach(Database::onDisable);
@@ -146,6 +156,6 @@ public final class OreoCore extends JavaPlugin {
      * @param properties The plugin properties
      */
     public void dependPlugin(JavaPlugin plugin, DependedPluginProperties properties) {
-        hookedPlugin.put(plugin, properties);
+        hookedPlugin.put(plugin.getName(), properties);
     }
 }
