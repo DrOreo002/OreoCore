@@ -3,23 +3,21 @@ package me.droreo002.oreocore.configuration;
 import com.google.common.base.Charsets;
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.ODebug;
-import me.droreo002.oreocore.utils.io.FileUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +85,7 @@ public class CustomConfig {
     public void saveConfig(boolean updateMemory) {
         try {
             config.save(yamlFile);
-            updateComments(plugin.getResource(getFileName()));
+           updateComments();
         } catch (IOException e) {
             e.printStackTrace();
             ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
@@ -113,7 +111,7 @@ public class CustomConfig {
         InputStream configData = plugin.getResource(getFileName());
         if (configData != null) {
             try {
-                updateComments(configData);
+                updateComments();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -133,7 +131,7 @@ public class CustomConfig {
 
         if (!version.equals(latestVersion)) {
             try {
-                ConfigUpdater.update(yamlFile, plugin, fileName);
+                updateComments();
                 getConfig().set(configVersionPath, latestVersion);
                 saveConfig(true);
 
@@ -148,6 +146,19 @@ public class CustomConfig {
     }
 
     /**
+     * Update config comments and containers
+     *
+     * @throws IOException If something goes wrong
+     */
+    private void updateComments() throws IOException {
+        FileConfiguration source = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(getFileName())));
+        List<String> ignoredSection = new ArrayList<>(getNewPaths(source, config));
+        ignoredSection.forEach(System.out::println);
+
+        ConfigUpdater.update(plugin, getFileName(), getYamlFile(), ignoredSection);
+    }
+
+    /**
      * Register a memory
      *
      * @param memory The memory to register
@@ -158,62 +169,26 @@ public class CustomConfig {
     }
 
     /**
-     * Update config comments, currently private usage only
+     * Get the new paths of config
      *
-     * @param commentSource Config comment source
-     * @throws IOException If there's something bad happens
+     * @param config The source config or the non edited
+     * @param config2 The target config or the edited one
+     * @return A list of new section containing a new path
      */
-    private void updateComments(InputStream commentSource) throws IOException {
-        final File toUpdate = getYamlFile();
-        if (!toUpdate.exists()) throw new NullPointerException("File cannot be null!");
-        Reader baseReader = new InputStreamReader(commentSource, Charsets.UTF_8);
-        FileConfiguration config = YamlConfiguration.loadConfiguration(toUpdate);
-        BufferedReader reader = new BufferedReader(baseReader);
+    private List<String> getNewPaths(FileConfiguration config, FileConfiguration config2) {
+        List<String> newPaths = new ArrayList<>();
 
-        final Writer writer = new OutputStreamWriter(new FileOutputStream(toUpdate), Charsets.UTF_8);
-        final List<String> checked = new ArrayList<>();
-        String line;
-        outer: while ((line = reader.readLine()) != null) {
-            if (line.startsWith("#")) {
-                write(writer, line);
-                continue;
+        for (String s : config2.getKeys(true)) {
+            if (!config.getKeys(true).contains(s)) {
+                String[] dat = s.split("\\.");
+                String sectionData = dat[dat.length - 1];
+                String newPath = s.replace("." + sectionData, "");
+                if (newPaths.contains(newPath)) continue;
+                newPaths.add(newPath);
             }
-
-            for (String key : config.getKeys(true)) {
-                if (checked.contains(key)) continue;
-                String[] keyArray = key.split("\\.");
-                String keyString = keyArray[keyArray.length - 1]; // Because last key is always a value
-
-                if (line.trim().startsWith(keyString + ":")) {
-                    checked.add(key);
-                    if (config.isConfigurationSection(key)) {
-                        write(writer, line);
-                        continue outer;
-                    }
-
-                    String[] array = line.split(": ");
-
-                    if (array.length > 1) {
-                        if (array[1].startsWith("\"") || array[1].startsWith("'")) {
-                            char c = array[1].charAt(0);
-                            String s = config.getString(key);
-                            if (s.contains("'")) {
-                                s = s.replace("'", "''");
-                            }
-                            line = array[0] + ": " + c + s + c;
-                        } else {
-                            line = array[0] + ": " + config.get(key);
-                        }
-                    }
-                    write(writer, line);
-                    continue outer;
-                }
-            }
-            write(writer, line);
         }
-        writer.flush();
-        writer.close();
-        reader.close();
+
+        return newPaths;
     }
 
     /**
