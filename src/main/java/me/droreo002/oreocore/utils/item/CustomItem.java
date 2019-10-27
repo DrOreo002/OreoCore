@@ -8,6 +8,7 @@ import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -307,10 +308,10 @@ public class CustomItem extends ItemStack {
         if (materialDurr != -1) {
             res = new ItemStack(uMaterial.getMaterial(), amount, (short) materialDurr);
         } else {
-            res = new ItemStack(uMaterial.getMaterial(), amount);
+            res = uMaterial.getItemStack();
         }
 
-        if (material.equals(UMaterial.PLAYER_HEAD.getMaterial().toString())) {
+        if (uMaterial.getMaterial().toString().equals(UMaterial.PLAYER_HEAD.getMaterial().toString())) {
             if (texture != null) {
                 res = CustomSkull.setTexture(res, texture);
             }

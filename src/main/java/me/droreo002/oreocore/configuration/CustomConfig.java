@@ -153,7 +153,6 @@ public class CustomConfig {
     private void updateComments() throws IOException {
         FileConfiguration source = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(getFileName())));
         List<String> ignoredSection = new ArrayList<>(getNewPaths(source, config));
-        ignoredSection.forEach(System.out::println);
 
         ConfigUpdater.update(plugin, getFileName(), getYamlFile(), ignoredSection);
     }

@@ -4,27 +4,15 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
-import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
-import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
-import me.droreo002.oreocore.utils.strings.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
 public final class CustomSkull {
 
@@ -124,7 +112,7 @@ public final class CustomSkull {
      * @return the result ItemStack if successful, null otherwise
      */
     public static ItemStack toHead(ItemStack item, UUID uuid) {
-        validate(item);
+        tryFix(item);
 
         if (CACHE.containsKey(uuid.toString())) {
             if (ItemUtils.isSimilar(item, CACHE.get(uuid.toString()))) {
@@ -183,7 +171,7 @@ public final class CustomSkull {
      * @return the result ItemStack if successful, null otherwise
      */
     public static ItemStack setTexture(ItemStack item, String texture) {
-        validate(item);
+        tryFix(item);
 
         if (CACHE.containsKey(texture)) {
             if (ItemUtils.isSimilar(item, CACHE.get(texture))) {
@@ -209,7 +197,7 @@ public final class CustomSkull {
      * @param texture : The head texture
      */
     private static void addToCache(ItemStack item, String texture) {
-        validate(item);
+        tryFix(item);
 
         if (CACHE.containsKey(texture)) return;
         if (item.hasItemMeta()) {
@@ -224,8 +212,9 @@ public final class CustomSkull {
      *
      * @param item : The item to validate
      */
-    private static void validate(ItemStack item) {
-        if (item.getType() != UMaterial.PLAYER_HEAD_ITEM.getMaterial()) throw new NullPointerException("Item " + item.getType() + ". Required is " + UMaterial.PLAYER_HEAD_ITEM.getMaterial());
+    private static void tryFix(ItemStack item) {
+        if (item.getType() != UMaterial.PLAYER_HEAD_ITEM.getMaterial())
+            item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
     }
 
     /**
