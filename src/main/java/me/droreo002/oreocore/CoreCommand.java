@@ -1,5 +1,7 @@
 package me.droreo002.oreocore;
 
+import me.droreo002.oreocore.conversation.OreoConversation;
+import me.droreo002.oreocore.conversation.OreoPrompt;
 import me.droreo002.oreocore.inventory.linked.LinkedInventoryManager;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
@@ -13,12 +15,17 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -98,6 +105,22 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     }
                     sound(player);
                     sendMessage(player, "Texture are " + CustomSkull.getTexture(item));
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-conversation")) {
+                    sendMessage(player, "Testing conversation...");
+                    new OreoConversation<String>("not player", "exit", plugin)
+                            .first(new OreoPrompt<String>("first") {
+                                @Override
+                                public String onInput(ConversationContext conversationContext, String s) {
+                                    return s;
+                                }
+
+                                @Override
+                                public String getPromptText(ConversationContext conversationContext) {
+                                    return "Please type your number";
+                                }
+                            }).lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {
