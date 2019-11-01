@@ -8,6 +8,8 @@ import org.bukkit.conversations.StringPrompt;
 
 public abstract class OreoPrompt<T> extends StringPrompt {
 
+    public static final String DATA_KEY = "DATA";
+
     @Getter @Setter
     private String nextPrompt;
     @Getter @Setter
@@ -29,7 +31,7 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
         T t = onInput(conversationContext, s);
-        conversationContext.getAllSessionData().put("DATA", t);
+        conversationContext.getAllSessionData().put(DATA_KEY, t);
 
         OreoConversation<T> conversation = ((OreoConversation) conversationContext.getAllSessionData().get(OreoConversation.CONVERSATION_DATA));
 

@@ -68,6 +68,17 @@ public class LinkedInventoryManager {
     }
 
     /**
+     * Add a linkable inventory, with some extra wow
+     *
+     * @param linkable The linkable inventory
+     * @return Current object
+     */
+    public LinkedInventoryManager then(Linkable linkable) {
+        addLinkedInventory(linkable);
+        return this;
+    }
+
+    /**
      * Add the inventories
      *
      * @param linkable The linkable inventories

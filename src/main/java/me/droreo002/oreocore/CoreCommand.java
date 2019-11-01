@@ -118,9 +118,22 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
 
                                 @Override
                                 public String getPromptText(ConversationContext conversationContext) {
-                                    return "Please type your number";
+                                    return "Type first data";
                                 }
-                            }).lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player);
+                            })
+                            .then(new OreoPrompt<String>("second") {
+                                @Override
+                                public String onInput(ConversationContext conversationContext, String s) {
+                                    String data = (String) conversationContext.getSessionData(DATA_KEY);
+                                    return data + s;
+                                }
+
+                                @Override
+                                public String getPromptText(ConversationContext conversationContext) {
+                                    return "Type second data";
+                                }
+                            })
+                            .lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {

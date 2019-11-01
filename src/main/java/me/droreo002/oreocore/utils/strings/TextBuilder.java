@@ -112,7 +112,13 @@ public class TextBuilder {
             return this;
         }
         List<TextComponent> components = new ArrayList<>();
-        value.forEach(s -> components.add(new TextComponent(color(s) + "\n")));
+        for (int i = 0; i < value.size(); i++) {
+            TextComponent c = new TextComponent(color(value.get(i)) + "\n");
+            if (i == value.size() - 1) { // Last one
+                c = new TextComponent(color(value.get(i)));
+            }
+            components.add(c);
+        }
 
         Arrays.stream(TextComponent.fromLegacyText(color(text))).forEach(component -> {
             component.setHoverEvent(new HoverEvent(action, components.toArray(new TextComponent[components.size() - 1])));

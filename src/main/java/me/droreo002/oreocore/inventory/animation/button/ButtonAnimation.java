@@ -2,6 +2,8 @@ package me.droreo002.oreocore.inventory.animation.button;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import org.bukkit.Material;
@@ -9,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,21 @@ public class ButtonAnimation implements Cloneable {
 
         if (buttonAnimationName == null) {
             // TODO: 06/08/2019 Setup animation from raw frames
+        }
+
+        try {
+            if (!buttonAnimationName.equals("none")) {
+                DefaultButtonAnimation.valueOf(buttonAnimationName);
+            }
+        } catch (Exception e) {
+            /*
+            Must users have typos here. So we print out the available button animations
+            to provider quick fix
+             */
+            ODebug.log("Failed to get button animation with the name of &a" + this.buttonAnimationName, true);
+            ODebug.log("    &c> Available are: " + Arrays.toString(DefaultButtonAnimation.values()), false);
+            e.printStackTrace();
+            return;
         }
 
         updateButtonMetaData(buttonItem);

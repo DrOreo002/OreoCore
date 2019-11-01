@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.ItemUtils;
@@ -16,6 +18,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +84,25 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             this.closeSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("closeSound"));
         if (layoutDatabase.isSet("clickSound"))
             this.clickSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("clickSound"));
+
+        /*
+        Validations
+         */
+        try {
+            if (!this.openAnimationName.equals("none")) {
+                OpenAnimations.valueOf(this.openAnimationName);
+            }
+        } catch (Exception e) {
+            /*
+            Must users have typos here. So we print out the available open animations
+            to provider quick fix
+             */
+            ODebug.log("Failed to get open animation with the name of &a" + this.openAnimationName, true);
+            ODebug.log("    &c> Available are: " + Arrays.toString(OpenAnimations.values()), false);
+            e.printStackTrace();
+            return;
+        }
+
 
         int slot = 0;
         for (String s : rawLayout) {

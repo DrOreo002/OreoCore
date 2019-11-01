@@ -91,6 +91,8 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      */
     public OreoConversation<T> then(OreoPrompt<T> prompt) {
         if (prompts.isEmpty()) throw new IllegalStateException("Please add the first prompt first!");
+        OreoPrompt<T> pr = this.prompts.get(this.prompts.size() - 1); // Get last one
+        pr.setNextPrompt(prompt.getIdentifier());
         prompts.add(prompt);
         return this;
     }

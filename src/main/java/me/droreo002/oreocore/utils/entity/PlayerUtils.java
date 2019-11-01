@@ -10,6 +10,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.bridge.CrackedServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
@@ -38,13 +39,27 @@ public final class PlayerUtils {
      * @return the Location of block the player's looking at
      */
     public static Location getPlayerLooking(Player player, int distance) {
-        ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight(null, distance);
-        ArrayList<Location> sight = new ArrayList<Location>();
+        List<Block> sightBlock = player.getLineOfSight(null, distance);
+        List<Location> sight = new ArrayList<Location>();
         for (Block block : sightBlock) {
             sight.add(block.getLocation());
         }
         // Get the last
         return sight.get(sight.size() - 1);
+    }
+
+    /**
+     * Send a message to player
+     *
+     * @param message The message to send
+     * @param target The target
+     * @param clearChat Should we clear chat?
+     * @param soundObject The sound to play, nullable
+     */
+    public static void sendMessage(Player target, String message, boolean clearChat, SoundObject soundObject) {
+        if (clearChat) PlayerUtils.clearChat(target);
+        if (soundObject != null) soundObject.send(target);
+        sendMessage(target, message);
     }
 
     /**

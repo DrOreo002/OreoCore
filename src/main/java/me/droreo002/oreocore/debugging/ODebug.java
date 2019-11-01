@@ -13,6 +13,10 @@ import java.util.Set;
 
 public final class ODebug {
 
+    public static void log(String text, boolean addPrefix) {
+        log(OreoCore.getInstance(), text, addPrefix);
+    }
+
     public static void log(JavaPlugin source, String text, boolean addPrefix) {
         if (source != null && !source.getName().equals(OreoCore.getInstance().getName())) {
             final Map<String, DependedPluginProperties> hook = OreoCore.getInstance().getHookedPlugin();
