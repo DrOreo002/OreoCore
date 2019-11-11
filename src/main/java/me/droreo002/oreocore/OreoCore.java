@@ -23,7 +23,6 @@ import me.droreo002.oreocore.listeners.player.PlayerListener;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
-import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;

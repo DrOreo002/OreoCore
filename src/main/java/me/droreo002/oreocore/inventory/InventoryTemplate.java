@@ -278,8 +278,18 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             InventoryTemplate template = (InventoryTemplate) super.clone();
             template.setLayout(new HashMap<>(this.layout));
             template.setRawLayout(new ArrayList<>(this.rawLayout));
-            template.setGuiButtons(new HashMap<>(this.guiButtons));
 
+            Map<String, List<GUIButton>> buttons = new HashMap<>();
+            for (Map.Entry ent : this.guiButtons.entrySet()) {
+                String key = (String) ent.getKey();
+                List<GUIButton> but = new ArrayList<>();
+
+                for (GUIButton b : (List<GUIButton>) ent.getValue()) {
+                    but.add(b.clone());
+                }
+                buttons.put(key, but);
+            }
+            template.setGuiButtons(buttons);
             return template;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);

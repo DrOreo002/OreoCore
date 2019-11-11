@@ -72,9 +72,9 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     public OreoInventory(InventoryTemplate template) {
+        this.inventoryTemplate = template;
         this.size = template.getSize();
         this.title = color(template.getTitle());
-        this.inventoryTemplate = template;
         this.inventoryType = template.getInventoryType();
 
         if (!template.getOpenAnimationName().equals("none")) {
@@ -151,7 +151,9 @@ public abstract class OreoInventory implements InventoryHolder {
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
                 List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
-                if (loadedListeners != null) loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                if (loadedListeners != null) {
+                    loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                }
             }
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
@@ -243,6 +245,11 @@ public abstract class OreoInventory implements InventoryHolder {
     public void onOpen(InventoryOpenEvent e) {}
 
     /**
+     * Called before {@link OreoInventory#setup()} get called
+     */
+    public void onPreSetup() {}
+
+    /**
      * Get the inventory
      *
      * @return The inventory, can be null also
@@ -300,6 +307,7 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param player The target player
      */
     public void open(Player player) {
+        onPreSetup();
         setup();
         // Some basic setup with animations
         if (getInventoryAnimation() != null) {
@@ -419,9 +427,8 @@ public abstract class OreoInventory implements InventoryHolder {
             this.inventoryType = template.getInventoryType();
 
             // We ignore the already added button
-            for (GUIButton button : template.getAllGUIButtons()) {
-                addButton(button, false);
-            }
+            template.getAllGUIButtons().forEach(b -> addButton(b, false));
+
             if (template.getOpenSound() != null) setSoundOnOpen(template.getOpenSound());
             if (template.getCloseSound() != null) setSoundOnClose(template.getCloseSound());
             if (template.getClickSound() != null) setSoundOnClick(template.getClickSound());

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LinkedInventoryManager {
@@ -28,20 +29,28 @@ public class LinkedInventoryManager {
      * to open
      *
      * @param player Target player
+     * @param extraData The extra data
      */
-    public void openInventory(Player player) {
-        openInventory(player, null);
+    public void openInventory(Player player, LinkedDatas extraData) {
+        openInventory(player, null, extraData);
     }
 
     /**
      * Open the inventory
      *
      * @param player Target player
+     * @param extraData The extra data
+     * @param firstInventory The first inventory to open
      */
-    public void openInventory(Player player, String firstInventory) {
+    public void openInventory(Player player, String firstInventory, LinkedDatas extraData) {
         if (inventories.isEmpty()) throw new NullPointerException("Inventories cannot be empty!");
         Linkable linkable = (firstInventory == null) ? inventories.get(0) : getLinkedInventory(firstInventory);
         setCurrentInventory(linkable.getInventoryName());
+        if (extraData != null) {
+            this.linkedDatas.addAll(extraData.getData());
+            linkable.acceptData(this.linkedDatas, null);
+            setupButtons(linkable); // Just in case if there's a new one added
+        }
         linkable.getInventoryOwner().open(player);
     }
 

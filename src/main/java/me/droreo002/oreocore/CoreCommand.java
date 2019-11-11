@@ -18,6 +18,9 @@ import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
+import me.droreo002.oreocore.utils.strings.TextBuilder;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +33,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class CoreCommand implements CommandExecutor, TabCompleter {
@@ -146,7 +152,12 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                             new FirstLinkedInventory(),
                             new SecondLinkedInventory()
                     );
-                    manager.openInventory(player);
+                    manager.openInventory(player, null);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-text-builder")) {
+                    List<BaseComponent> components = TextBuilder.of("&7[Test]").setHoverEvent(HoverEvent.Action.SHOW_TEXT, Collections.singletonList("&7- Ini list ya")).getList();
+                    TextBuilder.of("&aBangsat lo &cAnjing ngentot! &7(&a5d 2d 7m 2s&7) &r%lol%").replace("%lol%", components).send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-template-inventory")) {

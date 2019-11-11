@@ -145,8 +145,12 @@ public class ConfigUpdater {
         for (int i = 0; i < list.size(); i++) {
             Object o = list.get(i);
 
-            if (o instanceof String || o instanceof Character) {
-                builder.append(prefixSpaces).append("- '").append(o).append("'");
+            if (o instanceof String) {
+                String fixed = (String) o;
+                if (fixed.contains("'")) {
+                    fixed = fixed.replace("'", "''");
+                }
+                builder.append(prefixSpaces).append("- '").append(fixed).append("'");
             } else if (o instanceof List) {
                 builder.append(prefixSpaces).append("- ").append(yaml.dump(o));
             } else {

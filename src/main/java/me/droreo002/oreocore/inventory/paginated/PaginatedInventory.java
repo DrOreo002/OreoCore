@@ -12,6 +12,7 @@ import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.list.Iterators;
 import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -48,6 +49,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         super(size, title);
         this.paginatedButtons = new ArrayList<>();
         this.paginatedButtonSlots = new ArrayList<>();
+        this.paginatedButtonResult = new ArrayList<>();
         setupDefaultButton();
     }
 
@@ -55,6 +57,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         super(template);
         this.paginatedButtons = new ArrayList<>();
         this.paginatedButtonSlots = new ArrayList<>();
+        this.paginatedButtonResult = new ArrayList<>();
         setupDefaultButton();
     }
 
@@ -78,6 +81,7 @@ public abstract class PaginatedInventory extends OreoInventory {
     private void setItemRow(int row) {
         if (row == 0) {
             for (int i = 0; i < 9; i++) {
+                if (paginatedButtonSlots.contains(i)) continue;
                 paginatedButtonSlots.add(i);
             }
         } else {
@@ -85,6 +89,7 @@ public abstract class PaginatedInventory extends OreoInventory {
             int stop = start + 9;
 
             for (int i = start; i < stop; i++) {
+                if (paginatedButtonSlots.contains(i)) continue;
                 paginatedButtonSlots.add(i);
             }
         }
@@ -176,13 +181,12 @@ public abstract class PaginatedInventory extends OreoInventory {
             this.currentPage = 0;
             this.totalPage = 1;
         } else {
-            // Paginate
+            // Paginate the buttons
             this.buttonPaginator = new Paginator<>(new ArrayList<>(paginatedButtons));
-            this.paginatedButtonResult = buttonPaginator.paginates(paginatedButtonSlots.size());
 
-            // Specify more variables
+            this.paginatedButtonResult = Iterators.divideIterable(paginatedButtons, paginatedButtonSlots.size());
             this.currentPage = 0;
-            this.totalPage = buttonPaginator.totalPage(paginatedButtonSlots.size()) - 1; // Somehow returned <original + 1> not sure why.
+            this.totalPage = paginatedButtonResult.size();
 
             setupPaginatedButtons();
         }
@@ -196,17 +200,16 @@ public abstract class PaginatedInventory extends OreoInventory {
         // Add the buttons
         int toGet = 0;
         for (int i : paginatedButtonSlots) {
-            List<GUIButton> but = getCurrentPageButtons();
+            List<GUIButton> buttons = getCurrentPageButtons();
             ItemStack item;
             try {
-                item = but.get(toGet).getItem();
+                item = buttons.get(toGet).getItem();
             } catch (IndexOutOfBoundsException e) {
                 break;
             }
+            buttons.get(toGet).setInventorySlot(i);
+            if (item != null) getInventory().setItem(i, item);
             toGet++;
-            if (item == null) continue;
-            but.get(toGet - 1).setInventorySlot(i);
-            getInventory().setItem(i, item);
         }
     }
 

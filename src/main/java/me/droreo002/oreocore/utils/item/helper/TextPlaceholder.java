@@ -224,7 +224,7 @@ public class TextPlaceholder {
      * @param source The source
      * @return true if contains, false otherwise
      */
-    public boolean isContainsPlaceholder(String source) {
+    public static boolean isContainsPlaceholder(String source) {
         Matcher sMatcher = PAPI_REGEX_SINGLE.matcher(source);
         return sMatcher.find();
     }

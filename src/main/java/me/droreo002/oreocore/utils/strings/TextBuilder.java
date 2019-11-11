@@ -2,11 +2,13 @@ package me.droreo002.oreocore.utils.strings;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -27,13 +29,30 @@ public class TextBuilder {
 
     public TextBuilder() {}
 
-    private TextBuilder(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue) {
+    private TextBuilder(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue, boolean withPlaceholder) {
         if (base == null) {
             return;
         }
         base = color(base);
+        StringBuilder data = new StringBuilder();
+        List<BaseComponent> components = new ArrayList<>();
 
-        Arrays.stream(TextComponent.fromLegacyText(base)).forEach(component -> {
+        if (withPlaceholder) {
+            for (String s : base.split(" ")) {
+                if (TextPlaceholder.isContainsPlaceholder(s)) {
+                    components.addAll(Arrays.asList(TextComponent.fromLegacyText(data.toString())));
+                    components.addAll(Arrays.asList(TextComponent.fromLegacyText(s)));
+                    data = new StringBuilder();
+                    continue;
+                }
+                data.append(s).append(" ");
+            }
+            components.addAll(Arrays.asList(TextComponent.fromLegacyText(data.toString())));
+        } else {
+            components.addAll(Arrays.asList(TextComponent.fromLegacyText(base)));
+        }
+
+        components.forEach(component -> {
             if (clickValue != null) {
                 component.setClickEvent(new ClickEvent(clickAction, clickValue));
             }
@@ -51,8 +70,8 @@ public class TextBuilder {
      *
      * @return The TextBuilder
      */
-    public static TextBuilder of(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue) {
-        return new TextBuilder(base, clickAction, clickValue, hoverAction, hoverValue);
+    public static TextBuilder of(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue, boolean withPlaceholder) {
+        return new TextBuilder(base, clickAction, clickValue, hoverAction, hoverValue, withPlaceholder);
     }
 
     /**
@@ -61,7 +80,16 @@ public class TextBuilder {
      * @return The TextBuilder
      */
     public static TextBuilder of(String base) {
-        return of(base, null, null, null, null);
+        return of(base, null, null, null, null, false);
+    }
+
+    /**
+     * Create a new TextBuilder, parameter ar self explanatory
+     *
+     * @return The text builder
+     */
+    public static TextBuilder of(String base, boolean withPlaceholder) {
+        return of(base, null, null, null, null, withPlaceholder);
     }
 
     /**
@@ -209,6 +237,31 @@ public class TextBuilder {
     }
 
     /**
+     * Set the hover event of current text
+     *
+     * @param action The hover event action
+     * @param value The hover event value as list
+     * @return the TextBuilder
+     */
+    public TextBuilder setHoverEvent(HoverEvent.Action action, List<String> value) {
+        if (value == null || value.isEmpty()) {
+            return this;
+        }
+
+        List<TextComponent> components = new ArrayList<>();
+        for (int i = 0; i < value.size(); i++) {
+            TextComponent c = new TextComponent(color(value.get(i)) + "\n");
+            if (i == value.size() - 1) { // Last one
+                c = new TextComponent(color(value.get(i)));
+            }
+            components.add(c);
+        }
+
+        list.forEach(component -> component.setHoverEvent(new HoverEvent(action, components.toArray(new TextComponent[components.size() - 1]))));
+        return this;
+    }
+
+    /**
      * Merge another TextBuilder object
      *
      * @param textBuilder Other object
@@ -251,7 +304,7 @@ public class TextBuilder {
      * @param text The text to find and replace
      * @param components The component as the replacement
      */
-    public void replace(String text, List<BaseComponent> components) {
+    public TextBuilder replace(String text, List<BaseComponent> components) {
         int foundIndex = 0;
         boolean found = false;
         for (BaseComponent c : list) {
@@ -262,8 +315,10 @@ public class TextBuilder {
             }
             foundIndex++;
         }
-        if (!found) return;
-        list.remove(foundIndex);
-        list.addAll(foundIndex, components);
+        if (found) {
+            list.remove(foundIndex);
+            list.addAll(foundIndex, components);
+        }
+        return this;
     }
 }

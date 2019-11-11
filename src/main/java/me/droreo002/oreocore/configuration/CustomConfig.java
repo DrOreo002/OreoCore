@@ -85,7 +85,7 @@ public class CustomConfig {
     public void saveConfig(boolean updateMemory) {
         try {
             config.save(yamlFile);
-           updateComments();
+            updateComments();
         } catch (IOException e) {
             e.printStackTrace();
             ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
@@ -108,14 +108,6 @@ public class CustomConfig {
         if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
 
         saveConfig(false);
-        InputStream configData = plugin.getResource(getFileName());
-        if (configData != null) {
-            try {
-                updateComments();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
