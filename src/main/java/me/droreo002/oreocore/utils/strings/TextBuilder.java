@@ -29,11 +29,12 @@ public class TextBuilder {
 
     public TextBuilder() {}
 
-    private TextBuilder(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue, boolean withPlaceholder) {
+    private TextBuilder(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue) {
         if (base == null) {
             return;
         }
         base = color(base);
+        boolean withPlaceholder = base.contains("%");
         StringBuilder data = new StringBuilder();
         List<BaseComponent> components = new ArrayList<>();
 
@@ -42,7 +43,7 @@ public class TextBuilder {
                 if (TextPlaceholder.isContainsPlaceholder(s)) {
                     components.addAll(Arrays.asList(TextComponent.fromLegacyText(data.toString())));
                     components.addAll(Arrays.asList(TextComponent.fromLegacyText(s)));
-                    data = new StringBuilder();
+                    data = new StringBuilder().append(" "); // Add extra space after adding placeholder!
                     continue;
                 }
                 data.append(s).append(" ");
@@ -70,8 +71,8 @@ public class TextBuilder {
      *
      * @return The TextBuilder
      */
-    public static TextBuilder of(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue, boolean withPlaceholder) {
-        return new TextBuilder(base, clickAction, clickValue, hoverAction, hoverValue, withPlaceholder);
+    public static TextBuilder of(String base, ClickEvent.Action clickAction, String clickValue, HoverEvent.Action hoverAction, String hoverValue) {
+        return new TextBuilder(base, clickAction, clickValue, hoverAction, hoverValue);
     }
 
     /**
@@ -80,16 +81,7 @@ public class TextBuilder {
      * @return The TextBuilder
      */
     public static TextBuilder of(String base) {
-        return of(base, null, null, null, null, false);
-    }
-
-    /**
-     * Create a new TextBuilder, parameter ar self explanatory
-     *
-     * @return The text builder
-     */
-    public static TextBuilder of(String base, boolean withPlaceholder) {
-        return of(base, null, null, null, null, withPlaceholder);
+        return of(base, null, null, null, null);
     }
 
     /**

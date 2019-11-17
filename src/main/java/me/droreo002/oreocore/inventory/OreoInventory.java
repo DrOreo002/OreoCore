@@ -246,8 +246,12 @@ public abstract class OreoInventory implements InventoryHolder {
 
     /**
      * Called before {@link OreoInventory#setup()} get called
+     *
+     * @return true to continue setup, false otherwise
      */
-    public void onPreSetup() {}
+    public boolean onPreSetup() {
+        return true;
+    }
 
     /**
      * Get the inventory
@@ -269,7 +273,7 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     /**
-     * Close player's inventoru with sound
+     * Close player's inventory with sound
      *
      * @param player The target player
      * @param closeSound The sound to play
@@ -307,24 +311,26 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param player The target player
      */
     public void open(Player player) {
-        onPreSetup();
-        setup();
-        // Some basic setup with animations
-        if (getInventoryAnimation() != null) {
-            OpenAnimation openAnimation = getInventoryAnimation().getOpenAnimation();
-            if (openAnimation != null) {
-                openAnimation.setInventory(getInventory());
+        PlayerUtils.closeInventory(player); // If player still opening something
+        if (onPreSetup()) {
+            setup();
+            // Some basic setup with animations
+            if (getInventoryAnimation() != null) {
+                OpenAnimation openAnimation = getInventoryAnimation().getOpenAnimation();
+                if (openAnimation != null) {
+                    openAnimation.setInventory(getInventory());
+                }
             }
+            /*
+             * Apparently custom inventory holder
+             * in mc version greater than 1.12 will no longer work
+             * so we use Inventory caching manager to make this work
+             */
+            if (inventoryType != InventoryType.CHEST && !ServerUtils.isLegacyVersion()) {
+                OreoCore.getInstance().getInventoryCacheManager().add(player, this);
+            }
+            openInventory(player, getInventory());
         }
-        /*
-         * Apparently custom inventory holder
-         * in mc version greater than 1.12 will no longer work
-         * so we use Inventory caching manager to make this work
-         */
-        if (inventoryType != InventoryType.CHEST && !ServerUtils.isLegacyVersion()) {
-            OreoCore.getInstance().getInventoryCacheManager().add(player, this);
-        }
-        openInventory(player, getInventory());
     }
 
     /**
@@ -425,6 +431,10 @@ public abstract class OreoInventory implements InventoryHolder {
 
         if (template != null) {
             this.inventoryType = template.getInventoryType();
+            // There's a changes
+            if (!this.title.equals(template.getTitle())) {
+                this.inventory = Bukkit.createInventory(this, inventoryType, template.getTitle());
+            }
 
             // We ignore the already added button
             template.getAllGUIButtons().forEach(b -> addButton(b, false));

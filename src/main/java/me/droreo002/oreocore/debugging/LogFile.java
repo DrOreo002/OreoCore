@@ -3,8 +3,8 @@ package me.droreo002.oreocore.debugging;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.utils.io.FileUtils;
-import me.droreo002.oreocore.utils.misc.TimestampBuilder;
-import me.droreo002.oreocore.utils.misc.TimestampUtils;
+import me.droreo002.oreocore.utils.time.TimestampBuilder;
+import me.droreo002.oreocore.utils.time.TimestampUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

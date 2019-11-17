@@ -4,13 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.enums.Sounds;
+import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.utils.bridge.OSound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
-public class TitleObject implements SerializableConfigVariable<TitleObject> {
+public class TitleObject implements SerializableConfigVariable<TitleObject>, Cloneable {
 
     @Getter @Setter
     private String title;
@@ -24,6 +28,33 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
     private int fadeOut;
     @Getter @Setter
     private SoundObject soundOnSend;
+
+    public TitleObject(String title) {
+        this.title = title;
+        this.subTitle = " ";
+        this.fadeIn = 0;
+        this.stay = 20;
+        this.fadeOut = 0;
+        this.soundOnSend = null;
+    }
+
+    public TitleObject(String title, String subTitle) {
+        this.title = title;
+        this.subTitle = subTitle;
+        this.fadeIn = 0;
+        this.stay = 20;
+        this.fadeOut = 0;
+        this.soundOnSend = null;
+    }
+
+    public TitleObject(String title, String subTitle, SoundObject soundOnSend) {
+        this.title = title;
+        this.subTitle = subTitle;
+        this.fadeIn = 0;
+        this.stay = 20;
+        this.fadeOut = 0;
+        this.soundOnSend = soundOnSend;
+    }
 
     public TitleObject() {
         this.title = "Dummy";
@@ -57,7 +88,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         int fadeOut = section.getInt("fade-out");
         SoundObject soundOnSend = null;
         if (section.isSet("soundOnSend")) {
-            final Sounds s = Sounds.fromString(section.getString("soundOnSend"));
+            final OSound s = OSound.match(section.getString("soundOnSend"));
             if (s != null) soundOnSend = new SoundObject(s);
         }
         return new TitleObject(title, subTitle, fadeIn, stay, fadeOut, soundOnSend);
@@ -70,6 +101,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
         config.set(path + ".fade-in", fadeIn);
         config.set(path + ".stay", stay);
         config.set(path + ".fade-out", fadeIn);
+        if (soundOnSend != null) config.set(path + ".soundOnSend", soundOnSend.getSound().toString());
     }
 
     /**
@@ -80,5 +112,19 @@ public class TitleObject implements SerializableConfigVariable<TitleObject> {
      */
     public static TitleObject fromConfig(ConfigurationSection section) {
         return new TitleObject().getFromConfig(section); // We don't need config because we'll not use it anyway
+    }
+
+    /**
+     * Clone this TitleObject
+     *
+     * @return The GUIButton
+     */
+    @Override
+    public TitleObject clone() {
+        try {
+            return (TitleObject) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
+        }
     }
 }

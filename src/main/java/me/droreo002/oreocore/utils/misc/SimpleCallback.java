@@ -1,5 +1,7 @@
 package me.droreo002.oreocore.utils.misc;
 
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
+
 public interface SimpleCallback<T> {
 
     /**
@@ -7,7 +9,7 @@ public interface SimpleCallback<T> {
      *
      * @param t Object
      */
-    void success(T t);
+    void success(@Nullable T t);
 
     /**
      * Called when something bad happens!

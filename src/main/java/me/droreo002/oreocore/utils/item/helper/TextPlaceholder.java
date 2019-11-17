@@ -150,19 +150,18 @@ public class TextPlaceholder {
 
         if (!getPlaceholders().isEmpty()) {
             for (TextPlaceholder place : getPlaceholders()) {
-                boolean doLore = false;
-                boolean doDisplay = false;
+                // Default will be true
+                boolean doLore = true;
+                boolean doDisplay = true;
 
                 switch (place.getType()) {
-                    case DISPLAY_AND_LORE:
-                        doLore = true;
-                        doDisplay = true;
-                        break;
                     case DISPLAY_NAME:
                         doDisplay = true;
+                        doLore = false;
                         break;
                     case LORE:
                         doLore = true;
+                        doDisplay = false;
                         break;
                     default: break;
                 }

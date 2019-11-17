@@ -15,6 +15,7 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     @Getter @Setter
     private String identifier;
 
+
     public OreoPrompt(String identifier) {
         this.identifier = identifier;
     }

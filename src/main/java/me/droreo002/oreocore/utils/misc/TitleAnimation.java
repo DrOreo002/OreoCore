@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +15,31 @@ public class TitleAnimation {
     private long animationSpeed;
     @Getter @Setter
     private boolean repeatingAnimation;
+    @Getter @Setter
+    private Player target;
     @Getter
     private int runnableTaskId;
     @Getter
-    private List<TitleObject> titleFrame;
+    private List<TitleFrame> titleFrame;
     @Getter
-    private int currentFrame;
+    private int frameNumber;
     @Getter
-    private SimpleCallback<Void> onDone;
+    private SimpleCallback<Player> onDone;
+    @Getter
+    private TitleObject baseTitle;
 
-    public TitleAnimation(TitleObject firstFrame, SimpleCallback<Void> onDone, long animationSpeed) {
+    public TitleAnimation(TitleObject baseTitle, long animationSpeed) {
         this.animationSpeed = animationSpeed;
         this.runnableTaskId = 0;
-        this.currentFrame = 0;
+        this.frameNumber = 0;
         this.titleFrame = new ArrayList<>();
-        this.onDone = onDone;
-        this.repeatingAnimation = false;
+        this.repeatingAnimation = true;
+        this.baseTitle = baseTitle;
+    }
 
-        titleFrame.add(firstFrame);
+    public TitleAnimation setOnDone(SimpleCallback<Player> onDone) {
+        this.onDone = onDone;
+        return this;
     }
 
     /**
@@ -39,15 +47,17 @@ public class TitleAnimation {
      *
      * @param frame The frame
      */
-    public void addFrame(TitleObject frame) {
+    public TitleAnimation addFrame(TitleFrame frame) {
         titleFrame.add(frame);
+        return this;
     }
 
     /**
      * Start the animation
      */
-    public void start() {
+    public void start(Player target) {
         this.runnableTaskId = Bukkit.getScheduler().runTaskTimer(OreoCore.getInstance(), new AnimationHandler(), 0L, animationSpeed).getTaskId();
+        this.target = target;
     }
 
     /**
@@ -58,7 +68,9 @@ public class TitleAnimation {
     public void stop(boolean callBack) {
         if (runnableTaskId == 0) return;
         Bukkit.getScheduler().cancelTask(runnableTaskId);
-        onDone.success(null);
+        if (callBack) {
+            if (onDone != null) onDone.success(target);
+        }
     }
 
     /**
@@ -70,17 +82,30 @@ public class TitleAnimation {
         return this.runnableTaskId != 0;
     }
 
+    public TitleFrame getCurrentFrame() {
+        return this.titleFrame.get(frameNumber);
+    }
+
     public class AnimationHandler implements Runnable {
 
         @Override
         public void run() {
-            if (currentFrame >= titleFrame.size()) {
+            if (frameNumber >= titleFrame.size()) {
                 if (!repeatingAnimation) {
                     stop(true);
                     return;
                 }
+                frameNumber = 0;
             }
-            currentFrame++;
+            if (target.isOnline()) {
+                TitleFrame frame = getCurrentFrame();
+                baseTitle.setSubTitle(frame.getNextSubTitle(baseTitle.getSubTitle()));
+                baseTitle.setTitle(frame.getNextTitle(baseTitle.getTitle()));
+                baseTitle.setSoundOnSend(frame.getSound());
+
+                baseTitle.send(target);
+            }
+            frameNumber++;
         }
     }
 }

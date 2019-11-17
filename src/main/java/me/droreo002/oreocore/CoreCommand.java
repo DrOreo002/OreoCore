@@ -19,6 +19,8 @@ import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import me.droreo002.oreocore.utils.strings.TextBuilder;
+import me.droreo002.oreocore.utils.time.TimestampBuilder;
+import me.droreo002.oreocore.utils.time.TimestampUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.Command;
@@ -35,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,6 +82,18 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sendMessage(player, "This is the title!");
                     sound(player);
                     plugin.getPluginConfig().getMemory().getTitleObject().send(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-timestamp")) {
+                    TimestampBuilder builder = TimestampBuilder.builder(TimestampBuilder.SIMPLIFIED_FORMAT);
+                    sendMessage(player, "Your time (+1 Hour): " + builder.addTime(1, TimestampBuilder.Clock.HOUR).buildAsString());
+                    sendMessage(player, "Your time (-2 Hour): " + builder.decreaseTime(2, TimestampBuilder.Clock.HOUR).buildAsString());
+
+                    TimestampBuilder fromSecond = TimestampUtils.fromSeconds(TimestampBuilder.DEFAULT_FORMAT, 300);
+                    sendMessage(player, "Difference between (Now) with (+5 Minute from now): " +
+                            TimestampUtils.getDifference(new Date(),
+                                    new Date(fromSecond.getTimestamp().getTime()), TimestampBuilder.TICKING_TIME_FORMAT)
+                    );
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("enum-memory")) {
@@ -139,7 +154,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return "Type second data";
                                 }
                             })
-                            .lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player);
+                            .lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player, 300);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {
@@ -157,7 +172,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("test-text-builder")) {
                     List<BaseComponent> components = TextBuilder.of("&7[Test]").setHoverEvent(HoverEvent.Action.SHOW_TEXT, Collections.singletonList("&7- Ini list ya")).getList();
-                    TextBuilder.of("&aBangsat lo &cAnjing ngentot! &7(&a5d 2d 7m 2s&7) &r%lol%").replace("%lol%", components).send(player);
+                    TextBuilder.of("Hello World %lol%").replace("%lol%", components).send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-template-inventory")) {

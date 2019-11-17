@@ -5,11 +5,19 @@ import lombok.Setter;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
+import me.droreo002.oreocore.utils.misc.TitleAnimation;
+import me.droreo002.oreocore.utils.misc.TitleFrame;
+import me.droreo002.oreocore.utils.misc.TitleObject;
+import me.droreo002.oreocore.utils.time.SimplifiedTime;
+import me.droreo002.oreocore.utils.time.TimestampBuilder;
+import me.droreo002.oreocore.utils.time.TimestampUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +37,18 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     private String abandonedMessage;
     @Getter
     private SoundObject abandonedSound;
+    @Getter
+    private TitleAnimation titleAnimation;
+    @Getter
+    private TimestampBuilder conversationTimeOut;
+    @Getter
+    private TitleObject titleCountdown;
+    @Getter
+    private boolean useTitle;
+    @Getter
+    private int timeOut;
+    @Getter
+    private String timeOutFormat;
 
     public OreoConversation(String nonPlayerMessage, String escapeSequence, JavaPlugin owner) {
         this.prompts = new ArrayList<>();
@@ -38,6 +58,45 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
                 .addConversationAbandonedListener(this)
                 .withEscapeSequence(escapeSequence)
                 .thatExcludesNonPlayersWithMessage(nonPlayerMessage);
+        this.useTitle = false;
+    }
+
+    /**
+     * Set the title countdown
+     *
+     * @param titleCountdown The title countdown
+     */
+    public OreoConversation<T> withTitleCountdown(TitleObject titleCountdown, int timeOut, SimpleCallback<Player> whenDone) {
+        this.useTitle = true;
+        this.timeOut = timeOut;
+        this.titleCountdown = titleCountdown;
+        this.titleAnimation = new TitleAnimation(this.titleCountdown,20L)
+            .addFrame(new TitleFrame() {
+
+                @Override
+                public SoundObject getSound() {
+                    return titleCountdown.getSoundOnSend();
+                }
+
+                @Override
+                public String getNextSubTitle(String prevSubTitle) {
+                    if (conversationTimeOut == null) return " ";
+                    Date date = new Date();
+                    return TimestampUtils.getDifference(date, new Date(conversationTimeOut.getTimestamp().getTime()), timeOutFormat);
+                }
+            })
+            .setOnDone(whenDone);
+        return this;
+    }
+
+    /**
+     * Set the TimeOut format
+     *
+     * @param timeOutFormat The format
+     */
+    public OreoConversation<T> withTimeOutFormat(String timeOutFormat) {
+        this.timeOutFormat = timeOutFormat;
+        return this;
     }
 
     /**
@@ -120,6 +179,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
             }
         }
         if (abandonedSound != null) abandonedSound.send(player);
+        if (titleAnimation != null) titleAnimation.stop(true);
     }
 
     /**
@@ -150,6 +210,11 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
             String key = (String) ent.getKey();
             conversation.getContext().setSessionData(key, ent.getValue());
         }
+        if (useTitle) {
+            this.timeOutFormat = (timeOutFormat == null) ? TimestampBuilder.TICKING_TIME_FORMAT : timeOutFormat;
+            this.conversationTimeOut = TimestampUtils.fromSeconds(TimestampBuilder.DEFAULT_FORMAT, timeOut);
+            this.titleAnimation.start(player);
+        }
         conversation.begin();
     }
 
@@ -160,6 +225,17 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      */
     public void send(Player player) {
         OreoPrompt prompt = this.prompts.get(0); // First index
-        this.send(prompt.getIdentifier(), player, new HashMap<>(), 0);
+        this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
+    }
+
+    /**
+     * Send conversation
+     *
+     * @param player The target player
+     * @param timeOut The timeout
+     */
+    public void send(Player player, int timeOut) {
+        OreoPrompt prompt = this.prompts.get(0); // First index
+        this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
     }
 }

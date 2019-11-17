@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.utils.misc;
+package me.droreo002.oreocore.utils.time;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +8,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static me.droreo002.oreocore.utils.misc.TimestampUtils.*;
+import static me.droreo002.oreocore.utils.time.TimestampUtils.*;
 
 public class TimestampBuilder {
 
-    public static final String DEFAULT_FORMAT = "dd/MM/yyyy hh:mm:ss";
+    public static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    public static final String SIMPLIFIED_FORMAT = "HH:mm:ss";
+    public static final String TICKING_TIME_FORMAT = "%d%d %h%h %m%m %s%s";
 
     @Getter @Setter
     private Timestamp timestamp;
@@ -95,7 +97,7 @@ public class TimestampBuilder {
      * @return TimestampBuilder
      */
     public TimestampBuilder addTime(int value, Clock clock) {
-        if (value <= 0) throw new IllegalStateException("Value cannot be less or equal than 0!");
+        if (value <= 0) return this;
         switch (clock) {
             case SECOND:
                 this.timestamp = addSecond(value, timestamp);
@@ -121,7 +123,7 @@ public class TimestampBuilder {
      * @return TimestampBuilder
      */
     public TimestampBuilder decreaseTime(int value, Clock clock) {
-        if (value <= 0) throw new IllegalStateException("Value cannot be less or equal than 0!");
+        if (value <= 0) return this;
         value = -value; // Set to negative.
         switch (clock) {
             case SECOND:

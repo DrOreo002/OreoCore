@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.utils.misc;
+package me.droreo002.oreocore.utils.time;
 
 import me.droreo002.oreocore.utils.strings.StringUtils;
 
@@ -6,22 +6,22 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public final class TimestampUtils {
 
     /**
      * Get the difference of the dates
      *
-     * @param startDate : Start date
-     * @param endDate : End date
-     * @param addColor : Should we add color to diff format message?
-     * @param diffFormat : The diff format message
+     * @param startDate Start date
+     * @param endDate End date
+     * @param diffFormat The diff format message
      * @return The difference format string
      */
-    public static String getDifference(Date startDate, Date endDate, boolean addColor, String diffFormat) {
-        //milliseconds
+    public static String getDifference(Date startDate, Date endDate, String diffFormat) {
         long different = endDate.getTime() - startDate.getTime();
 
         long secondsInMilli = 1000;
@@ -51,8 +51,7 @@ public final class TimestampUtils {
                 .replace("%m%", String.valueOf(elapsedMinutes))
                 .replace("%s%", String.valueOf(elapsedSeconds));
 
-        if (addColor) diffFormat = StringUtils.color(diffFormat);
-        return diffFormat;
+        return StringUtils.color(diffFormat);
     }
 
     /**
@@ -210,5 +209,26 @@ public final class TimestampUtils {
                 break;
         }
         return Integer.parseInt(format.format(date));
+    }
+
+    /**
+     * Make a new TimestampBuilder from seconds
+     *
+     * @param timeFormat The time format
+     * @param seconds The seconds
+     * @return the TimestampBuilder
+     */
+    public static TimestampBuilder fromSeconds(String timeFormat, int seconds) {
+        TimestampBuilder builder = TimestampBuilder.builder(timeFormat);
+        int day = (int) TimeUnit.SECONDS.toDays(seconds);
+        int hour = Math.toIntExact(TimeUnit.SECONDS.toHours(seconds) - (day * 24));
+        int minute = Math.toIntExact(TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60));
+        int second = Math.toIntExact(TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60));
+
+        return builder
+                .addTime(day, TimestampBuilder.Clock.DAY)
+                .addTime(hour, TimestampBuilder.Clock.HOUR)
+                .addTime(minute, TimestampBuilder.Clock.MINUTE)
+                .addTime(second, TimestampBuilder.Clock.SECOND);
     }
 }
