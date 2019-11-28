@@ -20,11 +20,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneable {
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
 
+    @Getter
+    private final UUID uniqueId;
     @Getter
     private boolean animated;
     @Getter
@@ -46,6 +49,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     For config getting
      */
     public GUIButton() {
+        this.uniqueId = UUID.randomUUID();
         this.buttonListeners = new HashMap<>();
     }
 
@@ -55,6 +59,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      * @param item The item
      */
     public GUIButton(ItemStack item) {
+        this.uniqueId = UUID.randomUUID();
         this.item = item;
         this.buttonListeners = new HashMap<>();
     }
@@ -67,6 +72,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      * @param textPlaceholder The TextPlaceholder to replace placeholder on item data
      */
     public GUIButton(ConfigurationSection section, TextPlaceholder textPlaceholder) {
+        this.uniqueId = UUID.randomUUID();
         this.item = CustomItem.fromSection(section, textPlaceholder);
         this.inventorySlot = section.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
@@ -85,6 +91,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      * @param inventorySlot The slot of this button
      */
     public GUIButton(ItemStack item, int inventorySlot) {
+        this.uniqueId = UUID.randomUUID();
         this.item = item;
         this.inventorySlot = inventorySlot;
         this.buttonListeners = new HashMap<>();
@@ -200,7 +207,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
      */
     @Override
     public void saveToConfig(String path, FileConfiguration config) {
-        // TODO: 08/08/2019 Save to config
+        // Do nothing
     }
 
     /**

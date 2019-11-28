@@ -15,6 +15,7 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -33,6 +34,8 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +134,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-conversation")) {
                     sendMessage(player, "Testing conversation...");
                     new OreoConversation<String>("not player", "exit", plugin)
-                            .first(new OreoPrompt<String>("first") {
+                            .first(new OreoPrompt<String>("first", "FIRST_DATA") {
                                 @Override
                                 public String onInput(ConversationContext conversationContext, String s) {
                                     return s;
@@ -142,11 +145,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return "Type first data";
                                 }
                             })
-                            .then(new OreoPrompt<String>("second") {
+                            .then(new OreoPrompt<Integer>("second", "SECOND_DATA") {
                                 @Override
-                                public String onInput(ConversationContext conversationContext, String s) {
-                                    String data = (String) conversationContext.getSessionData(DATA_KEY);
-                                    return data + s;
+                                public Integer onInput(ConversationContext conversationContext, String s) {
+                                    return Integer.parseInt(s);
                                 }
 
                                 @Override
@@ -154,7 +156,9 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return "Type second data";
                                 }
                             })
-                            .lastly(s1 -> sendMessage(player, "You've picked " + s1)).send(player, 300);
+                            .withDataBuilder(context -> context.getSessionData("FIRST_DATA") + ":" + context.getSessionData("SECOND_DATA"))
+                            .lastly((s1, conversationContext) -> sendMessage(player, "Your data is " + s1))
+                            .send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {

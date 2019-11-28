@@ -1,14 +1,15 @@
 package me.droreo002.oreocore.utils.misc;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface SimpleCallback<T> {
+public interface DoubleValueCallback<T, S> {
     /**
      * Simple callback
      *
      * @param t Object
      */
-    void success(@Nullable T t);
+    void success(@Nullable T t, @NotNull S s);
 
     /**
      * Called when something bad happens!

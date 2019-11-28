@@ -34,6 +34,10 @@ public class TextPlaceholder {
     @Getter @Setter
     private ItemMetaType type;
 
+    public static TextPlaceholder empty() {
+        return new TextPlaceholder("%EMPTY_PLACEHOLDER%", "MARKED AS EMPTY PLACEHOLDER");
+    }
+
     /**
      * Construct via static useful for shortening the code
      *

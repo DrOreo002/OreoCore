@@ -37,6 +37,16 @@ public class LinkedDatas {
     }
 
     /**
+     * Check if data contains that key
+     *
+     * @param dataKey The data key
+     * @return true if contains, false otherwise
+     */
+    public boolean contains(String dataKey) {
+        return getData(dataKey) != null;
+    }
+
+    /**
      * Remove the data from the list
      *
      * @param dataKey The data key

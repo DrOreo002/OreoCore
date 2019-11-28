@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class LinkedInventoryManager {
 
@@ -14,6 +15,8 @@ public class LinkedInventoryManager {
     private final List<Linkable> inventories;
     @Getter
     private final LinkedDatas linkedDatas;
+    @Getter
+    private final List<UUID> modifiedButton;
     @Getter @Setter
     private String currentInventory;
 
@@ -21,6 +24,8 @@ public class LinkedInventoryManager {
         this.inventories = new ArrayList<>();
         this.currentInventory = "";
         this.linkedDatas = new LinkedDatas();
+        this.modifiedButton = new ArrayList<>();
+
         addLinkedInventory(linkables);
     }
 
@@ -49,7 +54,7 @@ public class LinkedInventoryManager {
         if (extraData != null) {
             this.linkedDatas.addAll(extraData.getData());
             linkable.acceptData(this.linkedDatas, null);
-            setupButtons(linkable); // Just in case if there's a new one added
+            setupButtons(linkable); // Just in case if there's a new one added when accepting data
         }
         linkable.getInventoryOwner().open(player);
     }
@@ -61,11 +66,15 @@ public class LinkedInventoryManager {
      */
     private void setupButtons(Linkable linkable) {
         linkable.getLinkedButtons().forEach(button -> {
-            if (button.getTargetInventory() == null) return; // Don't setup
+            if (modifiedButton.contains(button.getUniqueId())) return;
+            if (button.getTargetInventory() == null) return;
+
             button.addListener(e -> { // Default ClickType would be left
                 final Player player = (Player) e.getWhoClicked();
                 final Linkable targetInventory = getLinkedInventory(button.getTargetInventory());
                 final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
+                if (targetInventory == null) return;
+                if (prevInventory == null) return;
 
                 linkedDatas.addAll(prevInventory.getInventoryData());
                 targetInventory.acceptData(linkedDatas, prevInventory);
@@ -73,6 +82,7 @@ public class LinkedInventoryManager {
                 targetInventory.getInventoryOwner().open(player);
                 setCurrentInventory(targetInventory.getInventoryName());
             });
+            modifiedButton.add(button.getUniqueId());
         });
     }
 

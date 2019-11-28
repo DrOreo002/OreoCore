@@ -1,20 +1,19 @@
 package me.droreo002.oreocore.conversation;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.droreo002.oreocore.utils.list.ListUtils;
+import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.TitleAnimation;
 import me.droreo002.oreocore.utils.misc.TitleFrame;
 import me.droreo002.oreocore.utils.misc.TitleObject;
-import me.droreo002.oreocore.utils.time.SimplifiedTime;
 import me.droreo002.oreocore.utils.time.TimestampBuilder;
 import me.droreo002.oreocore.utils.time.TimestampUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,9 +29,13 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private ConversationFactory conversationFactory;
     @Getter
-    private List<OreoPrompt<T>> prompts;
+    private List<OreoPrompt<?>> prompts;
     @Getter
-    private SimpleCallback<T> lastCallback;
+    private DoubleValueCallback<T, ConversationContext> lastCallback;
+    @Getter
+    private SimpleCallback<Player> onConversationSent;
+    @Getter
+    private SimpleCallback<ConversationAbandonedEvent> onConversationAbandoned;
     @Getter
     private String abandonedMessage;
     @Getter
@@ -44,11 +47,15 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private TitleObject titleCountdown;
     @Getter
+    private TitleObject abandonedTitle;
+    @Getter
     private boolean useTitle;
     @Getter
     private int timeOut;
     @Getter
     private String timeOutFormat;
+    @Getter @Nullable
+    private DataBuilder<T> dataBuilder;
 
     public OreoConversation(String nonPlayerMessage, String escapeSequence, JavaPlugin owner) {
         this.prompts = new ArrayList<>();
@@ -59,6 +66,16 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
                 .withEscapeSequence(escapeSequence)
                 .thatExcludesNonPlayersWithMessage(nonPlayerMessage);
         this.useTitle = false;
+    }
+
+    /**
+     * Make the data builder
+     *
+     * @param dataBuilder The data builder
+     */
+    public OreoConversation<T> withDataBuilder(DataBuilder<T> dataBuilder) {
+        this.dataBuilder = dataBuilder;
+        return this;
     }
 
     /**
@@ -100,12 +117,43 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     }
 
     /**
+     * Add a sent listener
+     *
+     * @param onConversationSent The callback
+     */
+    public OreoConversation<T> onConversationSent(SimpleCallback<Player> onConversationSent) {
+        this.onConversationSent = onConversationSent;
+        return this;
+    }
+
+    /**
+     * Add a abandoned listener
+     *
+     * @param onConversationAbandoned The callback
+     */
+    public OreoConversation<T> onConversationAbandoned(SimpleCallback<ConversationAbandonedEvent> onConversationAbandoned) {
+        this.onConversationAbandoned = onConversationAbandoned;
+        return this;
+    }
+
+    /**
+     * Set the abandoned title, will be sent if the conversation
+     * is abandoned
+     *
+     * @param object The title object
+     */
+    public OreoConversation<T> withAbandonedTitle(TitleObject object) {
+        this.abandonedTitle = object;
+        return this;
+    }
+
+    /**
      * Get the next prompt of target
      *
      * @param prompt Target
      * @return The next of target prompt is there's any. Null otherwise
      */
-    public OreoPrompt<T> nextOf(OreoPrompt<T> prompt) {
+    public OreoPrompt<?> nextOf(OreoPrompt<?> prompt) {
         return this.prompts.stream().filter(p -> p.getIdentifier().equals(prompt.getNextPrompt())).findAny().orElse(null);
     }
 
@@ -137,7 +185,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param prompt The prompt to add
      * @return the Conversation
      */
-    public OreoConversation<T> first(OreoPrompt<T> prompt) {
+    public OreoConversation<T> first(OreoPrompt<?> prompt) {
         this.prompts.add(prompt);
         return this;
     }
@@ -148,9 +196,9 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param prompt The prompt to add
      * @return The conversation
      */
-    public OreoConversation<T> then(OreoPrompt<T> prompt) {
+    public OreoConversation<T> then(OreoPrompt<?> prompt) {
         if (prompts.isEmpty()) throw new IllegalStateException("Please add the first prompt first!");
-        OreoPrompt<T> pr = this.prompts.get(this.prompts.size() - 1); // Get last one
+        OreoPrompt<?> pr = this.prompts.get(this.prompts.size() - 1); // Get last one
         pr.setNextPrompt(prompt.getIdentifier());
         prompts.add(prompt);
         return this;
@@ -162,7 +210,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param lastCallback The last callback
      * @return The data
      */
-    public OreoConversation<T> lastly(SimpleCallback<T> lastCallback) {
+    public OreoConversation<T> lastly(DoubleValueCallback<T, ConversationContext> lastCallback) {
         this.lastCallback = lastCallback;
         return this;
     }
@@ -178,8 +226,10 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
                 player.sendMessage(abandonedMessage);
             }
         }
+        if (onConversationAbandoned != null) onConversationAbandoned.success(abandonedEvent);
         if (abandonedSound != null) abandonedSound.send(player);
         if (titleAnimation != null) titleAnimation.stop(true);
+        if (abandonedTitle != null) abandonedTitle.send(player);
     }
 
     /**
@@ -188,7 +238,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param promptName The prompt name
      * @return The prompt
      */
-    public OreoPrompt<T> getPrompt(String promptName) {
+    public OreoPrompt<?> getPrompt(String promptName) {
         return this.prompts.stream().filter(p -> p.getIdentifier().equals(promptName)).findAny().orElse(null);
     }
 
@@ -215,6 +265,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
             this.conversationTimeOut = TimestampUtils.fromSeconds(TimestampBuilder.DEFAULT_FORMAT, timeOut);
             this.titleAnimation.start(player);
         }
+        if (onConversationSent != null) onConversationSent.success(player);
         conversation.begin();
     }
 
@@ -237,5 +288,9 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     public void send(Player player, int timeOut) {
         OreoPrompt prompt = this.prompts.get(0); // First index
         this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
+    }
+
+    public interface DataBuilder<T> {
+        T build(ConversationContext context);
     }
 }

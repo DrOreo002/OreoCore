@@ -99,6 +99,7 @@ public class SimplifiedTime {
             day++;
         }
 
+
         // Format the time
         this.simplifiedResult = timeFormat
                 .replace("%h%", String.valueOf(hour))

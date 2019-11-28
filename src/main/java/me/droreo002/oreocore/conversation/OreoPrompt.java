@@ -14,10 +14,15 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     private String nextPrompt;
     @Getter @Setter
     private String identifier;
+    @Getter @Setter
+    private String customDataKey;
+    @Getter @Setter
+    private State state;
 
-
-    public OreoPrompt(String identifier) {
+    public OreoPrompt(String identifier, String customDataKey) {
         this.identifier = identifier;
+        this.customDataKey = customDataKey;
+        this.state = State.CONTINUE;
     }
 
     /**
@@ -32,7 +37,11 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
         T t = onInput(conversationContext, s);
-        conversationContext.getAllSessionData().put(DATA_KEY, t);
+        if (state != State.CONTINUE) return null; // Cancel the conversation
+        conversationContext.getAllSessionData().put(DATA_KEY, t); // You can say DATA_KEY is a Universal data
+        if (customDataKey != null) {
+            conversationContext.getAllSessionData().put(customDataKey, t); // Also add to custom data key
+        }
 
         OreoConversation<T> conversation = ((OreoConversation) conversationContext.getAllSessionData().get(OreoConversation.CONVERSATION_DATA));
 
@@ -46,7 +55,16 @@ public abstract class OreoPrompt<T> extends StringPrompt {
          * We can say that if the nextPrompt is null
          * then its the last one
          */
-        if (result == null) conversation.getLastCallback().success(t);
+        if (result == null) {
+            T dataResult = t;
+            if (conversation.getDataBuilder() != null) dataResult = conversation.getDataBuilder().build(conversationContext);
+            conversation.getLastCallback().success(dataResult, conversationContext);
+        }
         return result;
+    }
+
+    public enum State {
+        FAIL,
+        CONTINUE;
     }
 }

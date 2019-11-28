@@ -281,4 +281,21 @@ public final class StringUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * Remove the quotes from string
+     *
+     * @param val The val
+     * @return list of removed quotes
+     */
+    public static List<String> removeQuotes(String val) {
+        List<String> result = new ArrayList<>();
+        Pattern p = Pattern.compile("\"([^\"]*)\"");
+        Matcher m = p.matcher(val);
+
+        while (m.find()) {
+            result.add(m.group(1));
+        }
+        return result;
+    }
 }

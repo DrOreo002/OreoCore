@@ -131,7 +131,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             if (!guiButtons.containsKey(buttonKey)) guiButtons.put(buttonKey, new ArrayList<>());
 
             ConfigurationSection itemSection = layoutItemDatabase.getConfigurationSection(buttonKey);
-            if (itemSection == null) throw new NullPointerException("Item section with the id of " + buttonKey + " is not exists!");
+            if (itemSection == null) throw new NullPointerException("Item section with the id of " + buttonKey + " does not exists on layout " + layoutDatabase.getName());
             final GUIButton guiButton = new GUIButton(itemSection, null);
             if (ItemUtils.isEmpty(guiButton.getItem())) continue; // Skip this button
             guiButton.setInventorySlot(buttonSlot);
@@ -223,6 +223,16 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     public List<GUIButton> getGUIButtons(String key) {
         if (!isKeyAvailable(key)) return new ArrayList<>();
         return guiButtons.get(key);
+    }
+
+    /**
+     * Check if template has that button
+     *
+     * @param key The button key
+     * @return true or false
+     */
+    public boolean hasButton(String key) {
+        return !getGUIButtons(key).isEmpty();
     }
 
     /**
