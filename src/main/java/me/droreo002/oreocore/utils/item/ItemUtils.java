@@ -1,8 +1,10 @@
 package me.droreo002.oreocore.utils.item;
 
 import jdk.nashorn.internal.objects.annotations.Setter;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
+import me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -10,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +128,17 @@ public final class ItemUtils {
         final List<String> ec = new ArrayList<>();
 
         for (Map.Entry ent : item.getEnchantments().entrySet()) {
-            String enchant = StringUtils.upperCaseFirstLetter(((Enchantment) ent.getKey()).getKey().getKey());
+            String enchant = null;
+            if (ServerUtils.isOldAsFuckVersion()) {
+                Enchantment enchantment = (Enchantment) ent.getKey();
+                try {
+                    enchant = (String) SimpleReflectionUtils.getMethod(enchantment.getClass(), "getName").invoke(enchantment);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                enchant = StringUtils.upperCaseFirstLetter(((Enchantment) ent.getKey()).getKey().getKey());
+            }
             if (withLevel) enchant += "|" + (int) ent.getValue();
             ec.add(enchant);
         }

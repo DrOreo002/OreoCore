@@ -124,8 +124,9 @@ public class TextPlaceholder {
      *
      * @param textPlaceholder : The placeholder
      */
-    public void addAll(TextPlaceholder textPlaceholder) {
+    public TextPlaceholder addAll(TextPlaceholder textPlaceholder) {
         this.placeholders.addAll(textPlaceholder.getPlaceholders());
+        return this;
     }
 
     /**
