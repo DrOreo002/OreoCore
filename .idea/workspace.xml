@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -125,13 +124,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Fix yet another gradle problem">
-      <created>1563446877647</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1563446877647</updated>
     </task>
     <task id="LOCAL-00007" summary="Some api change">
       <created>1563606280568</created>
@@ -469,7 +461,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575730359302</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Oreo?">
+      <created>1576340123294</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1576340123295</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -503,7 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Yaya data changes" />
     <MESSAGE value="More changes on buttons!" />
     <MESSAGE value="More update" />
     <MESSAGE value="Fix sql error" />
@@ -528,6 +526,7 @@
     <MESSAGE value="Some api changes" />
     <MESSAGE value="Some simple fix" />
     <MESSAGE value="Gradle Gradle Gradle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Gradle Gradle Gradle" />
+    <MESSAGE value="Oreo?" />
+    <option name="LAST_COMMIT_MESSAGE" value="Oreo?" />
   </component>
 </project>

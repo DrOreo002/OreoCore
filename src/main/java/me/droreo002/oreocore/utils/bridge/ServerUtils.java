@@ -155,6 +155,7 @@ public final class ServerUtils {
             case V1_10_R1:
             case V1_11_R1:
             case V1_12_R1:
+            case V1_15_R1:
                 return true;
             case V1_13_R1:
             case V1_13_R2:
