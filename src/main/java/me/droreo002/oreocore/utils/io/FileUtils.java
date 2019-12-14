@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,5 +32,14 @@ public final class FileUtils {
         reader.close();
 
         return lines;
+    }
+
+    public static void write(File file, String... strings) throws IOException {
+        FileWriter writer = new FileWriter(file);
+        for (String s : strings) {
+            writer.write((!s.endsWith(System.lineSeparator()) ? s + System.lineSeparator() : s));
+        }
+        writer.flush();
+        writer.close();
     }
 }

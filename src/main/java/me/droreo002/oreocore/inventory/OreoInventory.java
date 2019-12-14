@@ -433,8 +433,12 @@ public abstract class OreoInventory implements InventoryHolder {
             this.inventoryType = template.getInventoryType();
             // There's a changes
             if (!this.title.equals(template.getTitle())) {
-                System.out.println("Changing inventory title");
-                this.inventory = Bukkit.createInventory(this, inventoryType, template.getTitle());
+                // Other than size is always a non customize able size inventory!
+                if (inventoryType != InventoryType.CHEST) {
+                    this.inventory = Bukkit.createInventory(this, inventoryType, template.getTitle());
+                } else {
+                    this.inventory = Bukkit.createInventory(this, size, template.getTitle());
+                }
             }
 
             // We ignore the already added button
@@ -452,10 +456,8 @@ public abstract class OreoInventory implements InventoryHolder {
         getButtons().forEach(guiButton -> {
             try {
                 if (getInventory().getItem(guiButton.getInventorySlot()) != null) return; // Ignore filled
-                System.out.println("Setting on " + guiButton.getInventorySlot());
                 getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
             } catch (ArrayIndexOutOfBoundsException ignored) {
-                System.out.println("Holy shit error!");
             }
         });
 
