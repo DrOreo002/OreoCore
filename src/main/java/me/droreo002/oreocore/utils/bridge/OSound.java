@@ -12,7 +12,7 @@ import me.droreo002.oreocore.enums.MinecraftVersion;
 import org.bukkit.Sound;
 
 /**
- * Originally called GSound. Made by gober
+ * Originally called GSound. Made by Gober edited by DrOreo002
  * https://www.spigotmc.org/threads/gsound-1-8-1-14-complete-sound-enum-version-independent.385603/
  */
 public enum OSound {
@@ -20,7 +20,7 @@ public enum OSound {
     /*
      * Minecraft Versions and enum values
      *	 WEATHER_RAIN("same", "same", "same", "same", "same", ""),
-     *	   V1_14	   V1_13	V1_12   V1_11   V1_10   V1_9  V1_8
+     *	 V1_14 or V_15	  V1_13,	V1_12,   V1_11,   V1_10,   V1_9,  V1_8
      */
     AMBIENT_CAVE("same", "same", "same", "same", "same", "AMBIENCE_CAVE"),
     AMBIENT_UNDERWATER_ENTER("same", "", "", "", "", ""),
@@ -915,7 +915,7 @@ public enum OSound {
             }
             case "V1_11": {
                 String val = this.getSoundsList().get(2);
-                Sound soun = null;
+                Sound soun;
                 try {
                     soun = Sound.valueOf(val);
                 } catch (IllegalArgumentException e) {
@@ -943,7 +943,7 @@ public enum OSound {
             }
             case "V1_13": {
                 String val = this.getSoundsList().get(0);
-                Sound soun = null;
+                Sound soun;
                 try {
                     soun = Sound.valueOf(val);
                 } catch (IllegalArgumentException e) {
@@ -955,7 +955,8 @@ public enum OSound {
                 sounds.put(this,soun);
                 return soun;
             }
-            case "V1_14": {
+            case "V1_14":
+            case "V1_15": {
                 String val = this.toString();
                 Sound soun;
                 try {

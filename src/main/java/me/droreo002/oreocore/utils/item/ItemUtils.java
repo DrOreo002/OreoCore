@@ -9,11 +9,13 @@ import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,7 +129,12 @@ public final class ItemUtils {
     public static List<String> getEnchantAsString(ItemStack item, boolean withLevel) {
         final List<String> ec = new ArrayList<>();
 
-        for (Map.Entry ent : item.getEnchantments().entrySet()) {
+        Map<Enchantment, Integer> enchants = item.getEnchantments();
+        if (item.getType() == UMaterial.ENCHANTED_BOOK.getMaterial()) {
+            EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) item.getItemMeta();
+            enchants = storageMeta.getStoredEnchants();
+        }
+        for (Map.Entry ent : enchants.entrySet()) {
             String enchant = null;
             if (ServerUtils.isOldAsFuckVersion()) {
                 Enchantment enchantment = (Enchantment) ent.getKey();

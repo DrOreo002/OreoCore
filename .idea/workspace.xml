@@ -4,6 +4,8 @@
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/OSound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/OSound.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/ItemUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/ItemUtils.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,13 +126,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Some api change">
-      <created>1563606280568</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1563606280569</updated>
     </task>
     <task id="LOCAL-00008" summary="Update ma boy">
       <created>1563630141833</created>
@@ -468,7 +463,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576340123295</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="Update to 1.15">
+      <created>1576341122041</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1576341122041</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -502,8 +504,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="More changes on buttons!" />
-    <MESSAGE value="More update" />
     <MESSAGE value="Fix sql error" />
     <MESSAGE value="Bump" />
     <MESSAGE value="Inventory changes" />
@@ -527,6 +527,8 @@
     <MESSAGE value="Some simple fix" />
     <MESSAGE value="Gradle Gradle Gradle" />
     <MESSAGE value="Oreo?" />
-    <option name="LAST_COMMIT_MESSAGE" value="Oreo?" />
+    <MESSAGE value="Update to 1.15" />
+    <MESSAGE value="Update on item" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update on item" />
   </component>
 </project>
