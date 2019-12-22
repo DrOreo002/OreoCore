@@ -107,9 +107,11 @@ public final class OreoCore extends JavaPlugin {
             final ConfigurationSection dData = getPluginConfig().getMemory().getDebuggingData();
             if (!hookedPlugin.isEmpty()) {
                 ODebug.log(this, "&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
-                for (Map.Entry ent : hookedPlugin.entrySet()) {
-                    JavaPlugin pl = ServerUtils.getPlugin((String) ent.getKey());
-                    DependedPluginProperties properties = (DependedPluginProperties) ent.getValue();
+                for (Map.Entry<String, DependedPluginProperties> ent : hookedPlugin.entrySet()) {
+                    JavaPlugin pl = ServerUtils.getPlugin(ent.getKey());
+                    DependedPluginProperties properties = ent.getValue();
+                    if (properties == null) continue;
+                    if (dData == null) return;
 
                     boolean isPremium = properties.isPremiumPlugin();
                     ODebug.log(this, "     &f> &e" + pl.getName() + " version &b" + pl.getDescription().getVersion() + "&f access type is &cFULL_ACCESS &f| " + ((pl.isEnabled()) ? "&aACTIVE &f| " : "&cDISABLED &f| ") + ((isPremium) ? "&cPREMIUM" : "&aFREE"), false);

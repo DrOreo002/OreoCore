@@ -109,13 +109,10 @@ public class IAnimationRunnable implements Runnable {
             String nextDisplayName = frm.nextDisplayName(meta.getDisplayName());
             List<String> nextLore = frm.nextLore(meta.getLore());
 
-            if (nextDisplayName != null) {
-                item = new CustomItem(item, nextDisplayName);
-            }
+            if (nextDisplayName == null) nextDisplayName = meta.getDisplayName();
+            if (nextLore == null) nextLore = meta.getLore();
 
-            if (nextLore != null) {
-                item = new CustomItem(item, nextLore);
-            }
+            item = new CustomItem(item, nextDisplayName, nextLore);
 
             button.setItem(item, true, false);
         } else {

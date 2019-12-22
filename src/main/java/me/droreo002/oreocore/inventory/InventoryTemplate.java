@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.debugging.ODebug;
+import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
+import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
@@ -176,6 +178,40 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
             button.setItem(item, updateMeta, updateFrame);
+        }
+    }
+
+    /**
+     * Apply button animation to key
+     *
+     * @param buttonKey The button key
+     * @param buttonAnimation The animation to add
+     */
+    public void applyAnimation(String buttonKey, ButtonAnimation buttonAnimation) {
+        if (!guiButtons.containsKey(buttonKey)) return;
+        for (GUIButton button : guiButtons.get(buttonKey)) {
+            button.setAnimated(true);
+            button.setButtonAnimation(buttonAnimation);
+        }
+    }
+
+    /**
+     * Apply button animation to key, with default setting
+     *
+     * @param buttonKey The button key
+     * @param frames The button frames
+     * @param applyFirstState Should we apply the first state of the button?
+     */
+    public void applyAnimation(String buttonKey, boolean applyFirstState, IButtonFrame... frames) {
+        if (!guiButtons.containsKey(buttonKey)) return;
+        for (GUIButton button : guiButtons.get(buttonKey)) {
+            button.setAnimated(true);
+            ButtonAnimation animation = new ButtonAnimation(button.getItem());
+            for (IButtonFrame f : frames) {
+                animation.addFrame(f, applyFirstState);
+            }
+            animation.setRepeatingAnimation(true);
+            button.setButtonAnimation(animation);
         }
     }
 

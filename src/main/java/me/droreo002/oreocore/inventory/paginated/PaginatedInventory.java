@@ -7,6 +7,7 @@ import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.LinkedButton;
+import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.CustomItem;
@@ -71,6 +72,27 @@ public abstract class PaginatedInventory extends OreoInventory {
         for (int i : rows) {
             setItemRow(i);
         }
+    }
+
+    @Override
+    public void clear() {
+        this.paginatedButtonResult.clear();
+        this.paginatedButtons.clear();
+
+        this.currentPage = 0;
+        this.totalPage = 0;
+
+        for (int i : this.paginatedButtonSlots) {
+            getInventory().setItem(i, UMaterial.AIR.getItemStack());
+        }
+    }
+
+    public void reloadPaginatedButtons() {
+        setupPaginatedButtons();
+        getInventory().getViewers().forEach(p -> {
+            Player player = (Player) p;
+            updateAttributes(player);
+        });
     }
 
     /**
@@ -177,6 +199,14 @@ public abstract class PaginatedInventory extends OreoInventory {
         }
 
         super.setup();
+        setupPaginatedButtons();
+        updateInformationButton();
+    }
+
+    /**
+     * Setup the paginated buttons
+     */
+    private void setupPaginatedButtons() {
         if (paginatedButtons.isEmpty()) {
             this.currentPage = 0;
             this.totalPage = 1;
@@ -187,17 +217,14 @@ public abstract class PaginatedInventory extends OreoInventory {
             this.paginatedButtonResult = Iterators.divideIterable(paginatedButtons, paginatedButtonSlots.size());
             this.currentPage = 0;
             this.totalPage = paginatedButtonResult.size();
-
-            setupPaginatedButtons();
+            refresh();
         }
-        updateInformationButton();
     }
 
     /**
-     * Setup the paginated buttons
+     * Refresh this inventory's paginated button
      */
-    private void setupPaginatedButtons() {
-        // Add the buttons
+    public void refresh() {
         int toGet = 0;
         for (int i : paginatedButtonSlots) {
             List<GUIButton> buttons = getCurrentPageButtons();
@@ -301,7 +328,7 @@ public abstract class PaginatedInventory extends OreoInventory {
      */
     private void updateAttributes(Player player) {
         if (getInventoryAnimation() != null) getInventoryAnimation().stopAnimation();
-        setupPaginatedButtons();
+        refresh();
         updateInformationButton();
         updateInventory(player);
         if (getInventoryAnimation() != null) getInventoryAnimation().startAnimation(this);

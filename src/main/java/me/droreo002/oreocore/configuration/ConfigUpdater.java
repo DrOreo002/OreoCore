@@ -11,7 +11,10 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 /**
+ * INFO: This contains changes!. Please take a look before updating!
+ *
  * A class to update/add new sections/keys to your config while keeping your current values and keeping your comments
  * Algorithm:
  * Read the new file and scan for comments and ignored sections, if ignored section is found it is treated as a comment.
@@ -105,14 +108,16 @@ public class ConfigUpdater {
         } else if (obj instanceof String || obj instanceof Character) {
             if (obj instanceof String) {
                 String s = (String) obj;
-                obj = s.replace("\n", "\\n");
+                // Re place all ' to empty. Then replace the remaining as double
+                s = s.replace("\n", "").replace("'", "''");
+                obj = s;
             }
 
-            writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj));
+            writer.write(prefixSpaces + actualKey + ": '" + obj + "'" + System.lineSeparator()); // An List
         } else if (obj instanceof List) {
             writeList((List) obj, actualKey, prefixSpaces, yaml, writer);
         } else {
-            writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj));
+            writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj)); // An Object?
         }
     }
 
@@ -145,12 +150,8 @@ public class ConfigUpdater {
         for (int i = 0; i < list.size(); i++) {
             Object o = list.get(i);
 
-            if (o instanceof String) {
-                String fixed = (String) o;
-                if (fixed.contains("'")) {
-                    fixed = fixed.replace("'", "''");
-                }
-                builder.append(prefixSpaces).append("- '").append(fixed).append("'");
+            if (o instanceof String || o instanceof Character) {
+                builder.append(prefixSpaces).append("- '").append(o).append("'");
             } else if (o instanceof List) {
                 builder.append(prefixSpaces).append("- ").append(yaml.dump(o));
             } else {

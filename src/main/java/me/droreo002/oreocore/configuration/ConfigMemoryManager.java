@@ -67,7 +67,7 @@ public final class ConfigMemoryManager {
                     if (SerializableConfigVariable.class.isAssignableFrom(f.getType())) {
                         // Use different saving
                         try {
-                            SerializableConfigVariable seri = (SerializableConfigVariable) f.get(memory);
+                            SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
                             seri.saveToConfig(configVariable.path(), config);
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
@@ -110,7 +110,7 @@ public final class ConfigMemoryManager {
                     if (!f.isAccessible()) f.setAccessible(true);
                     if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
                     try {
-                        SerializableConfigVariable seri = (SerializableConfigVariable) f.get(memory);
+                        SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
                         Validate.notNull(seri, "Please always initialize the variable first!. Variable name " + f.getName());
                         configValue = seri.getFromConfig(cs);
                         f.set(memory, configValue);
@@ -142,7 +142,7 @@ public final class ConfigMemoryManager {
                     }
                     continue;
                 }
-                
+
                 switch (configVariable.valueType()) {
                     case FLOAT:
                         configValue = (float) config.getDouble(path);
@@ -228,9 +228,6 @@ public final class ConfigMemoryManager {
                         set(f, memory, configValue);
                         break;
                     default:
-                         /*
-                        Nothing found try to set it instead
-                         */
                         set(f, memory, configValue);
                         break;
                 }

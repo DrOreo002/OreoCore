@@ -424,6 +424,17 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     /**
+     * Re setup the inventory
+     */
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            getInventory().setItem(i, UMaterial.AIR.getItemStack());
+        }
+        this.buttons.clear();
+        this.groupedButtons.clear();
+    }
+
+    /**
      * Setup the inventory
      */
     public void setup() {
