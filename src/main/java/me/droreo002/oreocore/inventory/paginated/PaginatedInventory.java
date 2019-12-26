@@ -6,6 +6,7 @@ import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
+import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
@@ -76,6 +77,10 @@ public abstract class PaginatedInventory extends OreoInventory {
 
     @Override
     public void clear() {
+        if (this instanceof Linkable) {
+            Linkable linkable = (Linkable) this;
+            if (linkable.getLinkedButtons() != null) linkable.getLinkedButtons().clear();
+        }
         this.paginatedButtonResult.clear();
         this.paginatedButtons.clear();
 

@@ -14,6 +14,7 @@ import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
+import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
@@ -344,14 +345,11 @@ public abstract class OreoInventory implements InventoryHolder {
         if (replace) {
             if (isHasButton(guiButton.getInventorySlot())) {
                 removeButton(guiButton.getInventorySlot());
-                getButtons().add(guiButton);
-            } else {
-                getButtons().add(guiButton);
             }
         } else {
             if (isHasButton(guiButton.getInventorySlot())) return;
-            getButtons().add(guiButton);
         }
+        getButtons().add(guiButton);
     }
 
     /**
@@ -427,6 +425,10 @@ public abstract class OreoInventory implements InventoryHolder {
      * Re setup the inventory
      */
     public void clear() {
+        if (this instanceof Linkable) {
+            Linkable linkable = (Linkable) this;
+            if (linkable.getLinkedButtons() != null) linkable.getLinkedButtons().clear();
+        }
         for (int i = 0; i < size; i++) {
             getInventory().setItem(i, UMaterial.AIR.getItemStack());
         }

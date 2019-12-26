@@ -26,6 +26,7 @@ import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -124,8 +125,8 @@ public final class OreoCore extends JavaPlugin {
 
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {
                     final Map<String, Integer> res = new HashMap<>();
-                    for (Map.Entry ent : hookedPlugin.entrySet()) {
-                        JavaPlugin pl = (JavaPlugin) ent.getKey();
+                    for (Map.Entry<String, DependedPluginProperties> ent : hookedPlugin.entrySet()) {
+                        JavaPlugin pl = ServerUtils.getPlugin(ent.getKey());
                         res.put(pl.getName(), 1);
                     }
                     return res;

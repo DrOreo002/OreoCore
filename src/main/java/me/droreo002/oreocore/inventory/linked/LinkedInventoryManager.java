@@ -2,7 +2,9 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.button.GUIButton;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +56,7 @@ public class LinkedInventoryManager {
         if (extraData != null) {
             this.linkedDatas.addAll(extraData.getData());
             linkable.acceptData(this.linkedDatas, null);
-            setupButtons(linkable); // Just in case if there's a new one added when accepting data
+            setupButtons(linkable, false); // Just in case if there's a new one added when accepting data
         }
         linkable.getInventoryOwner().open(player);
     }
@@ -64,7 +66,9 @@ public class LinkedInventoryManager {
      *
      * @param linkable The linkable inventory
      */
-    private void setupButtons(Linkable linkable) {
+    public void setupButtons(Linkable linkable, boolean reSetup) {
+        if (reSetup) modifiedButton.clear();
+
         linkable.getLinkedButtons().forEach(button -> {
             if (modifiedButton.contains(button.getUniqueId())) return;
             if (button.getTargetInventory() == null) return;
@@ -114,7 +118,7 @@ public class LinkedInventoryManager {
     public void addLinkedInventory(Linkable linkable) {
         if (linkable == null) throw new NullPointerException("Linkable cannot be null!");
         if (linkable.getInventoryOwner() == null) throw new NullPointerException("InventoryOwner of Linkable cannot be null!");
-        setupButtons(linkable);
+        setupButtons(linkable, false);
         inventories.add(linkable);
     }
 

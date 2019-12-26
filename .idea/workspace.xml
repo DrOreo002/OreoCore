@@ -2,18 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/WebUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigUpdater.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedInventoryManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00009" summary="New inventory api!">
-      <created>1563809789174</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1563809789175</updated>
     </task>
     <task id="LOCAL-00010" summary="New inventory api!">
       <created>1563811049782</created>
@@ -482,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576488581139</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Fixed invalid config format when reloading">
+      <created>1577028094962</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1577028094963</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -516,7 +512,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix sql error" />
     <MESSAGE value="Bump" />
     <MESSAGE value="Inventory changes" />
     <MESSAGE value="Inventories shit" />
@@ -541,29 +536,42 @@
     <MESSAGE value="Oreo?" />
     <MESSAGE value="Update to 1.15" />
     <MESSAGE value="Update on item" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update on item" />
+    <MESSAGE value="Fixed invalid config format when reloading" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed invalid config format when reloading" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1577027923986">
+    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1577270106329">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577027923986" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1577027923986">
+    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577270106329" />
+    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1577028092229">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577027923986" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1577027923986">
+    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577028092229" />
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1577339970066">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577027923986" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1577027923986">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577339970066" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1577339970066">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577027923986" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577339970066" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1577339970066">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577339970066" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1577339970066">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577339970066" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="440" y="113" key="SettingsEditor/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577010923793" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1577028097505">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577028097505" />
     <state x="1277" y="215" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1576949516846">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
@@ -572,9 +580,9 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="646" y="261" width="627" height="558" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577027885021" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577019046205">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577336936373">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577019046205" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577336936373" />
   </component>
 </project>

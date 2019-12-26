@@ -108,14 +108,14 @@ public class ConfigUpdater {
         } else if (obj instanceof String || obj instanceof Character) {
             if (obj instanceof String) {
                 String s = (String) obj;
-                // Re place all ' to empty. Then replace the remaining as double
+                // Replace ' to '', this will fix yaml parsing error
                 s = s.replace("\n", "").replace("'", "''");
                 obj = s;
             }
 
             writer.write(prefixSpaces + actualKey + ": '" + obj + "'" + System.lineSeparator()); // An List
         } else if (obj instanceof List) {
-            writeList((List) obj, actualKey, prefixSpaces, yaml, writer);
+            writeList((List<?>) obj, actualKey, prefixSpaces, yaml, writer);
         } else {
             writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj)); // An Object?
         }
@@ -133,7 +133,7 @@ public class ConfigUpdater {
     }
 
     //Writes a list of any object
-    private static void writeList(List list, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
+    private static void writeList(List<?> list, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
         writer.write(getListAsString(list, actualKey, prefixSpaces, yaml));
     }
 
@@ -150,7 +150,10 @@ public class ConfigUpdater {
         for (int i = 0; i < list.size(); i++) {
             Object o = list.get(i);
 
-            if (o instanceof String || o instanceof Character) {
+            if (o instanceof String) {
+                o = ((String) o).replace("'", "''");
+                builder.append(prefixSpaces).append("- '").append(o).append("'");
+            } else if (o instanceof Character) {
                 builder.append(prefixSpaces).append("- '").append(o).append("'");
             } else if (o instanceof List) {
                 builder.append(prefixSpaces).append("- ").append(yaml.dump(o));
