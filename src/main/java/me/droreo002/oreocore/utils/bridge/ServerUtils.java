@@ -4,6 +4,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.MinecraftVersion;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
+import me.droreo002.oreocore.utils.multisupport.MinecraftFeature;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
@@ -162,6 +163,18 @@ public final class ServerUtils {
             case V1_15_R1:
             case UNKNOWN:
                 return false;
+        }
+        return false;
+    }
+
+    /**
+     * Check if current Minecraft version has that feature
+     *
+     * @return True if contains, false otherwise
+     */
+    public static boolean isVersionHas(MinecraftFeature feature) {
+        for (MinecraftVersion versions : feature.getOnVersion()) {
+            if (getServerVersion().getBaseVersion().equals(versions.getBaseVersion())) return true;
         }
         return false;
     }
