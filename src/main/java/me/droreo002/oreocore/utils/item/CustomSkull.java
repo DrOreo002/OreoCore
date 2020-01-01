@@ -8,6 +8,7 @@ import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -16,6 +17,7 @@ import java.util.*;
 
 public final class CustomSkull {
 
+    private static final String TEXTURE_URL = "http://textures.minecraft.net/texture/";
     private static final Map<String, ItemStack> CACHE = new HashMap<>();
 
     static {
@@ -55,12 +57,29 @@ public final class CustomSkull {
     }
 
     /**
+     * Get the player head
+     *
+     * @param uuid : The owner of the head A.K.A the texture
+     * @return The player's head as a ItemStack
+     */
+    public static ItemStack fromUniqueId(UUID uuid) {
+        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
+        ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
+        SkullMeta skull = (SkullMeta) item.getItemMeta();
+        setOwningPlayer(skull, uuid);
+        item.setItemMeta(skull);
+        addToCache(item, uuid.toString());
+        return item;
+    }
+
+    /**
      * Get the skull, can freeze the server
      *
-     * @param url The texture URL
+     * @param url The texture 'url' example: bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9
      * @return an player head with that texture applied
      */
-    public static ItemStack getSkullUrl(final String url) {
+    public static ItemStack fromUrl(String url) {
+        if (!url.contains(TEXTURE_URL)) url = TEXTURE_URL + url;
         if (CACHE.containsKey(url)) return CACHE.get(url);
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
@@ -89,29 +108,13 @@ public final class CustomSkull {
     }
 
     /**
-     * Get the player head
-     *
-     * @param uuid : The owner of the head A.K.A the texture
-     * @return The player's head as a ItemStack
-     */
-    public static ItemStack getHead(UUID uuid) {
-        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
-        ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
-        SkullMeta skull = (SkullMeta) item.getItemMeta();
-        setOwningPlayer(skull, uuid);
-        item.setItemMeta(skull);
-        addToCache(item, uuid.toString());
-        return item;
-    }
-
-    /**
      * If its an actual player head then, set that ItemStack head into {@param player}'s head!
      *
      * @param item : The ItemStack that will get edited
      * @param uuid : The owner of the head A.K.A the texture
      * @return the result ItemStack if successful, null otherwise
      */
-    public static ItemStack toHead(ItemStack item, UUID uuid) {
+    public static ItemStack toHeadUuid(ItemStack item, UUID uuid) {
         tryFix(item);
 
         if (CACHE.containsKey(uuid.toString())) {
@@ -137,7 +140,7 @@ public final class CustomSkull {
      * @param textureUrl The texture url
      * @return the result ItemStack if successful, null otherwise
      */
-    public static ItemStack toHead(ItemStack item, String textureUrl) {
+    public static ItemStack toHeadUrl(ItemStack item, String textureUrl) {
         item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
@@ -170,7 +173,7 @@ public final class CustomSkull {
      * @param texture : The texture
      * @return the result ItemStack if successful, null otherwise
      */
-    public static ItemStack setTexture(ItemStack item, String texture) {
+    public static ItemStack toHeadTexture(ItemStack item, String texture) {
         tryFix(item);
 
         if (CACHE.containsKey(texture)) {

@@ -17,6 +17,8 @@ import me.droreo002.oreocore.dependencies.DependencyManager;
 import me.droreo002.oreocore.dependencies.OCoreDependency;
 import me.droreo002.oreocore.dependencies.classloader.PluginClassLoader;
 import me.droreo002.oreocore.dependencies.classloader.ReflectionClassLoader;
+import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
+import me.droreo002.oreocore.inventory.ITemplatePlaceholderManager;
 import me.droreo002.oreocore.inventory.InventoryCacheManager;
 import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
 import me.droreo002.oreocore.listeners.player.PlayerListener;
@@ -99,13 +101,13 @@ public final class OreoCore extends JavaPlugin {
 
         Bukkit.getPluginCommand("oreocore").setExecutor(new CoreCommand(this));
         pluginConfig = new PluginConfig(this);
-        if (pluginConfig.getMemory().isCachePlayerInformation()) {
+        if (pluginConfig.isCachePlayerInformation()) {
             playerInformationDatabase = new PlayerInformationDatabase(this);
         }
 
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            final ConfigurationSection dData = getPluginConfig().getMemory().getDebuggingData();
+            final ConfigurationSection dData = getPluginConfig().getDebuggingData();
             if (!hookedPlugin.isEmpty()) {
                 ODebug.log(this, "&fI'm currently handling &7(&c" + hookedPlugin.size() + "&7) &fplugins", true);
                 for (Map.Entry<String, DependedPluginProperties> ent : hookedPlugin.entrySet()) {
@@ -120,7 +122,7 @@ public final class OreoCore extends JavaPlugin {
                     // Update config data
                     dData.set(pl.getName(), properties.isEnableLogging());
                 }
-                getPluginConfig().getMemory().setDebuggingData(dData);
+                getPluginConfig().setDebuggingData(dData);
                 getPluginConfig().saveConfig(true);
 
                 metrics.addCustomChart(new Metrics.AdvancedPie("handled_plugin", () -> {

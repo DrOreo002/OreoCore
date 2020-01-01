@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.configuration.annotations;
 
+import me.droreo002.oreocore.configuration.LoadPriority;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.configuration.ValueType;
 
@@ -46,4 +47,13 @@ public @interface ConfigVariable {
      * @return the type
      */
     ValueType valueType() default ValueType.AUTO;
+
+    /**
+     * Get the load priority of this config variable
+     * memory manager will check if there's any priority set
+     * and get the greater value first to execute
+     *
+     * @return Load priority as integer
+     */
+    int loadPriority() default 0;
 }

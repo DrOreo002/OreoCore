@@ -27,17 +27,17 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         final Player player = e.getPlayer();
-        final PluginConfig.Memory memory = plugin.getPluginConfig().getMemory();
+        final PluginConfig memory = plugin.getPluginConfig();
 
         if (memory.isCachePlayerInformation()) {
             plugin.getPlayerInformationDatabase().loadPlayer(player);
         }
         if (memory.isCachePlayerHead()) {
-            ThreadingUtils.makeChain().asyncFirst(() -> CustomSkull.getHead(player.getUniqueId())).execute();
+            ThreadingUtils.makeChain().asyncFirst(() -> CustomSkull.fromUniqueId(player.getUniqueId())).execute();
         }
 
         if (!player.hasPermission("oreocore.admin")) return;
-        if (plugin.getPluginConfig().getMemory().isDisableNotif()) return;
+        if (plugin.getPluginConfig().isDisableNotif()) return;
         player.sendMessage(plugin.getPrefix() + StringUtils.color("&fThis server is currently running on &eOreoCore &7(&c" + plugin.getDescription().getVersion() + "&7)&f. This plugin is also currently handling &7(&c" + plugin.getHookedPlugin().size() + "&7) &fplugin"));
     }
 

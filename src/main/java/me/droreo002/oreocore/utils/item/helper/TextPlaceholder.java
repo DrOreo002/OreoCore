@@ -23,7 +23,7 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
 public class TextPlaceholder {
 
-    private static final Pattern PAPI_REGEX_SINGLE = Pattern.compile("[%]([^%]+)[%]");
+    public static final Pattern PAPI_REGEX_SINGLE = Pattern.compile("[%]([^%]+)[%]");
 
     @Getter
     private final List<TextPlaceholder> placeholders;

@@ -72,8 +72,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.rawLayout = new ArrayList<>();
         this.layout = new HashMap<>();
         this.guiButtons = new HashMap<>();
-        this.size = layoutDatabase.getInt("size", 0);
-        this.title = layoutDatabase.getString("title", "Custom Inventory");
+        this.size = layoutDatabase.getInt("size", 27); // Def 27
+        this.title = layoutDatabase.getString("title", "Custom Inventory"); // Def Custom Inventory
         this.rawLayout = layoutDatabase.getStringList("layout");
         this.openAnimationName = layoutDatabase.getString("openAnimation", "none");
         this.inventoryType = InventoryType.CHEST;
@@ -119,7 +119,13 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
                     continue; // Ignore this
                 }
             }
-            if (StringUtils.hasSpecialCharacter(s)) throw new IllegalStateException("Invalid character at inventory layout!");
+            ITemplatePlaceholder placeholder = ITemplatePlaceholderManager.getPlaceholder(s);
+            if (placeholder != null) {
+                guiButtons.putAll(placeholder.format(this, slot));
+                slot += 9;
+                continue;
+            }
+            if (StringUtils.hasSpecialCharacter(s)) throw new IllegalStateException("Invalid character at inventory layout! (" + layoutDatabase.getName() + ")");
             for (char c : s.toCharArray()) {
                 String str = String.valueOf(c);
                 layout.put(slot, str);
@@ -127,9 +133,9 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             }
         }
 
-        for (Map.Entry ent : layout.entrySet()) {
-            int buttonSlot = (int) ent.getKey();
-            String buttonKey = (String) ent.getValue();
+        for (Map.Entry<Integer, String> ent : layout.entrySet()) {
+            int buttonSlot = ent.getKey();
+            String buttonKey = ent.getValue();
             if (!guiButtons.containsKey(buttonKey)) guiButtons.put(buttonKey, new ArrayList<>());
 
             ConfigurationSection itemSection = layoutItemDatabase.getConfigurationSection(buttonKey);

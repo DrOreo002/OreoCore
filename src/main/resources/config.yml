@@ -34,6 +34,7 @@ Inventory:
     layout:
       - '!-------!'
       - 'xPxxIxxNx'
+      - '%wow%'
     layout-item:
       # The border
       x:
@@ -54,3 +55,14 @@ Inventory:
         material: 'ARROW'
         name: '&aNext Page'
         animated: false
+Inventory-Placeholder:
+  Test:
+    placeholder: '%wow%'
+    placeholder-layout:
+      - 'BBBBBBBBB'
+    placeholder-item:
+      B:
+        material: IRON_BARS
+        name: '&aPlaceholder'
+        lore:
+          - '&7A placeholder, nothing else'

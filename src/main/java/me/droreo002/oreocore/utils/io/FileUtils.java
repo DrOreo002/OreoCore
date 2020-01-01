@@ -21,14 +21,20 @@ public final class FileUtils {
         }
     }
 
-    public static List<String> readLines(InputStream stream, String ignoreStarting) throws IOException {
+    public static List<String> readLines(InputStream stream, String... ignoreStarting) throws IOException {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8));
         final List<String> lines = new ArrayList<>();
 
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.startsWith(ignoreStarting)) continue;
-            lines.add(line);
+            boolean contains = false;
+            for (String s : ignoreStarting) {
+                if (line.startsWith(s)) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) lines.add(line);
         }
         reader.close();
         lines.removeIf(String::isEmpty);

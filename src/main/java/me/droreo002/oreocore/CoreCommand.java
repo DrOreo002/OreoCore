@@ -2,6 +2,8 @@ package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.conversation.OreoConversation;
 import me.droreo002.oreocore.conversation.OreoPrompt;
+import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
+import me.droreo002.oreocore.inventory.ITemplatePlaceholderManager;
 import me.droreo002.oreocore.inventory.linked.LinkedInventoryManager;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
@@ -72,7 +74,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                    return true;
                 }
                 if (args[0].equalsIgnoreCase("config-memory")) {
-                    sendMessage(player,"ODebug value : " + plugin.getPluginConfig().getMemory().getWorking());
+                    sendMessage(player,"ODebug value : " + plugin.getPluginConfig().getWorking());
                     sound(player);
                     return true;
                 }
@@ -84,7 +86,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("title-memory")) {
                     sendMessage(player, "This is the title!");
                     sound(player);
-                    plugin.getPluginConfig().getMemory().getTitleObject().send(player);
+                    plugin.getPluginConfig().getTitleObject().send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-timestamp")) {
@@ -100,13 +102,13 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("enum-memory")) {
-                    sendMessage(player, "ODebug Value : " + plugin.getPluginConfig().getMemory().getBody().toString());
+                    sendMessage(player, "ODebug Value : " + plugin.getPluginConfig().getBody().toString());
                     sound(player);
                     return true;
                 }
                 if (args[0].equals("test-config-update")) {
                     sendMessage(player, "Testing...");
-                    plugin.getPluginConfig().getMemory().getTitleObject().setTitle("Hello World!");
+                    plugin.getPluginConfig().getTitleObject().setTitle("Hello World!");
                     plugin.getPluginConfig().saveConfig(true);
                     sound(player);
                     return true;
@@ -114,7 +116,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-get-head")) {
                     sendMessage(player, "Testing get-head on server version " + ServerUtils.getServerVersion());
                     sound(player);
-                    ItemStack item = CustomSkull.getSkullUrl("http://textures.minecraft.net/texture/3ab0263bdd76f3e418dba5bf481b921ced397d8b8a34a5561fb7beaa46ece1");
+                    ItemStack item = CustomSkull.fromUrl("3ab0263bdd76f3e418dba5bf481b921ced397d8b8a34a5561fb7beaa46ece1");
                     player.getInventory().addItem(item);
                     return true;
                 }
@@ -140,8 +142,9 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return s;
                                 }
 
+                                @NotNull
                                 @Override
-                                public String getPromptText(ConversationContext conversationContext) {
+                                public String getPromptText(@NotNull ConversationContext conversationContext) {
                                     return "Type first data";
                                 }
                             })
@@ -151,8 +154,9 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return Integer.parseInt(s);
                                 }
 
+                                @NotNull
                                 @Override
-                                public String getPromptText(ConversationContext conversationContext) {
+                                public String getPromptText(@NotNull ConversationContext conversationContext) {
                                     return "Type second data";
                                 }
                             })
@@ -164,6 +168,11 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {
                     sendMessage(player, "Please select the type (CustomInventory, PaginatedInventory)");
                     sound(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-placeholder-inventory")) {
+                    sendMessage(player, "Testing placeholder inventory...");
+                    new InventoryTemplateTest(plugin.getPluginConfig().getTestTemplate().clone()).open(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {
@@ -180,7 +189,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-template-inventory")) {
-                    new InventoryTemplateTest(plugin.getPluginConfig().getMemory().getTestTemplate()).open(player);
+                    new InventoryTemplateTest(plugin.getPluginConfig().getTestTemplate()).open(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-lag-inventory")) {

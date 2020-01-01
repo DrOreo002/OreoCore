@@ -20,11 +20,11 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     @Getter
     private final Set<PlayerInformation> playerInformation = new HashSet<>();
     @Getter
-    private PluginConfig.Memory memory;
+    private PluginConfig memory;
 
     public PlayerInformationDatabase(OreoCore plugin) {
         super(plugin, "playerdata", plugin.getDataFolder(), SQLType.SQL_BASED);
-        this.memory = plugin.getPluginConfig().getMemory();
+        this.memory = plugin.getPluginConfig();
 
         loadData();
         DatabaseManager.registerDatabase(plugin, this);

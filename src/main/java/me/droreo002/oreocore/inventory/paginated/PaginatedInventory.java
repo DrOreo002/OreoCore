@@ -31,8 +31,8 @@ public abstract class PaginatedInventory extends OreoInventory {
     /*
     Variables
      */
-    private static final String NEXT_ARROW = "http://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf";
-    private static final String PREV_ARROW = "http://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9";
+    private static final String NEXT_ARROW = "19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf";
+    private static final String PREV_ARROW = "bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9";
 
     @Getter @Setter
     private GUIButton informationButton, nextPageButton, previousPageButton;
@@ -363,11 +363,11 @@ public abstract class PaginatedInventory extends OreoInventory {
      */
     private void setupDefaultButton() {
         if (this.previousPageButton == null) {
-            this.previousPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(PREV_ARROW), "&aPrevious Page", new String[]{"&7Click me!"}));
+            this.previousPageButton = new GUIButton(new CustomItem(CustomSkull.fromUrl(PREV_ARROW), "&aPrevious Page", new String[]{"&7Click me!"}));
         }
 
         if (this.nextPageButton == null) {
-            this.nextPageButton = new GUIButton(new CustomItem(CustomSkull.getSkullUrl(NEXT_ARROW), "&aNext Page", new String[]{"&7Click me!"}));
+            this.nextPageButton = new GUIButton(new CustomItem(CustomSkull.fromUrl(NEXT_ARROW), "&aNext Page", new String[]{"&7Click me!"}));
         }
 
         this.previousPageButton.addListener(event -> {

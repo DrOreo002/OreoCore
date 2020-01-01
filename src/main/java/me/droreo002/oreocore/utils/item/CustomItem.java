@@ -297,6 +297,7 @@ public class CustomItem extends ItemStack {
         boolean glow = section.getBoolean("glow", false);
         boolean hideAtt = section.getBoolean("hide-att", true);
         String texture = section.getString("texture");
+        String texture_url = section.getString("texture-url");
         StringBuilder displayName = new StringBuilder(section.getString("name", " "));
         List<String> lore = section.getStringList("lore");
 
@@ -313,7 +314,10 @@ public class CustomItem extends ItemStack {
 
         if (uMaterial.getMaterial().toString().equals(UMaterial.PLAYER_HEAD.getMaterial().toString())) {
             if (texture != null) {
-                res = CustomSkull.setTexture(res, texture);
+                res = CustomSkull.toHeadTexture(res, texture);
+            }
+            if (texture_url != null) {
+                res = CustomSkull.toHeadUrl(res, texture_url);
             }
         }
 

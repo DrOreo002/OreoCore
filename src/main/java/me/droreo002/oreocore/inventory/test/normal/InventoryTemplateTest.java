@@ -10,8 +10,10 @@ public class InventoryTemplateTest extends PaginatedInventory {
 
     public InventoryTemplateTest(InventoryTemplate template) {
         super(template);
-        for (int i = 0; i < 30; i++) {
-            addPaginatedButton(new GUIButton(new CustomItem(UMaterial.DIRT.getItemStack(), "&f" + i)));
-        }
+
+        // INFO: Test case for paginated buttons
+//        for (int i = 0; i < 30; i++) {
+//            addPaginatedButton(new GUIButton(new CustomItem(UMaterial.DIRT.getItemStack(), "&f" + i)));
+//        }
     }
 }

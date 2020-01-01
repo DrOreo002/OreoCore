@@ -91,146 +91,158 @@ public final class ConfigMemoryManager {
      */
     private static void processMemory(ConfigMemory memory) {
         final FileConfiguration config = memory.getParent().getConfig();
+        final Map<ConfigVariable, Field> variables = new LinkedHashMap<>();
         for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
-                final ConfigVariable configVariable = f.getAnnotation(ConfigVariable.class);
-                String path = configVariable.path();
-                Object configValue = config.get(path);
-                if (configVariable.isSerializableObject()) {
-                    ConfigurationSection cs = config.getConfigurationSection(path);
-                    if (cs == null) {
-                        if (configVariable.errorWhenNull()) {
-                            throw new NullPointerException("Failed to get config value on path " + path);
-                        } else {
-                            ODebug.log(memory.getParent().getPlugin(), "&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
-                            continue; // We ignore the null value
-                        }
-                    }
+                ConfigVariable variable = f.getAnnotation(ConfigVariable.class);
+                if (variable.loadPriority() < 0) throw new IllegalStateException("Load priority cannot be less than 0!");
+                variables.put(variable, f);
+            }
+        }
 
-                    if (!f.isAccessible()) f.setAccessible(true);
-                    if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
-                    try {
-                        SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
-                        Validate.notNull(seri, "Please always initialize the variable first!. Variable name " + f.getName());
-                        configValue = seri.getFromConfig(cs);
-                        f.set(memory, configValue);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    continue;
-                }
-                if (configValue == null) {
+        List<ConfigVariable> sorted = new ArrayList<>(variables.keySet());
+        sorted.sort(Comparator.comparingInt(ConfigVariable::loadPriority));
+        Collections.reverse(sorted);
+
+        for (ConfigVariable configVariable : sorted) {
+            Field f = variables.get(configVariable);
+
+            String path = configVariable.path();
+            Object configValue = config.get(path);
+            if (configVariable.isSerializableObject()) {
+                ConfigurationSection cs = config.getConfigurationSection(path);
+                if (cs == null) {
                     if (configVariable.errorWhenNull()) {
                         throw new NullPointerException("Failed to get config value on path " + path);
                     } else {
-                        ODebug.log(memory.getParent().getPlugin(),"&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                        ODebug.log(memory.getParent().getPlugin(), "&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
                         continue; // We ignore the null value
                     }
                 }
 
                 if (!f.isAccessible()) f.setAccessible(true);
-                if (f.getType().isEnum()) {
-                    try {
-                        Method valueOf = f.getType().getMethod("valueOf", String.class);
-                        Object value = valueOf.invoke(null, String.valueOf(configValue));
-                        f.set(memory, value);
-                    } catch (Exception e) {
-                        // handle error here
-                        e.printStackTrace();
-                        ODebug.log(memory.getParent().getPlugin(), "Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
-                        continue;
-                    }
+                if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
+                try {
+                    SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
+                    Validate.notNull(seri, "Please always initialize the variable first!. Variable name " + f.getName());
+                    configValue = seri.getFromConfig(cs);
+                    f.set(memory, configValue);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            if (configValue == null) {
+                if (configVariable.errorWhenNull()) {
+                    throw new NullPointerException("Failed to get config value on path " + path);
+                } else {
+                    ODebug.log(memory.getParent().getPlugin(),"&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
+                    continue; // We ignore the null value
+                }
+            }
+
+            if (!f.isAccessible()) f.setAccessible(true);
+            if (f.getType().isEnum()) {
+                try {
+                    Method valueOf = f.getType().getMethod("valueOf", String.class);
+                    Object value = valueOf.invoke(null, String.valueOf(configValue));
+                    f.set(memory, value);
+                } catch (Exception e) {
+                    // handle error here
+                    e.printStackTrace();
+                    ODebug.log(memory.getParent().getPlugin(), "Failed to serialize config variable!. Variable name " + configValue + ". Enum class " + f.getType().getName(), true);
                     continue;
                 }
+                continue;
+            }
 
-                switch (configVariable.valueType()) {
-                    case FLOAT:
-                        configValue = (float) config.getDouble(path);
-                        set(f, memory, configValue);
-                        break;
-                    case BOOLEAN:
-                        configValue = config.getBoolean(path);
-                        set(f, memory, configValue);
-                        break;
-                    case BOOLEAN_LIST:
-                        configValue = config.getBooleanList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case BYTE_LIST:
-                        configValue = config.getByteList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case CHARACTER_LIST:
-                        configValue = config.getCharacterList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case COLOR:
-                        configValue = config.getColor(path);
-                        set(f, memory, configValue);
-                        break;
-                    case CONFIGURATION_SECTION:
-                        configValue = config.getConfigurationSection(path);
-                        set(f, memory, configValue);
-                        break;
-                    case DOUBLE:
-                        configValue = config.getDouble(path);
-                        set(f, memory, configValue);
-                        break;
-                    case DOUBLE_LIST:
-                        configValue = config.getDoubleList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case FLOAT_LIST:
-                        configValue = config.getFloatList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case INT:
-                        configValue = config.getInt(path);
-                        set(f, memory, configValue);
-                        break;
-                    case INTEGER_LIST:
-                        configValue = config.getIntegerList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case ITEM_STACK:
-                        configValue = config.getItemStack(path);
-                        if (configValue == null) {
-                            configValue = CustomItem.fromSection(config.getConfigurationSection(path), null);
-                        }
-                        set(f, memory, configValue);
-                        break;
-                    case LIST:
-                        configValue = config.getList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case LONG:
-                        configValue = config.getLong(path);
-                        set(f, memory, configValue);
-                        break;
-                    case LONG_LIST:
-                        configValue = config.getLongList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case MAP_LIST:
-                        configValue = config.getMapList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case STRING:
-                        configValue = config.getString(path);
-                        set(f, memory, configValue);
-                        break;
-                    case STRING_LIST:
-                        configValue = config.getStringList(path);
-                        set(f, memory, configValue);
-                        break;
-                    case VECTOR:
-                        configValue = config.getVector(path);
-                        set(f, memory, configValue);
-                        break;
-                    default:
-                        set(f, memory, configValue);
-                        break;
-                }
+            switch (configVariable.valueType()) {
+                case FLOAT:
+                    configValue = (float) config.getDouble(path);
+                    set(f, memory, configValue);
+                    break;
+                case BOOLEAN:
+                    configValue = config.getBoolean(path);
+                    set(f, memory, configValue);
+                    break;
+                case BOOLEAN_LIST:
+                    configValue = config.getBooleanList(path);
+                    set(f, memory, configValue);
+                    break;
+                case BYTE_LIST:
+                    configValue = config.getByteList(path);
+                    set(f, memory, configValue);
+                    break;
+                case CHARACTER_LIST:
+                    configValue = config.getCharacterList(path);
+                    set(f, memory, configValue);
+                    break;
+                case COLOR:
+                    configValue = config.getColor(path);
+                    set(f, memory, configValue);
+                    break;
+                case CONFIGURATION_SECTION:
+                    configValue = config.getConfigurationSection(path);
+                    set(f, memory, configValue);
+                    break;
+                case DOUBLE:
+                    configValue = config.getDouble(path);
+                    set(f, memory, configValue);
+                    break;
+                case DOUBLE_LIST:
+                    configValue = config.getDoubleList(path);
+                    set(f, memory, configValue);
+                    break;
+                case FLOAT_LIST:
+                    configValue = config.getFloatList(path);
+                    set(f, memory, configValue);
+                    break;
+                case INT:
+                    configValue = config.getInt(path);
+                    set(f, memory, configValue);
+                    break;
+                case INTEGER_LIST:
+                    configValue = config.getIntegerList(path);
+                    set(f, memory, configValue);
+                    break;
+                case ITEM_STACK:
+                    configValue = config.getItemStack(path);
+                    if (configValue == null) {
+                        configValue = CustomItem.fromSection(config.getConfigurationSection(path), null);
+                    }
+                    set(f, memory, configValue);
+                    break;
+                case LIST:
+                    configValue = config.getList(path);
+                    set(f, memory, configValue);
+                    break;
+                case LONG:
+                    configValue = config.getLong(path);
+                    set(f, memory, configValue);
+                    break;
+                case LONG_LIST:
+                    configValue = config.getLongList(path);
+                    set(f, memory, configValue);
+                    break;
+                case MAP_LIST:
+                    configValue = config.getMapList(path);
+                    set(f, memory, configValue);
+                    break;
+                case STRING:
+                    configValue = config.getString(path);
+                    set(f, memory, configValue);
+                    break;
+                case STRING_LIST:
+                    configValue = config.getStringList(path);
+                    set(f, memory, configValue);
+                    break;
+                case VECTOR:
+                    configValue = config.getVector(path);
+                    set(f, memory, configValue);
+                    break;
+                default:
+                    set(f, memory, configValue);
+                    break;
             }
         }
     }
