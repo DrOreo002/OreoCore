@@ -69,6 +69,7 @@ public abstract class OreoInventory implements InventoryHolder {
         this.size = size;
         this.title = color(title);
         this.inventoryTemplate = null;
+        this.inventoryType = InventoryType.CHEST;
         setupDefault();
     }
 
@@ -101,6 +102,7 @@ public abstract class OreoInventory implements InventoryHolder {
         this.title = "Inventory";
         this.inventoryTemplate = null;
         this.inventoryType = InventoryType.CHEST;
+
         setupDefault();
     }
 

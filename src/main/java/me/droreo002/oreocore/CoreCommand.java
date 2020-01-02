@@ -196,6 +196,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     new LagInventoryTest().open(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("test-paginated-inventory")) {
+                    new PaginatedInventoryTest().open(player);
+                    return true;
+                }
             }
             if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {

@@ -3,14 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/dummy/PluginConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/ITemplatePlaceholder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/ITemplatePlaceholder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/ITemplatePlaceholderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/ITemplatePlaceholderManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/InventoryTemplateTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/normal/InventoryTemplateTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/CustomSkull.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/paginated/PaginatedInventory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,13 +130,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00013" summary="More change!">
-      <created>1563950515942</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1563950515942</updated>
     </task>
     <task id="LOCAL-00014" summary="Sound changes!">
       <created>1563965756109</created>
@@ -479,7 +467,14 @@
       <option name="project" value="LOCAL" />
       <updated>1577896800934</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Added inventory template placeholder!">
+      <created>1577947562756</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1577947562762</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -513,7 +508,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="A lot of update" />
     <MESSAGE value="Some more updateeeee" />
     <MESSAGE value="Another massive recode, thanks" />
     <MESSAGE value="Fix this bug?" />
@@ -538,45 +532,46 @@
     <MESSAGE value="Fix another invalid config things" />
     <MESSAGE value="New utilities yay!" />
     <MESSAGE value="Something good" />
-    <option name="LAST_COMMIT_MESSAGE" value="Something good" />
+    <MESSAGE value="Added inventory template placeholder!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added inventory template placeholder!" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1577892239982">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577892239982" />
-    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1577896797914">
+    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1577947559978">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577896797914" />
+    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947559978" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1577891331222">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577891331222" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1577947527145">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1577951801016">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947527145" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1577947527145">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577951801016" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1577951801016">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947527145" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1577947527145">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577951801016" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1577951801015">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947527145" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1577947527145">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577951801015" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1577951801016">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947527145" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577951801016" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="440" y="113" key="SettingsEditor/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577010923793" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1577896804466">
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1577947565685">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577896804466" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947565685" />
     <state x="1277" y="215" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1576949516846">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
@@ -585,13 +580,13 @@
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
     <state x="1920" y="0" width="1419" height="1004" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577815302477" />
-    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1577808318670">
+    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1577947579760">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577808318670" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577942227148">
+    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577947579760" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577950209106">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577942227148" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577950209106" />
   </component>
 </project>

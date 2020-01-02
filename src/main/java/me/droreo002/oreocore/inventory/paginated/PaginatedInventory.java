@@ -148,11 +148,14 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         previousPageButton.setInventorySlot(backSlot);
         nextPageButton.setInventorySlot(nextSlot);
-        informationButton.setInventorySlot(informationSlot);
 
         addButton(previousPageButton, true);
         addButton(nextPageButton, true);
-        addButton(informationButton, true);
+
+        if (informationButton != null) {
+            informationButton.setInventorySlot(informationSlot);
+            addButton(informationButton, true);
+        }
 
         if (addBorder) {
             for (int i = backSlot; i < nextSlot; i++) {
@@ -206,6 +209,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         super.setup();
         setupPaginatedButtons();
         updateInformationButton();
+        getInventory().setItem(previousPageButton.getInventorySlot(), null); // Always null because inventory will open on first slot
     }
 
     /**
@@ -227,7 +231,7 @@ public abstract class PaginatedInventory extends OreoInventory {
     }
 
     /**
-     * Refresh this inventory's paginated button
+     * Refresh this inventory's paginated button and other things
      */
     public void refresh() {
         int toGet = 0;
@@ -305,6 +309,11 @@ public abstract class PaginatedInventory extends OreoInventory {
             if (getInventory().getItem(i) != null) getInventory().setItem(i, UMaterial.AIR.getItemStack());
         }
 
+        if ((currentPage + 1) >= totalPage) {
+            // This current page is the last page
+            getInventory().setItem(nextPageButton.getInventorySlot(), null);
+        }
+        getInventory().setItem(previousPageButton.getInventorySlot(), previousPageButton.getItem());
         updateAttributes(player);
     }
 
@@ -322,6 +331,12 @@ public abstract class PaginatedInventory extends OreoInventory {
         for (int i : paginatedButtonSlots) {
             if (getInventory().getItem(i) != null) getInventory().setItem(i, UMaterial.AIR.getItemStack());
         }
+
+        if (currentPage <= 0) {
+            // This current page is the first page
+            getInventory().setItem(previousPageButton.getInventorySlot(), null);
+        }
+        getInventory().setItem(nextPageButton.getInventorySlot(), nextPageButton.getItem());
 
         updateAttributes(player);
     }
