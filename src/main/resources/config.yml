@@ -29,40 +29,35 @@ Enum:
 Inventory:
   Test:
     title: 'Test layout'
-    size: 18
-    paginated: true # If paginated X will be used as item slot
     layout:
-      - '!-------!'
-      - 'xPxxIxxNx'
+      - 'BBBBBBBBB'
       - '%wow%'
     layout-item:
-      # The border
-      x:
-        material: 'GRAY_STAINED_GLASS_PANE'
-        name: '&fHello World'
-      # Prev page button
-      P:
-        material: 'ARROW'
-        name: '&aPrev Page'
-        animated: false
-      # Information button
-      I:
-        material: 'PAPER'
-        name: '&bInformation'
-        animated: false
-      # Next button
-      N:
-        material: 'ARROW'
-        name: '&aNext Page'
-        animated: false
-Inventory-Placeholder:
-  Test:
-    placeholder: '%wow%'
-    placeholder-layout:
-      - 'BBBBBBBBB'
-    placeholder-item:
       B:
-        material: IRON_BARS
-        name: '&aPlaceholder'
+        material: DIRT
+        name: '&aOh wow'
         lore:
-          - '&7A placeholder, nothing else'
+          - '&7Test button'
+Inventory-Placeholder:
+  placeholder: '%wow%'
+  placeholder-layout:
+    - 'XXXXXXXXX'
+    - 'PX_____XN'
+  placeholder-item:
+    P:
+      name: '&aPrevious Inventory'
+      material: PLAYER_HEAD
+      texture-url: 'bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9'
+      lore:
+        - '&aClick &7to go to previous inventory'
+    N:
+      name: '&aNext Inventory'
+      material: PLAYER_HEAD
+      texture-url: '19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf'
+      lore:
+        - '&aClick &7to go to next inventory'
+    X:
+      name: '.'
+      material: IRON_BARS
+    _:
+      material: AIR

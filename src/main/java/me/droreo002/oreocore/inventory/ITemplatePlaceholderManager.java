@@ -19,7 +19,7 @@ public final class ITemplatePlaceholderManager {
     public static ITemplatePlaceholder getPlaceholder(String placeholder) {
         for (ITemplatePlaceholder p : PLACEHOLDERS) {
             if (p.getPlaceholder().equalsIgnoreCase(placeholder)) {
-                if (p.getPlaceholderButtons().isEmpty()) throw new IllegalStateException("Placeholder is registered but invalid! (" + placeholder + "), no button was found!");
+                if (p.getPlaceholderItems().isEmpty()) throw new IllegalStateException("Placeholder is registered but invalid! (" + placeholder + "), no button was found!");
                 return p;
             }
         }
@@ -32,7 +32,7 @@ public final class ITemplatePlaceholderManager {
      * @param placeholder Placeholder to register
      */
     public static void register(ITemplatePlaceholder placeholder) {
-        if (getPlaceholder(placeholder.getPlaceholder()) != null) throw new IllegalStateException("Placeholder already registered!: " + placeholder.getPlaceholder());
+        if (getPlaceholder(placeholder.getPlaceholder()) != null) return;
         PLACEHOLDERS.add(placeholder);
     }
 }

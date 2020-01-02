@@ -137,10 +137,11 @@ public final class CustomSkull {
      * Convert the item into head while keeping its meta data
      *
      * @param item The ItemStack that will get edited
-     * @param textureUrl The texture url
+     * @param url The texture url
      * @return the result ItemStack if successful, null otherwise
      */
-    public static ItemStack toHeadUrl(ItemStack item, String textureUrl) {
+    public static ItemStack toHeadUrl(ItemStack item, String url) {
+        if (!url.contains(TEXTURE_URL)) url = TEXTURE_URL + url;
         item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
@@ -149,7 +150,7 @@ public final class CustomSkull {
 
         if (propertyMap == null) throw new IllegalStateException("Profile doesn't contain a property map");
 
-        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", textureUrl).getBytes());
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
 
         propertyMap.put("textures", new Property("textures", new String(encodedData)));
 

@@ -18,6 +18,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +56,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     private List<String> rawLayout; // The raw layout
     @Getter @Setter
     private Map<Integer, String> layout; // The layout, where integer is the slot and string is the button 'id'
+    @Getter @Setter
+    private List<ITemplatePlaceholder> placeholders;
 
     /**
      * For default initializer, do not remove
@@ -63,6 +67,9 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.layoutItemDatabase = null;
         this.guiButtons = new HashMap<>();
         this.inventoryType = InventoryType.CHEST;
+        this.placeholders = new ArrayList<>();
+        this.layout = new HashMap<>();
+        this.rawLayout = new ArrayList<>();
     }
 
     public InventoryTemplate(ConfigurationSection layoutDatabase) {
@@ -77,6 +84,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         this.rawLayout = layoutDatabase.getStringList("layout");
         this.openAnimationName = layoutDatabase.getString("openAnimation", "none");
         this.inventoryType = InventoryType.CHEST;
+        this.placeholders = new ArrayList<>();
 
         if (layoutDatabase.isSet("inventoryType"))
             this.inventoryType = InventoryType.valueOf(layoutDatabase.getString("inventoryType"));
@@ -105,25 +113,24 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             return;
         }
 
-
         int slot = 0;
         for (String s : rawLayout) {
+            ITemplatePlaceholder placeholder = ITemplatePlaceholderManager.getPlaceholder(s);
+            if (placeholder != null) {
+                slot = placeholder.format(this, slot);
+                this.placeholders.add(placeholder);
+                continue;
+            }
             if (!paginatedInventory) {
                 if (inventoryType == InventoryType.CHEST) {
                     if (s.length() != 9)
-                        throw new IllegalStateException("Invalid layout length! " + s.length() + " expected are 9");
+                        throw new IllegalStateException("Invalid layout length! (" + s.length() + "), expected are 9");
                 }
             } else {
                 if (s.equalsIgnoreCase(PAGINATED_ITEM_ROW_KEY)) {
                     slot += 9;
                     continue; // Ignore this
                 }
-            }
-            ITemplatePlaceholder placeholder = ITemplatePlaceholderManager.getPlaceholder(s);
-            if (placeholder != null) {
-                guiButtons.putAll(placeholder.format(this, slot));
-                slot += 9;
-                continue;
             }
             if (StringUtils.hasSpecialCharacter(s)) throw new IllegalStateException("Invalid character at inventory layout! (" + layoutDatabase.getName() + ")");
             for (char c : s.toCharArray()) {
@@ -260,9 +267,23 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      * Get the final GUIButton from key
      *
      * @param key The button key
-     * @return The GUIButton as array because it's possible to have more than one. Nullable also
+     * @return The GUIButton as array because it's possible to have more than one
      */
+    @NotNull
     public List<GUIButton> getGUIButtons(String key) {
+        if (!isKeyAvailable(key)) return new ArrayList<>();
+        return guiButtons.get(key);
+    }
+
+    /**
+     * Get the final placeholder GUIButton from key
+     *
+     * @param key The button key
+     * @return The GUIButton as array because it's possible to have more than one
+     */
+    @NotNull
+    public List<GUIButton> getPlaceholderButtons(String key) {
+        key = ITemplatePlaceholder.SECTION_KEY_PREFIX + key;
         if (!isKeyAvailable(key)) return new ArrayList<>();
         return guiButtons.get(key);
     }
@@ -284,8 +305,8 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
      */
     public List<GUIButton> getAllGUIButtons() {
         List<GUIButton> all = new ArrayList<>();
-        for (Map.Entry ent : guiButtons.entrySet()) {
-            for (GUIButton g : ((List<? extends GUIButton>) ent.getValue())) {
+        for (Map.Entry<String, List<GUIButton>> ent : guiButtons.entrySet()) {
+            for (GUIButton g : ent.getValue()) {
                 all.add(g.clone());
             }
         }
@@ -330,6 +351,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
             InventoryTemplate template = (InventoryTemplate) super.clone();
             template.setLayout(new HashMap<>(this.layout));
             template.setRawLayout(new ArrayList<>(this.rawLayout));
+            template.setPlaceholders(new ArrayList<>(this.placeholders));
 
             Map<String, List<GUIButton>> buttons = new HashMap<>();
             for (Map.Entry ent : this.guiButtons.entrySet()) {

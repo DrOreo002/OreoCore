@@ -48,7 +48,7 @@ public class PluginConfig extends CustomConfig implements ConfigMemory {
     @Getter
     private InventoryTemplate testTemplate = new InventoryTemplate();
 
-    @ConfigVariable(path = "Inventory-Placeholder.Test", isSerializableObject = true, loadPriority = 1)
+    @ConfigVariable(path = "Inventory-Placeholder", isSerializableObject = true, loadPriority = 1)
     @Getter
     private ITemplatePlaceholder placeholder = new ITemplatePlaceholder();
 
