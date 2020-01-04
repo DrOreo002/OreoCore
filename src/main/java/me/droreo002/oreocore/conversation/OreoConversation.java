@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.conversation;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
@@ -20,6 +21,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class OreoConversation<T> implements ConversationAbandonedListener {
 
@@ -215,6 +219,10 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
         return this;
     }
 
+    public OreoConversation<T> last(CompletableFuture<T> completableFuture) {
+        return this;
+    }
+
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
         Player player = (Player) abandonedEvent.getContext().getForWhom();
@@ -251,13 +259,13 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param timeOut The execution time out
      */
     public void send(String promptName, Player player, Map<String, Object> sessionData, int timeOut) {
-        OreoPrompt prompt = getPrompt(promptName);
+        OreoPrompt<?> prompt = getPrompt(promptName);
         if (prompt == null) throw new NullPointerException("Failed to get prompt with the identifier of " + promptName);
 
         sessionData.put(CONVERSATION_DATA, this);
         Conversation conversation = conversationFactory.withFirstPrompt(prompt).withTimeout((timeOut == 0) ? DEFAULT_TIME_OUT : timeOut).buildConversation(player);
-        for (Map.Entry ent : sessionData.entrySet()) {
-            String key = (String) ent.getKey();
+        for (Map.Entry<String, Object> ent : sessionData.entrySet()) {
+            String key = ent.getKey();
             conversation.getContext().setSessionData(key, ent.getValue());
         }
         if (useTitle) {
@@ -275,7 +283,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param player The target player
      */
     public void send(Player player) {
-        OreoPrompt prompt = this.prompts.get(0); // First index
+        OreoPrompt<?> prompt = this.prompts.get(0); // First index
         this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
     }
 
@@ -286,7 +294,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      * @param timeOut The timeout
      */
     public void send(Player player, int timeOut) {
-        OreoPrompt prompt = this.prompts.get(0); // First index
+        OreoPrompt<?> prompt = this.prompts.get(0); // First index
         this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
     }
 

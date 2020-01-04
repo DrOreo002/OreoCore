@@ -6,6 +6,8 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
+import java.util.concurrent.Callable;
+
 public abstract class OreoPrompt<T> extends StringPrompt {
 
     public static final String DATA_KEY = "DATA";
@@ -47,7 +49,7 @@ public abstract class OreoPrompt<T> extends StringPrompt {
 
         Prompt result = null;
         if (nextPrompt != null) {
-            OreoPrompt nextPrompt = conversation.nextOf(this);
+            OreoPrompt<?> nextPrompt = conversation.nextOf(this);
             result = (t == null) ? null : nextPrompt;
         }
 

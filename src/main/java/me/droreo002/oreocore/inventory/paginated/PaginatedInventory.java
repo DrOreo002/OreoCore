@@ -37,6 +37,8 @@ public abstract class PaginatedInventory extends OreoInventory {
     @Getter @Setter
     private GUIButton informationButton, nextPageButton, previousPageButton;
     @Getter @Setter
+    private ItemStack noNextPageItem, noPreviousPageItem;
+    @Getter @Setter
     private int totalPage, currentPage, informationButtonSlot;
     @Getter
     private Paginator<GUIButton> buttonPaginator;
@@ -209,7 +211,12 @@ public abstract class PaginatedInventory extends OreoInventory {
         super.setup();
         setupPaginatedButtons();
         updateInformationButton();
-        getInventory().setItem(previousPageButton.getInventorySlot(), null); // Always null because inventory will open on first slot
+        if (totalPage > 1) {
+            getInventory().setItem(nextPageButton.getInventorySlot(), nextPageButton.getItem());
+        } else {
+            getInventory().setItem(nextPageButton.getInventorySlot(), noNextPageItem);
+        }
+        getInventory().setItem(previousPageButton.getInventorySlot(), noPreviousPageItem); // Always null because inventory will open on first slot
     }
 
     /**
@@ -311,7 +318,7 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         if ((currentPage + 1) >= totalPage) {
             // This current page is the last page
-            getInventory().setItem(nextPageButton.getInventorySlot(), null);
+            getInventory().setItem(nextPageButton.getInventorySlot(), noNextPageItem);
         }
         getInventory().setItem(previousPageButton.getInventorySlot(), previousPageButton.getItem());
         updateAttributes(player);
@@ -334,7 +341,7 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         if (currentPage <= 0) {
             // This current page is the first page
-            getInventory().setItem(previousPageButton.getInventorySlot(), null);
+            getInventory().setItem(previousPageButton.getInventorySlot(), noPreviousPageItem);
         }
         getInventory().setItem(nextPageButton.getInventorySlot(), nextPageButton.getItem());
 

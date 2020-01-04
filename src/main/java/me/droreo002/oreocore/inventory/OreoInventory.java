@@ -62,8 +62,6 @@ public abstract class OreoInventory implements InventoryHolder {
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
     @Getter @Setter
     private boolean shouldProcessButtonClickEvent;
-    @Getter @Setter
-    private List<GroupedButton> groupedButtons;
 
     public OreoInventory(int size, String title) {
         this.size = size;
@@ -109,7 +107,6 @@ public abstract class OreoInventory implements InventoryHolder {
     private void setupDefault() {
         this.buttons = new ArrayList<>();
         this.disabledClickListeners = new ArrayList<>();
-        this.groupedButtons = new ArrayList<>();
         this.inventory = Bukkit.createInventory(this, size, title);
         this.soundOnClick = new SoundObject(OSound.UI_BUTTON_CLICK);
         this.soundOnClose = new SoundObject(OSound.BLOCK_CHEST_CLOSE);
@@ -316,6 +313,7 @@ public abstract class OreoInventory implements InventoryHolder {
     public void open(Player player) {
         PlayerUtils.closeInventory(player); // If player still opening something
         if (onPreSetup()) {
+            build();
             setup();
             // Some basic setup with animations
             if (getInventoryAnimation() != null) {
@@ -343,6 +341,17 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param replace Should we replace if it exists already?
      */
     public void addButton(GUIButton guiButton, boolean replace) {
+        addButton(guiButton, replace, false);
+    }
+
+    /**
+     * Add a button into the inventory
+     *
+     * @param guiButton The button to add
+     * @param replace Should we replace if it exists already?
+     * @param update Should we directly set this button to inventory?
+     */
+    public void addButton(GUIButton guiButton, boolean replace, boolean update) {
         Validate.notNull(guiButton, "Button cannot be null!");
         if (replace) {
             if (isHasButton(guiButton.getInventorySlot())) {
@@ -352,6 +361,7 @@ public abstract class OreoInventory implements InventoryHolder {
             if (isHasButton(guiButton.getInventorySlot())) return;
         }
         getButtons().add(guiButton);
+        if (update) getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
     }
 
     /**
@@ -435,7 +445,6 @@ public abstract class OreoInventory implements InventoryHolder {
             getInventory().setItem(i, UMaterial.AIR.getItemStack());
         }
         this.buttons.clear();
-        this.groupedButtons.clear();
     }
 
     /**
@@ -470,30 +479,10 @@ public abstract class OreoInventory implements InventoryHolder {
 
         getButtons().forEach(guiButton -> {
             try {
-                if (getInventory().getItem(guiButton.getInventorySlot()) != null) return;
                 getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
             } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         });
-
-        if (!getGroupedButtons().isEmpty()) {
-            for (GroupedButton groupedButton : getGroupedButtons()) {
-                if (groupedButton.isShouldOverrideOtherButton()) { // Remove every single thing inside
-                    for (int i : groupedButton.getSlots()) {
-                        getInventory().setItem(i, UMaterial.AIR.getItemStack());
-                    }
-                }
-
-                for (GUIButton button : groupedButton.getButtons()) {
-                    final int slot = button.getInventorySlot();
-                    if (groupedButton.isShouldOverrideOtherButton()) {
-                        getInventory().setItem(slot, button.getItem());
-                    } else {
-                        if (getInventory().getItem(slot) != null) getInventory().setItem(slot, button.getItem());
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -507,15 +496,6 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     /**
-     * Add a groped button into the inventory
-     *
-     * @param groupedButton The grouped button
-     */
-    public void addGroupedButton(GroupedButton groupedButton) {
-        groupedButtons.add(groupedButton);
-    }
-
-    /**
      * Update the player's inventory (non packet)
      *
      * @param player The target player
@@ -523,4 +503,6 @@ public abstract class OreoInventory implements InventoryHolder {
     public void updateInventory(Player player) {
         PlayerUtils.updateInventory(player);
     }
+
+    public void build() {}
 }

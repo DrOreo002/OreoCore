@@ -11,7 +11,7 @@ import java.util.concurrent.*;
  */
 public final class ThreadingUtils {
 
-    private static final ScheduledExecutorService asyncExecutor = new AsyncExecutor();
+    public static final ScheduledExecutorService asyncExecutor = new AsyncExecutor();
 
     /**
      * Make a new future task

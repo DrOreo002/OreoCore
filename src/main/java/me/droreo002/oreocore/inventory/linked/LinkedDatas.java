@@ -61,7 +61,10 @@ public class LinkedDatas {
      * @param datas The data to add
      */
     public void addAll(List<LinkedData> datas) {
-        data.addAll(datas);
+        if (datas.isEmpty()) return;
+        for (LinkedData d : datas) {
+            addData(d);
+        }
     }
 
     /**
@@ -70,6 +73,8 @@ public class LinkedDatas {
      * @param linkedData The linked data
      */
     public void addData(LinkedData linkedData) {
+        if (linkedData.getDataValue() == null) return;
+        removeData(linkedData.getDataKey());
         data.add(linkedData);
     }
 }

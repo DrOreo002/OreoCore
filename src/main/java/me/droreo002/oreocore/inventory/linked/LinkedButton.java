@@ -2,6 +2,7 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 public class LinkedButton extends GUIButton {
 
@@ -20,6 +22,8 @@ public class LinkedButton extends GUIButton {
     private String belongsTo;
     @Getter @Setter
     private String targetInventory;
+    @Getter @Setter
+    private Future<LinkedDatas> extraDataProvider;
 
     /**
      * Construct a new LickedButton (without slot)

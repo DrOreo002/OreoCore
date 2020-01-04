@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class CoreCommand implements CommandExecutor, TabCompleter {
 
@@ -148,19 +150,6 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                                     return "Type first data";
                                 }
                             })
-                            .then(new OreoPrompt<Integer>("second", "SECOND_DATA") {
-                                @Override
-                                public Integer onInput(ConversationContext conversationContext, String s) {
-                                    return Integer.parseInt(s);
-                                }
-
-                                @NotNull
-                                @Override
-                                public String getPromptText(@NotNull ConversationContext conversationContext) {
-                                    return "Type second data";
-                                }
-                            })
-                            .withDataBuilder(context -> context.getSessionData("FIRST_DATA") + ":" + context.getSessionData("SECOND_DATA"))
                             .lastly((s1, conversationContext) -> sendMessage(player, "Your data is " + s1))
                             .send(player);
                     return true;

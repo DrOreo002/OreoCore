@@ -2,28 +2,34 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.inventory.button.GUIButton;
+import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class LinkedInventoryManager {
 
     @Getter
-    private final List<Linkable> inventories;
+    private final LinkedList<Linkable> inventories;
     @Getter
     private final LinkedDatas linkedDatas;
     @Getter
     private final List<UUID> modifiedButton;
     @Getter @Setter
     private String currentInventory;
+    @Getter @Setter
+    private int currentInventorySlot;
+    @Getter @Setter
+    private LinkedListener linkedListener;
 
     public LinkedInventoryManager(Linkable... linkables) {
-        this.inventories = new ArrayList<>();
+        this.inventories = new LinkedList<>();
+        this.currentInventorySlot = 0;
         this.currentInventory = "";
         this.linkedDatas = new LinkedDatas();
         this.modifiedButton = new ArrayList<>();
@@ -79,15 +85,64 @@ public class LinkedInventoryManager {
                 final Linkable prevInventory = getLinkedInventory(getCurrentInventory());
                 if (targetInventory == null) return;
                 if (prevInventory == null) return;
+                PlayerUtils.closeInventory(player);
 
                 linkedDatas.addAll(prevInventory.getInventoryData());
+                if (button.getExtraDataProvider() != null) {
+                    try {
+                        linkedDatas.addAll(button.getExtraDataProvider().get().getData());
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                // Pre
+                if (this.linkedListener != null) {
+                    this.linkedListener.onInventoryPreTransfer(prevInventory, targetInventory);
+                }
+
                 targetInventory.acceptData(linkedDatas, prevInventory);
                 targetInventory.onLinkOpen(prevInventory);
                 targetInventory.getInventoryOwner().open(player);
+
+                // Post
+                if (this.linkedListener != null) {
+                    this.linkedListener.onInventoryTransfer(prevInventory, targetInventory);
+                }
+
                 setCurrentInventory(targetInventory.getInventoryName());
+                setCurrentInventorySlot(currentInventorySlot + 1);
             });
             modifiedButton.add(button.getUniqueId());
         });
+    }
+
+    /**
+     * Get the next inventory
+     *
+     * @return The next inventory
+     */
+    @Nullable
+    public Linkable getNextInventory() {
+        if (currentInventorySlot + 1 >= inventories.size()) return null;
+        setCurrentInventorySlot(currentInventorySlot + 1);
+        Linkable nextInventory = getInventories().get(currentInventorySlot);
+        setCurrentInventory(nextInventory.getInventoryName());
+        return nextInventory;
+    }
+
+    /**
+     * Get the previous inventory
+     *
+     * @return The previous inventory
+     */
+    @Nullable
+    public Linkable getPreviousInventory() {
+        if (currentInventorySlot - 1 < 0) return null;
+        setCurrentInventorySlot(currentInventorySlot - 1);
+        Linkable prevInventory = getInventories().get(currentInventorySlot);
+        setCurrentInventory(prevInventory.getInventoryName());
+        return prevInventory;
     }
 
     /**
@@ -130,5 +185,32 @@ public class LinkedInventoryManager {
      */
     public Linkable getLinkedInventory(String name) {
         return inventories.stream().filter(inv -> inv.getInventoryName().equalsIgnoreCase(name)).findAny().orElse(null);
+    }
+
+    /**
+     * Interface for listener method
+     * on LinkedInventoryManager
+     */
+    public interface LinkedListener {
+
+        /**
+         * Called when there's a inventory transfer occurred
+         *
+         * @param before Linkable
+         * @param after Linkable
+         */
+        default void onInventoryTransfer(Linkable before, Linkable after) {
+
+        }
+
+        /**
+         * Called when inventory pre transferred
+         *
+         * @param before Linkable
+         * @param after Linkable
+         */
+        default void onInventoryPreTransfer(Linkable before, Linkable after) {
+
+        }
     }
 }
