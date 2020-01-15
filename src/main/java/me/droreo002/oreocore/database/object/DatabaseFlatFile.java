@@ -11,6 +11,7 @@ import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +82,7 @@ public abstract class DatabaseFlatFile extends Database {
     /**
      * Add a new dataCache entry into the cache!
      *
-     * @param dataCache : The dataCache class
+     * @param dataCache The dataCache class
      */
     private void addData(DataCache dataCache) {
         String name = dataCache.getDataFileName();
@@ -92,16 +93,12 @@ public abstract class DatabaseFlatFile extends Database {
     /**
      * Add a new data entry into cache
      *
-     * @param fileName : The data's file name
-     * @return true if succeeded, false otherwise
+     * @param fileName The data's file name
      */
-    public boolean addData(String fileName) {
-        if (!fileName.contains(".yml")) fileName += ".yml";
-        File file = new File(dataFolder, fileName);
-        if (!file.exists()) return false;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        addData(new DataCache(config, file));
-        return true;
+    public void addData(String fileName) {
+        File file = new File(dataFolder, validateName(fileName));
+        if (!file.exists()) return;
+        addData(new DataCache(YamlConfiguration.loadConfiguration(file), file));
     }
 
     /**
@@ -111,23 +108,22 @@ public abstract class DatabaseFlatFile extends Database {
      * @return true if exists, false otherwise
      */
     public boolean isDataFileExists(String fileName) {
-        if (!fileName.contains(".yml")) fileName += ".yml";
-        return new File(dataFolder, fileName).exists();
+        return new File(dataFolder, validateName(fileName)).exists();
     }
 
     /**
      * Setup the FileConfiguration, this will also call the SetupCallback method. This is different from the load data
      *
-     * @param fileName : The file name
+     * @param fileName The file name
      */
-    public void setup(String fileName, boolean addDefault, SetupCallback callback) {
+    public void setup(String fileName, boolean addDefault, @Nullable SetupCallback callback) {
         fileName = validateName(fileName);
         File file = new File(dataFolder, fileName);
         if (file.exists()) {
             if (isDataCached(fileName)) return;
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             addData(new DataCache(config, file));
-            callback.callBack(SetupCallbackType.LOADED);
+            if (callback != null) callback.onDone(SetupCallback.Type.LOADED);
             return;
         }
         try {
@@ -146,7 +142,7 @@ public abstract class DatabaseFlatFile extends Database {
             }
         }
         addData(new DataCache(config, file));
-        callback.callBack(SetupCallbackType.CREATED_AND_LOADED);
+        if (callback != null) callback.onDone(SetupCallback.Type.CREATED_AND_LOADED);
     }
 
     /**
@@ -155,28 +151,7 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName : The file name
      */
     public void setup(String fileName, boolean addDefault) {
-        File file = new File(dataFolder, fileName.replace(".yml", "") + ".yml"); // Making sure it would not be .yml.yml
-        if (file.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            addData(new DataCache(config, file));
-            return;
-        }
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if (addDefault) {
-            addDefaults(config);
-            try {
-                config.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-        addData(new DataCache(config, file));
+        setup(fileName, addDefault, null);
     }
 
     /**
@@ -185,6 +160,7 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName : The data file name
      * @return the data class if there's any. Null otherwise
      */
+    @Nullable
     public DataCache getDataCache(String fileName) {
         String newName = validateName(fileName);
         if (!isDataCached(newName)) return null;
@@ -211,8 +187,8 @@ public abstract class DatabaseFlatFile extends Database {
     /**
      * Remove the dataCache from the cache or delete it permanently
      *
-     * @param dataCache : The dataCache object
-     * @param delete : Should we delete it?
+     * @param dataCache The dataCache object
+     * @param delete Should we delete it?
      */
     public void removeData(DataCache dataCache, boolean delete) {
         if (delete) {
@@ -222,6 +198,18 @@ public abstract class DatabaseFlatFile extends Database {
         }
         dataCaches.removeIf(cache -> cache.getDataFileName().equals(dataCache.getDataFileName()));
     }
+
+    /**
+     * Remove the dataCache from the cache or delete it permanently
+     *
+     * @param fileName The file name
+     * @param delete Should we delete it?
+     */
+    public void removeData(String fileName, boolean delete) {
+        if (!isDataCached(fileName)) return;
+        removeData(getDataCache(fileName), delete);
+    }
+
 
     /**
      * Check if the data is cached
@@ -244,7 +232,7 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     @Data
-    public class DataCache {
+    public static class DataCache {
         private FileConfiguration config;
         private File dataFile;
         private String dataFileName;
@@ -257,11 +245,20 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     public interface SetupCallback {
-        void callBack(SetupCallbackType type);
-    }
 
-    public enum SetupCallbackType {
-        CREATED_AND_LOADED,
-        LOADED
+        /**
+         * When done, call this
+         *
+         * @param type The setup type
+         */
+        void onDone(Type type);
+
+        /**
+         * Type enum
+         */
+        enum Type {
+            CREATED_AND_LOADED,
+            LOADED
+        }
     }
 }

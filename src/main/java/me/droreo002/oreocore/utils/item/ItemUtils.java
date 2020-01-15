@@ -134,17 +134,17 @@ public final class ItemUtils {
             EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) item.getItemMeta();
             enchants = storageMeta.getStoredEnchants();
         }
-        for (Map.Entry ent : enchants.entrySet()) {
+        for (Map.Entry<Enchantment, Integer> ent : enchants.entrySet()) {
             String enchant = null;
+            Enchantment enchantment = ent.getKey();
             if (ServerUtils.isOldAsFuckVersion()) {
-                Enchantment enchantment = (Enchantment) ent.getKey();
                 try {
                     enchant = (String) SimpleReflectionUtils.getMethod(enchantment.getClass(), "getName").invoke(enchantment);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             } else {
-                enchant = StringUtils.upperCaseFirstLetter(((Enchantment) ent.getKey()).getKey().getKey());
+                enchant = StringUtils.upperCaseFirstLetter(enchantment.getKey().getKey());
             }
             if (withLevel) enchant += "|" + (int) ent.getValue();
             ec.add(enchant);
