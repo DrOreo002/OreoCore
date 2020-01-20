@@ -137,7 +137,8 @@ public final class ItemUtils {
         for (Map.Entry<Enchantment, Integer> ent : enchants.entrySet()) {
             String enchant = null;
             Enchantment enchantment = ent.getKey();
-            if (ServerUtils.isOldAsFuckVersion()) {
+            // Apparently #getKey only available at 1.13+
+            if (ServerUtils.isLegacyVersion()) {
                 try {
                     enchant = (String) SimpleReflectionUtils.getMethod(enchantment.getClass(), "getName").invoke(enchantment);
                 } catch (IllegalAccessException | InvocationTargetException e) {
