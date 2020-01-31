@@ -7,6 +7,7 @@ import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.multisupport.MinecraftFeature;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -190,5 +191,14 @@ public final class ServerUtils {
             if (soundObject != null) soundObject.send(o);
             o.sendMessage(StringUtils.color(message));
         });
+    }
+
+    /**
+     * Send a console message with color support
+     *
+     * @param message The message to send
+     */
+    public static void sendConsoleMessage(String message) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 }

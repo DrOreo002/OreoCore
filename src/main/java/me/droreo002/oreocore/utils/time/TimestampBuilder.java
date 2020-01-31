@@ -15,6 +15,7 @@ public class TimestampBuilder {
     public static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
     public static final String SIMPLIFIED_FORMAT = "HH:mm:ss";
     public static final String TICKING_TIME_FORMAT = "%d%d %h%h %m%m %s%s";
+    public static final String NO_SPACE = "dd/MM/yyyy-HH:mm:ss";
 
     @Getter @Setter
     private Timestamp timestamp;

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public final class FileDownloader {
 
@@ -16,7 +17,12 @@ public final class FileDownloader {
      * @throws IOException If something goes wrong
      */
     public static void download(URL url, File save) throws IOException {
-        try (BufferedInputStream in = new BufferedInputStream(url.openStream()); FileOutputStream fileOutputStream = new FileOutputStream(save)) {
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.addRequestProperty("User-Agent", "Mozilla");
+        urlConnection.setReadTimeout(5000);
+        urlConnection.setConnectTimeout(5000);
+
+        try (BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream()); FileOutputStream fileOutputStream = new FileOutputStream(save)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {

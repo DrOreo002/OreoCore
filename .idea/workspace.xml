@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/HastebinUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/ItemUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/ItemUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/io/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/FileDownloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/misc/FileDownloader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/time/TimestampBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/time/TimestampBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/time/TimestampUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/time/TimestampUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,8 +45,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -129,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Bug fixes">
-      <created>1564418015941</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1564418015941</updated>
     </task>
     <task id="LOCAL-00018" summary="Bug fixes">
       <created>1564542946038</created>
@@ -473,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579093779260</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Fixed error on getting enchantment">
+      <created>1579527808051</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1579527808052</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -507,7 +512,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Version change" />
     <MESSAGE value="I do not know what to say" />
     <MESSAGE value="Fixed error and something" />
     <MESSAGE value="Many changes" />
@@ -532,45 +536,46 @@
     <MESSAGE value="Some new feature" />
     <MESSAGE value="Fixed linked shit" />
     <MESSAGE value="More and more changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="More and more changes" />
+    <MESSAGE value="Fixed error on getting enchantment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed error on getting enchantment" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1577892239982">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577892239982" />
-    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1579093774879">
+    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1579527806164">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579093774879" />
+    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579527806164" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1577891331222">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577891331222" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1579169094941">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1580479033896">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579169094941" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1579169094941">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580479033896" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1580479033895">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579169094941" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1579169094941">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580479033895" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1580479033895">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579169094941" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1579169094941">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580479033895" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1580479033895">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579169094941" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580479033895" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="440" y="113" key="SettingsEditor/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577010923793" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1579093781428">
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1579527810676">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579093781428" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579527810676" />
     <state x="1277" y="215" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1576949516846">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
@@ -579,13 +584,13 @@
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
     <state x="1977" y="0" width="1399" height="1004" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577958210600" />
-    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1578144334988">
+    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1580457613373">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1578144334988" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1579445660624">
+    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580457613373" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1580479022704">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1579445660624" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580479022704" />
   </component>
 </project>

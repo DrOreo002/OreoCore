@@ -21,6 +21,19 @@ public final class FileUtils {
         }
     }
 
+    public static List<String> readLines(InputStream stream) throws IOException {
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8));
+        final List<String> lines = new ArrayList<>();
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            lines.add(line);
+        }
+        reader.close();
+        lines.removeIf(String::isEmpty);
+        return lines;
+    }
+
     public static List<String> readLines(InputStream stream, String... ignoreStarting) throws IOException {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8));
         final List<String> lines = new ArrayList<>();

@@ -55,7 +55,7 @@ public final class TimestampUtils {
     }
 
     /**
-     * Check if the Clock time has passed
+     * Check if the {@param data}'s specified clock time has passed {@param second}
      *
      * @param data The TimeStamp to check
      * @param clock The clock time to check {@link TimestampBuilder.Clock}
@@ -66,16 +66,16 @@ public final class TimestampUtils {
     public static boolean hasPassed(Timestamp data, Timestamp second, TimestampBuilder.Clock clock, int value) {
         switch (clock) {
             case SECOND:
-                data = addSecond(value, data);
+                second = addSecond(value, second);
                 break;
             case MINUTE:
-                data = addMinute(value, data);
+                second = addMinute(value, second);
                 break;
             case HOUR:
-                data = addHour(value, data);
+                second = addHour(value, second);
                 break;
             case DAY:
-                data = addDay(value, data);
+                second = addDay(value, second);
                 break;
         }
         return data.after(second);
