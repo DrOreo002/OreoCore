@@ -1,5 +1,6 @@
 package me.droreo002.oreocore.utils.misc;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -14,6 +15,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,22 +53,27 @@ public final class UpdateChecker {
         return (secondSplit.length > firstSplit.length) ? second : first;
     };
 
-    private static final String USER_AGENT = "CHOCO-update-checker";
+    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2";
     private static final String UPDATE_URL = "https://api.spiget.org/v2/resources/%d/versions?size=1&sort=-releaseDate";
+    private static final String UPDATE_URL_SPIGOT = "https://api.spigotmc.org/legacy/update.php?resource=%d";
     private static final Pattern DECIMAL_SCHEME_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
-
-    private static UpdateChecker instance;
 
     private UpdateResult lastResult = null;
 
+    @Getter
     private final JavaPlugin plugin;
+    @Getter
     private final int pluginID;
+    @Getter
     private final VersionScheme versionScheme;
+    @Getter @Setter
+    private boolean premium;
 
     private UpdateChecker(JavaPlugin plugin, int pluginID, VersionScheme versionScheme) {
         this.plugin = plugin;
         this.pluginID = pluginID;
         this.versionScheme = versionScheme;
+        this.premium = false;
     }
 
     /**
@@ -78,23 +86,41 @@ public final class UpdateChecker {
         return CompletableFuture.supplyAsync(() -> {
             int responseCode = -1;
             try {
-                URL url = new URL(String.format(UPDATE_URL, pluginID));
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.addRequestProperty("User-Agent", USER_AGENT);
+                String latest = null;
+                String current = plugin.getDescription().getVersion();
+                String newest = "";
 
-                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-                responseCode = connection.getResponseCode();
+                if (!premium) {
+                    URL url = new URL(String.format(UPDATE_URL, pluginID));
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.addRequestProperty("User-Agent", USER_AGENT);
 
-                JsonElement element = new JsonParser().parse(reader);
-                if (!element.isJsonArray()) {
-                    return new UpdateResult(UpdateReason.INVALID_JSON);
+                    InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+                    responseCode = connection.getResponseCode();
+
+                    JsonElement element = new JsonParser().parse(reader);
+                    if (!element.isJsonArray()) {
+                        return new UpdateResult(UpdateReason.INVALID_JSON);
+                    }
+
+                    reader.close();
+
+                    JsonObject versionObject = element.getAsJsonArray().get(0).getAsJsonObject();
+                    newest = versionObject.get("name").getAsString();
+
+                } else {
+                    URL url = new URL(String.format(UPDATE_URL_SPIGOT, pluginID));
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.addRequestProperty("User-Agent", USER_AGENT);
+
+                    InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+                    responseCode = connection.getResponseCode();
+                    BufferedReader in = new BufferedReader(reader);
+                    newest = in.readLine(); // The response is only 1 line
+                    in.close();
                 }
 
-                reader.close();
-
-                JsonObject versionObject = element.getAsJsonArray().get(0).getAsJsonObject();
-                String current = plugin.getDescription().getVersion(), newest = versionObject.get("name").getAsString();
-                String latest = versionScheme.compareVersions(current, newest);
+                latest = versionScheme.compareVersions(current, newest);
 
                 if (latest == null) {
                     return new UpdateResult(UpdateReason.UNSUPPORTED_VERSION_SCHEME);
@@ -131,9 +157,7 @@ public final class UpdateChecker {
     }
 
     /**
-     * Initialize this update checker with the specified values and return its instance. If an instance
-     * of UpdateChecker has already been initialized, this method will act similarly to {@link #get()}
-     * (which is recommended after initialization).
+     * Initialize this update checker with the specified values and return its instance
      *
      * @param plugin the plugin for which to check updates. Cannot be null
      * @param pluginID the ID of the plugin as identified in the SpigotMC resource link. For example,
@@ -148,13 +172,11 @@ public final class UpdateChecker {
         Preconditions.checkArgument(pluginID > 0, "Plugin ID must be greater than 0");
         Preconditions.checkArgument(versionScheme != null, "null version schemes are unsupported");
 
-        return (instance == null) ? instance = new UpdateChecker(plugin, pluginID, versionScheme) : instance;
+        return new UpdateChecker(plugin, pluginID, versionScheme);
     }
 
     /**
-     * Initialize this update checker with the specified values and return its instance. If an instance
-     * of UpdateChecker has already been initialized, this method will act similarly to {@link #get()}
-     * (which is recommended after initialization).
+     * Initialize this update checker with the specified values and return its instance
      *
      * @param plugin the plugin for which to check updates. Cannot be null
      * @param pluginID the ID of the plugin as identified in the SpigotMC resource link. For example,
@@ -168,32 +190,10 @@ public final class UpdateChecker {
     }
 
     /**
-     * Get the initialized instance of UpdateChecker. If {@link #init(JavaPlugin, int)} has not yet been
-     * invoked, this method will throw an exception.
-     *
-     * @return the UpdateChecker instance
-     */
-    public static UpdateChecker get() {
-        Preconditions.checkState(instance != null, "Instance has not yet been initialized. Be sure #init() has been invoked");
-        return instance;
-    }
-
-    /**
-     * Check whether the UpdateChecker has been initialized or not (if {@link #init(JavaPlugin, int)}
-     * has been invoked) and {@link #get()} is safe to use.
-     *
-     * @return true if initialized, false otherwise
-     */
-    public static boolean isInitialized() {
-        return instance != null;
-    }
-
-
-    /**
      * A functional interface to compare two version Strings with similar version schemes.
      */
     @FunctionalInterface
-    public static interface VersionScheme {
+    public interface VersionScheme {
 
         /**
          * Compare two versions and return the higher of the two. If null is returned, it is assumed
@@ -204,14 +204,13 @@ public final class UpdateChecker {
          *
          * @return the greater of the two versions. null if unsupported version schemes
          */
-        public String compareVersions(String first, String second);
-
+        String compareVersions(String first, String second);
     }
 
     /**
      * A constant reason for the result of {@link UpdateResult}.
      */
-    public static enum UpdateReason {
+    public enum UpdateReason {
 
         /**
          * A new update is available for download on SpigotMC.
@@ -309,5 +308,4 @@ public final class UpdateChecker {
         }
 
     }
-
 }

@@ -3,7 +3,6 @@ package me.droreo002.oreocore.utils.misc;
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.enums.Sounds;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -27,21 +26,7 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     /**
      * Allow null for @ConfigVariable support
      */
-    public SoundObject() {
-
-    }
-
-    public SoundObject(Sounds sound, float volume, float pitch) {
-        this.volume = volume;
-        this.pitch = pitch;
-        this.sound = OSound.match(sound.toString());
-    }
-
-    public SoundObject(Sounds sound) {
-        this.volume = 1.0f;
-        this.pitch = 1.0f;
-        this.sound = OSound.match(sound.toString());
-    }
+    public SoundObject() { }
 
     public SoundObject(OSound sound, float volume, float pitch) {
         this.volume = volume;

@@ -83,16 +83,17 @@ public class CustomConfig {
      * @param updateMemory Should we update the memory?
      */
     public void saveConfig(boolean updateMemory) {
-        try {
-            config.save(yamlFile);
-            updateComments();
-        } catch (IOException e) {
-            e.printStackTrace();
-            ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
-        }
-
         if (updateMemory) {
-            if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+            if (registeredMemory == null) throw new NullPointerException("Registered memory cannot be null!");
+            ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+        } else {
+            try {
+                config.save(yamlFile);
+                updateComments();
+            } catch (IOException e) {
+                e.printStackTrace();
+                ODebug.log(plugin, "Failed to save custom config file! &7(&e" + getFilePath() + "&7)", true);
+            }
         }
     }
 

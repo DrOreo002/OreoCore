@@ -1,5 +1,10 @@
 package me.droreo002.oreocore.enums;
 
+import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -10,6 +15,7 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-// TODO : Create your own particle data
 /**
  * <b>ParticleEffects Library</b>
  * <p>
@@ -174,7 +179,7 @@ public enum ParticleEffect {
      * <li>The particle color gets lighter when increasing the speed and darker when decreasing the speed
      * </ul>
      */
-    SPELL_MOB("mobSpell", 15, -1, ParticleProperty.COLORABLE),
+    SPELL_MOB("mobSpell", 15, -1, ParticleProperty.COLOR_ABLE),
     /**
      * A particle effect which is displayed by entities with active potion effects applied through a beacon:
      * <ul>
@@ -183,7 +188,7 @@ public enum ParticleEffect {
      * <li>The particle color gets lighter when increasing the speed and darker when decreasing the speed
      * </ul>
      */
-    SPELL_MOB_AMBIENT("mobSpellAmbient", 16, -1, ParticleProperty.COLORABLE),
+    SPELL_MOB_AMBIENT("mobSpellAmbient", 16, -1, ParticleProperty.COLOR_ABLE),
     /**
      * A particle effect which is displayed by witches:
      * <ul>
@@ -240,7 +245,7 @@ public enum ParticleEffect {
      * <li>The speed value causes the particle to be colored green when set to 0
      * </ul>
      */
-    NOTE("note", 23, -1, ParticleProperty.COLORABLE),
+    NOTE("note", 23, -1, ParticleProperty.COLOR_ABLE),
     /**
      * A particle effect which is displayed by nether portals, endermen, ender pearls, eyes of ender, ender chests and dragon eggs:
      * <ul>
@@ -296,7 +301,7 @@ public enum ParticleEffect {
      * <li>The speed value causes the particle to be colored red when set to 0
      * </ul>
      */
-    REDSTONE("reddust", 30, -1, ParticleProperty.COLORABLE),
+    REDSTONE("reddust", 30, -1, ParticleProperty.COLOR_ABLE),
     /**
      * A particle effect which is displayed when snowballs hit a block:
      * <ul>
@@ -498,6 +503,36 @@ public enum ParticleEffect {
         return ParticlePacket.getVersion() >= requiredVersion;
     }
 
+
+    /**
+     * Displays a particle effect which is only visible for all players within a certain range in the world of @param center
+     *
+     * @param offsetX Maximum distance particles can fly away from the center on the x-axis
+     * @param offsetY Maximum distance particles can fly away from the center on the y-axis
+     * @param offsetZ Maximum distance particles can fly away from the center on the z-axis
+     * @param speed Display speed of the particles
+     * @param amount Amount of particles
+     * @param center Center location of the effect
+     * @param range Range of the visibility
+     * @throws ParticleVersionException If the particle effect is not supported by the server version
+     * @throws ParticleDataException If the particle effect requires additional data
+     * @throws IllegalArgumentException If the particle effect requires water and none is at the center location
+     * @see ParticlePacket
+     * @see ParticlePacket#sendTo(Location, double, boolean protocolLibPacket)
+     */
+    public void display(float offsetX, float offsetY, float offsetZ, float speed, int amount, Location center, double range) throws ParticleVersionException, ParticleDataException, IllegalArgumentException {
+        if (!isSupported()) {
+            throw new ParticleVersionException("This particle effect is not supported by your server version");
+        }
+        if (hasProperty(ParticleProperty.REQUIRES_DATA)) {
+            throw new ParticleDataException("This particle effect requires additional data");
+        }
+        if (hasProperty(ParticleProperty.REQUIRES_WATER) && !isWater(center)) {
+            throw new IllegalArgumentException("There is no water at the center location");
+        }
+        new ParticlePacket(this, offsetX, offsetY, offsetZ, speed, amount, range > 256, null).sendTo(center, range, false);
+    }
+
     /**
      * Returns the particle effect with the given name
      *
@@ -538,7 +573,7 @@ public enum ParticleEffect {
      */
     private static boolean isWater(Location location) {
         Material material = location.getBlock().getType();
-        return material == XMaterial.WATER.parseMaterial();
+        return material == UMaterial.WATER.getMaterial();
     }
 
     /**
@@ -605,7 +640,7 @@ public enum ParticleEffect {
         /**
          * The particle effect uses the offsets as color values
          */
-        COLORABLE
+        COLOR_ABLE
     }
 
     /**
@@ -1008,6 +1043,7 @@ public enum ParticleEffect {
         private final boolean longDistance;
         private final ParticleData data;
         private Object packet;
+        private WrapperPlayServerWorldParticles protocolLibPacket;
 
         /**
          * Construct a new particle packet
@@ -1091,8 +1127,8 @@ public enum ParticleEffect {
                 getHandle = BukkitReflectionUtils.getMethod("CraftPlayer", BukkitReflectionUtils.PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
                 playerConnection = BukkitReflectionUtils.getField("EntityPlayer", BukkitReflectionUtils.PackageType.MINECRAFT_SERVER, false, "playerConnection");
                 sendPacket = BukkitReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", BukkitReflectionUtils.PackageType.MINECRAFT_SERVER.getClass("Packet"));
-            } catch (Exception exception) {
-                throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
+            } catch (Exception ignored) {
+
             }
             initialized = true;
         }
@@ -1129,6 +1165,17 @@ public enum ParticleEffect {
             if (packet != null) {
                 return;
             }
+            this.protocolLibPacket = new WrapperPlayServerWorldParticles();
+            protocolLibPacket.setX((float) center.getX());
+            protocolLibPacket.setY((float) center.getY());
+            protocolLibPacket.setZ((float) center.getZ());
+            protocolLibPacket.setOffsetX(offsetX);
+            protocolLibPacket.setOffsetY(offsetY);
+            protocolLibPacket.setOffsetZ(offsetZ);
+            protocolLibPacket.setNumberOfParticles(amount);
+            protocolLibPacket.setLongDistance(longDistance);
+            protocolLibPacket.setParticleType(EnumWrappers.Particle.getById(effect.getId()));
+
             try {
                 packet = packetConstructor.newInstance();
                 if (version < 8) {
@@ -1153,8 +1200,8 @@ public enum ParticleEffect {
                 BukkitReflectionUtils.setValue(packet, true, "g", offsetZ);
                 BukkitReflectionUtils.setValue(packet, true, "h", speed);
                 BukkitReflectionUtils.setValue(packet, true, "i", amount);
-            } catch (Exception exception) {
-                throw new PacketInstantiationException("Packet instantiation failed", exception);
+            } catch (Exception ignored) {
+
             }
         }
 
@@ -1167,12 +1214,20 @@ public enum ParticleEffect {
          * @throws PacketSendingException       If sending fails due to an unknown error
          * @see #initializePacket(Location)
          */
-        void sendTo(Location center, Player player) throws PacketInstantiationException, PacketSendingException {
+        public void sendTo(Location center, Player player, boolean protocolLib) throws PacketInstantiationException, PacketSendingException {
             initializePacket(center);
-            try {
-                sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), packet);
-            } catch (Exception exception) {
-                throw new PacketSendingException("Failed to send the packet to player '" + player.getName() + "'", exception);
+            if (protocolLib) {
+                try {
+                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, protocolLibPacket.getHandle());
+                } catch (InvocationTargetException e) {
+                    throw new IllegalStateException("Unable to send packet", e);
+                }
+            } else {
+                try {
+                    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), packet);
+                } catch (Exception exception) {
+                    throw new PacketSendingException("Failed to send the packet to player '" + player.getName() + "'", exception);
+                }
             }
         }
 
@@ -1182,14 +1237,14 @@ public enum ParticleEffect {
          * @param center  Center location of the effect
          * @param players Receivers of the packet
          * @throws IllegalArgumentException If the player list is empty
-         * @see #sendTo(Location center, Player player)
+         * @see #sendTo(Location center, Player player, boolean protocolLib)
          */
-        public void sendTo(Location center, List<Player> players) throws IllegalArgumentException {
+        public void sendTo(Location center, List<Player> players, boolean protocolLib) throws IllegalArgumentException {
             if (players.isEmpty()) {
                 throw new IllegalArgumentException("The player list is empty");
             }
             for (Player player : players) {
-                sendTo(center, player);
+                sendTo(center, player, protocolLib);
             }
         }
 
@@ -1199,9 +1254,9 @@ public enum ParticleEffect {
          * @param center Center location of the effect
          * @param range  Range in which players will receive the packet (Maximum range for particles is usually 16, but it can differ for some types)
          * @throws IllegalArgumentException If the range is lower than 1
-         * @see #sendTo(Location center, Player player)
+         * @see #sendTo(Location center, Player player, boolean protocolLib)
          */
-        public void sendTo(Location center, double range) throws IllegalArgumentException {
+        public void sendTo(Location center, double range, boolean protocolLib) throws IllegalArgumentException {
             if (range < 1) {
                 throw new IllegalArgumentException("The range is lower than 1");
             }
@@ -1213,7 +1268,7 @@ public enum ParticleEffect {
                         if (!player.getWorld().getName().equals(worldName) || player.getLocation().distanceSquared(center) > squared) {
                             continue;
                         }
-                        sendTo(center, player);
+                        sendTo(center, player, protocolLib);
                     }
                 }
             }

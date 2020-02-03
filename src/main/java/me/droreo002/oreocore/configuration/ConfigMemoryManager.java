@@ -35,7 +35,7 @@ public final class ConfigMemoryManager {
     }
 
     /**
-     * Update the memory (Will remove and replace)
+     * Update the config's memory
      *
      * @param plugin Owner of this memory
      * @param memory The memory
@@ -45,7 +45,7 @@ public final class ConfigMemoryManager {
             if (isLoaded(plugin, memory)) {
                 CONFIG_MEMORY.get(plugin).remove(memory);
                 writeChanges(memory);
-
+                memory.getParent().saveConfig(false);
                 processMemory(memory);
                 CONFIG_MEMORY.get(plugin).add(memory);
             }
@@ -67,13 +67,14 @@ public final class ConfigMemoryManager {
                     if (SerializableConfigVariable.class.isAssignableFrom(f.getType())) {
                         // Use different saving
                         try {
-                            SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
-                            seri.saveToConfig(configVariable.path(), config);
+                            SerializableConfigVariable<?> s = (SerializableConfigVariable<?>) f.get(memory);
+                            s.saveToConfig(configVariable.path(), config);
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
                     } else {
                         try {
+                            System.out.println("Setting: " + configVariable.path() + " as " + f.get(memory));
                             config.set(configVariable.path(), f.get(memory));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();

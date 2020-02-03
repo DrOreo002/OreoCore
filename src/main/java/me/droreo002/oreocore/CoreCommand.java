@@ -2,6 +2,7 @@ package me.droreo002.oreocore;
 
 import me.droreo002.oreocore.conversation.OreoConversation;
 import me.droreo002.oreocore.conversation.OreoPrompt;
+import me.droreo002.oreocore.enums.ParticleEffect;
 import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
 import me.droreo002.oreocore.inventory.ITemplatePlaceholderManager;
 import me.droreo002.oreocore.inventory.linked.LinkedInventoryManager;
@@ -24,6 +25,7 @@ import me.droreo002.oreocore.utils.strings.StringUtils;
 import me.droreo002.oreocore.utils.strings.TextBuilder;
 import me.droreo002.oreocore.utils.time.TimestampBuilder;
 import me.droreo002.oreocore.utils.time.TimestampUtils;
+import me.droreo002.oreocore.utils.world.WorldUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.Command;
@@ -36,6 +38,7 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +136,11 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     }
                     sound(player);
                     sendMessage(player, "Texture are " + CustomSkull.getTexture(item));
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-particle")) {
+                    sendMessage(player, "Testing particle..");
+                    WorldUtils.playParticles(ParticleEffect.WATER_SPLASH, 0, 0, 0, 3, 5, player.getLocation(), 5);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-conversation")) {

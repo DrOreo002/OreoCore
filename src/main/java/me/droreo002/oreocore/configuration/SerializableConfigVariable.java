@@ -19,5 +19,5 @@ public interface SerializableConfigVariable<T> {
      * @param path The path
      * @param config The config
      */
-    void saveToConfig(String path, FileConfiguration config);
+    default void saveToConfig(String path, FileConfiguration config) { }
 }

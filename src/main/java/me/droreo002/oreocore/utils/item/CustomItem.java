@@ -1,14 +1,8 @@
 package me.droreo002.oreocore.utils.item;
 
-import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.enums.XMaterial;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
-import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.SerializableAs;

@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.io;
 
 import com.google.common.base.Charsets;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +20,10 @@ public final class FileUtils {
         } else {
             return file.getName();
         }
+    }
+
+    public static String getFileExtension(File file) {
+        return file.getName().substring(file.getName().lastIndexOf(".") + 1);
     }
 
     public static List<String> readLines(InputStream stream) throws IOException {
