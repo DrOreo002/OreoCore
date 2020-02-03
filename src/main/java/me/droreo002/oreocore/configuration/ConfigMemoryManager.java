@@ -74,7 +74,6 @@ public final class ConfigMemoryManager {
                         }
                     } else {
                         try {
-                            System.out.println("Setting: " + configVariable.path() + " as " + f.get(memory));
                             config.set(configVariable.path(), f.get(memory));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
