@@ -1,22 +1,14 @@
 package me.droreo002.oreocore.configuration;
 
-import com.google.common.base.Charsets;
 import lombok.Getter;
 import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +118,7 @@ public class CustomConfig {
             try {
                 updateComments();
                 getConfig().set(configVersionPath, latestVersion);
-                saveConfig(true);
+                saveConfig(registeredMemory != null);
 
                 this.version = latestVersion;
             } catch (IOException e) {
