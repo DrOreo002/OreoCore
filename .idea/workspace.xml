@@ -4,7 +4,6 @@
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/ConfigMemoryManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/configuration/CustomConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,13 +128,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Massive changes!">
-      <created>1564757200216</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1564757200216</updated>
     </task>
     <task id="LOCAL-00024" summary="Update version">
       <created>1564757242716</created>
@@ -473,7 +465,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581227195321</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Error fix">
+      <created>1581247750422</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1581247750422</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -507,7 +506,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="A conversation update" />
     <MESSAGE value="More update!" />
     <MESSAGE value="Update config updater" />
     <MESSAGE value="Big update!" />
@@ -532,7 +530,8 @@
     <MESSAGE value="Some fixes and recode" />
     <MESSAGE value="Remove debug" />
     <MESSAGE value="Some stuff changed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some stuff changed" />
+    <MESSAGE value="Error fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Error fix" />
   </component>
   <component name="WindowStateProjectService">
     <state x="297" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580567810514">
@@ -547,30 +546,30 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="690" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580646808856" />
-    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1581227191700">
+    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1581247743631">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581227191700" />
+    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581247743631" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1577891331222">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577891331222" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1581246263034">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1581257963235">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581246263034" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1581246263029">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581257963235" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1581257963235">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581246263029" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1581246263028">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581257963235" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1581257963235">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581246263028" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1581246263029">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581257963235" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1581257963235">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581246263029" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581257963235" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -587,10 +586,10 @@
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
     <state x="1920" y="0" width="1413" height="789" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580646268112" />
-    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1581243663658">
+    <state x="1162" y="211" width="758" height="628" key="find.popup" timestamp="1581257673496">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581243663658" />
+    <state x="1162" y="211" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581257673496" />
     <state x="342" y="205" key="new project wizard" timestamp="1580640513748">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -599,9 +598,9 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580642235516" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1581243672304">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1581258514752">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581243672304" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581258514752" />
   </component>
 </project>

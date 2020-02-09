@@ -115,8 +115,7 @@ public final class ConfigMemoryManager {
                     if (configVariable.errorWhenNull()) {
                         throw new NullPointerException("Failed to get config value on path " + path);
                     } else {
-                        ODebug.log(memory.getParent().getPlugin(), "&cFailed to get config value on path &e" + configVariable.path() + " &cplease update your config!", true);
-                        continue; // We ignore the null value
+                        continue;
                     }
                 }
 
@@ -136,7 +135,7 @@ public final class ConfigMemoryManager {
                 if (configVariable.errorWhenNull()) {
                     throw new NullPointerException("Failed to get config value on path " + path);
                 } else {
-                    continue; // We ignore the null value
+                    continue;
                 }
             }
 
