@@ -151,9 +151,6 @@ public abstract class OreoInventory implements InventoryHolder {
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
-                if (button instanceof LinkedButton) {
-                    System.out.println("A linked button!. Fallback is " + ((LinkedButton) button).getTargetInventory());
-                }
                 List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
                 if (loadedListeners != null) {
                     loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
