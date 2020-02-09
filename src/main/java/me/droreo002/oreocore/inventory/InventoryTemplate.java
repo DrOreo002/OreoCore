@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class InventoryTemplate implements SerializableConfigVariable<InventoryTemplate>, Cloneable {
 
@@ -274,6 +275,20 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         if (!isKeyAvailable(key)) return new ArrayList<>();
         return guiButtons.get(key);
     }
+
+    /**
+     * Get gui button, will get the first index
+     * of GUIButton list
+     *
+     * @param key The key
+     * @return GUIButton
+     */
+    @Nullable
+    public GUIButton getGUIButton(String key) {
+        List<GUIButton> data = getGUIButtons(key);
+        return (data.isEmpty()) ? null : data.get(0);
+    }
+
 
     /**
      * Get the final placeholder GUIButton from key

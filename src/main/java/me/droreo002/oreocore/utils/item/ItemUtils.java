@@ -24,30 +24,26 @@ public final class ItemUtils {
     /**
      * Get item name
      *
-     * @param item : The item
-     * @param uMaterial : Should we use uMaterial if item doesn't have any name?
+     * @param item The target item
+     * @param uMaterial Shoudl we use uMaterial as item name alternative?
      * @return the item name if there's any, empty string otherwise
      */
     public static String getName(ItemStack item, boolean uMaterial) {
         if (!item.hasItemMeta()) {
             if (uMaterial) {
-                String name = UMaterial.match(item).name();
+                String name = UMaterial.match(item.getType().name()).name();
                 if (!name.contains("_")) return StringUtils.upperCaseFirstLetter(name.toLowerCase());
                 StringBuilder builder = new StringBuilder();
                 String[] arr = name.split("_");
                 for (int i = 0; i <= (arr.length - 1); i++) {
-                    if (i != arr.length) { // Last one
-                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
-                    }
+                    builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
                 }
                 return builder.toString();
             } else {
                 StringBuilder builder = new StringBuilder();
                 String[] arr = item.getType().toString().split("_");
-                for (int i = 0; i <= (arr.length - 1); i++) {
-                    if (i != arr.length) { // Last one
-                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
-                    }
+                for (String s : arr) {
+                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
                 }
                 return builder.toString();
             }
@@ -55,23 +51,19 @@ public final class ItemUtils {
         ItemMeta meta = item.getItemMeta();
         if (!meta.hasDisplayName()) {
             if (uMaterial) {
-                String name = UMaterial.match(item).name();
+                String name = UMaterial.match(item.getType().name()).name();
                 if (!name.contains("_")) return StringUtils.upperCaseFirstLetter(name.toLowerCase());
                 StringBuilder builder = new StringBuilder();
                 String[] arr = name.split("_");
-                for (int i = 0; i <= (arr.length - 1); i++) {
-                    if (i != arr.length) { // Last one
-                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
-                    }
+                for (String s : arr) {
+                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
                 }
                 return builder.toString();
             } else {
                 StringBuilder builder = new StringBuilder();
                 String[] arr = item.getType().toString().split("_");
-                for (int i = 0; i <= (arr.length - 1); i++) {
-                    if (i != arr.length) { // Last one
-                        builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
-                    }
+                for (String s : arr) {
+                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
                 }
                 return builder.toString();
             }

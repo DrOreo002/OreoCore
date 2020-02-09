@@ -175,14 +175,13 @@ public class TextPlaceholder {
                     lore = format(lore);
                 }
                 if (doDisplay) {
-                    String str = displayName.toString();
-                    displayName = new StringBuilder(format(str));
+                    displayName = new StringBuilder(format(displayName.toString()));
                 }
             }
 
             ItemMeta meta = cloned.getItemMeta();
             if (meta == null) return cloned;
-            if (displayName != null) meta.setDisplayName(color(displayName.toString()));
+            meta.setDisplayName(color(displayName.toString()));
             meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
             cloned.setItemMeta(meta);
