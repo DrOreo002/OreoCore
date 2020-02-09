@@ -156,7 +156,7 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
     }
 
     /**
-     * Apply placeholder into the buttpn
+     * Apply placeholder into the button
      *
      * @param buttonKey The button key or identifier
      * @param textPlaceholder The placeholder

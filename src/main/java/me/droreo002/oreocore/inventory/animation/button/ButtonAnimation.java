@@ -138,6 +138,7 @@ public class ButtonAnimation implements Cloneable {
         if (addFirstState) {
             if (frames.isEmpty()) { // If first add, append this one first
                 if (!buttonMetaData.isEmpty()) { // If not empty, we proceed adding default value first
+                    System.out.println("First state of LORE: " + Arrays.toString(((List<String>) buttonMetaData.get(ItemMetaType.LORE.name())).toArray()));
                     frames.add(new IButtonFrame() {
                         @Override
                         public String nextDisplayName(String prev) {
