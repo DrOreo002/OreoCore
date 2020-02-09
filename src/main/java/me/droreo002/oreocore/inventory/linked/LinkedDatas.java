@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class LinkedDatas {
@@ -13,7 +15,7 @@ public class LinkedDatas {
     private final List<LinkedData> data;
 
     public LinkedDatas() {
-        this.data = new ArrayList<>();
+        this.data = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -62,8 +64,10 @@ public class LinkedDatas {
      */
     public void addAll(List<LinkedData> datas) {
         if (datas.isEmpty()) return;
-        for (LinkedData d : datas) {
-            addData(d);
+        synchronized (this.data) {
+            for (LinkedData d : datas) {
+                addData(d);
+            }
         }
     }
 

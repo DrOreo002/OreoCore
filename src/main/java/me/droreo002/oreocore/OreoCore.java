@@ -136,7 +136,7 @@ public final class OreoCore extends JavaPlugin {
             } else {
                 ODebug.log(this, "&fI'm currently handling &7(&c0&7) plugin", true);
             }
-        }, 20L * 15L); // 15 Seconds
+        }, 20L * 120L); // 2 Minute after initialization
         ODebug.log(this, "OreoCore has been enabled successfully!", true);
     }
 

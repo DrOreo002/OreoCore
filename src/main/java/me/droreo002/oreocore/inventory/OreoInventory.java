@@ -15,6 +15,7 @@ import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
 import me.droreo002.oreocore.inventory.linked.Linkable;
+import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
@@ -150,6 +151,9 @@ public abstract class OreoInventory implements InventoryHolder {
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
+                if (button instanceof LinkedButton) {
+                    System.out.println("A linked button!. Fallback is " + ((LinkedButton) button).getTargetInventory());
+                }
                 List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
                 if (loadedListeners != null) {
                     loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));

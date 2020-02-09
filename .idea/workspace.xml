@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="" />
+    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedDatas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedDatas.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -125,13 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Remove debug message">
-      <created>1564586504378</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1564586504378</updated>
     </task>
     <task id="LOCAL-00022" summary="Added auto config updater">
       <created>1564644789432</created>
@@ -469,7 +468,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580732922336</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="Remove debug">
+      <created>1580733116073</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1580733116073</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -503,7 +509,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added a fix for comment updating" />
     <MESSAGE value="Fix problem with CustomItem" />
     <MESSAGE value="A conversation update" />
     <MESSAGE value="More update!" />
@@ -528,7 +533,8 @@
     <MESSAGE value="More update" />
     <MESSAGE value="Added update checker" />
     <MESSAGE value="Some fixes and recode" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some fixes and recode" />
+    <MESSAGE value="Remove debug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove debug" />
   </component>
   <component name="WindowStateProjectService">
     <state x="297" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580567810514">
@@ -543,30 +549,30 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="690" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580646808856" />
-    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1580732918462">
+    <state x="607" y="46" key="CommitChangelistDialog2" timestamp="1580733113218">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580732918462" />
+    <state x="607" y="46" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580733113218" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1577891331222">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577891331222" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1580733083592">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1581179825397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580733083592" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1580733083591">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581179825397" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1581179825397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580733083591" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1580733083591">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581179825397" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1581179825397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580733083591" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1580733083592">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581179825397" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1581179825397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580733083592" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581179825397" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -595,9 +601,9 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580642235516" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1580725557795">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1581148791424">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1580725557795" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1581148791424" />
   </component>
 </project>
