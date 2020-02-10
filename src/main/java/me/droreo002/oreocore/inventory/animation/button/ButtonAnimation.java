@@ -138,7 +138,6 @@ public class ButtonAnimation implements Cloneable {
         if (addFirstState) {
             if (frames.isEmpty()) { // If first add, append this one first
                 if (!buttonMetaData.isEmpty()) { // If not empty, we proceed adding default value first
-                    System.out.println("First state of LORE: " + Arrays.toString(((List<String>) buttonMetaData.get(ItemMetaType.LORE.name())).toArray()));
                     frames.add(new IButtonFrame() {
                         @Override
                         public String nextDisplayName(String prev) {
@@ -212,8 +211,8 @@ public class ButtonAnimation implements Cloneable {
             /*
             Apparently HashMap also need tobe cloned.
              */
-            b.setButtonMetaData(new HashMap<>(buttonMetaData));
-            b.setFrames(new ArrayList<>(frames));
+            b.setButtonMetaData(new HashMap<>(this.buttonMetaData));
+            b.setFrames(new ArrayList<>(this.frames));
             return b;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);

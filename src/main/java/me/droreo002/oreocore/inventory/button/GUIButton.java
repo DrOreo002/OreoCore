@@ -108,6 +108,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
         ItemMeta lastMeta = this.item.getItemMeta().clone();
         if (animated) {
+            buttonAnimation.updateButtonMetaData(item);
             if (updateAnimationFrames) {
                 buttonAnimation.setupAnimation(this, true);
             }
@@ -116,7 +117,6 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
             item.setItemMeta(lastMeta);
         }
 
-        buttonAnimation.updateButtonMetaData(item); // Crucial should be updated every time
         this.item = item;
     }
 
@@ -224,8 +224,8 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
             /*
             Apparently HashMap also need tobe cloned.
              */
-            b.setButtonListeners(new HashMap<>(buttonListeners));
-            b.setItem(b.getItem().clone(), true, true);
+            b.setButtonListeners(new HashMap<>(this.buttonListeners));
+            b.setItem(this.item.clone(), true, true);
 
             if (this.buttonAnimation != null) {
                 b.setButtonAnimation(this.buttonAnimation.clone());
