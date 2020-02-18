@@ -3,9 +3,7 @@ package me.droreo002.oreocore;
 import me.droreo002.oreocore.conversation.OreoConversation;
 import me.droreo002.oreocore.conversation.OreoPrompt;
 import me.droreo002.oreocore.enums.ParticleEffect;
-import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
-import me.droreo002.oreocore.inventory.ITemplatePlaceholderManager;
-import me.droreo002.oreocore.inventory.linked.LinkedInventoryManager;
+import me.droreo002.oreocore.inventory.linked.LinkedInventoryBuilder;
 import me.droreo002.oreocore.inventory.test.animation.CInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.animation.PInventoryAnimationTest;
 import me.droreo002.oreocore.inventory.test.normal.InventoryTemplateTest;
@@ -18,8 +16,6 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
-import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import me.droreo002.oreocore.utils.strings.TextBuilder;
@@ -33,23 +29,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class CoreCommand implements CommandExecutor, TabCompleter {
 
@@ -173,11 +160,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {
-                    final LinkedInventoryManager manager = new LinkedInventoryManager(
-                            new FirstLinkedInventory(),
-                            new SecondLinkedInventory()
-                    );
-                    manager.openInventory(player, null);
+                    final LinkedInventoryBuilder manager = new LinkedInventoryBuilder()
+                            .add(new FirstLinkedInventory())
+                            .add(new SecondLinkedInventory());
+                    manager.build(player, null);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-text-builder")) {

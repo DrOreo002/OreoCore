@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-public class LinkedInventoryManager {
+public class LinkedInventoryBuilder {
 
     @Getter
     private final LinkedList<Linkable> inventories;
@@ -20,51 +20,55 @@ public class LinkedInventoryManager {
     private final LinkedDatas linkedDatas;
     @Getter
     private final List<UUID> modifiedButton;
+    @Getter
+    private LinkedInventoryListener linkedInventoryListener;
     @Getter @Setter
     private String currentInventory;
     @Getter @Setter
     private int currentInventorySlot;
-    @Getter @Setter
-    private LinkedListener linkedListener;
 
-    public LinkedInventoryManager(Linkable... linkables) {
+    public LinkedInventoryBuilder() {
         this.inventories = new LinkedList<>();
         this.currentInventorySlot = 0;
         this.currentInventory = "";
         this.linkedDatas = new LinkedDatas();
         this.modifiedButton = new ArrayList<>();
-
-        addLinkedInventory(linkables);
     }
 
     /**
-     * Open inventory without specifying inventory
-     * to open
+     * Build this linked inventory
+     */
+    public void build() {
+        this.inventories.forEach(l -> setupButtons(l, false));
+    }
+
+    /**
+     * Build this linked inventory, will auto open
      *
      * @param player Target player
      * @param extraData The extra data
      */
-    public void openInventory(Player player, LinkedDatas extraData) {
-        openInventory(player, null, extraData);
+    public void build(Player player, LinkedDatas extraData) {
+        build(player, null, extraData);
     }
 
     /**
-     * Open the inventory
+     * Build this linked inventory, will auto open
      *
      * @param player Target player
      * @param extraData The extra data
      * @param firstInventory The first inventory to open
      */
-    public void openInventory(Player player, String firstInventory, LinkedDatas extraData) {
+    public void build(Player player, String firstInventory, LinkedDatas extraData) {
         if (inventories.isEmpty()) throw new NullPointerException("Inventories cannot be empty!");
         Linkable linkable = (firstInventory == null) ? inventories.get(0) : getLinkedInventory(firstInventory);
         setCurrentInventory(linkable.getInventoryName());
         if (extraData != null) {
             this.linkedDatas.addAll(extraData.getData());
             linkable.acceptData(this.linkedDatas, null);
-            setupButtons(linkable, false); // Just in case if there's a new one added when accepting data
         }
         linkable.getInventoryOwner().open(player);
+        build();
     }
 
     /**
@@ -97,8 +101,8 @@ public class LinkedInventoryManager {
                 }
 
                 // Pre
-                if (this.linkedListener != null) {
-                    this.linkedListener.onInventoryPreTransfer(prevInventory, targetInventory);
+                if (this.linkedInventoryListener != null) {
+                    this.linkedInventoryListener.onInventoryPreTransfer(prevInventory, targetInventory);
                 }
 
                 targetInventory.acceptData(linkedDatas, prevInventory);
@@ -106,8 +110,8 @@ public class LinkedInventoryManager {
                 targetInventory.getInventoryOwner().open(player);
 
                 // Post
-                if (this.linkedListener != null) {
-                    this.linkedListener.onInventoryTransfer(prevInventory, targetInventory);
+                if (this.linkedInventoryListener != null) {
+                    this.linkedInventoryListener.onInventoryTransfer(prevInventory, targetInventory);
                 }
 
                 setCurrentInventory(targetInventory.getInventoryName());
@@ -146,23 +150,13 @@ public class LinkedInventoryManager {
     }
 
     /**
-     * Add a linkable inventory, with some extra wow
-     *
-     * @param linkable The linkable inventory
-     * @return Current object
-     */
-    public LinkedInventoryManager then(Linkable linkable) {
-        addLinkedInventory(linkable);
-        return this;
-    }
-
-    /**
      * Add the inventories
      *
      * @param linkable The linkable inventories
      */
-    public void addLinkedInventory(Linkable... linkable) {
-        for (Linkable l : linkable) addLinkedInventory(l);
+    public LinkedInventoryBuilder addAll(Linkable... linkable) {
+        for (Linkable l : linkable) add(l);
+        return this;
     }
 
     /**
@@ -170,11 +164,21 @@ public class LinkedInventoryManager {
      *
      * @param linkable The linkable inventory
      */
-    public void addLinkedInventory(Linkable linkable) {
+    public LinkedInventoryBuilder add(Linkable linkable) {
         if (linkable == null) throw new NullPointerException("Linkable cannot be null!");
         if (linkable.getInventoryOwner() == null) throw new NullPointerException("InventoryOwner of Linkable cannot be null!");
-        setupButtons(linkable, false);
         inventories.add(linkable);
+        return this;
+    }
+
+    /**
+     * Set the linked inventory listener
+     *
+     * @param linkedInventoryListener The listener
+     */
+    public LinkedInventoryBuilder setLinkedInventoryListener(LinkedInventoryListener linkedInventoryListener) {
+        this.linkedInventoryListener = linkedInventoryListener;
+        return this;
     }
 
     /**
@@ -189,9 +193,9 @@ public class LinkedInventoryManager {
 
     /**
      * Interface for listener method
-     * on LinkedInventoryManager
+     * on LinkedInventoryBuilder
      */
-    public interface LinkedListener {
+    public interface LinkedInventoryListener {
 
         /**
          * Called when there's a inventory transfer occurred

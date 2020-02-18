@@ -314,7 +314,6 @@ public abstract class OreoInventory implements InventoryHolder {
     public void open(Player player) {
         PlayerUtils.closeInventory(player); // If player still opening something
         if (onPreSetup()) {
-            build();
             setup();
             // Some basic setup with animations
             if (getInventoryAnimation() != null) {
@@ -350,9 +349,9 @@ public abstract class OreoInventory implements InventoryHolder {
      *
      * @param guiButton The button to add
      * @param replace Should we replace if it exists already?
-     * @param update Should we directly set this button to inventory?
+     * @param directUpdate Should we directly set this button to inventory?
      */
-    public void addButton(GUIButton guiButton, boolean replace, boolean update) {
+    public void addButton(GUIButton guiButton, boolean replace, boolean directUpdate) {
         Validate.notNull(guiButton, "Button cannot be null!");
         if (replace) {
             if (isHasButton(guiButton.getInventorySlot())) {
@@ -362,7 +361,7 @@ public abstract class OreoInventory implements InventoryHolder {
             if (isHasButton(guiButton.getInventorySlot())) return;
         }
         getButtons().add(guiButton);
-        if (update) getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
+        if (directUpdate) getInventory().setItem(guiButton.getInventorySlot(), guiButton.getItem());
     }
 
     /**
@@ -504,6 +503,4 @@ public abstract class OreoInventory implements InventoryHolder {
     public void updateInventory(Player player) {
         PlayerUtils.updateInventory(player);
     }
-
-    public void build() {}
 }

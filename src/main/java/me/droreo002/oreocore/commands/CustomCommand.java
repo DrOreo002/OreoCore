@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class CustomCommand {
 
@@ -24,7 +25,7 @@ public abstract class CustomCommand {
     @Getter @Setter
     private String argumentNotFoundMessage, commandBase;
     @Getter
-    private String tabCompletePermission, tabCompleteNoPermissionMessage, permission, noPermissionMessage, consoleOnlyMessage, playerOnlyMessage;;
+    private String tabCompletePermission, tabCompleteNoPermissionMessage, permission, noPermissionMessage, consoleOnlyMessage, playerOnlyMessage;
     @Getter
     private boolean consoleOnly, playerOnly;
     @Getter
@@ -159,7 +160,13 @@ public abstract class CustomCommand {
      *
      * @return List of string that will be used for the tab completer
      */
-    public abstract List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args);
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> possibleTabComplete = this.args.stream().map(CommandArg::getTrigger).collect(Collectors.toList());
+        if (args.length == 1) {
+            return createReturnList(possibleTabComplete, args[0]);
+        }
+        return null;
+    }
 
     /**
      * Create a return list with the specified list. This code are taken from Slimefun 4
