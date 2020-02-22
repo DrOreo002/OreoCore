@@ -241,12 +241,10 @@ public class TextPlaceholder {
      */
     private String replacePlaceholder(String source, TextPlaceholder p) {
         Matcher sMatcher = PAPI_REGEX_SINGLE.matcher(source);
-        if (sMatcher.find()) {
-            for (int i = 0; i < sMatcher.groupCount(); i++) {
-                String curr = sMatcher.group(i);
-                if (p.getFrom().equals(curr)) {
-                    source = source.replace(p.getFrom(), p.getTo()); // Finally replace
-                }
+        while (sMatcher.find()) {
+            String curr = sMatcher.group();
+            if (p.getFrom().equals(curr)) {
+                source = source.replace(p.getFrom(), p.getTo()); // Finally replace
             }
         }
         return source;

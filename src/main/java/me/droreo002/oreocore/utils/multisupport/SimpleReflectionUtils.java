@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -122,6 +123,23 @@ public class SimpleReflectionUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Send packet to player
+     *
+     * @param player The target player
+     * @param packet Packet to send
+     */
+    public static void sendPacket(Player player, Object packet) {
+        Object playerConnection = getConnection(player);
+        Method sendPacketMethod;
+        try {
+            sendPacketMethod = playerConnection.getClass().getDeclaredMethod("sendPacket", getNMSClass("Packet"));
+            sendPacketMethod.invoke(playerConnection, packet);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

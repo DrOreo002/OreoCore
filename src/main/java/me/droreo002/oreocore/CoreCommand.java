@@ -1,5 +1,8 @@
 package me.droreo002.oreocore;
 
+import me.droreo002.oreocore.actionbar.OreoActionBar;
+import me.droreo002.oreocore.actionbar.ProgressActionBar;
+import me.droreo002.oreocore.bossbar.ProgressBossBar;
 import me.droreo002.oreocore.conversation.OreoConversation;
 import me.droreo002.oreocore.conversation.OreoPrompt;
 import me.droreo002.oreocore.enums.ParticleEffect;
@@ -12,6 +15,7 @@ import me.droreo002.oreocore.inventory.test.normal.FirstLinkedInventory;
 import me.droreo002.oreocore.inventory.test.normal.LagInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
+import me.droreo002.oreocore.scoreboard.OreoScoreboard;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.CustomSkull;
@@ -24,6 +28,9 @@ import me.droreo002.oreocore.utils.time.TimestampUtils;
 import me.droreo002.oreocore.utils.world.WorldUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +38,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -116,7 +125,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sendMessage(player, "Testing get-texture on server version " + ServerUtils.getServerVersion());
                     sound(player);
                     ItemStack item = player.getInventory().getItemInMainHand();
-                    if (item == null || !item.getType().equals(UMaterial.PLAYER_HEAD.getItemStack())) {
+                    if (!item.getType().equals(UMaterial.PLAYER_HEAD.getItemStack())) {
                         sound(player);
                         sendMessage(commandSender, "Please put the head on your main hand");
                         return true;
@@ -149,6 +158,35 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                             .send(player);
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("test-boss-bar")) {
+                    ProgressBossBar bossBar = new ProgressBossBar("Loading.. (%currentProgress%/%maxProgress%)", BarColor.RED, BarStyle.SOLID, 0, 100, true);
+                    bossBar.setHalfwayColor(BarColor.GREEN);
+                    bossBar.setAutomated(true);
+                    bossBar.setIncrementPerTick(1);
+                    bossBar.setOnDone(progressBossBar -> {
+                        progressBossBar.remove();
+                        player.sendMessage("We're done!");
+                    });
+
+                    bossBar.start(player, 10L);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-action-bar")) {
+                    ProgressActionBar actionBar = new ProgressActionBar(0, 500, ChatColor.GRAY, ChatColor.GREEN, '∎', '∎', "%loadingBar% &7(&a%percentage%&7)");
+                    actionBar.addPlayer(player);
+                    BukkitTask task = new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            actionBar.addProgress(1D);
+                        }
+                    }.runTaskTimer(plugin, 0L, 10L);
+                    actionBar.setOnDone(aVoid -> {
+                        task.cancel();
+                        player.sendMessage("Done!");
+                    });
+                    actionBar.send();
+                    return true;
+                }
                 if (args[0].equalsIgnoreCase("test-animated-inventory")) {
                     sendMessage(player, "Please select the type (CustomInventory, PaginatedInventory)");
                     sound(player);
@@ -157,6 +195,18 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-placeholder-inventory")) {
                     sendMessage(player, "Testing placeholder inventory...");
                     new InventoryTemplateTest(plugin.getPluginConfig().getTestTemplate().clone()).open(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-scoreboard")) {
+                    OreoScoreboard scoreboard = new OreoScoreboard("Hello World");
+                    scoreboard.add("        :", 0);
+                    scoreboard.add("        :", 1);
+                    scoreboard.add("        :", 2);
+                    scoreboard.add("      &b➡ &a∎", 3);
+                    scoreboard.add("        :", 4);
+                    scoreboard.add("        :", 5);
+                    scoreboard.add("        :", 6);
+                    scoreboard.send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {

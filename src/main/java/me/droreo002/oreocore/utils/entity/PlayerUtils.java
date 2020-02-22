@@ -6,6 +6,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.google.common.base.Charsets;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.bridge.CrackedServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +31,45 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
+@SuppressWarnings("deprecation")
 public final class PlayerUtils {
+
+    public static final UUID INVALID_USER_UUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
+
+    /**
+     * Generate a new invalid OfflinePlayer by skipping
+     * the original Bukkit's lookup. The UUID will be generated using
+     * {@link PlayerUtils#INVALID_USER_UUID}
+     *
+     * @param name The user name
+     * @return Invalid OfflinePlayer with name specified
+     */
+    public static OfflinePlayer getOfflinePlayerSkipLookup(String name) {
+        Class<?> gameProfileClass;
+        Constructor<?> gameProfileConstructor;
+        Constructor<?> craftOfflinePlayerConstructor;
+        try {
+            try { // 1.7
+                gameProfileClass = Class.forName("net.minecraft.util.com.mojang.authlib.GameProfile");
+            } catch (ClassNotFoundException e) { // 1.8
+                gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+            }
+            gameProfileConstructor = gameProfileClass.getDeclaredConstructor(UUID.class, String.class);
+            gameProfileConstructor.setAccessible(true);
+            Class<?> serverClass = Bukkit.getServer().getClass();
+            Class<?> craftOfflinePlayerClass = Class.forName(serverClass.getName()
+                    .replace("CraftServer", "CraftOfflinePlayer"));
+            craftOfflinePlayerConstructor = craftOfflinePlayerClass.getDeclaredConstructor(
+                    serverClass, gameProfileClass
+            );
+            craftOfflinePlayerConstructor.setAccessible(true);
+            Object gameProfile = gameProfileConstructor.newInstance(INVALID_USER_UUID, name);
+            Object craftOfflinePlayer = craftOfflinePlayerConstructor.newInstance(Bukkit.getServer(), gameProfile);
+            return (OfflinePlayer) craftOfflinePlayer;
+        } catch (Throwable t) { // Fallback if fail
+            return Bukkit.getOfflinePlayer(name);
+        }
+    }
 
     /**
      * Get block's location that the player's looking at

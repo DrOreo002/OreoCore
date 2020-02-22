@@ -2,9 +2,11 @@ package me.droreo002.oreocore.utils.strings;
 
 import javafx.beans.binding.StringBinding;
 import me.droreo002.oreocore.enums.Currency;
+import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.MathUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -206,29 +208,30 @@ public final class StringUtils {
      * @param current The current value of the bar
      * @param baseLoadingColor The loading bar base color
      * @param loadingColor The loading bar progress color
-     * @param percent Should we use percentage for indicator?
+     * @param loadedChar The character to use when loaded
+     * @param defaultChar The character to use when not loaded
+     * @param loadingBarFormat The loading bar format, also has a placeholder, check code
      * @return The loading bar
      */
-    public static String generateLoadingBar(int current, int max, String baseLoadingColor, String loadingColor, boolean percent, char barChar) {
-        String progress;
-        if (percent) {
-            progress = String.format("&e%f", MathUtils.getPercentage(current, max)) + "%";
-        } else {
-            progress = String.format("&e%d&6/&e%d", current, max);
-        }
+    public static String generateLoadingBar(double current, double max, ChatColor baseLoadingColor,
+                                            ChatColor loadingColor, char loadedChar, char defaultChar, String loadingBarFormat) {
+        if (!loadingBarFormat.contains("%loadingBar%")) throw new IllegalStateException("Invalid loading bar format!");
+        TextPlaceholder placeholder = TextPlaceholder
+                .of("%percentage%", MathUtils.getPercentage(current, max) + "%")
+                .add("%current%", (int) current)
+                .add("%max%", (int) max);
 
-        final char defaultChar = (barChar == ' ') ? '-' : barChar;
-        final String icon = loadingColor + defaultChar;
-        int maxBarSize = 20;
+        String loadedCharIcon = loadingColor.toString() + loadedChar;
+        int maxBarSize = 20; // Default
 
-        int loading = Math.abs(Math.round(((100 * current) / max) / 10)) * 2; // Round and absolute it. We don't want negative value
+        int loading = (int) Math.floor(Math.abs(Math.round(((100 * current) / max) / 10)) * 2); // Round and absolute it. We don't want negative value
         String barString = new String(new char[maxBarSize]).replace('\0', defaultChar);
         StringBuilder barDone = new StringBuilder();
         for (int i = 0; i < loading; i++) {
-            barDone.append(icon);
+            barDone.append(loadedCharIcon);
         }
-        String barRemain = barString.substring(loading);
-        return color(barDone + baseLoadingColor + barRemain + "&r " + progress);
+        String resultBar = color(barDone + baseLoadingColor.toString() + barString.substring(loading));
+        return placeholder.add("%loadingBar%", resultBar + ChatColor.RESET).format(StringUtils.color(loadingBarFormat));
     }
 
     /**
