@@ -39,7 +39,7 @@ public class LinkedInventoryBuilder {
      * Build this linked inventory
      */
     public void build() {
-        this.inventories.forEach(l -> setupButtons(l, false));
+        this.inventories.forEach(l -> setupLinkedButtons(l, false));
     }
 
     /**
@@ -76,7 +76,7 @@ public class LinkedInventoryBuilder {
      *
      * @param linkable The linkable inventory
      */
-    public void setupButtons(Linkable linkable, boolean reSetup) {
+    public void setupLinkedButtons(Linkable linkable, boolean reSetup) {
         if (reSetup) modifiedButton.clear();
 
         linkable.getLinkedButtons().forEach(button -> {

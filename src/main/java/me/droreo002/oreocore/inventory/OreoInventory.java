@@ -11,6 +11,7 @@ import me.droreo002.oreocore.inventory.animation.open.ItemFill;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
 import me.droreo002.oreocore.inventory.animation.open.ItemWave;
+import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.button.GroupedButton;
@@ -153,7 +154,7 @@ public abstract class OreoInventory implements InventoryHolder {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
                 List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
                 if (loadedListeners != null) {
-                    loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                    loadedListeners.forEach(buttonListener -> buttonListener.onClick(new ButtonClickEvent(e)));
                 }
             }
         }

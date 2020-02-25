@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.ConfigurationMemory;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
-import me.droreo002.oreocore.configuration.CustomConfig;
+import me.droreo002.oreocore.configuration.CustomConfiguration;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class PluginConfig extends CustomConfig implements ConfigurationMemory {
+public class PluginConfig extends CustomConfiguration implements ConfigurationMemory {
 
     private static final String LATEST_VERSION = "11.0";
 
@@ -26,7 +26,7 @@ public class PluginConfig extends CustomConfig implements ConfigurationMemory {
 
     @ConfigVariable(path = "Title.test", isSerializableObject = true, isUpdateAbleObject = true)
     @Getter
-    private OreoTitle oreoTitle = new OreoTitle();
+    private OreoTitle oreoTitle;
 
     @ConfigVariable(path = "Enum.test")
     @Getter
@@ -65,7 +65,7 @@ public class PluginConfig extends CustomConfig implements ConfigurationMemory {
     }
 
     @Override
-    public @NonNull CustomConfig getParent() {
+    public @NonNull CustomConfiguration getParent() {
         return this;
     }
 }

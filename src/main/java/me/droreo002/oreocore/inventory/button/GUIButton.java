@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory.button;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.CustomItem;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     private ItemStack item;
     @Getter
     private SoundObject soundOnClick;
-    @Getter @Setter
+    @Setter
     private Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter @Setter
     private int inventorySlot;
@@ -188,6 +190,23 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public void clearListener() {
         this.buttonListeners.clear();
+    }
+
+    /**
+     * Get the button listener (sorted)
+     *
+     * @return The button listener
+     */
+    @NotNull
+    public Map<ClickType, List<ButtonListener>> getButtonListeners() {
+        Map<ClickType, List<ButtonListener>> newMap = new HashMap<>();
+        for (Map.Entry<ClickType, List<ButtonListener>> entry : this.buttonListeners.entrySet()) {
+            List<ButtonListener> listeners = entry.getValue();
+            listeners.sort(Comparator.comparingInt(button -> button.getListenerPriority().getLevel()));
+            Collections.reverse(listeners);
+            newMap.put(entry.getKey(), listeners);
+        }
+        return newMap;
     }
 
     /**

@@ -13,7 +13,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomConfig {
+public class CustomConfiguration {
 
     @Getter
     private JavaPlugin plugin;
@@ -39,7 +39,7 @@ public class CustomConfig {
      * @param plugin : The JavaPlugin class
      * @param yamlFile : The yaml file object
      */
-    public CustomConfig(JavaPlugin plugin, File yamlFile) {
+    public CustomConfiguration(JavaPlugin plugin, File yamlFile) {
         this.plugin = plugin;
         this.yamlFile = yamlFile;
         this.fileName = yamlFile.getName();

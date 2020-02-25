@@ -1,6 +1,8 @@
 package me.droreo002.oreocore.inventory.test.normal;
 
-import me.droreo002.oreocore.inventory.CustomInventory;
+import me.droreo002.oreocore.inventory.OreoInventory;
+import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
+import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 
@@ -9,10 +11,55 @@ import me.droreo002.oreocore.utils.item.complex.UMaterial;
  *
  * Status [Success]
  */
-public class CustomInventoryTest extends CustomInventory {
+public class CustomInventoryTest extends OreoInventory {
 
     public CustomInventoryTest() {
         super(27, "CustomInventory");
-        addButton(new GUIButton(UMaterial.DIRT.getItemStack(), 5).addListener(e -> System.out.println("Ouch!")), true);
+        addButton(new GUIButton(UMaterial.DIRT.getItemStack(), 5)
+                .addListener(new ButtonListener() {
+                    @Override
+                    public Priority getListenerPriority() {
+                        return Priority.HIGH;
+                    }
+
+                    @Override
+                    public void onClick(ButtonClickEvent e) {
+                        System.out.println("This is first");
+                    }
+                })
+                .addListener(new ButtonListener() {
+                    @Override
+                    public Priority getListenerPriority() {
+                        return Priority.MEDIUM;
+                    }
+
+                    @Override
+                    public void onClick(ButtonClickEvent e) {
+                        System.out.println("This is second");
+                    }
+                })
+                .addListener(new ButtonListener() {
+                    @Override
+                    public Priority getListenerPriority() {
+                        return Priority.LOW;
+                    }
+
+                    @Override
+                    public void onClick(ButtonClickEvent e) {
+                        System.out.println("This is third");
+                    }
+                })
+                .addListener(new ButtonListener() {
+                    @Override
+                    public Priority getListenerPriority() {
+                        return Priority.DEFAULT;
+                    }
+
+                    @Override
+                    public void onClick(ButtonClickEvent e) {
+                        System.out.println("This is last");
+                    }
+                })
+        , true);
     }
 }

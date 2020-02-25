@@ -2,7 +2,7 @@ package me.droreo002.oreocore.lang;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.configuration.CustomConfig;
+import me.droreo002.oreocore.configuration.CustomConfiguration;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class LangManager extends CustomConfig {
+public class LangManager extends CustomConfiguration {
 
     @Getter
     private final Map<String, Object> values = new HashMap<>();

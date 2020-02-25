@@ -126,9 +126,7 @@ public final class ConfigMemoryManager {
                 if (!f.isAccessible()) f.setAccessible(true);
                 if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
                 try {
-                    SerializableConfigVariable configurationSerializable = (SerializableConfigVariable) f.get(memory);
-                    Validate.notNull(configurationSerializable, "Please always initialize the variable first!. Variable name " + f.getName());
-                    configValue = configurationSerializable.getClass().getMethod("deserialize", ConfigurationSection.class).invoke(null, configurationSection);
+                    configValue = f.getType().getMethod("deserialize", ConfigurationSection.class).invoke(null, configurationSection);
                     f.set(memory, configValue);
                 } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();

@@ -76,4 +76,9 @@ public class LinkedButton extends GUIButton {
         setAnimated(button.isAnimated());
         setButtonAnimation(button.getButtonAnimation());
     }
+
+    @Override
+    public LinkedButton addListener(ButtonListener buttonListener) {
+        return (LinkedButton) super.addListener(buttonListener);
+    }
 }

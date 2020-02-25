@@ -3,6 +3,7 @@ package me.droreo002.oreocore.inventory.paginated;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
+import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
@@ -271,7 +272,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         if (button != null) {
             List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
             if (loadedListeners != null) {
-                loadedListeners.forEach(buttonListener -> buttonListener.onClick(e));
+                loadedListeners.forEach(buttonListener -> buttonListener.onClick(new ButtonClickEvent(e)));
             }
         }
     }
