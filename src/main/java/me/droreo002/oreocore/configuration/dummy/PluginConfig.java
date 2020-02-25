@@ -3,20 +3,20 @@ package me.droreo002.oreocore.configuration.dummy;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import me.droreo002.oreocore.configuration.ConfigMemory;
+import me.droreo002.oreocore.configuration.ConfigurationMemory;
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.configuration.CustomConfig;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
-import me.droreo002.oreocore.utils.misc.TitleObject;
+import me.droreo002.oreocore.title.OreoTitle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class PluginConfig extends CustomConfig implements ConfigMemory {
+public class PluginConfig extends CustomConfig implements ConfigurationMemory {
 
     private static final String LATEST_VERSION = "11.0";
 
@@ -26,7 +26,7 @@ public class PluginConfig extends CustomConfig implements ConfigMemory {
 
     @ConfigVariable(path = "Title.test", isSerializableObject = true, isUpdateAbleObject = true)
     @Getter
-    private TitleObject titleObject = new TitleObject();
+    private OreoTitle oreoTitle = new OreoTitle();
 
     @ConfigVariable(path = "Enum.test")
     @Getter

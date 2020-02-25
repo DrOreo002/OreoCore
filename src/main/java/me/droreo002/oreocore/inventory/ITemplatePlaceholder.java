@@ -3,14 +3,11 @@ package me.droreo002.oreocore.inventory;
 import lombok.Getter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.item.ItemUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +17,7 @@ import java.util.Map;
 
 import static me.droreo002.oreocore.utils.item.helper.TextPlaceholder.*;
 
-public class ITemplatePlaceholder implements SerializableConfigVariable<ITemplatePlaceholder> {
+public class ITemplatePlaceholder implements SerializableConfigVariable {
 
     public static final String SECTION_KEY_PREFIX = "Placeholder|";
 
@@ -84,15 +81,14 @@ public class ITemplatePlaceholder implements SerializableConfigVariable<ITemplat
         return lastSlot;
     }
 
-    @Override
-    public ITemplatePlaceholder getFromConfig(ConfigurationSection section) {
+    public static ITemplatePlaceholder deserialize(ConfigurationSection section) {
         ITemplatePlaceholder placeholder = new ITemplatePlaceholder(section.getString("placeholder"), section);
         ITemplatePlaceholderManager.register(placeholder);
         return placeholder;
     }
 
     @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-
+    public @NotNull Map<String, Object> serialize() {
+        return new HashMap<>(); // TODO: 25/02/2020 Make?
     }
 }

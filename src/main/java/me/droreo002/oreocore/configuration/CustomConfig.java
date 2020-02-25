@@ -28,7 +28,7 @@ public class CustomConfig {
     @Getter
     private String version;
     @Getter
-    private ConfigMemory registeredMemory;
+    private ConfigurationMemory registeredMemory;
     @Getter
     private boolean updateAble;
 
@@ -139,7 +139,7 @@ public class CustomConfig {
         FileConfiguration source = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(getFileName())));
         List<String> ignoredSection = new ArrayList<>(getNewPaths(source, config));
 
-        ConfigUpdater.update(plugin, getFileName(), getYamlFile(), ignoredSection);
+        ConfigurationUpdater.update(plugin, getFileName(), getYamlFile(), ignoredSection);
     }
 
     /**
@@ -147,7 +147,7 @@ public class CustomConfig {
      *
      * @param memory The memory to register
      */
-    public void registerMemory(ConfigMemory memory) {
+    public void registerMemory(ConfigurationMemory memory) {
         this.registeredMemory = memory;
         ConfigMemoryManager.registerMemory(getPlugin(), memory);
     }

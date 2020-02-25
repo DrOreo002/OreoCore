@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneable {
+public class GUIButton implements SerializableConfigVariable, Cloneable {
 
     public static final ButtonListener CLOSE_LISTENER = e -> PlayerUtils.closeInventory((Player) e.getWhoClicked());
 
@@ -81,7 +82,7 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         setAnimated(section.getBoolean("animated", false));
 
         if (section.getConfigurationSection("soundOnClick") != null)
-            this.soundOnClick = new SoundObject().getFromConfig(section.getConfigurationSection("soundOnClick"));
+            this.soundOnClick = SoundObject.deserialize(section.getConfigurationSection("soundOnClick"));
     }
 
     /**
@@ -190,28 +191,6 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
     }
 
     /**
-     * Get from config
-     *
-     * @param section The configuration section
-     * @return The GUIButton from config
-     */
-    @Override
-    public GUIButton getFromConfig(ConfigurationSection section) {
-        return new GUIButton(section, null);
-    }
-
-    /**
-     * Save button to config
-     *
-     * @param path The path
-     * @param config The config
-     */
-    @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-        // Do nothing
-    }
-
-    /**
      * Clone the GUIButton
      *
      * @return The GUIButton
@@ -234,5 +213,14 @@ public class GUIButton implements SerializableConfigVariable<GUIButton>, Cloneab
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }
+    }
+
+    public static GUIButton deserialize(ConfigurationSection section) {
+        return new GUIButton(section, null);
+    }
+
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        return new HashMap<>(); // TODO: 25/02/2020 Actually make this?
     }
 }

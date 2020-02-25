@@ -1,6 +1,5 @@
 package me.droreo002.oreocore;
 
-import me.droreo002.oreocore.actionbar.OreoActionBar;
 import me.droreo002.oreocore.actionbar.ProgressActionBar;
 import me.droreo002.oreocore.bossbar.ProgressBossBar;
 import me.droreo002.oreocore.conversation.OreoConversation;
@@ -18,6 +17,7 @@ import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
 import me.droreo002.oreocore.scoreboard.OreoScoreboard;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.item.Base64ItemStack;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
@@ -87,7 +87,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("title-memory")) {
                     sendMessage(player, "This is the title!");
                     sound(player);
-                    plugin.getPluginConfig().getTitleObject().send(player);
+                    plugin.getPluginConfig().getOreoTitle().send(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-timestamp")) {
@@ -109,7 +109,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equals("test-config-update")) {
                     sendMessage(player, "Testing...");
-                    plugin.getPluginConfig().getTitleObject().setTitle("Hello World!");
+                    plugin.getPluginConfig().getOreoTitle().setTitle("Hello World!");
                     plugin.getPluginConfig().saveConfig(true);
                     sound(player);
                     return true;
@@ -207,6 +207,13 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     scoreboard.add("        :", 5);
                     scoreboard.add("        :", 6);
                     scoreboard.send(player);
+                    return true;
+                }
+                // To encrypt
+                if (args[0].equalsIgnoreCase("test-en-base64")) {
+                    ItemStack item = player.getInventory().getItemInMainHand();
+                    System.out.println(Base64ItemStack.asBase64(item));
+                    sendMessage(player, "Check console!");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-linked-inventory")) {

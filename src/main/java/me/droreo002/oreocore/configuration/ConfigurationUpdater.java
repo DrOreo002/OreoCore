@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * If a key has an attached comment above it, it is written first.
  * @author tchristofferson
  */
-public class ConfigUpdater {
+public class ConfigurationUpdater {
 
     /**
      * Update a yaml file from a resource inside your plugin jar

@@ -1,8 +1,9 @@
-package me.droreo002.oreocore.utils.misc;
+package me.droreo002.oreocore.title;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,9 +27,9 @@ public class TitleAnimation {
     @Getter
     private SimpleCallback<Player> onDone;
     @Getter
-    private TitleObject baseTitle;
+    private OreoTitle baseTitle;
 
-    public TitleAnimation(TitleObject baseTitle, long animationSpeed) {
+    public TitleAnimation(OreoTitle baseTitle, long animationSpeed) {
         this.animationSpeed = animationSpeed;
         this.runnableTaskId = 0;
         this.frameNumber = 0;

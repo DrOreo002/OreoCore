@@ -7,10 +7,14 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class SoundObject implements SerializableConfigVariable<SoundObject> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SoundObject implements SerializableConfigVariable {
 
     // Pre - Initialized
     public static final SoundObject SUCCESS_SOUND = new SoundObject(OSound.ENTITY_EXPERIENCE_ORB_PICKUP);
@@ -79,7 +83,7 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
         Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> send(player), 20L * delay);
     }
 
-    public static SoundObject fromConfig(ConfigurationSection section) {
+    public static SoundObject deserialize(ConfigurationSection section) {
         float volume = (float) section.getDouble("volume", 1.0f);
         float pitch = (float) section.getDouble("pitch", 1.0f);
         OSound sounds = OSound.match(section.getString("sound"));
@@ -88,19 +92,11 @@ public class SoundObject implements SerializableConfigVariable<SoundObject> {
     }
 
     @Override
-    public SoundObject getFromConfig(ConfigurationSection section) {
-        float volume = (float) section.getDouble("volume", 1.0f);
-        float pitch = (float) section.getDouble("pitch", 1.0f);
-        OSound sounds = OSound.match(section.getString("sound"));
-        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
-        return new SoundObject(sounds, volume, pitch);
-    }
-
-    @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path + ".sound", sound.toString());
-        // Not default value. Then save
-        if (volume != 1.0f) config.set(path + ".volume", volume);
-        if (pitch != 1.0f) config.set(path + ".pitch", pitch);
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("sound", sound.toString());
+        if (volume != 1.0f) map.put("volume", volume);
+        if (pitch != 1.0f) map.put("pitch", pitch);
+        return map;
     }
 }

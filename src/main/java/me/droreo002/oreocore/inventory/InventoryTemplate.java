@@ -1,6 +1,5 @@
 package me.droreo002.oreocore.inventory;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
@@ -26,9 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-public class InventoryTemplate implements SerializableConfigVariable<InventoryTemplate>, Cloneable {
+public class InventoryTemplate implements SerializableConfigVariable, Cloneable {
 
     private static final String PAGINATED_ITEM_ROW_KEY = "!-------!";
     public static final String PAGINATED_NB_KEY = "N"; // NextButton
@@ -90,11 +88,11 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         if (layoutDatabase.isSet("inventoryType"))
             this.inventoryType = InventoryType.valueOf(layoutDatabase.getString("inventoryType"));
         if (layoutDatabase.isSet("openSound"))
-            this.openSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("openSound"));
+            this.openSound = SoundObject.deserialize(layoutDatabase.getConfigurationSection("openSound"));
         if (layoutDatabase.isSet("closeSound"))
-            this.closeSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("closeSound"));
+            this.closeSound = SoundObject.deserialize(layoutDatabase.getConfigurationSection("closeSound"));
         if (layoutDatabase.isSet("clickSound"))
-            this.clickSound = SoundObject.fromConfig(layoutDatabase.getConfigurationSection("clickSound"));
+            this.clickSound = SoundObject.deserialize(layoutDatabase.getConfigurationSection("clickSound"));
 
         /*
         Validations
@@ -347,17 +345,18 @@ public class InventoryTemplate implements SerializableConfigVariable<InventoryTe
         return guiButtons;
     }
 
-    @Override
-    public InventoryTemplate getFromConfig(ConfigurationSection section) {
+    public static InventoryTemplate deserialize(ConfigurationSection section) {
         return new InventoryTemplate(section);
     }
 
     @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path + ".title", getTitle());
-        config.set(path + ".size", getSize());
-        config.set(path + ".layout", getRawLayout());
-        config.set(path + ".paginated", isPaginatedInventory());
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("size", size);
+        map.put("layout", rawLayout);
+        map.put("paginated", paginatedInventory);
+        return map;
     }
 
     @Override

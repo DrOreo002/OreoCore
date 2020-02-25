@@ -10,6 +10,25 @@ import java.net.URLConnection;
 public final class FileDownloader {
 
     /**
+     * Force download the file
+     *
+     * @param url The url to download
+     * @param file The save file
+     */
+    public static void forceDownload(URL url, File file, int maxTries) {
+        int totalTries = 0;
+        while (true) {
+            try {
+                download(url, file);
+                break;
+            } catch (IOException e) {
+                if (totalTries >= maxTries) throw new NullPointerException("Failed to download file from " + url.toString() + " Caused by: Maximum tries has been reached!");
+                totalTries++;
+            }
+        }
+    }
+
+    /**
      * Download the file from direct URL
      *
      * @param url The url (must be direct link)

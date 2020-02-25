@@ -3,6 +3,7 @@ package me.droreo002.oreocore.utils.item;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.strings.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -209,6 +210,17 @@ public class CustomItem extends ItemStack {
             meta.setDisplayName(color(display));
         }
         setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Update this item's type
+     *
+     * @param material The new type material
+     * @return CustomItem
+     */
+    public CustomItem updateType(Material material) {
+        this.setType(material);
         return this;
     }
 

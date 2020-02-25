@@ -6,16 +6,17 @@ import me.droreo002.oreocore.utils.item.CustomItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public final class ConfigMemoryManager {
 
-    private static final Map<JavaPlugin, List<ConfigMemory>> CONFIG_MEMORY = new HashMap<>();
+    private static final Map<JavaPlugin, List<ConfigurationMemory>> CONFIG_MEMORY = new HashMap<>();
 
     /**
      * Register the memory
@@ -23,9 +24,9 @@ public final class ConfigMemoryManager {
      * @param plugin Owner of this memory
      * @param memory The memory
      */
-    public static void registerMemory(JavaPlugin plugin, ConfigMemory memory) {
+    public static void registerMemory(JavaPlugin plugin, ConfigurationMemory memory) {
         if (isLoaded(plugin, memory)) return;
-        List<ConfigMemory> arr = new ArrayList<>();
+        List<ConfigurationMemory> arr = new ArrayList<>();
         if (CONFIG_MEMORY.containsKey(plugin)) arr = CONFIG_MEMORY.get(plugin);
         processMemory(memory);
 
@@ -40,7 +41,7 @@ public final class ConfigMemoryManager {
      * @param plugin Owner of this memory
      * @param memory The memory
      */
-    public static void updateMemory(JavaPlugin plugin, ConfigMemory memory) {
+    public static void updateMemory(JavaPlugin plugin, ConfigurationMemory memory) {
         if (CONFIG_MEMORY.containsKey(plugin)) {
             if (isLoaded(plugin, memory)) {
                 CONFIG_MEMORY.get(plugin).remove(memory);
@@ -57,7 +58,7 @@ public final class ConfigMemoryManager {
      *
      * @param memory The memory
      */
-    private static void writeChanges(ConfigMemory memory) {
+    private static void writeChanges(ConfigurationMemory memory) {
         FileConfiguration config = memory.getParent().getConfig();
         for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
@@ -67,8 +68,11 @@ public final class ConfigMemoryManager {
                     if (SerializableConfigVariable.class.isAssignableFrom(f.getType())) {
                         // Use different saving
                         try {
-                            SerializableConfigVariable<?> s = (SerializableConfigVariable<?>) f.get(memory);
-                            s.saveToConfig(configVariable.path(), config);
+                            SerializableConfigVariable configurationSerializable = (SerializableConfigVariable) f.get(memory);
+                            Map<String, Object> serialized = configurationSerializable.serialize();
+                            for (Map.Entry<String, Object> data : serialized.entrySet()) {
+                                config.set(configVariable.path() + "." + data.getKey(), data.getValue());
+                            }
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -89,7 +93,7 @@ public final class ConfigMemoryManager {
      *
      * @param memory The config memory
      */
-    private static void processMemory(ConfigMemory memory) {
+    private static void processMemory(ConfigurationMemory memory) {
         final FileConfiguration config = memory.getParent().getConfig();
         final Map<ConfigVariable, Field> variables = new LinkedHashMap<>();
         for (Field f : getDeclaredFields(memory)) {
@@ -110,8 +114,8 @@ public final class ConfigMemoryManager {
             String path = configVariable.path();
             Object configValue = config.get(path);
             if (configVariable.isSerializableObject()) {
-                ConfigurationSection cs = config.getConfigurationSection(path);
-                if (cs == null) {
+                ConfigurationSection configurationSection = config.getConfigurationSection(path);
+                if (configurationSection == null) {
                     if (configVariable.errorWhenNull()) {
                         throw new NullPointerException("Failed to get config value on path " + path);
                     } else {
@@ -122,11 +126,11 @@ public final class ConfigMemoryManager {
                 if (!f.isAccessible()) f.setAccessible(true);
                 if (!SerializableConfigVariable.class.isAssignableFrom(f.getType())) continue;
                 try {
-                    SerializableConfigVariable<?> seri = (SerializableConfigVariable<?>) f.get(memory);
-                    Validate.notNull(seri, "Please always initialize the variable first!. Variable name " + f.getName());
-                    configValue = seri.getFromConfig(cs);
+                    SerializableConfigVariable configurationSerializable = (SerializableConfigVariable) f.get(memory);
+                    Validate.notNull(configurationSerializable, "Please always initialize the variable first!. Variable name " + f.getName());
+                    configValue = configurationSerializable.getClass().getMethod("deserialize", ConfigurationSection.class).invoke(null, configurationSection);
                     f.set(memory, configValue);
-                } catch (IllegalAccessException e) {
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
                 continue;
@@ -252,9 +256,9 @@ public final class ConfigMemoryManager {
      * @param memory The memory
      * @return true if loaded, false otherwise
      */
-    private static boolean isLoaded(JavaPlugin plugin, ConfigMemory memory) {
+    private static boolean isLoaded(JavaPlugin plugin, ConfigurationMemory memory) {
         if (CONFIG_MEMORY.get(plugin) == null) return false;
-       return CONFIG_MEMORY.get(plugin).stream().anyMatch(configMemory -> configMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
+       return CONFIG_MEMORY.get(plugin).stream().anyMatch(configurationMemory -> configurationMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
     }
 
     /**
@@ -264,7 +268,7 @@ public final class ConfigMemoryManager {
      * @param memory The memory
      * @param v The object to set
      */
-    private static void set(Field f, ConfigMemory memory, Object v) {
+    private static void set(Field f, ConfigurationMemory memory, Object v) {
         try {
             f.set(memory, v);
         } catch (IllegalAccessException e) {
@@ -278,8 +282,8 @@ public final class ConfigMemoryManager {
      * @param memory The memory
      * @return the declared fields as array
      */
-    private static Field[] getDeclaredFields(ConfigMemory memory) {
-        Class<? extends ConfigMemory> obj = memory.getClass();
+    private static Field[] getDeclaredFields(ConfigurationMemory memory) {
+        Class<? extends ConfigurationMemory> obj = memory.getClass();
         return obj.getDeclaredFields();
     }
 }

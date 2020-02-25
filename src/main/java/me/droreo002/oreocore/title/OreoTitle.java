@@ -1,16 +1,21 @@
-package me.droreo002.oreocore.utils.misc;
+package me.droreo002.oreocore.title;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.utils.bridge.OSound;
+import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
-public class TitleObject implements SerializableConfigVariable<TitleObject>, Cloneable {
+public class OreoTitle implements SerializableConfigVariable, Cloneable {
 
     @Getter @Setter
     private String title;
@@ -25,7 +30,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
     @Getter @Setter
     private SoundObject soundOnSend;
 
-    public TitleObject(String title) {
+    public OreoTitle(String title) {
         this.title = title;
         this.subTitle = " ";
         this.fadeIn = 0;
@@ -34,7 +39,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
         this.soundOnSend = null;
     }
 
-    public TitleObject(String title, String subTitle) {
+    public OreoTitle(String title, String subTitle) {
         this.title = title;
         this.subTitle = subTitle;
         this.fadeIn = 0;
@@ -43,7 +48,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
         this.soundOnSend = null;
     }
 
-    public TitleObject(String title, String subTitle, SoundObject soundOnSend) {
+    public OreoTitle(String title, String subTitle, SoundObject soundOnSend) {
         this.title = title;
         this.subTitle = subTitle;
         this.fadeIn = 0;
@@ -52,7 +57,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
         this.soundOnSend = soundOnSend;
     }
 
-    public TitleObject() {
+    public OreoTitle() {
         this.title = "Dummy";
         this.subTitle = "Dummy";
         this.fadeIn = 1;
@@ -61,7 +66,7 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
         this.soundOnSend = null;
     }
 
-    public TitleObject(String title, String subTitle, int fadeIn, int stay, int fadeOut, SoundObject soundOnSend) {
+    public OreoTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut, SoundObject soundOnSend) {
         this.title = title;
         this.subTitle = subTitle;
         this.fadeIn = fadeIn;
@@ -70,13 +75,17 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
         this.soundOnSend = soundOnSend;
     }
 
+    /**
+     * Send this title to player
+     *
+     * @param player The target player
+     */
     public void send(Player player) {
         if (soundOnSend != null) soundOnSend.send(player);
         player.sendTitle(color(title), color(subTitle), fadeIn, stay, fadeOut);
     }
 
-    @Override
-    public TitleObject getFromConfig(ConfigurationSection section) {
+    public static OreoTitle deserialize(ConfigurationSection section) {
         String title = section.getString("title");
         String subTitle = section.getString("sub-title");
         int fadeIn = section.getInt("fade-in");
@@ -87,38 +96,30 @@ public class TitleObject implements SerializableConfigVariable<TitleObject>, Clo
             final OSound s = OSound.match(section.getString("soundOnSend"));
             if (s != null) soundOnSend = new SoundObject(s);
         }
-        return new TitleObject(title, subTitle, fadeIn, stay, fadeOut, soundOnSend);
+        return new OreoTitle(title, subTitle, fadeIn, stay, fadeOut, soundOnSend);
     }
 
     @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path + ".title", title);
-        config.set(path + ".sub-title", subTitle);
-        config.set(path + ".fade-in", fadeIn);
-        config.set(path + ".stay", stay);
-        config.set(path + ".fade-out", fadeIn);
-        if (soundOnSend != null) config.set(path + ".soundOnSend", soundOnSend.getSound().toString());
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("sub-title", subTitle);
+        map.put("fade-in", fadeIn);
+        map.put("stay", stay);
+        map.put("fade-out", fadeOut);
+        if (soundOnSend != null) map.put("soundOnSend", soundOnSend.getSound().toString());
+        return map;
     }
 
     /**
-     * Get from config (Static)
-     *
-     * @param section The ConfigSection containing the data
-     * @return the TitleObject
-     */
-    public static TitleObject fromConfig(ConfigurationSection section) {
-        return new TitleObject().getFromConfig(section); // We don't need config because we'll not use it anyway
-    }
-
-    /**
-     * Clone this TitleObject
+     * Clone this OreoTitle
      *
      * @return The GUIButton
      */
     @Override
-    public TitleObject clone() {
+    public OreoTitle clone() {
         try {
-            return (TitleObject) super.clone();
+            return (OreoTitle) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }

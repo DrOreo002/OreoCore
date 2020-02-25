@@ -1,4 +1,6 @@
-package me.droreo002.oreocore.utils.misc;
+package me.droreo002.oreocore.title;
+
+import me.droreo002.oreocore.utils.misc.SoundObject;
 
 public interface TitleFrame {
 

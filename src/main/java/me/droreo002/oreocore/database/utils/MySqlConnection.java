@@ -2,11 +2,14 @@ package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-public class MySqlConnection implements SerializableConfigVariable<MySqlConnection> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class MySqlConnection implements SerializableConfigVariable {
 
     @Getter
     private String host;
@@ -34,8 +37,7 @@ public class MySqlConnection implements SerializableConfigVariable<MySqlConnecti
         this.user = user;
     }
 
-    @Override
-    public MySqlConnection getFromConfig(ConfigurationSection section) {
+    public static MySqlConnection deserialize(ConfigurationSection section) {
         String host = section.getString("host");
         int port = section.getInt("port");
         String databaseName = section.getString("databaseName");
@@ -45,11 +47,13 @@ public class MySqlConnection implements SerializableConfigVariable<MySqlConnecti
     }
 
     @Override
-    public void saveToConfig(String path, FileConfiguration config) {
-        config.set(path + ".host", host);
-        config.set(path + ".port", port);
-        config.set(path + ".databaseName", databaseName);
-        config.set(path + ".password", password);
-        config.set(path + ".user", user);
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("host", host);
+        map.put("port", port);
+        map.put("databaseName", databaseName);
+        map.put("password", password);
+        map.put("user", user);
+        return map;
     }
 }

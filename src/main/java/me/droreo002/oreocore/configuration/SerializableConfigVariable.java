@@ -1,23 +1,25 @@
 package me.droreo002.oreocore.configuration;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-public interface SerializableConfigVariable<T> {
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Define a serialize able config variable
+ * anything that implement this must have
+ * static method called deserialize that accept {@link org.bukkit.configuration.ConfigurationSection}
+ * and returns itself
+ */
+public interface SerializableConfigVariable {
 
     /**
-     * Get the object or class from config
+     * Serialize the object to a map
      *
-     * @param section The configuration section
-     * @return The object
+     * @return The HashMap
      */
-    T getFromConfig(ConfigurationSection section);
-
-    /**
-     * Save the object or class to the config
-     *
-     * @param path The path
-     * @param config The config
-     */
-    default void saveToConfig(String path, FileConfiguration config) { }
+    @NotNull
+    default Map<String, Object> serialize() {
+        return new HashMap<>();
+    }
 }

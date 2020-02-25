@@ -1,7 +1,5 @@
 package me.droreo002.oreocore.configuration.annotations;
 
-import me.droreo002.oreocore.configuration.LoadPriority;
-import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.configuration.ValueType;
 
 import java.lang.annotation.ElementType;
@@ -28,7 +26,7 @@ public @interface ConfigVariable {
     boolean errorWhenNull() default false;
 
     /**
-     * Does it implements {@link SerializableConfigVariable}
+     * Does it implements {@link SerializableYamlObject}
      *
      * @return true or false. Depend
      */

@@ -1,14 +1,13 @@
 package me.droreo002.oreocore.conversation;
 
 import lombok.Getter;
-import lombok.Setter;
+import me.droreo002.oreocore.title.OreoTitle;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.misc.SoundObject;
-import me.droreo002.oreocore.utils.misc.TitleAnimation;
-import me.droreo002.oreocore.utils.misc.TitleFrame;
-import me.droreo002.oreocore.utils.misc.TitleObject;
+import me.droreo002.oreocore.title.TitleAnimation;
+import me.droreo002.oreocore.title.TitleFrame;
 import me.droreo002.oreocore.utils.time.TimestampBuilder;
 import me.droreo002.oreocore.utils.time.TimestampUtils;
 import org.bukkit.conversations.*;
@@ -21,9 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 public class OreoConversation<T> implements ConversationAbandonedListener {
 
@@ -49,9 +46,9 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private TimestampBuilder conversationTimeOut;
     @Getter
-    private TitleObject titleCountdown;
+    private OreoTitle titleCountdown;
     @Getter
-    private TitleObject abandonedTitle;
+    private OreoTitle abandonedTitle;
     @Getter
     private boolean useTitle;
     @Getter
@@ -87,7 +84,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      *
      * @param titleCountdown The title countdown
      */
-    public OreoConversation<T> withTitleCountdown(TitleObject titleCountdown, int timeOut, SimpleCallback<Player> whenDone) {
+    public OreoConversation<T> withTitleCountdown(OreoTitle titleCountdown, int timeOut, SimpleCallback<Player> whenDone) {
         this.useTitle = true;
         this.timeOut = timeOut;
         this.titleCountdown = titleCountdown;
@@ -146,7 +143,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      *
      * @param object The title object
      */
-    public OreoConversation<T> withAbandonedTitle(TitleObject object) {
+    public OreoConversation<T> withAbandonedTitle(OreoTitle object) {
         this.abandonedTitle = object;
         return this;
     }
