@@ -1,74 +1,27 @@
 package me.droreo002.oreocore.inventory.button;
 
 import lombok.Getter;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
+import lombok.Setter;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents mostly {@link InventoryClickEvent}
- * but created for {@link ButtonListener} usage
+ * Same event as {@link InventoryClickEvent}
+ * we extend it because we want to have other variable
+ * to handle cancelling the event or not. Because we want
+ * to always cancel the base event {@link InventoryClickEvent#isCancelled()}
  */
-public class ButtonClickEvent implements Cancellable {
+public class ButtonClickEvent extends InventoryClickEvent {
 
-    private boolean cancelled;
+    @Getter @Setter
+    private boolean buttonClickEventCancelled;
 
-    @Getter
-    private final ClickType click;
-    @Getter
-    private final InventoryAction action;
-    @Getter
-    private InventoryType.SlotType slotType;
-    @Getter
-    private int slot;
-    @Getter
-    private int rawSlot;
-    @Getter
-    private ItemStack currentItem;
-    @Getter
-    private int hotbarButton;
-    @Getter
-    private Inventory clickedInventory;
-    @Getter
-    private Inventory inventory;
-    @Getter
-    private InventoryView view;
-    @Getter
-    private List<HumanEntity> viewers;
-    @Getter
-    private HumanEntity whoClicked;
-
-    public ButtonClickEvent(InventoryClickEvent event) {
-        this.click = event.getClick();
-        this.action = event.getAction();
-        this.slotType = event.getSlotType();
-        this.slot = event.getSlot();
-        this.rawSlot = event.getRawSlot();
-        this.currentItem = event.getCurrentItem();
-        this.hotbarButton = event.getHotbarButton();
-        this.clickedInventory = event.getClickedInventory();
-        this.inventory = event.getInventory();
-        this.view = event.getView();
-        this.viewers = event.getViewers();
-        this.whoClicked = event.getWhoClicked();
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return this.cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        this.cancelled = b;
+    public ButtonClickEvent(@NotNull InventoryView view, InventoryType.@NotNull SlotType type, int slot, @NotNull ClickType click, @NotNull InventoryAction action) {
+        super(view, type, slot, click, action);
+        this.buttonClickEventCancelled = false;
     }
 }

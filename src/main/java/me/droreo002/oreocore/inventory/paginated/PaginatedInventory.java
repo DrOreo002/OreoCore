@@ -270,10 +270,7 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         GUIButton button = getPaginatedButton(slot);
         if (button != null) {
-            List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
-            if (loadedListeners != null) {
-                loadedListeners.forEach(buttonListener -> buttonListener.onClick(new ButtonClickEvent(e)));
-            }
+            processButtonListener(button, e);
         }
     }
 

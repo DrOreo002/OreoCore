@@ -152,14 +152,28 @@ public abstract class OreoInventory implements InventoryHolder {
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
-                List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
-                if (loadedListeners != null) {
-                    loadedListeners.forEach(buttonListener -> buttonListener.onClick(new ButtonClickEvent(e)));
-                }
+                processButtonListener(button, e);
             }
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
         oreoInventory.onClick(e); // After process we call
+    }
+
+    /**
+     * Process button listener by default
+     *
+     * @param button Clicked button
+     * @param e Click event
+     */
+    public static void processButtonListener(GUIButton button, InventoryClickEvent e) {
+        ButtonClickEvent event = new ButtonClickEvent(e.getView(), e.getSlotType(), e.getSlot(), e.getClick(), e.getAction());
+        List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
+        if (loadedListeners != null) {
+            for (ButtonListener listener : loadedListeners) {
+                if (event.isButtonClickEventCancelled()) break;
+                listener.onClick(event);
+            }
+        }
     }
 
     /**

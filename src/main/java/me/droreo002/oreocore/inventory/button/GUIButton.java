@@ -202,8 +202,11 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         Map<ClickType, List<ButtonListener>> newMap = new HashMap<>();
         for (Map.Entry<ClickType, List<ButtonListener>> entry : this.buttonListeners.entrySet()) {
             List<ButtonListener> listeners = entry.getValue();
-            listeners.sort(Comparator.comparingInt(button -> button.getListenerPriority().getLevel()));
-            Collections.reverse(listeners);
+            // We do not want to change anything if no priority is set to other than default
+            if (listeners.stream().anyMatch(bListener -> bListener.getListenerPriority() != ButtonListener.Priority.DEFAULT)) {
+                listeners.sort(Comparator.comparingInt(button -> button.getListenerPriority().getLevel()));
+                Collections.reverse(listeners);
+            }
             newMap.put(entry.getKey(), listeners);
         }
         return newMap;

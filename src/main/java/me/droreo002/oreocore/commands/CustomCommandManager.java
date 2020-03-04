@@ -13,11 +13,22 @@ public final class CustomCommandManager {
     private static final Map<JavaPlugin, List<CustomCommand>> COMMANDS = new HashMap<>();
 
     /**
+     * Register the command
+     *
+     * @param command The command to register
+     */
+    public static void registerCommand(CustomCommand command) {
+        registerCommand(command.getOwner(), command);
+    }
+
+    /**
      * Register a new custom command
      *
      * @param plugin The command owner / source
      * @param command The command class
+     * @deprecated Use {@link #registerCommand(CustomCommand)} instead
      */
+    @Deprecated
     public static void registerCommand(JavaPlugin plugin, CustomCommand command) {
         Validate.notNull(plugin, "Plugin cannot be null!");
         Validate.notNull(command, "Command cannot be null!");

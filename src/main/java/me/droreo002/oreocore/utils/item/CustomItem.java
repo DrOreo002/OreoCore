@@ -318,12 +318,12 @@ public class CustomItem extends ItemStack {
             res = uMaterial.getItemStack();
         }
 
-        if (uMaterial.getMaterial().toString().equals(UMaterial.PLAYER_HEAD.getMaterial().toString())) {
+        if (uMaterial.name().contains("PLAYER_HEAD")) {
             if (texture != null) {
-                res = CustomSkull.toHeadTexture(res, texture);
+                res = CustomSkull.fromHeadTexture(texture);
             }
             if (texture_url != null) {
-                res = CustomSkull.toHeadUrl(res, texture_url);
+                res = CustomSkull.fromUrl(texture_url);
             }
         }
 

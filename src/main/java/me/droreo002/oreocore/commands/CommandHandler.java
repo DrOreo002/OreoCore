@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -13,12 +14,12 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
 
     private final CustomCommand cmd;
 
-    CommandHandler(CustomCommand cmd) {
+    public CommandHandler(CustomCommand cmd) {
         this.cmd = cmd;
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command vanillaCommand, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command vanillaCommand, @NotNull String s, String[] args) {
         /*
         Some spaget code here but
         don't change it. Too much work heh
@@ -50,13 +51,11 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                     }
                 }
                 argument.execute(commandSender, args);
-                return true;
             } else {
                 if (cmd.getArgumentNotFoundMessage() != null) {
                     cmd.sendMessage(commandSender, cmd.getArgumentNotFoundMessage());
                     if (commandSender instanceof Player) cmd.errorSound(commandSender);
                 }
-                return true;
             }
         } else {
             if (commandSender instanceof Player) {
@@ -81,8 +80,8 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                 }
             }
             cmd.execute(commandSender, args);
-            return true;
         }
+        return true;
     }
 
     /**

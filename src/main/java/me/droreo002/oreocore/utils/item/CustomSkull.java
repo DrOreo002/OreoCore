@@ -63,7 +63,6 @@ public final class CustomSkull {
      * @return The player's head as a ItemStack
      */
     public static ItemStack fromUniqueId(UUID uuid) {
-        if (CACHE.containsKey(uuid.toString())) return CACHE.get(uuid.toString());
         ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         setOwningPlayer(skull, uuid);
@@ -80,7 +79,6 @@ public final class CustomSkull {
      */
     public static ItemStack fromUrl(String url) {
         if (!url.contains(TEXTURE_URL)) url = TEXTURE_URL + url;
-        if (CACHE.containsKey(url)) return CACHE.get(url);
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
         PropertyMap propertyMap = profile.getProperties();
@@ -117,11 +115,6 @@ public final class CustomSkull {
     public static ItemStack toHeadUuid(ItemStack item, UUID uuid) {
         tryFix(item);
 
-        if (CACHE.containsKey(uuid.toString())) {
-            if (ItemUtils.isSimilar(item, CACHE.get(uuid.toString()))) {
-                return CACHE.get(uuid.toString());
-            }
-        }
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -168,6 +161,26 @@ public final class CustomSkull {
     }
 
     /**
+     * Generate from head texture
+     *
+     * @param texture The texture string
+     * @return The head item
+     */
+    public static ItemStack fromHeadTexture(String texture) {
+        final ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
+        final ItemMeta meta = item.getItemMeta();
+        final Object skin = createGameProfile(texture, UUID.randomUUID());
+        try {
+            BukkitReflectionUtils.setValue(meta, true, "profile", skin);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        item.setItemMeta(meta);
+        addToCache(item, texture);
+        return item;
+    }
+
+    /**
      * If its an actual player head then, set that ItemStack head texture into {@param texture}
      *
      * @param item : The ItemStack that will get edited
@@ -176,12 +189,6 @@ public final class CustomSkull {
      */
     public static ItemStack toHeadTexture(ItemStack item, String texture) {
         tryFix(item);
-
-        if (CACHE.containsKey(texture)) {
-            if (ItemUtils.isSimilar(item, CACHE.get(texture))) {
-                return CACHE.get(texture);
-            }
-        }
         final ItemMeta meta = item.getItemMeta();
         final Object skin = createGameProfile(texture, UUID.randomUUID());
         try {

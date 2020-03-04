@@ -17,8 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class DatabaseFlatFile extends Database {
 
@@ -31,12 +33,12 @@ public abstract class DatabaseFlatFile extends Database {
      * Where the string is the file name
      */
     @Getter
-    private Set<DataCache> dataCaches;
+    private List<DataCache> dataCaches;
 
     public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
         this.dataFolder = databaseFolder;
-        this.dataCaches = new HashSet<>();
+        this.dataCaches = new CopyOnWriteArrayList<>();
         this.loadDataOnStartup = loadDataOnStartup;
         init(); // You have to call this first!
     }

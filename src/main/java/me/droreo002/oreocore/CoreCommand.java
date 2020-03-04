@@ -117,7 +117,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-get-head")) {
                     sendMessage(player, "Testing get-head on server version " + ServerUtils.getServerVersion());
                     sound(player);
-                    ItemStack item = CustomSkull.fromUrl("3ab0263bdd76f3e418dba5bf481b921ced397d8b8a34a5561fb7beaa46ece1");
+                    ItemStack item = CustomSkull.fromUrl("badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a");
                     player.getInventory().addItem(item);
                     return true;
                 }
