@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.utils.item;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
@@ -28,15 +29,19 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
  * without the hassle of modifying ItemMeta
  * ItemStackBuilder also accept from config with read-able keys
  */
-public class ItemStackBuilder implements SerializableConfigVariable {
+public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
 
     public static final ItemStack GRAY_GLASS_PANE = ItemStackBuilder.of(UMaterial.GRAY_STAINED_GLASS_PANE.getItemStack()).getItemStack();
 
-    @Getter
+    @Getter @Setter
+    @NotNull
     private ItemStack itemStack;
     @Getter
     @Nullable
     private String headTexture, headTextureUrl;
+    @Getter
+    @NotNull
+    private List<ItemStackBuilderCondition> builderConditions;
 
     /**
      * Create new custom item
@@ -45,6 +50,7 @@ public class ItemStackBuilder implements SerializableConfigVariable {
      */
     private ItemStackBuilder(@NotNull ItemStack item) {
         this.itemStack = item;
+        this.builderConditions = new ArrayList<>();
     }
 
     /**
@@ -68,15 +74,31 @@ public class ItemStackBuilder implements SerializableConfigVariable {
     }
 
     /**
-     * Add flag to the item
+     * Add flag to the builder
      *
-     * @param flags : The flags to add
+     * @param flags The flags to add
      * @return the modified ItemStackBuilder
      */
     public ItemStackBuilder addFlags(@NotNull ItemFlag... flags) {
         ItemMeta meta = getItemMeta();
         meta.addItemFlags(flags);
-        setItemMeta(meta);
+        return setItemMeta(meta);
+    }
+
+    /**
+     * Add flags to builder
+     *
+     * @param flagStringList The flag string list
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder addFlags(List<String> flagStringList) {
+        for (String s : flagStringList) {
+            try {
+                addFlags(ItemFlag.valueOf(s));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
@@ -100,8 +122,7 @@ public class ItemStackBuilder implements SerializableConfigVariable {
     public ItemStackBuilder setDisplayName(@NotNull String display) {
         ItemMeta meta = getItemMeta();
         meta.setDisplayName(color(display));
-        setItemMeta(meta);
-        return this;
+        return setItemMeta(meta);
     }
 
     /**
@@ -124,8 +145,7 @@ public class ItemStackBuilder implements SerializableConfigVariable {
         ItemMeta meta = getItemMeta();
         lore = ListUtils.color(lore);
         meta.setLore(lore);
-        setItemMeta(meta);
-        return this;
+        return setItemMeta(meta);
     }
 
     /**
@@ -188,13 +208,69 @@ public class ItemStackBuilder implements SerializableConfigVariable {
     }
 
     /**
+     * Add a new builder condition to this builder
+     *
+     * @param builderCondition The builder condition
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder addBuilderCondition(ItemStackBuilderCondition builderCondition) {
+        this.builderConditions.add(builderCondition);
+        return this;
+    }
+
+    /**
+     * Apply a text placeholder to this builder
+     *
+     * @param textPlaceholder The text placeholder
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder applyTextPlaceholder(TextPlaceholder textPlaceholder) {
+        this.itemStack = textPlaceholder.format(this.itemStack);
+        return this;
+    }
+
+    /**
+     * Apply the condition. Will be retrieved via name
+     *
+     * @param conditionName The condition name
+     * @param conditionValue The condition value
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder applyBuilderCondition(String conditionName, boolean conditionValue) {
+        ItemStackBuilderCondition builderCondition = this.builderConditions.stream().filter(c -> c.getConditionName().equalsIgnoreCase(conditionName)).findAny().orElse(null);
+        if (builderCondition == null) throw new NullPointerException("Cannot find builder condition with the name of " + conditionName);
+        return builderCondition.applyCondition(this, conditionValue);
+    }
+
+    /**
+     * Set unbreakable or not
+     *
+     * @param unbreakable Condition
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder setUnbreakable(boolean unbreakable) {
+        ItemMeta meta = getItemMeta();
+        meta.setUnbreakable(unbreakable);
+        return setItemMeta(meta);
+    }
+
+    /**
+     * Finally build. Or you can use {@link ItemStackBuilder#getItemStack()}
+     *
+     * @return Result item stack
+     */
+    public ItemStack build() {
+        return this.itemStack;
+    }
+
+    /**
      * Check if this builder's item is a
      * player head or not
      *
      * @return true if player head, false otherwise
      */
     public boolean isPlayerHead() {
-        return this.itemStack != null && this.itemStack.getType().name().contains("PLAYER_HEAD");
+        return this.itemStack.getType().name().contains("PLAYER_HEAD");
     }
 
     @Override
@@ -203,18 +279,17 @@ public class ItemStackBuilder implements SerializableConfigVariable {
         ItemMeta meta = getItemMeta();
         map.put("material", itemStack.getType().name());
 
-        if (meta != null) {
-            if (meta.hasDisplayName()) map.put("name", getItemMeta().getDisplayName());
-            if (meta.hasLore()) map.put("lore", getItemMeta().getLore());
-            if (meta.isUnbreakable()) map.put("unbreakable", true);
-            if (!meta.getItemFlags().isEmpty()) {
-                List<String> flagAsList = meta.getItemFlags().stream().map(Enum::name).collect(Collectors.toList());
-                map.put("itemFlags", flagAsList);
-            }
+        if (meta.hasDisplayName()) map.put("name", getItemMeta().getDisplayName());
+        if (meta.hasLore()) map.put("lore", getItemMeta().getLore());
+        if (meta.isUnbreakable()) map.put("unbreakable", true);
+        if (!meta.getItemFlags().isEmpty()) {
+            List<String> flagAsList = meta.getItemFlags().stream().map(Enum::name).collect(Collectors.toList());
+            map.put("itemFlags", flagAsList);
         }
         if (itemStack.getAmount() > 1) map.put("amount", itemStack.getAmount());
         if (headTexture != null) map.put("texture", headTexture);
         if (headTextureUrl != null) map.put("texture-url", headTextureUrl);
+        builderConditions.forEach(c -> map.putAll(c.serialize()));
         return map;
     }
 
@@ -223,8 +298,9 @@ public class ItemStackBuilder implements SerializableConfigVariable {
      *
      * @return ItemMeta
      */
-    @Nullable
+    @NotNull
     public ItemMeta getItemMeta() {
+        if (this.getItemStack().getItemMeta() == null) throw new NullPointerException("ItemMeta is null!");
         return this.itemStack.getItemMeta();
     }
 
@@ -233,8 +309,27 @@ public class ItemStackBuilder implements SerializableConfigVariable {
      *
      * @param meta ItemMeta
      */
-    public void setItemMeta(ItemMeta meta) {
+    public ItemStackBuilder setItemMeta(ItemMeta meta) {
         this.itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Clone this item stack builder
+     *
+     * @return The cloned ItemStackBuilder
+     */
+    @Override
+    public ItemStackBuilder clone() {
+        try {
+            // Not sure if this will also clone the item. But we want to be safe here
+            ItemStackBuilder builder = (ItemStackBuilder) super.clone();
+            builder.setItemStack(getItemStack().clone());
+            return builder;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -251,43 +346,44 @@ public class ItemStackBuilder implements SerializableConfigVariable {
         String texture_url = section.getString("texture-url");
         List<String> lore = section.getStringList("lore");
         List<String> itemFlags = section.getStringList("itemFlags");
+        List<ConfigurationSection> builderConditions = new ArrayList<>();
         if (itemFlags.isEmpty()) {
             // Add default
             itemFlags.add(ItemFlag.HIDE_ENCHANTS.name());
             itemFlags.add(ItemFlag.HIDE_ATTRIBUTES.name());
             itemFlags.add(ItemFlag.HIDE_UNBREAKABLE.name());
         }
+        if (section.isSet("conditions")) {
+            for (String s : section.getConfigurationSection("conditions").getKeys(false)) {
+                builderConditions.add(section.getConfigurationSection("conditions." + s));
+            }
+        }
 
         if (material.equals(UMaterial.AIR.getMaterial().toString())) return new ItemStackBuilder(UMaterial.AIR.getItemStack());
 
         UMaterial uMaterial = UMaterial.match(material);
         if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
-        ItemStack res = new ItemStack(uMaterial.getMaterial(), amount);
+        ItemStack itemStack = new ItemStack(uMaterial.getMaterial(), amount);
 
         if (uMaterial.name().contains("PLAYER_HEAD")) {
             if (texture != null) {
-                res = CustomSkull.fromHeadTexture(texture);
+                itemStack = CustomSkull.fromHeadTexture(texture);
             }
             if (texture_url != null) {
-                res = CustomSkull.fromUrl(texture_url);
+                itemStack = CustomSkull.fromUrl(texture_url);
             }
         }
 
-        ItemMeta meta = res.getItemMeta();
-        if (unbreakAble) meta.setUnbreakable(true);
-        for (String s : itemFlags) {
-            try {
-                ItemFlag flag = ItemFlag.valueOf(s);
-                meta.addItemFlags(flag);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        ItemStackBuilder itemStackBuilder = ItemStackBuilder.of(itemStack);
+        itemStackBuilder.setUnbreakable(unbreakAble);
+        itemStackBuilder.addFlags(itemFlags);
+        itemStackBuilder.setDisplayName(section.getString("name", " "));
+        itemStackBuilder.setLore(lore);
+        for (ConfigurationSection condition : builderConditions) {
+            itemStackBuilder.addBuilderCondition(new ItemStackBuilderCondition(condition.getName(), condition));
         }
-        meta.setDisplayName(color(section.getString("name", " ")));
-        meta.setLore(lore.stream().map(StringUtils::color).collect(Collectors.toList()));
-        res.setItemMeta(meta);
-
-        return new ItemStackBuilder(res);
+        
+        return itemStackBuilder;
     }
 
     /**

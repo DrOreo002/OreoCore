@@ -61,3 +61,14 @@ Inventory-Placeholder:
       material: IRON_BARS
     _:
       material: AIR
+ItemStackBuilderTest:
+  material: DIRT
+  name: '&aDirt?'
+  lore:
+    - '&7Diamond hell yeah?'
+  conditions:
+    is-op:
+      metaType: DISPLAY_NAME
+      conditionValue: '&aPretend that this is a &bDiamond'
+      expectedCondition: true
+

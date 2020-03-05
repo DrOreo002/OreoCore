@@ -11,6 +11,7 @@ import me.droreo002.oreocore.enums.ArmorStandBody;
 import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.title.OreoTitle;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,6 +56,10 @@ public class PluginConfig extends CustomConfiguration implements ConfigurationMe
     @ConfigVariable(path = "Settings.debugging", isUpdateAbleObject = true)
     @Getter @Setter
     private ConfigurationSection debuggingData;
+
+    @ConfigVariable(path = "ItemStackBuilderTest", isSerializableObject = true)
+    @Getter
+    private ItemStackBuilder itemStackBuilderTest;
 
     public PluginConfig(JavaPlugin plugin) {
         super(plugin, new File(plugin.getDataFolder(), "config.yml"));

@@ -19,6 +19,7 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.Base64ItemStack;
 import me.droreo002.oreocore.utils.item.CustomSkull;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -119,6 +120,13 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sound(player);
                     ItemStack item = CustomSkull.fromUrl("badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a");
                     player.getInventory().addItem(item);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-item-condition")) {
+                    sendMessage(player,"Testing item condition. Is op: " + player.isOp());
+                    ItemStackBuilder builder = plugin.getPluginConfig().getItemStackBuilderTest().clone();
+                    builder.applyBuilderCondition("is-op", player.isOp());
+                    player.getInventory().addItem(builder.getItemStack());
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-get-texture")) {
