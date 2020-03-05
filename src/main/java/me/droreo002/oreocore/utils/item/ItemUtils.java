@@ -1,6 +1,5 @@
 package me.droreo002.oreocore.utils.item;
 
-import jdk.nashorn.internal.objects.annotations.Setter;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
@@ -11,11 +10,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,7 +94,7 @@ public final class ItemUtils {
      * @return true if similar, false otherwise
      */
     public static boolean isSimilar(ItemStack one, ItemStack two) {
-        return CustomItem.isSimilar(one, two);
+        return ItemStackBuilder.isSimilar(one, two);
     }
 
     /**

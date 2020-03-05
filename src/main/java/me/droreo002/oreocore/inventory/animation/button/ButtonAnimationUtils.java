@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.inventory.animation.button;
 
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.ItemUtils;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ButtonAnimationUtils {
      */
     public static void addWaveAnimation(GUIButton button, String waveColor, String waveBaseColor, int duplicatesPerFrame) {
         String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(new CustomItem(button.getItem(), waveBaseColor + displayName), true, false);
+        button.setItem(ItemStackBuilder.of(button.getItem()).setDisplayName(waveBaseColor + displayName).getItemStack(), true, false);
         String[] wave = colorWaveString(displayName,waveColor, waveBaseColor);
         addFrames(button, wave, duplicatesPerFrame, true);
     }
@@ -34,7 +34,7 @@ public class ButtonAnimationUtils {
      */
     public static void addFillAnimation(GUIButton button, String fillColor, String fillBaseColor, int duplicatesPerFrame) {
         String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(new CustomItem(button.getItem(), fillBaseColor + displayName), true, false);
+        button.setItem(ItemStackBuilder.of(button.getItem()).setDisplayName(fillBaseColor + displayName).getItemStack(), true, false);
         String[] wave = colorFillString(displayName, fillColor, fillBaseColor);
         addFrames(button, wave, duplicatesPerFrame, true);
     }

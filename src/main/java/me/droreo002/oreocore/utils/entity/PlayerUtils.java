@@ -10,7 +10,7 @@ import com.google.common.base.Charsets;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.bridge.CrackedServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -259,7 +259,7 @@ public final class PlayerUtils {
         int amount = 0;
         final List<ItemStack> items = new ArrayList<>(Arrays.asList(playerInventory.getContents()));
         for (ItemStack i : items) {
-            if (CustomItem.isSimilar(i, item)) {
+            if (ItemStackBuilder.isSimilar(i, item)) {
                 amount += i.getAmount();
             }
         }

@@ -7,7 +7,6 @@ import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
-import me.droreo002.oreocore.conversation.OreoConversation;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
@@ -17,20 +16,15 @@ import me.droreo002.oreocore.dependencies.DependencyManager;
 import me.droreo002.oreocore.dependencies.OCoreDependency;
 import me.droreo002.oreocore.dependencies.classloader.PluginClassLoader;
 import me.droreo002.oreocore.dependencies.classloader.ReflectionClassLoader;
-import me.droreo002.oreocore.inventory.ITemplatePlaceholder;
-import me.droreo002.oreocore.inventory.ITemplatePlaceholderManager;
 import me.droreo002.oreocore.inventory.InventoryCacheManager;
 import me.droreo002.oreocore.listeners.inventory.MainInventoryListener;
 import me.droreo002.oreocore.listeners.player.PlayerListener;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
 import me.droreo002.oreocore.utils.modules.HookUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -74,7 +68,6 @@ public final class OreoCore extends JavaPlugin {
         inventoryCacheManager = new InventoryCacheManager();
 
         HookUtils.getInstance(); // Initialize
-        ConfigurationSerialization.registerClass(CustomItem.class);
 
         if (ServerUtils.isOldAsFuckVersion()) {
             ODebug.log(this, "Old minecraft version found!. Beginning loading external sql driver! This might take a while please wait...", true);

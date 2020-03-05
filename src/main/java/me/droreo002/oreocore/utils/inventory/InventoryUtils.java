@@ -1,6 +1,6 @@
 package me.droreo002.oreocore.utils.inventory;
 
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.entity.HumanEntity;
@@ -57,7 +57,7 @@ public final class InventoryUtils {
     public static List<ItemStack> getContent(Inventory inventory) {
         final List<ItemStack> items = new ArrayList<>();
         for (ItemStack i : inventory.getContents()) {
-            if (CustomItem.isEmpty(i) || i.getType().equals(UMaterial.AIR.getMaterial())) continue;
+            if (ItemStackBuilder.isEmpty(i) || i.getType().equals(UMaterial.AIR.getMaterial())) continue;
             items.add(i);
         }
         return items;
@@ -83,7 +83,7 @@ public final class InventoryUtils {
         int itemAmount = 0;
 
         for (ItemStack iStack : items.values()) {
-            if (!CustomItem.isSimilar(iStack, item)) {
+            if (!ItemStackBuilder.isSimilar(iStack, item)) {
                 continue;
             }
 
@@ -118,7 +118,7 @@ public final class InventoryUtils {
     public static int countEmpty(Inventory inventory) {
         int emptyAmount = 0;
         for (ItemStack stack : getContent(inventory)) {
-            if (CustomItem.isEmpty(stack)) {
+            if (ItemStackBuilder.isEmpty(stack)) {
                 emptyAmount++;
             }
         }
@@ -182,12 +182,12 @@ public final class InventoryUtils {
                     return true;
                 }
 
-                if (CustomItem.isEmpty(iStack)) {
+                if (ItemStackBuilder.isEmpty(iStack)) {
                     left -= item.getMaxStackSize();
                     continue;
                 }
 
-                if (!CustomItem.isSimilar(iStack, item)) {
+                if (!ItemStackBuilder.isSimilar(iStack, item)) {
                     continue;
                 }
 
@@ -228,7 +228,7 @@ public final class InventoryUtils {
 
         int amount = item.getAmount();
         for (ItemStack currentItem : sourceInventory) {
-            if (CustomItem.isSimilar(currentItem, item)) {
+            if (ItemStackBuilder.isSimilar(currentItem, item)) {
                 ItemStack clone = currentItem.clone();
                 if (currentItem.getAmount() >= amount) {
                     clone.setAmount(amount);
@@ -282,13 +282,13 @@ public final class InventoryUtils {
         for (int currentSlot = 0; currentSlot < effectiveSize(inventory) && amountLeft > 0; currentSlot++) {
             ItemStack currentItem = inventory.getItem(currentSlot);
 
-            if (CustomItem.isEmpty(currentItem)) {
+            if (ItemStackBuilder.isEmpty(currentItem)) {
                 currentItem = new ItemStack(item);
                 currentItem.setAmount(Math.min(amountLeft, maxStackSize));
                 inventory.setItem(currentSlot, currentItem);
 
                 amountLeft -= currentItem.getAmount();
-            } else if (currentItem.getAmount() < maxStackSize && CustomItem.isSimilar(currentItem, item)) {
+            } else if (currentItem.getAmount() < maxStackSize && ItemStackBuilder.isSimilar(currentItem, item)) {
                 int neededToAdd = Math.min(maxStackSize - currentItem.getAmount(), amountLeft);
 
                 currentItem.setAmount(currentItem.getAmount() + neededToAdd);
@@ -352,7 +352,7 @@ public final class InventoryUtils {
         for (int currentSlot = 0; currentSlot < effectiveSize(inventory) && amountLeft > 0; currentSlot++) {
             ItemStack currentItem = inventory.getItem(currentSlot);
 
-            if (currentItem != null && CustomItem.isSimilar(currentItem, item)) {
+            if (currentItem != null && ItemStackBuilder.isSimilar(currentItem, item)) {
                 int neededToRemove = Math.min(currentItem.getAmount(), amountLeft);
 
                 currentItem.setAmount(currentItem.getAmount() - neededToRemove);
@@ -380,7 +380,7 @@ public final class InventoryUtils {
         Iterating:
         for (ItemStack item : items) {
             for (ItemStack iStack : itemList) {
-                if (CustomItem.isSimilar(item, iStack)) {
+                if (ItemStackBuilder.isSimilar(item, iStack)) {
                     iStack.setAmount(iStack.getAmount() + item.getAmount());
                     continue Iterating;
                 }

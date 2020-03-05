@@ -2,11 +2,9 @@ package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.debugging.ODebug;
-import me.droreo002.oreocore.utils.item.CustomItem;
-import org.apache.commons.lang.Validate;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -207,9 +205,6 @@ public final class ConfigMemoryManager {
                     break;
                 case ITEM_STACK:
                     configValue = config.getItemStack(path);
-                    if (configValue == null) {
-                        configValue = CustomItem.fromSection(config.getConfigurationSection(path), null);
-                    }
                     set(f, memory, configValue);
                     break;
                 case LIST:

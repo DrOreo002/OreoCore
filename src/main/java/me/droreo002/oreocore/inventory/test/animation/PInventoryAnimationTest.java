@@ -5,7 +5,7 @@ import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 
 /**
@@ -19,7 +19,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
         setItemRow(0, 1);
         setSearchRow(2, false, null);
 
-        GUIButton button = new GUIButton(new CustomItem(UMaterial.OAK_DOOR.getItemStack(), "Hello "));
+        GUIButton button = new GUIButton(ItemStackBuilder.of(UMaterial.OAK_DOOR.getItemStack()).setDisplayName("Hello ").getItemStack());
         button.addListener(GUIButton.CLOSE_LISTENER);
 
         ButtonAnimation animation = button.getButtonAnimation();

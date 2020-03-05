@@ -3,14 +3,12 @@ package me.droreo002.oreocore.inventory.button;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -76,11 +74,12 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public GUIButton(ConfigurationSection section, TextPlaceholder textPlaceholder) {
         this.uniqueId = UUID.randomUUID();
-        this.item = CustomItem.fromSection(section, textPlaceholder);
+        this.item = ItemStackBuilder.deserialize(section).getItemStack();
         this.inventorySlot = section.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
         this.itemDataSection = section;
         this.buttonListeners = new HashMap<>();
+        applyTextPlaceholder(textPlaceholder);
         setAnimated(section.getBoolean("animated", false));
 
         if (section.getConfigurationSection("soundOnClick") != null)
@@ -129,9 +128,10 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * @param textPlaceholder The text placeholder
      */
     public void applyTextPlaceholder(TextPlaceholder textPlaceholder) {
+        if (textPlaceholder == null) return;
         this.textPlaceholder = textPlaceholder;
         if (item == null) {
-            setItem(CustomItem.fromSection(itemDataSection, textPlaceholder), true, true);
+            setItem(textPlaceholder.format(ItemStackBuilder.deserialize(itemDataSection).getItemStack()), true, true);
         } else {
             setItem(textPlaceholder.format(item), true, true);
         }

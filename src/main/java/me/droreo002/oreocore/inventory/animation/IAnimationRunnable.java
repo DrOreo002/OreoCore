@@ -5,7 +5,7 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -112,7 +112,7 @@ public class IAnimationRunnable implements Runnable {
             if (nextDisplayName == null) nextDisplayName = meta.getDisplayName();
             if (nextLore == null) nextLore = meta.getLore();
 
-            item = new CustomItem(item, nextDisplayName, nextLore);
+            item = ItemStackBuilder.of(item).setDisplayName(nextDisplayName).setLore(nextLore).getItemStack();
 
             button.setItem(item, true, false);
         } else {

@@ -2,6 +2,7 @@ package me.droreo002.oreocore.utils.list;
 
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,5 +123,20 @@ public final class ListUtils {
 
         String[] sp = s.split(SPLIT_MARK);
         return new ArrayList<>(Arrays.asList(sp));
+    }
+
+    /**
+     * Convert the array into an ArrayList
+     *
+     * @param array The array to convert
+     * @param <T> Object type
+     * @return List
+     */
+    @NotNull
+    public static <T> List<T> convertArrayToList(@NotNull T[] array) {
+        // create a list from the Array
+        return Arrays
+                .stream(array)
+                .collect(Collectors.toList());
     }
 }

@@ -3,22 +3,16 @@ package me.droreo002.oreocore.inventory.paginated;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
-import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
-import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.Linkable;
-import me.droreo002.oreocore.inventory.linked.LinkedButton;
-import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
 import me.droreo002.oreocore.utils.inventory.Paginator;
-import me.droreo002.oreocore.utils.item.CustomItem;
+import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.list.Iterators;
-import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -385,11 +379,17 @@ public abstract class PaginatedInventory extends OreoInventory {
      */
     private void setupDefaultButton() {
         if (this.previousPageButton == null) {
-            this.previousPageButton = new GUIButton(new CustomItem(CustomSkull.fromUrl(PREV_ARROW), "&aPrevious Page", new String[]{"&7Click me!"}));
+            this.previousPageButton = new GUIButton(ItemStackBuilder.of(CustomSkull.fromUrl(PREV_ARROW))
+                    .setDisplayName("&aPrevious Page")
+                    .setLore("&7Click me!")
+                    .getItemStack());
         }
 
         if (this.nextPageButton == null) {
-            this.nextPageButton = new GUIButton(new CustomItem(CustomSkull.fromUrl(NEXT_ARROW), "&aNext Page", new String[]{"&7Click me!"}));
+            this.nextPageButton = new GUIButton(ItemStackBuilder.of(CustomSkull.fromUrl(NEXT_ARROW))
+                    .setDisplayName("&aNext Page")
+                    .setLore("&7Click me!")
+                    .getItemStack());
         }
 
         this.previousPageButton.addListener(event -> {
