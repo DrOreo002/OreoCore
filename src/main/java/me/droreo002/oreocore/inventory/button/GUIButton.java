@@ -36,23 +36,15 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     @Getter
     private ConfigurationSection itemDataSection;
     @Getter
-    private ItemStack item;
-    @Getter
     private SoundObject soundOnClick;
     @Setter
     private Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter @Setter
+    private ItemStackBuilder buttonItemStackBuilder;
+    @Getter @Setter
     private int inventorySlot;
     @Getter @Setter
     private ButtonAnimation buttonAnimation;
-
-    /*
-    For config getting
-     */
-    public GUIButton() {
-        this.uniqueId = UUID.randomUUID();
-        this.buttonListeners = new HashMap<>();
-    }
 
     /**
      * Construct a new gui button (without slot)
@@ -61,7 +53,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public GUIButton(ItemStack item) {
         this.uniqueId = UUID.randomUUID();
-        this.item = item;
+        this.buttonItemStackBuilder = ItemStackBuilder.of(item);
         this.buttonListeners = new HashMap<>();
     }
 
@@ -74,7 +66,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public GUIButton(ConfigurationSection section, TextPlaceholder textPlaceholder) {
         this.uniqueId = UUID.randomUUID();
-        this.item = ItemStackBuilder.deserialize(section).getItemStack();
+        this.buttonItemStackBuilder = ItemStackBuilder.deserialize(section);
         this.inventorySlot = section.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
         this.itemDataSection = section;
@@ -94,7 +86,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public GUIButton(ItemStack item, int inventorySlot) {
         this.uniqueId = UUID.randomUUID();
-        this.item = item;
+        this.buttonItemStackBuilder = ItemStackBuilder.of(item);
         this.inventorySlot = inventorySlot;
         this.buttonListeners = new HashMap<>();
     }
@@ -108,7 +100,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * @param updateAnimationFrames Should we update the animation frames?
      */
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
-        ItemMeta lastMeta = this.item.getItemMeta().clone();
+        ItemMeta lastMeta = this.getItem().getItemMeta().clone();
         if (animated) {
             buttonAnimation.updateButtonMetaData(item);
             if (updateAnimationFrames) {
@@ -119,7 +111,11 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
             item.setItemMeta(lastMeta);
         }
 
-        this.item = item;
+        if (this.buttonItemStackBuilder == null) {
+            this.buttonItemStackBuilder = ItemStackBuilder.of(item);
+        } else {
+            this.buttonItemStackBuilder.setItemStack(item);
+        }
     }
 
     /**
@@ -130,11 +126,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public void applyTextPlaceholder(TextPlaceholder textPlaceholder) {
         if (textPlaceholder == null) return;
         this.textPlaceholder = textPlaceholder;
-        if (item == null) {
-            setItem(textPlaceholder.format(ItemStackBuilder.deserialize(itemDataSection).getItemStack()), true, true);
-        } else {
-            setItem(textPlaceholder.format(item), true, true);
-        }
+        setItem(textPlaceholder.format(getItem()), true, true);
     }
 
     /**
@@ -157,9 +149,9 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         this.animated = animated;
         if (animated) {
             if (itemDataSection != null && itemDataSection.contains("animationData")) {
-                this.buttonAnimation = new ButtonAnimation(itemDataSection, item);
+                this.buttonAnimation = new ButtonAnimation(itemDataSection, getItem());
             } else {
-                this.buttonAnimation = new ButtonAnimation(item);
+                this.buttonAnimation = new ButtonAnimation(getItem());
             }
             this.buttonAnimation.setupAnimation(this, true);
         } else {
@@ -223,10 +215,16 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
             GUIButton b = (GUIButton) super.clone();
 
             /*
-            Apparently HashMap also need tobe cloned.
+            Hell yeah hardcode because why not
              */
             b.setButtonListeners(new HashMap<>(this.buttonListeners));
-            b.setItem(this.item.clone(), true, true);
+            ItemStackBuilder clonedBuilder = ItemStackBuilder.of(this.getItem().clone());
+            try {
+                clonedBuilder.setHeadTexture(this.buttonItemStackBuilder.getHeadTexture());
+                clonedBuilder.setHeadTextureUrl(this.buttonItemStackBuilder.getHeadTextureUrl());
+            } catch (Exception ignored) {}
+            clonedBuilder.setBuilderConditions(new ArrayList<>(this.buttonItemStackBuilder.getBuilderConditions()));
+            b.setButtonItemStackBuilder(clonedBuilder);
 
             if (this.buttonAnimation != null) {
                 b.setButtonAnimation(this.buttonAnimation.clone());
@@ -235,6 +233,16 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }
+    }
+
+    /**
+     * Get the button item
+     *
+     * @return The button item
+     */
+    @NotNull
+    public ItemStack getItem() {
+        return this.buttonItemStackBuilder.getItemStack();
     }
 
     public static GUIButton deserialize(ConfigurationSection section) {

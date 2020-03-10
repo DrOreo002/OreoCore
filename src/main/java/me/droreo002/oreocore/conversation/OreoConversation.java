@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +31,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private ConversationFactory conversationFactory;
     @Getter
-    private List<OreoPrompt<?>> prompts;
+    private LinkedList<OreoPrompt<?>> prompts;
     @Getter
     private DoubleValueCallback<T, ConversationContext> lastCallback;
     @Getter
@@ -59,7 +60,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     private DataBuilder<T> dataBuilder;
 
     public OreoConversation(String nonPlayerMessage, String escapeSequence, JavaPlugin owner) {
-        this.prompts = new ArrayList<>();
+        this.prompts = new LinkedList<>();
         this.conversationFactory = new ConversationFactory(owner)
                 .withModality(false)
                 .withLocalEcho(false)

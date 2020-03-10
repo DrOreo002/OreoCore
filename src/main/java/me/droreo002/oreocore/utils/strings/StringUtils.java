@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -217,7 +218,7 @@ public final class StringUtils {
                                             ChatColor loadingColor, char loadedChar, char defaultChar, String loadingBarFormat) {
         if (!loadingBarFormat.contains("%loadingBar%")) throw new IllegalStateException("Invalid loading bar format!");
         TextPlaceholder placeholder = TextPlaceholder
-                .of("%percentage%", MathUtils.getPercentage(current, max) + "%")
+                .of("%percentage%", new DecimalFormat("0.#").format(MathUtils.getPercentage(current, max)) + "%")
                 .add("%current%", (int) current)
                 .add("%max%", (int) max);
 

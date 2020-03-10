@@ -539,7 +539,7 @@ public enum OSound {
     ENTITY_PLAYER_HURT_DROWN("same", "same", "", "", "", ""),
     ENTITY_PLAYER_HURT_ON_FIRE("same", "same", "", "", "", ""),
     ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH("", "", "", "", "", ""),
-    ENTITY_PLAYER_LEVELUP("same", "same", "same", "same", "same", "LEVELUP"),
+    ENTITY_PLAYER_LEVEL_UP("same", "same", "same", "same", "same", "LEVEL_UP"),
     ENTITY_PLAYER_SMALL_FALL("same", "same", "same", "same", "same", "FALL_SMALL"),
     ENTITY_PLAYER_SPLASH("same", "same", "same", "same", "same", ""),
     ENTITY_PLAYER_SPLASH_HIGH_SPEED("same", "", "", "", "", ""),

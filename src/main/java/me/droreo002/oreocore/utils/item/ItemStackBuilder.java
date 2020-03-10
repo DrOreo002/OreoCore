@@ -1,11 +1,15 @@
 package me.droreo002.oreocore.utils.item;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
+import me.droreo002.oreocore.utils.bridge.NBTEditor;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +19,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +45,7 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
     @Getter
     @Nullable
     private String headTexture, headTextureUrl;
-    @Getter
+    @Getter @Setter
     @NotNull
     private List<ItemStackBuilderCondition> builderConditions;
 
@@ -149,6 +155,27 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
     }
 
     /**
+     * Add another lore entry
+     *
+     * @param lore The lore to add
+     * @return ItemStackBuilder
+     */
+    public ItemStackBuilder addLore(@NotNull String... lore) {
+        ItemMeta meta = getItemMeta();
+        if (meta.getLore() == null) {
+            return setLore(lore);
+        } else {
+            // INFO: DOESN'T MAKE SENSE IK. JUST DO NOT CHANGE OR 1.8 WOULDN'T LIKE IT
+            List<String> add = new ArrayList<>();
+            List<String> actual = meta.getLore();
+            Collections.addAll(add, lore);
+            actual.addAll(add);
+
+            return setLore(actual);
+        }
+    }
+
+    /**
      * Set the material for this builder
      *
      * @param material The material
@@ -234,12 +261,13 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
      *
      * @param conditionName The condition name
      * @param conditionValue The condition value
+     * @param onConditionApplied Called when the condition is successfully applied
      * @return ItemStackBuilder
      */
-    public ItemStackBuilder applyBuilderCondition(String conditionName, boolean conditionValue) {
+    public ItemStackBuilder applyBuilderCondition(String conditionName, boolean conditionValue, @Nullable SimpleCallback<Void> onConditionApplied) {
         ItemStackBuilderCondition builderCondition = this.builderConditions.stream().filter(c -> c.getConditionName().equalsIgnoreCase(conditionName)).findAny().orElse(null);
         if (builderCondition == null) throw new NullPointerException("Cannot find builder condition with the name of " + conditionName);
-        return builderCondition.applyCondition(this, conditionValue);
+        return builderCondition.applyCondition(this, conditionValue, onConditionApplied);
     }
 
     /**
@@ -250,8 +278,17 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
      */
     public ItemStackBuilder setUnbreakable(boolean unbreakable) {
         ItemMeta meta = getItemMeta();
-        meta.setUnbreakable(unbreakable);
-        return setItemMeta(meta);
+        if (ServerUtils.isOldAsFuckVersion()) {
+            try {
+                this.itemStack = NBTEditor.set(this.itemStack, (byte) 1, "Unbreakable");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        } else {
+            meta.setUnbreakable(unbreakable);
+            return setItemMeta(meta);
+        }
     }
 
     /**
@@ -363,7 +400,8 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
 
         UMaterial uMaterial = UMaterial.match(material);
         if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
-        ItemStack itemStack = new ItemStack(uMaterial.getMaterial(), amount);
+        ItemStack itemStack = uMaterial.getItemStack();
+        itemStack.setAmount(amount);
 
         if (uMaterial.name().contains("PLAYER_HEAD")) {
             if (texture != null) {

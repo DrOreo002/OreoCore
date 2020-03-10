@@ -368,11 +368,11 @@ public class InventoryTemplate implements SerializableConfigVariable, Cloneable 
             template.setPlaceholders(new ArrayList<>(this.placeholders));
 
             Map<String, List<GUIButton>> buttons = new HashMap<>();
-            for (Map.Entry ent : this.guiButtons.entrySet()) {
-                String key = (String) ent.getKey();
+            for (Map.Entry<String, List<GUIButton>> ent : this.guiButtons.entrySet()) {
+                String key = ent.getKey();
                 List<GUIButton> but = new ArrayList<>();
 
-                for (GUIButton b : (List<GUIButton>) ent.getValue()) {
+                for (GUIButton b : ent.getValue()) {
                     but.add(b.clone());
                 }
                 buttons.put(key, but);

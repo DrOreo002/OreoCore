@@ -70,7 +70,9 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
-     * Load the data on first startup. Only recommended to call it at that time useful for 'final' data
+     * Load the data on first startup. User can call this
+     * manually because sometimes they have to initialize something
+     * on their constructor first
      */
     public void loadData() {}
 

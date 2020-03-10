@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.utils.bridge.OSound;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,15 +18,22 @@ import java.util.Map;
 public class SoundObject implements SerializableConfigVariable {
 
     // Pre - Initialized
-    public static final SoundObject SUCCESS_SOUND = new SoundObject(OSound.ENTITY_EXPERIENCE_ORB_PICKUP);
-    public static final SoundObject ERROR_SOUND = new SoundObject(OSound.BLOCK_ANVIL_FALL);
+    public static SoundObject SUCCESS_SOUND = new SoundObject(OSound.ENTITY_EXPERIENCE_ORB_PICKUP);
+    public static SoundObject ERROR_SOUND = new SoundObject(OSound.BLOCK_ANVIL_FALL);
+
+    static {
+        if (ServerUtils.isOldAsFuckVersion()) {
+            SUCCESS_SOUND = new SoundObject(OSound.ENTITY_PLAYER_LEVEL_UP);
+            ERROR_SOUND = new SoundObject(OSound.ENTITY_VILLAGER_NO);
+        }
+    }
 
     @Getter
     private float volume;
     @Getter
     private float pitch;
     @Getter
-    private OSound sound;
+    private Sound sound;
 
     /**
      * Allow null for @ConfigVariable support
@@ -35,31 +43,19 @@ public class SoundObject implements SerializableConfigVariable {
     public SoundObject(OSound sound, float volume, float pitch) {
         this.volume = volume;
         this.pitch = pitch;
-        this.sound = sound;
+        this.sound = sound.parseSound();
     }
 
     public SoundObject(OSound sound) {
         this.volume = 1.0f;
         this.pitch = 1.0f;
-        this.sound = sound;
+        this.sound = sound.parseSound();
     }
 
-
-    /**
-     * Parsing from (volume,pitch,sound). Recommended if you want fast data saving
-     * Example : 1.0,1.0,ENTITY_BLAZE_DEATH
-     *
-     * @param toParse : The string
-     */
-    public SoundObject(String toParse) {
-        if (!toParse.contains(",")) {
-            throw new IllegalStateException("Invalid string to parse!");
-        }
-        String[] contains = toParse.split(",");
-        this.volume = Float.parseFloat(contains[1]);
-        this.pitch = Float.parseFloat(contains[2]);
-        this.sound = OSound.match(toParse);
-        if (sound == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + contains[0]);
+    public SoundObject(Sound sound) {
+        this.volume = 1.0f;
+        this.pitch = 1.0f;
+        this.sound = sound;
     }
 
     /**
@@ -68,9 +64,8 @@ public class SoundObject implements SerializableConfigVariable {
      * @param player : The target player
      */
     public void send(Player player) {
-        Sound s = sound.parseSound();
-        if (s == null) throw new NullPointerException("Sound is invalid!");
-        player.playSound(player.getLocation(), s, volume, pitch);
+        if (this.sound == null) throw new NullPointerException("Sound is invalid!");
+        player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
     /**

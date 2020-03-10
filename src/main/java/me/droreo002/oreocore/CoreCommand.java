@@ -124,8 +124,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("test-item-condition")) {
                     sendMessage(player,"Testing item condition. Is op: " + player.isOp());
-                    ItemStackBuilder builder = plugin.getPluginConfig().getItemStackBuilderTest().clone();
-                    builder.applyBuilderCondition("is-op", player.isOp());
+                    ItemStackBuilder builder = plugin.getPluginConfig().getItemStackBuilderTest().clone().applyBuilderCondition("is-op", player.isOp(), null);
                     player.getInventory().addItem(builder.getItemStack());
                     return true;
                 }

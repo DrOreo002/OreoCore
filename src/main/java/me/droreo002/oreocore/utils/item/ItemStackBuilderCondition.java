@@ -1,9 +1,11 @@
 package me.droreo002.oreocore.utils.item;
 
 import lombok.Getter;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,25 +22,18 @@ public class ItemStackBuilderCondition {
     @Getter
     private final String conditionName;
     @Getter
-    private ItemMetaType conditionMetaType;
-    @Getter
-    private Object conditionValue;
+    private Map<ChangeType, Object> conditionChanges;
     @Getter
     private boolean expectedCondition;
 
-    public ItemStackBuilderCondition(String conditionName, ItemMetaType conditionMetaType, Object conditionValue, boolean expectedCondition) {
-        this.conditionName = conditionName;
-        this.conditionMetaType = conditionMetaType;
-        this.conditionValue = conditionValue;
-        this.expectedCondition = expectedCondition;
-        if (this.conditionMetaType == ItemMetaType.DISPLAY_AND_LORE || this.conditionMetaType == ItemMetaType.NONE) throw new IllegalStateException("Invalid condition meta type!. Only accept DISPLAY_NAME and LORE");
-    }
-
     public ItemStackBuilderCondition(String conditionName, ConfigurationSection section) {
-        this.conditionName = conditionName;
-        this.conditionMetaType = ItemMetaType.valueOf(section.getString("metaType"));
-        this.conditionValue = section.get("conditionValue");
+        this.conditionName = conditionName.toLowerCase();
+        this.conditionChanges = new HashMap<>();
         this.expectedCondition = section.getBoolean("expectedCondition");
+
+        for (String key : section.getConfigurationSection("changes").getKeys(false)) {
+            this.conditionChanges.put(ChangeType.valueOf(key.toUpperCase()), section.get("changes." + key));
+        }
     }
 
     /**
@@ -46,16 +41,26 @@ public class ItemStackBuilderCondition {
      *
      * @param condition The condition to apply
      * @param itemStackBuilder The builder to apply to
+     * @param onConditionApplied Called when the condition is successfully applied
      * @return ItemStackBuilder
      */
-    public ItemStackBuilder applyCondition(ItemStackBuilder itemStackBuilder, boolean condition) {
+    public ItemStackBuilder applyCondition(ItemStackBuilder itemStackBuilder, boolean condition, @Nullable SimpleCallback<Void> onConditionApplied) {
         if (condition == expectedCondition) {
-            switch (conditionMetaType) {
-                case DISPLAY_NAME:
-                    return itemStackBuilder.setDisplayName((String) conditionValue);
-                case LORE:
-                    return itemStackBuilder.setLore((List<String>) conditionValue);
+            for (Map.Entry<ChangeType, Object> changesEntry : this.conditionChanges.entrySet()) {
+                Object value = changesEntry.getValue();
+                switch (changesEntry.getKey()) {
+                    case MATERIAL:
+                        itemStackBuilder.setMaterial(UMaterial.match((String) value).getMaterial());
+                        break;
+                    case NAME:
+                        itemStackBuilder.setDisplayName((String) value);
+                        break;
+                    case LORE:
+                        itemStackBuilder.setLore((List<String>) value);
+                        break;
+                }
             }
+            if (onConditionApplied != null) onConditionApplied.success(null);
         }
         return itemStackBuilder;
     }
@@ -67,9 +72,16 @@ public class ItemStackBuilderCondition {
      */
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
-        map.put("metaType", conditionMetaType.name());
-        map.put("conditionValue", conditionValue);
-        map.put("expectedCondition", expectedCondition);
+        map.put("conditions." + conditionName + ".expectedCondition", expectedCondition);
+        for (Map.Entry<ChangeType, Object> changesEntry : this.conditionChanges.entrySet()) {
+            map.put("conditions." + conditionName + ".changes." + changesEntry.getKey().name().toLowerCase(), changesEntry.getValue());
+        }
         return map;
+    }
+
+    public enum ChangeType {
+        MATERIAL,
+        NAME,
+        LORE
     }
 }

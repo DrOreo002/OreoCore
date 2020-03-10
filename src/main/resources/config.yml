@@ -68,7 +68,10 @@ ItemStackBuilderTest:
     - '&7Diamond hell yeah?'
   conditions:
     is-op:
-      metaType: DISPLAY_NAME
-      conditionValue: '&aPretend that this is a &bDiamond'
+      changes:
+        material: DIAMOND
+        name: '&aHello World'
+        lore:
+          - '&7Yes a diamond for OP!'
       expectedCondition: true
 

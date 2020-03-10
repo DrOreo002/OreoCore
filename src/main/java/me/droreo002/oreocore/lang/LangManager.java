@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static me.droreo002.oreocore.utils.strings.StringUtils.*;
+
 public class LangManager extends CustomConfiguration {
 
     @Getter
@@ -39,7 +41,8 @@ public class LangManager extends CustomConfiguration {
     }
 
     /**
-     * Load the lang datas
+     * Load the lang path
+     * and store them inside the cache
      */
     public void loadData() {
         if (!values.isEmpty()) values.clear();
@@ -80,17 +83,9 @@ public class LangManager extends CustomConfiguration {
      */
     public String getLang(String path, TextPlaceholder placeholder, boolean addPrefix) {
         if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
-        if (placeholder != null) {
-            // Process placeholder
-            String result = (String) values.get(path);
-            for (TextPlaceholder place : placeholder.getPlaceholders()) {
-                String from = place.getFrom();
-                String to = place.getTo();
-                result = result.replace(from, to);
-            }
-            return (addPrefix) ? StringUtils.color(pluginPrefix + result) : StringUtils.color(result);
-        }
-        return (addPrefix) ? StringUtils.color(pluginPrefix + values.get(path)) : StringUtils.color((String) values.get(path));
+        String result = (addPrefix) ? color(pluginPrefix + values.get(path)) : color((String) values.get(path));
+        if (placeholder != null) result = placeholder.format(result);
+        return result;
     }
 
     /**
@@ -112,21 +107,9 @@ public class LangManager extends CustomConfiguration {
      */
     public List<String> getLangList(String path, TextPlaceholder placeholder) {
         if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
-        if (placeholder != null) {
-            List<String> result = new ArrayList<>();
-            for (String s : (List<String>) values.get(path)) {
-                for (TextPlaceholder place : placeholder.getPlaceholders()) {
-                    String from = place.getFrom();
-                    String to = place.getTo();
-                    if (s.contains(from)) {
-                        s = s.replace(from, to);
-                    }
-                }
-                result.add(s);
-            }
-            return result.stream().map(StringUtils::color).collect(Collectors.toList());
-        }
-        return ((List<String>) values.get(path)).stream().map(StringUtils::color).collect(Collectors.toList());
+        List<String> result = ((List<String>) values.get(path)).stream().map(StringUtils::color).collect(Collectors.toList());
+        if (placeholder != null) result = placeholder.format(result);
+        return result;
     }
 
     /**

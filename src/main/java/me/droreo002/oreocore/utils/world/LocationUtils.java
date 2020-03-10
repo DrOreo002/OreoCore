@@ -12,6 +12,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class LocationUtils {
 
@@ -22,21 +23,17 @@ public final class LocationUtils {
      * @return List of locations
      */
     public static List<Location> toLocations(List<String> strings) {
-        final List<Location> res = new ArrayList<>();
-        strings.forEach(s -> res.add(toLocation(s)));
-        return res;
+        return strings.stream().map(LocationUtils::toLocation).collect(Collectors.toList());
     }
 
     /**
      * Convert the list of locations into a list of strings
      *
-     * @param locs The list of locations
+     * @param locations The list of locations
      * @return List of strings
      */
-    public static List<String> convertToStrings(List<Location> locs) {
-        final List<String> res = new ArrayList<>();
-        locs.forEach(location -> res.add(convertToString(location)));
-        return res;
+    public static List<String> toStringList(List<Location> locations) {
+        return locations.stream().map(LocationUtils::toString).collect(Collectors.toList());
     }
 
     /**
@@ -45,9 +42,9 @@ public final class LocationUtils {
      * @param location The location to convert
      * @return The converted location as string
      */
-    public static String convertToString(Location location) {
+    public static String toString(Location location) {
         Validate.notNull(location, "Location cannot be null!");
-        return "Location;" + location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ();
+        return "Location;" + location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ() + ";" + location.getYaw() + ";" + location.getPitch();
     }
 
     /**
@@ -61,10 +58,12 @@ public final class LocationUtils {
         String[] sp = format.split(";");
         if (!sp[0].equalsIgnoreCase("Location")) return null;
         String world = sp[1];
-        double x = Double.valueOf(sp[2]);
-        double y = Double.valueOf(sp[3]);
-        double z = Double.valueOf(sp[4]);
-        return new Location(Bukkit.getWorld(world), x, y, z);
+        double x = Double.parseDouble(sp[2]);
+        double y = Double.parseDouble(sp[3]);
+        double z = Double.parseDouble(sp[4]);
+        float yaw = Float.parseFloat(sp[5]);
+        float pitch = Float.parseFloat(sp[6]);
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 
     /**

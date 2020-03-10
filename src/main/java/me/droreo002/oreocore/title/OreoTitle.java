@@ -2,18 +2,21 @@ package me.droreo002.oreocore.title;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.utils.bridge.OSound;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
+import static me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils.*;
 
 public class OreoTitle implements SerializableConfigVariable, Cloneable {
 
@@ -82,7 +85,29 @@ public class OreoTitle implements SerializableConfigVariable, Cloneable {
      */
     public void send(Player player) {
         if (soundOnSend != null) soundOnSend.send(player);
-        player.sendTitle(color(title), color(subTitle), fadeIn, stay, fadeOut);
+        if (ServerUtils.isOldAsFuckVersion()) {
+            sendNms(player);
+        } else {
+            player.sendTitle(color(title), color(subTitle), fadeIn, stay, fadeOut);
+        }
+    }
+
+    /**
+     * Send title via nms
+     *
+     * @param player Target player
+     */
+    @SneakyThrows
+    private void sendNms(Player player) {
+        Object oTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\": \"" + color(title) + "\"}");
+        Object oSubTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\": \"" + color(subTitle) + "\"}");
+
+        Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), int.class, int.class, int.class);
+        Object packet = titleConstructor.newInstance(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null), oTitle, fadeIn, stay, fadeOut);
+        Object packet2 = titleConstructor.newInstance(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null), oSubTitle, fadeIn, stay, fadeOut);
+
+        sendPacket(player, packet);
+        sendPacket(player, packet2);
     }
 
     public static OreoTitle deserialize(ConfigurationSection section) {

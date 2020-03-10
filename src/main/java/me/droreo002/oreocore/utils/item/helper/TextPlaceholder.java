@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class TextPlaceholder {
         this.type = ItemMetaType.NONE;
         this.from = from;
         this.to = (to instanceof List<?>) ? ListUtils.toString((List<String>) to) : String.valueOf(to);
-        this.placeholders = new ArrayList<>();
+        this.placeholders = new CopyOnWriteArrayList<>();
 
         placeholders.add(this);
     }
@@ -79,6 +80,17 @@ public class TextPlaceholder {
         this.placeholders = new ArrayList<>();
 
         placeholders.add(this);
+    }
+
+    /**
+     * Remove placeholder
+     *
+     * @param from Placeholder name
+     * @return TextPlaceholder
+     */
+    public TextPlaceholder remove(String from) {
+        this.placeholders.removeIf(placeholder -> placeholder.getFrom().equals(from));
+        return this;
     }
 
     /**

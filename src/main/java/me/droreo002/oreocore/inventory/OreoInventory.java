@@ -306,7 +306,11 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param inventory The inventory to open
      */
     public void openInventory(Player player, Inventory inventory) {
-        PlayerUtils.openInventory(player, inventory);
+        if (ServerUtils.isOldAsFuckVersion()) {
+            player.openInventory(inventory);
+        } else {
+            PlayerUtils.openInventory(player, inventory);
+        }
     }
 
     /**
@@ -327,7 +331,6 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param player The target player
      */
     public void open(Player player) {
-        PlayerUtils.closeInventory(player); // If player still opening something
         if (onPreSetup()) {
             setup();
             // Some basic setup with animations
