@@ -95,17 +95,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
      * @return List of string that will be used for the tab completer
      */
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!cmd.getTabCompletePermission().equals("")) {
             if (sender instanceof Player) {
                 final Player player = (Player) sender;
                 if (!player.hasPermission(cmd.getTabCompletePermission())) {
                     // Fix spam message
-                    switch (ServerUtils.getServerVersion().getBaseVersion()) {
-                        case "V1_13":
-                        case "V1_14":
-                            return null;
-                    }
+                    if (!ServerUtils.isLegacyVersion()) return null;
                     cmd.sendMessage(sender, cmd.getTabCompleteNoPermissionMessage());
                     cmd.errorSound(sender);
                     return null;
