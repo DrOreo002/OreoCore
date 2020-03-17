@@ -14,6 +14,7 @@ import me.droreo002.oreocore.inventory.test.normal.FirstLinkedInventory;
 import me.droreo002.oreocore.inventory.test.normal.LagInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
+import me.droreo002.oreocore.netty.NettyDebug;
 import me.droreo002.oreocore.scoreboard.OreoScoreboard;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
@@ -120,6 +121,11 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sound(player);
                     ItemStack item = CustomSkull.fromUrl("badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a");
                     player.getInventory().addItem(item);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-netty")) {
+                    sendMessage(player, "Testing netty");
+                    NettyDebug.startDebug();
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-item-condition")) {
