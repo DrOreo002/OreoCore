@@ -23,7 +23,7 @@ public class SoundObject implements SerializableConfigVariable {
 
     static {
         if (ServerUtils.isOldAsFuckVersion()) {
-            SUCCESS_SOUND = new SoundObject(OSound.ENTITY_PLAYER_LEVEL_UP);
+            SUCCESS_SOUND = new SoundObject(OSound.ENTITY_PLAYER_LEVELUP);
             ERROR_SOUND = new SoundObject(OSound.ENTITY_VILLAGER_NO);
         }
     }

@@ -42,6 +42,10 @@ public final class MathUtils {
         }
     }
 
+    public static <T> T randomOnList(List<T> list) {
+        return list.get(random(0, list.size() - 1, false));
+    }
+
     public static boolean isNumber(String text) {
         return NumberUtils.isNumber(text);
     }

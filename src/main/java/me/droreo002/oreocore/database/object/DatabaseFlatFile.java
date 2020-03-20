@@ -1,9 +1,8 @@
 package me.droreo002.oreocore.database.object;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.SneakyThrows;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.utils.io.FileUtils;
@@ -11,15 +10,12 @@ import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class DatabaseFlatFile extends Database {
@@ -34,6 +30,14 @@ public abstract class DatabaseFlatFile extends Database {
      */
     @Getter
     private List<DataCache> dataCaches;
+
+    public DatabaseFlatFile(JavaPlugin plugin, String folderName, boolean loadDataOnStartup) {
+        super(DatabaseType.FLAT_FILE, plugin);
+        this.dataFolder = new File(plugin.getDataFolder(), folderName);
+        this.dataCaches = new CopyOnWriteArrayList<>();
+        this.loadDataOnStartup = loadDataOnStartup;
+        init(); // You have to call this first!
+    }
 
     public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
@@ -57,8 +61,7 @@ public abstract class DatabaseFlatFile extends Database {
             File[] files = getDataFolder().listFiles();
             if (files == null) return;
             for (File f : files) {
-                FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(f);
-                addData(new DataCache(fileConfig, f));
+                addData(new DataCache(YamlConfiguration.loadConfiguration(f), f));
             }
         }
     }
@@ -74,7 +77,7 @@ public abstract class DatabaseFlatFile extends Database {
      * manually because sometimes they have to initialize something
      * on their constructor first
      */
-    public void loadData() {}
+    public void onInitialized() {}
 
     /**
      * Add defaults data into the data
@@ -116,47 +119,37 @@ public abstract class DatabaseFlatFile extends Database {
     }
 
     /**
-     * Setup the FileConfiguration, this will also call the SetupCallback method. This is different from the load data
+     * Generate a new data
      *
      * @param fileName The file name
      */
-    public void setup(String fileName, boolean addDefault, @Nullable SetupCallback callback) {
+    @SneakyThrows
+    public void createData(@NotNull String fileName, boolean addDefault) {
         fileName = validateName(fileName);
         File file = new File(dataFolder, fileName);
         if (file.exists()) {
             if (isDataCached(fileName)) return;
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            addData(new DataCache(config, file));
-            if (callback != null) callback.onDone(SetupCallback.Type.LOADED);
-            return;
-        }
-        try {
+            addData(new DataCache(YamlConfiguration.loadConfiguration(file), file));
+        } else {
             file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if (addDefault) {
-            addDefaults(config);
-            try {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            if (addDefault) {
+                addDefaults(config);
                 config.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
             }
+            addData(new DataCache(config, file));
         }
-        addData(new DataCache(config, file));
-        if (callback != null) callback.onDone(SetupCallback.Type.CREATED_AND_LOADED);
     }
 
     /**
-     * Setup the FileConfiguration, without calling the SetupCallback method
+     * Generate a new data
      *
-     * @param fileName : The file name
+     * @param fileName The file name
      */
-    public void setup(String fileName, boolean addDefault) {
-        setup(fileName, addDefault, null);
+    public void createData(@NotNull String fileName) {
+        createData(fileName, true);
     }
+
 
     /**
      * Get the data class
@@ -245,24 +238,6 @@ public abstract class DatabaseFlatFile extends Database {
             this.config = config;
             this.dataFile = dataFile;
             this.dataFileName = FileUtils.getFileName(dataFile, true);
-        }
-    }
-
-    public interface SetupCallback {
-
-        /**
-         * When done, call this
-         *
-         * @param type The setup type
-         */
-        void onDone(Type type);
-
-        /**
-         * Type enum
-         */
-        enum Type {
-            CREATED_AND_LOADED,
-            LOADED
         }
     }
 }

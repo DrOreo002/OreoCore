@@ -312,22 +312,7 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
 
     @Override
     public @NotNull Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        ItemMeta meta = getItemMeta();
-        map.put("material", itemStack.getType().name());
-
-        if (meta.hasDisplayName()) map.put("name", getItemMeta().getDisplayName());
-        if (meta.hasLore()) map.put("lore", getItemMeta().getLore());
-        if (meta.isUnbreakable()) map.put("unbreakable", true);
-        if (!meta.getItemFlags().isEmpty()) {
-            List<String> flagAsList = meta.getItemFlags().stream().map(Enum::name).collect(Collectors.toList());
-            map.put("itemFlags", flagAsList);
-        }
-        if (itemStack.getAmount() > 1) map.put("amount", itemStack.getAmount());
-        if (headTexture != null) map.put("texture", headTexture);
-        if (headTextureUrl != null) map.put("texture-url", headTextureUrl);
-        builderConditions.forEach(c -> map.putAll(c.serialize()));
-        return map;
+        return toSerializedMap(build());
     }
 
     /**
@@ -367,6 +352,32 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Convert the ItemStack into a serialized map
+     *
+     * @param itemStack The item stack
+     * @return Map of data
+     */
+    public static Map<String, Object> toSerializedMap(ItemStack itemStack) {
+        Map<String, Object> map = new HashMap<>();
+        ItemStackBuilder builder = new ItemStackBuilder(itemStack);
+        ItemMeta meta = builder.getItemMeta();
+        map.put("material", itemStack.getType().name());
+
+        if (meta.hasDisplayName()) map.put("name", builder.getItemMeta().getDisplayName());
+        if (meta.hasLore()) map.put("lore", builder.getItemMeta().getLore());
+        if (meta.isUnbreakable()) map.put("unbreakable", true);
+        if (!meta.getItemFlags().isEmpty()) {
+            List<String> flagAsList = meta.getItemFlags().stream().map(Enum::name).collect(Collectors.toList());
+            map.put("itemFlags", flagAsList);
+        }
+        if (itemStack.getAmount() > 1) map.put("amount", itemStack.getAmount());
+        if (builder.headTexture != null) map.put("texture", builder.headTexture);
+        if (builder.headTextureUrl != null) map.put("texture-url", builder.headTextureUrl);
+        builder.builderConditions.forEach(c -> map.putAll(c.serialize()));
+        return map;
     }
 
     /**
