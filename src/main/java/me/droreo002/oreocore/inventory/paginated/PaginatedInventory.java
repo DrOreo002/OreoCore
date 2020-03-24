@@ -2,21 +2,28 @@ package me.droreo002.oreocore.inventory.paginated;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.InventoryTemplate;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.inventory.GUIPattern;
+import me.droreo002.oreocore.utils.inventory.InventoryTitleHelper;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.Iterators;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static me.droreo002.oreocore.inventory.InventoryTemplate.*;
@@ -89,12 +96,23 @@ public abstract class PaginatedInventory extends OreoInventory {
         }
     }
 
-    public void reloadPaginatedButtons() {
-        setupPaginatedButtons();
-        getInventory().getViewers().forEach(p -> {
-            Player player = (Player) p;
-            updateAttributes(player);
-        });
+    /**
+     * Reload the paginated buttons
+     */
+    private void reloadPaginatedButtons() {
+        int toGet = 0;
+        for (int i : paginatedButtonSlots) {
+            List<GUIButton> buttons = getCurrentPageButtons();
+            ItemStack item;
+            try {
+                item = buttons.get(toGet).getItem();
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+            buttons.get(toGet).setInventorySlot(i);
+            if (item != null) getInventory().setItem(i, item);
+            toGet++;
+        }
     }
 
     /**
@@ -205,7 +223,7 @@ public abstract class PaginatedInventory extends OreoInventory {
 
         super.setup();
         setupPaginatedButtons();
-        updateInformationButton();
+        updatePageInformation();
         if (totalPage > 1) {
             getInventory().setItem(nextPageButton.getInventorySlot(), nextPageButton.getItem());
         } else {
@@ -228,27 +246,17 @@ public abstract class PaginatedInventory extends OreoInventory {
             this.paginatedButtonResult = Iterators.divideIterable(paginatedButtons, paginatedButtonSlots.size());
             this.currentPage = 0;
             this.totalPage = paginatedButtonResult.size();
-            refresh();
+            reloadPaginatedButtons();
         }
     }
 
     /**
      * Refresh this inventory's paginated button and other things
      */
+    @Override
     public void refresh() {
-        int toGet = 0;
-        for (int i : paginatedButtonSlots) {
-            List<GUIButton> buttons = getCurrentPageButtons();
-            ItemStack item;
-            try {
-                item = buttons.get(toGet).getItem();
-            } catch (IndexOutOfBoundsException e) {
-                break;
-            }
-            buttons.get(toGet).setInventorySlot(i);
-            if (item != null) getInventory().setItem(i, item);
-            toGet++;
-        }
+        setup();
+        InventoryUtils.updateInventoryViewer(getInventory());
     }
 
     /**
@@ -279,20 +287,14 @@ public abstract class PaginatedInventory extends OreoInventory {
     }
 
     /**
-     * Get paginated button by slot
+     * Get a paginated button, will get
+     * at the current page of this inventory
      *
-     * @param slot The slot fo get
-     * @return the paginated button as GUIButton if found, null otherwise
+     * @param slot Button slot
+     * @return GUIButton if there's any
      */
     public GUIButton getPaginatedButton(int slot) {
-        List<GUIButton> buttons = getCurrentPageButtons();
-
-        for (GUIButton button : buttons) {
-            if (button.getInventorySlot() == slot) {
-                return button;
-            }
-        }
-        return null;
+        return getCurrentPageButtons().stream().filter(button -> button.getInventorySlot() == slot).findAny().orElse(null);
     }
 
     /**
@@ -349,28 +351,28 @@ public abstract class PaginatedInventory extends OreoInventory {
      */
     private void updateAttributes(Player player) {
         if (getInventoryAnimationManager() != null) getInventoryAnimationManager().stopAnimation();
-        refresh();
-        updateInformationButton();
+        reloadPaginatedButtons();
+        updatePageInformation();
         updateInventory(player);
         if (getInventoryAnimationManager() != null) getInventoryAnimationManager().startAnimation(this);
+    }
+
+    @Override
+    public void onOpenHandler(InventoryOpenEvent e) {
+        super.onOpenHandler(e);
+        updatePageInformation();
     }
 
     /**
      * Update the information button
      */
-    private void updateInformationButton() {
+    public void updatePageInformation() {
+        TextPlaceholder placeholder = TextPlaceholder.of("%currPage%", currentPage + 1).add("%maxPage%", totalPage);
+        getInventory().getViewers().forEach(view -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> InventoryTitleHelper.updateTitle((Player) view, placeholder.format(getTitle())), 1L);
+        });
         if (informationButton == null) return;
-        ItemStack infoButtonClone = informationButton.getItem().clone();
-        if (!infoButtonClone.hasItemMeta()) return;
-        ItemMeta meta = infoButtonClone.getItemMeta();
-        if (meta.getLore() == null) return;
-
-        List<String> temp = new ArrayList<>();
-        for (String s : meta.getLore()) {
-            temp.add(s.replaceAll("%currPage%", String.valueOf(currentPage + 1)).replaceAll("%totalPage%", String.valueOf(totalPage)));
-        }
-        meta.setLore(temp);
-        infoButtonClone.setItemMeta(meta);
+        ItemStack infoButtonClone = placeholder.format(informationButton.getItem());
         getInventory().setItem(informationButtonSlot, infoButtonClone);
     }
 
@@ -410,5 +412,12 @@ public abstract class PaginatedInventory extends OreoInventory {
     public List<GUIButton> getCurrentPageButtons() {
         if (paginatedButtonResult.isEmpty()) return new ArrayList<>();
         return paginatedButtonResult.get(currentPage);
+    }
+
+    @Nullable
+    @Override
+    public GUIButton getButton(int slot) {
+        GUIButton button = super.getButton(slot);
+        return (button == null) ? getPaginatedButton(slot) : button;
     }
 }

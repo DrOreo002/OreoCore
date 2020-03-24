@@ -94,6 +94,16 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
 
     /**
      * Set the item for this button
+     * will use the default boolean values of {@link GUIButton#setItem(ItemStack, boolean, boolean)}
+     *
+     * @param item The new item
+     */
+    public void setItem(ItemStack item) {
+        setItem(item, true, true);
+    }
+
+    /**
+     * Set the item for this button
      *
      * @param item The new item
      * @param updateMetaData Should we update the meta data?, meta data will be changed

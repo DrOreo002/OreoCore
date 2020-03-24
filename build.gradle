@@ -54,7 +54,7 @@ dependencies {
 }
 
 def pluginName = project.name
-def spigotDirectory = "Spigot 1.8"
+def spigotDirectory = "Spigot 1.13"
 
 group = 'me.droreo002'
 version = '13.7'

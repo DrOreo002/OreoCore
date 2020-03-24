@@ -18,16 +18,13 @@ import java.util.List;
 public class IAnimationRunnable implements Runnable {
 
     @Getter
-    private final List<GUIButton> buttons;
+    private Inventory inventory;
     @Getter
-    private final Inventory inventory;
+    private OreoInventory oreoInventory;
     @Getter
-    private final OreoInventory oreoInventory;
-    @Getter
-    private final List<Integer> singleButtonRunnable;
+    private List<Integer> singleButtonRunnable;
 
-    public IAnimationRunnable(List<GUIButton> buttons, Inventory inventory, OreoInventory oreoInventory) {
-        this.buttons = buttons;
+    public IAnimationRunnable(Inventory inventory, OreoInventory oreoInventory) {
         this.oreoInventory = oreoInventory;
         this.inventory = inventory;
         this.singleButtonRunnable = new ArrayList<>();
@@ -35,8 +32,10 @@ public class IAnimationRunnable implements Runnable {
 
     @Override
     public void run() {
-        for (GUIButton button : buttons) {
-            final int slot = button.getInventorySlot();
+        for (int i = 0; i < getInventory().getSize(); i++) {
+            GUIButton button = getOreoInventory().getButton(i);
+            if (button == null) continue;
+            int slot = button.getInventorySlot();
             if (singleButtonRunnable.contains(slot)) continue; // Skip this button
 
             if (button.isAnimated()) {
@@ -111,6 +110,7 @@ public class IAnimationRunnable implements Runnable {
 
             if (nextDisplayName == null) nextDisplayName = meta.getDisplayName();
             if (nextLore == null) nextLore = meta.getLore();
+            if (nextLore == null) nextLore = new ArrayList<>();
 
             item = ItemStackBuilder.of(item).setDisplayName(nextDisplayName).setLore(nextLore).getItemStack();
 

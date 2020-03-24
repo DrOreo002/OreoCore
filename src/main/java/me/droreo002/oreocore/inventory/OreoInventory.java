@@ -17,6 +17,7 @@ import me.droreo002.oreocore.inventory.linked.Linkable;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
+import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
@@ -207,7 +208,7 @@ public abstract class OreoInventory implements InventoryHolder {
         final InventoryAnimationManager inventoryAnimationManager = oreoInventory.getInventoryAnimationManager();
 
         if (inventoryAnimationManager != null) {
-            if (inventoryAnimationManager.isButtonAnimationRunning()) inventoryAnimationManager.stopAnimation();
+            inventoryAnimationManager.stopAnimation();
             if (inventoryAnimationManager.isOpenAnimationRunning()) inventoryAnimationManager.getOpenAnimation().stop(false);
         }
     }
@@ -319,6 +320,15 @@ public abstract class OreoInventory implements InventoryHolder {
     public void openInventory(Player player, Inventory inventory, SoundObject openSound) {
         PlayerUtils.openInventory(player, inventory);
         if (openSound != null) openSound.send(player);
+    }
+
+    /**
+     * Refresh this inventory
+     * will affect the button only
+     */
+    public void refresh() {
+        setup();
+        InventoryUtils.updateInventoryViewer(getInventory());
     }
 
     /**

@@ -26,10 +26,10 @@ public class ButtonAnimation implements Cloneable {
     private int nextFrame;
     @Getter
     private int animationSpeed;
+    @Getter
+    private boolean repeatingAnimation;
     @Getter @Setter
     private Map<String, Object> buttonMetaData;
-    @Getter @Setter
-    private boolean repeatingAnimation;
     @Getter @Setter
     private List<IButtonFrame> frames;
 
@@ -130,6 +130,17 @@ public class ButtonAnimation implements Cloneable {
     }
 
     /**
+     * Add a frame into the Button with default param
+     * value
+     *
+     * @param buttonFrame The button frame
+     * @return ButtonAnimation
+     */
+    public ButtonAnimation addFrame(IButtonFrame buttonFrame) {
+        return this.addFrame(buttonFrame, true);
+    }
+
+    /**
      * Add a frame into the Button
      *
      * @param buttonFrame the Button frame to add
@@ -202,6 +213,17 @@ public class ButtonAnimation implements Cloneable {
         } else {
             // TODO: 22/08/2019 Non default value maybe?
         }
+    }
+
+    /**
+     * Set this animation as an repeating animation?
+     *
+     * @param repeatingAnimation Value
+     * @return ButtonAnimation
+     */
+    public ButtonAnimation setRepeatingAnimation(boolean repeatingAnimation) {
+        this.repeatingAnimation = repeatingAnimation;
+        return this;
     }
 
     @Override
