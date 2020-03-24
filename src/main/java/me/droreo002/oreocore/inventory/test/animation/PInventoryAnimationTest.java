@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.inventory.test.animation;
 
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
-import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
@@ -35,7 +35,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
         button.setAnimated(true);
         button.setButtonAnimation(animation);
 
-        setInventoryAnimation(InventoryAnimation.builder().build()); // Default value
+        setInventoryAnimationManager(InventoryAnimationManager.getDefault()); // Default value
         for (int i = 0; i < 50; i++) {
             if (i == 10) {
                 addPaginatedButton(button);

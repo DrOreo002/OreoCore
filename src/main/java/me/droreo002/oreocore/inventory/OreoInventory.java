@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.droreo002.oreocore.OreoCore;
-import me.droreo002.oreocore.debugging.ODebug;
-import me.droreo002.oreocore.inventory.animation.InventoryAnimation;
+import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.animation.open.DiagonalFill;
 import me.droreo002.oreocore.inventory.animation.open.ItemFill;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
@@ -14,9 +13,7 @@ import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.inventory.button.GroupedButton;
 import me.droreo002.oreocore.inventory.linked.Linkable;
-import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
@@ -36,7 +33,6 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +55,7 @@ public abstract class OreoInventory implements InventoryHolder {
     @Getter @Setter
     private List<Integer> disabledClickListeners;
     @Getter @Setter
-    private InventoryAnimation inventoryAnimation;
+    private InventoryAnimationManager inventoryAnimationManager;
     @Getter @Setter
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
     @Getter @Setter
@@ -80,19 +76,19 @@ public abstract class OreoInventory implements InventoryHolder {
         this.inventoryType = template.getInventoryType();
 
         if (!template.getOpenAnimationName().equals("none")) {
-            InventoryAnimation.InventoryAnimationBuilder animation = InventoryAnimation.builder();
+            InventoryAnimationManager inventoryAnimationManager = InventoryAnimationManager.getDefault();
             switch (OpenAnimations.valueOf(template.getOpenAnimationName())) {
                 case DIAGONAL_FILL_ANIMATION:
-                    animation.openAnimation(new DiagonalFill());
+                    inventoryAnimationManager.setOpenAnimation(new DiagonalFill());
                     break;
                 case ITEM_FILL_ANIMATION:
-                    animation.openAnimation(new ItemFill(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
+                    inventoryAnimationManager.setOpenAnimation(new ItemFill(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
                     break;
                 case ITEM_WAVE_ANIMATION:
-                    animation.openAnimation(new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
+                    inventoryAnimationManager.setOpenAnimation(new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
                     break;
             }
-            setInventoryAnimation(animation.build());
+            setInventoryAnimationManager(inventoryAnimationManager);
         }
         setupDefault();
     }
@@ -208,11 +204,11 @@ public abstract class OreoInventory implements InventoryHolder {
 
         oreoInventory.onClose(e);
         if (oreoInventory.getSoundOnClose() != null) oreoInventory.getSoundOnClose().send(player);
-        final InventoryAnimation inventoryAnimation = oreoInventory.getInventoryAnimation();
+        final InventoryAnimationManager inventoryAnimationManager = oreoInventory.getInventoryAnimationManager();
 
-        if (inventoryAnimation != null) {
-            if (inventoryAnimation.isButtonAnimationRunning()) inventoryAnimation.stopAnimation();
-            if (inventoryAnimation.isOpenAnimationRunning()) inventoryAnimation.getOpenAnimation().stop(false);
+        if (inventoryAnimationManager != null) {
+            if (inventoryAnimationManager.isButtonAnimationRunning()) inventoryAnimationManager.stopAnimation();
+            if (inventoryAnimationManager.isOpenAnimationRunning()) inventoryAnimationManager.getOpenAnimation().stop(false);
         }
     }
 
@@ -229,12 +225,12 @@ public abstract class OreoInventory implements InventoryHolder {
 
         oreoInventory.onOpen(e);
         if (oreoInventory.getSoundOnOpen() != null) oreoInventory.getSoundOnOpen().send(player);
-        InventoryAnimation inventoryAnimation = oreoInventory.getInventoryAnimation();
-        if (inventoryAnimation != null) {
-            if (inventoryAnimation.getOpenAnimation() != null) {
-                inventoryAnimation.getOpenAnimation().start(aVoid -> inventoryAnimation.startAnimation(oreoInventory));
+        InventoryAnimationManager inventoryAnimationManager = oreoInventory.getInventoryAnimationManager();
+        if (inventoryAnimationManager != null) {
+            if (inventoryAnimationManager.getOpenAnimation() != null) {
+                inventoryAnimationManager.getOpenAnimation().start(aVoid -> inventoryAnimationManager.startAnimation(oreoInventory));
             } else {
-                inventoryAnimation.startAnimation(oreoInventory);
+                inventoryAnimationManager.startAnimation(oreoInventory);
             }
         }
     }
@@ -334,8 +330,8 @@ public abstract class OreoInventory implements InventoryHolder {
         if (onPreSetup()) {
             setup();
             // Some basic setup with animations
-            if (getInventoryAnimation() != null) {
-                OpenAnimation openAnimation = getInventoryAnimation().getOpenAnimation();
+            if (getInventoryAnimationManager() != null) {
+                OpenAnimation openAnimation = getInventoryAnimationManager().getOpenAnimation();
                 if (openAnimation != null) {
                     openAnimation.setInventory(getInventory());
                 }

@@ -7,45 +7,72 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ArmorStandUtils {
 
-    public static EulerAngle toEulerAngle(String format) {
+    /**
+     * Convert string into an euler angle
+     *
+     * @param format The string
+     * @return EulerAngle
+     */
+    @Nullable
+    public static EulerAngle stringToEuler(String format) {
         String[] sp = format.split(";");
         if (!sp[0].equalsIgnoreCase("EulerAngle")) return null;
-        double x = Double.valueOf(sp[1]);
-        double y = Double.valueOf(sp[2]);
-        double z = Double.valueOf(sp[3]);
-        return new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z));
+        return new EulerAngle(Math.toRadians(Double.parseDouble(sp[1])), Math.toRadians(Double.parseDouble(sp[2])), Math.toRadians(Double.parseDouble(sp[3])));
     }
 
-    public static String convertToString(EulerAngle angle) {
+    /**
+     * Convert euler angle into a string
+     *
+     * @param angle The angle to convert
+     * @return String result
+     */
+    @NotNull
+    public static String eulerToString(EulerAngle angle) {
         return "EulerAngle;" + angle.getX() + ";" + angle.getY() + ";" + angle.getZ();
     }
 
+    /**
+     * Get the ArmorStand angles
+     *
+     * @param armorStand The target armor stand
+     * @return Map of ArmorStand angles
+     */
+    @NotNull
     public static Map<ArmorStandBody, EulerAngle> getArmorStandAngle(ArmorStand armorStand) {
         Map<ArmorStandBody, EulerAngle> angle = new HashMap<>();
         angle.put(ArmorStandBody.HEAD, armorStand.getHeadPose());
         angle.put(ArmorStandBody.BODY, armorStand.getBodyPose());
-        angle.put(ArmorStandBody.L_ARM, armorStand.getLeftArmPose());
-        angle.put(ArmorStandBody.R_ARM, armorStand.getRightArmPose());
-        angle.put(ArmorStandBody.L_LEG, armorStand.getLeftLegPose());
-        angle.put(ArmorStandBody.R_LEG, armorStand.getRightLegPose());
+        angle.put(ArmorStandBody.LEFT_ARM, armorStand.getLeftArmPose());
+        angle.put(ArmorStandBody.RIGHT_ARM, armorStand.getRightArmPose());
+        angle.put(ArmorStandBody.LEFT_LEG, armorStand.getLeftLegPose());
+        angle.put(ArmorStandBody.RIGHT_LEG, armorStand.getRightLegPose());
         return angle;
     }
 
+    /**
+     * Get the ArmorStand items
+     *
+     * @param armorStand The target armor stand
+     * @return Map of ArmorStand item
+     */
+    @NotNull
     public static Map<EquipmentSlot, ItemStack> getArmorStandItems(ArmorStand armorStand) {
         Map<EquipmentSlot, ItemStack> items = new HashMap<>();
         EntityEquipment inventory = armorStand.getEquipment();
-        if (inventory.getHelmet() != null) items.put(EquipmentSlot.HEAD, inventory.getHelmet());
-        if (inventory.getChestplate() != null) items.put(EquipmentSlot.CHEST, inventory.getChestplate());
-        if (inventory.getItemInMainHand() != null) items.put(EquipmentSlot.HAND, inventory.getItemInMainHand());
-        if (inventory.getItemInOffHand() != null) items.put(EquipmentSlot.OFF_HAND, inventory.getItemInOffHand());
-        if (inventory.getLeggings() != null) items.put(EquipmentSlot.LEGS, inventory.getLeggings());
-        if (inventory.getBoots() != null) items.put(EquipmentSlot.FEET, inventory.getBoots());
+        items.put(EquipmentSlot.HEAD, inventory.getHelmet());
+        items.put(EquipmentSlot.CHEST, inventory.getChestplate());
+        items.put(EquipmentSlot.HAND, inventory.getItemInMainHand());
+        items.put(EquipmentSlot.OFF_HAND, inventory.getItemInOffHand());
+        items.put(EquipmentSlot.LEGS, inventory.getLeggings());
+        items.put(EquipmentSlot.FEET, inventory.getBoots());
         return items;
     }
 }

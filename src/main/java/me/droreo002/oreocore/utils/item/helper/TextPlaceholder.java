@@ -113,6 +113,7 @@ public class TextPlaceholder {
      */
     public TextPlaceholder add(String from, Object to) {
         validate(from);
+        remove(from);
         placeholders.add(new TextPlaceholder(from, to));
         return this;
     }

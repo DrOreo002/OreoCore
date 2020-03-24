@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     private ItemStackBuilder buttonItemStackBuilder;
     @Getter @Setter
     private int inventorySlot;
-    @Getter @Setter
+    @Getter @Nullable
     private ButtonAnimation buttonAnimation;
 
     /**
@@ -102,6 +103,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
         ItemMeta lastMeta = this.getItem().getItemMeta().clone();
         if (animated) {
+            if (buttonAnimation == null) return;
             buttonAnimation.updateButtonMetaData(item);
             if (updateAnimationFrames) {
                 buttonAnimation.setupAnimation(this, true);
@@ -233,6 +235,18 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }
+    }
+
+    /**
+     * Set the button animation
+     * this will also automatically set the button as animated
+     *
+     * @param buttonAnimation The button animation to se
+     */
+    public void setButtonAnimation(@Nullable ButtonAnimation buttonAnimation) {
+        if (buttonAnimation == null) return;
+        this.animated = true;
+        this.buttonAnimation = buttonAnimation;
     }
 
     /**

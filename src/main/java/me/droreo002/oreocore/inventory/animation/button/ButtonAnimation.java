@@ -134,7 +134,7 @@ public class ButtonAnimation implements Cloneable {
      *
      * @param buttonFrame the Button frame to add
      */
-    public void addFrame(IButtonFrame buttonFrame, boolean addFirstState) {
+    public ButtonAnimation addFrame(IButtonFrame buttonFrame, boolean addFirstState) {
         if (addFirstState) {
             if (frames.isEmpty()) { // If first add, append this one first
                 if (!buttonMetaData.isEmpty()) { // If not empty, we proceed adding default value first
@@ -164,6 +164,7 @@ public class ButtonAnimation implements Cloneable {
             // And then add the next one
             frames.add(buttonFrame);
         }
+        return this;
     }
 
     /**

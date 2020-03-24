@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 public abstract class DatabaseFlatFile extends Database {
 
@@ -124,12 +125,14 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName The file name
      */
     @SneakyThrows
-    public void createData(@NotNull String fileName, boolean addDefault) {
+    public void createData(@NotNull String fileName, boolean addDefault, @Nullable Consumer<CreateResult> createResultConsumer) {
         fileName = validateName(fileName);
         File file = new File(dataFolder, fileName);
+        CreateResult createResult;
         if (file.exists()) {
             if (isDataCached(fileName)) return;
             addData(new DataCache(YamlConfiguration.loadConfiguration(file), file));
+            createResult = CreateResult.LOADED;
         } else {
             file.createNewFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -138,7 +141,9 @@ public abstract class DatabaseFlatFile extends Database {
                 config.save(file);
             }
             addData(new DataCache(config, file));
+            createResult = CreateResult.CREATED_AND_LOADED;
         }
+        if (createResultConsumer != null) createResultConsumer.accept(createResult);
     }
 
     /**
@@ -147,9 +152,8 @@ public abstract class DatabaseFlatFile extends Database {
      * @param fileName The file name
      */
     public void createData(@NotNull String fileName) {
-        createData(fileName, true);
+        createData(fileName, true, null);
     }
-
 
     /**
      * Get the data class
@@ -239,5 +243,10 @@ public abstract class DatabaseFlatFile extends Database {
             this.dataFile = dataFile;
             this.dataFileName = FileUtils.getFileName(dataFile, true);
         }
+    }
+
+    public enum CreateResult {
+        CREATED_AND_LOADED,
+        LOADED
     }
 }

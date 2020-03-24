@@ -348,11 +348,11 @@ public abstract class PaginatedInventory extends OreoInventory {
      * @param player The target player
      */
     private void updateAttributes(Player player) {
-        if (getInventoryAnimation() != null) getInventoryAnimation().stopAnimation();
+        if (getInventoryAnimationManager() != null) getInventoryAnimationManager().stopAnimation();
         refresh();
         updateInformationButton();
         updateInventory(player);
-        if (getInventoryAnimation() != null) getInventoryAnimation().startAnimation(this);
+        if (getInventoryAnimationManager() != null) getInventoryAnimationManager().startAnimation(this);
     }
 
     /**

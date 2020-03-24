@@ -1,6 +1,5 @@
 package me.droreo002.oreocore.utils.item;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
@@ -10,7 +9,6 @@ import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
-import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
@@ -19,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -277,7 +274,6 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
      * @return ItemStackBuilder
      */
     public ItemStackBuilder setUnbreakable(boolean unbreakable) {
-        ItemMeta meta = getItemMeta();
         if (ServerUtils.isOldAsFuckVersion()) {
             try {
                 this.itemStack = NBTEditor.set(this.itemStack, (byte) 1, "Unbreakable");
@@ -286,6 +282,7 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
             }
             return this;
         } else {
+            ItemMeta meta = getItemMeta();
             meta.setUnbreakable(unbreakable);
             return setItemMeta(meta);
         }
@@ -389,7 +386,7 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
     public static ItemStackBuilder deserialize(ConfigurationSection section) {
         String material = section.getString("material", "DIRT");
         int amount = section.getInt("amount", 1);
-        boolean unbreakAble = section.getBoolean("unbreakable", false);
+        boolean unBreakAble = section.getBoolean("unbreakable", false);
         String texture = section.getString("texture");
         String texture_url = section.getString("texture-url");
         List<String> lore = section.getStringList("lore");
@@ -412,7 +409,6 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
         UMaterial uMaterial = UMaterial.match(material);
         if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
         ItemStack itemStack = uMaterial.getItemStack();
-        itemStack.setAmount(amount);
 
         if (uMaterial.name().contains("PLAYER_HEAD")) {
             if (texture != null) {
@@ -423,8 +419,11 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
             }
         }
 
+        if (itemStack == null) throw new NullPointerException("Failed to get ItemStack for item " + material);
+        itemStack.setAmount(amount);
+
         ItemStackBuilder itemStackBuilder = ItemStackBuilder.of(itemStack);
-        itemStackBuilder.setUnbreakable(unbreakAble);
+        if (unBreakAble) itemStackBuilder.setUnbreakable(true);
         itemStackBuilder.addFlags(itemFlags);
         itemStackBuilder.setDisplayName(section.getString("name", " "));
         itemStackBuilder.setLore(lore);
