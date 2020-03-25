@@ -166,10 +166,8 @@ public abstract class OreoInventory implements InventoryHolder {
         ButtonClickEvent event = new ButtonClickEvent(e.getView(), e.getSlotType(), e.getSlot(), e.getClick(), e.getAction());
         List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
         if (loadedListeners != null) {
-            System.out.println("Loaded listener: " + loadedListeners);
             for (ButtonListener listener : loadedListeners) {
                 if (event.isButtonClickEventCancelled()) break;
-                System.out.println("Processing click: " + listener.getClickType().name());
                 listener.onClick(event);
             }
         }
@@ -339,7 +337,6 @@ public abstract class OreoInventory implements InventoryHolder {
      * @param player The target player
      */
     public void open(Player player) {
-        System.out.println("Debug");
         if (onPreSetup()) {
             setup();
             // Some basic setup with animations

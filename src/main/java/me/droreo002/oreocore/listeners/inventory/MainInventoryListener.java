@@ -36,7 +36,6 @@ public class MainInventoryListener implements Listener {
         if (item == null || item.getType().equals(UMaterial.AIR.getMaterial())) return;
 
         if (inventory.getHolder() instanceof OreoInventory) {
-            System.out.println("[Super] On click check");
             ((OreoInventory) inventory.getHolder()).onClickHandler(e);
         } else {
             // Check on cache
