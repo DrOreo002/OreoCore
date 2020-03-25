@@ -117,6 +117,7 @@ public class LinkedInventoryBuilder {
                 setCurrentInventory(targetInventory.getInventoryName());
                 setCurrentInventorySlot(currentInventorySlot + 1);
             });
+            System.out.println("Linked listener information: " + button.getListenerInformation());
             modifiedButton.add(button.getUniqueId());
         });
     }

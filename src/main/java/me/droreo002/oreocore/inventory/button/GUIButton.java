@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GUIButton implements SerializableConfigVariable, Cloneable {
 
@@ -46,6 +47,8 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     private int inventorySlot;
     @Getter @Nullable
     private ButtonAnimation buttonAnimation;
+    @Getter @Setter
+    private int maxListener;
 
     /**
      * Construct a new gui button (without slot)
@@ -178,13 +181,12 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * @return GUIButton, modified.
      */
     public GUIButton addListener(ButtonListener buttonListener) {
+        if (this.maxListener != 0 && this.buttonListeners.size() >= this.maxListener) throw new IllegalStateException("Max listener has been reached!");
         final ClickType clickType = buttonListener.getClickType();
         if (buttonListeners.containsKey(clickType)) {
-            List<ButtonListener> val = buttonListeners.get(clickType);
-            val.add(buttonListener);
-            buttonListeners.put(clickType, val);
+            buttonListeners.get(clickType).add(buttonListener);
         } else {
-            buttonListeners.put(clickType, new ArrayList<>(Collections.singletonList(buttonListener)));
+            buttonListeners.put(clickType, new CopyOnWriteArrayList<>(Collections.singletonList(buttonListener)));
         }
         return this;
     }
@@ -195,6 +197,20 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public void clearListener() {
         this.buttonListeners.clear();
     }
+
+    /**
+     * For debug purpose
+     *
+     * @return String
+     */
+    public String getListenerInformation() {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<ClickType, List<ButtonListener>> entry : this.buttonListeners.entrySet()) {
+            builder.append(entry.getKey().name()).append(":").append(entry.getValue().size()).append(", ");
+        }
+        return builder.toString();
+    }
+
 
     /**
      * Get the button listener (sorted)

@@ -260,41 +260,13 @@ public abstract class PaginatedInventory extends OreoInventory {
     }
 
     /**
-     * The click handler, we add more thing into it, while keeping
-     * the default one
-     *
-     * @param e : The click event object
-     */
-    @Override
-    public void onClickHandler(InventoryClickEvent e) {
-        super.onClickHandler(e); // This will handle the normal button click
-        int slot = e.getSlot();
-
-        GUIButton button = getPaginatedButton(slot);
-        if (button != null) {
-            processButtonListener(button, e);
-        }
-    }
-
-    /**
      * Check if the item inside the slot is a paginated button
      *
      * @param slot The slot to check
      * @return true if paginated button, false otherwise
      */
     public boolean isPaginatedButton(int slot) {
-        return getPaginatedButton(slot) != null;
-    }
-
-    /**
-     * Get a paginated button, will get
-     * at the current page of this inventory
-     *
-     * @param slot Button slot
-     * @return GUIButton if there's any
-     */
-    public GUIButton getPaginatedButton(int slot) {
-        return getCurrentPageButtons().stream().filter(button -> button.getInventorySlot() == slot).findAny().orElse(null);
+        return getButton(slot) != null;
     }
 
     /**
@@ -367,7 +339,7 @@ public abstract class PaginatedInventory extends OreoInventory {
      * Update the information button
      */
     public void updatePageInformation() {
-        TextPlaceholder placeholder = TextPlaceholder.of("%currPage%", currentPage + 1).add("%maxPage%", totalPage);
+        TextPlaceholder placeholder = TextPlaceholder.of("%currPage%", currentPage + 1).add("%currentPage%", currentPage + 1).add("%totalPage%", totalPage).add("%maxPage%", totalPage);
         getInventory().getViewers().forEach(view -> {
             Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> InventoryTitleHelper.updateTitle((Player) view, placeholder.format(getTitle())), 1L);
         });
@@ -418,6 +390,6 @@ public abstract class PaginatedInventory extends OreoInventory {
     @Override
     public GUIButton getButton(int slot) {
         GUIButton button = super.getButton(slot);
-        return (button == null) ? getPaginatedButton(slot) : button;
+        return (button == null) ? getCurrentPageButtons().stream().filter(paginatedButton -> paginatedButton.getInventorySlot() == slot).findAny().orElse(null) : button;
     }
 }
