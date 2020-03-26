@@ -6,6 +6,7 @@ import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.Bukkit;
@@ -37,7 +38,8 @@ public class InventoryAnimationManager {
      * @return The default inventory animation
      */
     public static InventoryAnimationManager getDefault() {
-        return new InventoryAnimationManager(0L, 0L, null);
+        InventoryAnimationManager manager = new InventoryAnimationManager(0L, 0L, null);
+        return manager;
     }
 
     /**

@@ -5,7 +5,9 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.OreoInventory;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
+import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +41,7 @@ public class IAnimationRunnable implements Runnable {
             if (singleButtonRunnable.contains(slot)) continue; // Skip this button
 
             if (button.isAnimated()) {
-                final IButtonFrame frm = button.getButtonAnimation().getNextFrame();
+                final IButtonFrame frm = button.getButtonAnimationManager().getNextFrame();
                 if (frm == null) continue;
                 update(frm, button);
 
@@ -72,7 +74,7 @@ public class IAnimationRunnable implements Runnable {
                 singleButtonRunnable.remove(slot);
                 return; // Return will basically cancel the task
             }
-            final IButtonFrame frm = button.getButtonAnimation().getNextFrame();
+            final IButtonFrame frm = button.getButtonAnimationManager().getNextFrame();
             if (frm == null) {
                 singleButtonRunnable.remove(slot);
                 return; // Return will basically cancel the task
@@ -100,9 +102,9 @@ public class IAnimationRunnable implements Runnable {
         ItemStack item = button.getItem().clone();
         frm.run();
 
-        if (frm.nextItem() == null) {
+        if (frm.nextItem(item) == null) {
             final ItemMeta meta = item.getItemMeta();
-            final Material material = frm.nextMaterial();
+            final Material material = frm.nextMaterial(item.getType());
             if (material != null) button.getItem().setType(material);
 
             String nextDisplayName = frm.nextDisplayName(meta.getDisplayName());
@@ -112,11 +114,13 @@ public class IAnimationRunnable implements Runnable {
             if (nextLore == null) nextLore = meta.getLore();
             if (nextLore == null) nextLore = new ArrayList<>();
 
+            // TODO: 26/03/2020 There's a flick problem here. Please check if other reported
+
             item = ItemStackBuilder.of(item).setDisplayName(nextDisplayName).setLore(nextLore).getItemStack();
 
             button.setItem(item, true, false);
         } else {
-            button.setItem(frm.nextItem(), true, false);
+            button.setItem(frm.nextItem(item), true, false);
         }
     }
 }

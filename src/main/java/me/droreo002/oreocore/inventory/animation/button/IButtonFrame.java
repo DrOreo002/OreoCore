@@ -10,22 +10,21 @@ public interface IButtonFrame {
     /**
      * Get the next display name
      *
-     * @param prevDisplayName : The previous display name
+     * @param previousDisplayName : The previous display name
      *
      * @return next display name
      */
-    default String nextDisplayName(String prevDisplayName) {
+    default String nextDisplayName(String previousDisplayName) {
         return null;
     }
 
     /**
      * Get the next lore
      *
-     * @param prevLore : The previous lore
-     *
+     * @param previousLore : The previous lore
      * @return next lore
      */
-    default List<String> nextLore(List<String> prevLore) {
+    default List<String> nextLore(List<String> previousLore) {
         return null;
     }
 
@@ -33,18 +32,20 @@ public interface IButtonFrame {
      * Get the next item of this button
      * useful if there's a lot of changes
      *
+     * @param previousItem The previous item
      * @return the next item
      */
-    default ItemStack nextItem() {
+    default ItemStack nextItem(ItemStack previousItem) {
         return null;
     }
 
     /**
      * Get the next Material for the button
      *
+     * @param previousMaterial The previous material
      * @return the Material, default is null (disabled)
      */
-    default Material nextMaterial() {
+    default Material nextMaterial(Material previousMaterial) {
         return null;
     }
 

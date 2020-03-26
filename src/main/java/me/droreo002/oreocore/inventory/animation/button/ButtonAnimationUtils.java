@@ -1,77 +1,11 @@
 package me.droreo002.oreocore.inventory.animation.button;
 
-import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.ItemUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 
 public class ButtonAnimationUtils {
-
-    /**
-     * Add a wave animation into the button
-     *
-     * @param button The button
-     * @param duplicatesPerFrame The frame duplicates (This can also be used as duration)
-     */
-    public static void addWaveAnimation(GUIButton button, String waveColor, String waveBaseColor, int duplicatesPerFrame) {
-        String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(ItemStackBuilder.of(button.getItem()).setDisplayName(waveBaseColor + displayName).getItemStack(), true, false);
-        String[] wave = colorWaveString(displayName,waveColor, waveBaseColor);
-        addFrames(button, wave, duplicatesPerFrame, true);
-    }
-
-    /**
-     * Add a fill animation into the button
-     *
-     * @param button The button
-     * @param fillColor The fill color
-     * @param fillBaseColor The fill base color
-     * @param duplicatesPerFrame The frame duplicates (This can also be used as duration)
-     */
-    public static void addFillAnimation(GUIButton button, String fillColor, String fillBaseColor, int duplicatesPerFrame) {
-        String displayName = stripColor(ItemUtils.getName(button.getItem(), false));
-        button.setItem(ItemStackBuilder.of(button.getItem()).setDisplayName(fillBaseColor + displayName).getItemStack(), true, false);
-        String[] wave = colorFillString(displayName, fillColor, fillBaseColor);
-        addFrames(button, wave, duplicatesPerFrame, true);
-    }
-
-    /**
-     * Add frames to button
-     *
-     * @param button The button
-     * @param frames The frames to add
-     * @param duplicatesPerFrame The frame duplicates (This can also be used as duration)
-     * @param repeating Is this a repeating animation?
-     */
-    public static void addFrames(GUIButton button, String[] frames, int duplicatesPerFrame, boolean repeating) {
-        if (!button.isAnimated()) throw new IllegalStateException("Button is not an animated button!");
-        ButtonAnimation animation = button.getButtonAnimation();
-        animation.getFrames().clear();
-        for (String s : frames) {
-            if (duplicatesPerFrame > 0) {
-                for (int i = 0; i < duplicatesPerFrame; i++) {
-                    animation.addFrame(new IButtonFrame() {
-                        @Override
-                        public String nextDisplayName(String prevDisplayName) {
-                            return s;
-                        }
-                    }, false);
-                }
-            } else {
-                animation.addFrame(new IButtonFrame() {
-                    @Override
-                    public String nextDisplayName(String prevDisplayName) {
-                        return s;
-                    }
-                }, false);
-            }
-        }
-        animation.setRepeatingAnimation(repeating);
-    }
 
     /**
      * Make a wave animation on string
@@ -153,22 +87,5 @@ public class ButtonAnimationUtils {
             slot++;
         }
         return s.toArray(new String[0]);
-    }
-
-    /**
-     * Add animation via default value
-     *
-     * @param button The button
-     * @param animation The animation
-     */
-    public static void addAnimation(GUIButton button, DefaultButtonAnimation animation) {
-        switch (animation) {
-            case FILL_ANIMATION:
-                addFillAnimation(button, "&b&l", "&f&l", 0);
-                break;
-            case WAVE_ANIMATION:
-                addWaveAnimation(button, "&b&l", "&f&l", 0);
-                break;
-        }
     }
 }

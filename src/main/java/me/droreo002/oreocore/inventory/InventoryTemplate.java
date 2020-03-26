@@ -5,8 +5,9 @@ import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
+import me.droreo002.oreocore.inventory.animation.button.ButtonAnimationManager;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
-import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimationType;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.ItemUtils;
@@ -14,7 +15,6 @@ import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +99,7 @@ public class InventoryTemplate implements SerializableConfigVariable, Cloneable 
          */
         try {
             if (!this.openAnimationName.equals("none")) {
-                OpenAnimations.valueOf(this.openAnimationName);
+                OpenAnimationType.valueOf(this.openAnimationName);
             }
         } catch (Exception e) {
             /*
@@ -107,7 +107,7 @@ public class InventoryTemplate implements SerializableConfigVariable, Cloneable 
             to provider quick fix
              */
             ODebug.log("Failed to get open animation with the name of &a" + this.openAnimationName, true);
-            ODebug.log("    &c> Available are: " + Arrays.toString(OpenAnimations.values()), false);
+            ODebug.log("    &c> Available are: " + Arrays.toString(OpenAnimationType.values()), false);
             e.printStackTrace();
             return;
         }
@@ -197,13 +197,13 @@ public class InventoryTemplate implements SerializableConfigVariable, Cloneable 
      * Apply button animation to key
      *
      * @param buttonKey The button key
-     * @param buttonAnimation The animation to add
+     * @param buttonAnimationManager The animation to add
      */
-    public void applyAnimation(String buttonKey, ButtonAnimation buttonAnimation) {
+    public void applyAnimation(String buttonKey, ButtonAnimationManager buttonAnimationManager) {
         if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
             button.setAnimated(true);
-            button.setButtonAnimation(buttonAnimation);
+            button.setButtonAnimationManager(buttonAnimationManager);
         }
     }
 
@@ -217,13 +217,12 @@ public class InventoryTemplate implements SerializableConfigVariable, Cloneable 
     public void applyAnimation(String buttonKey, boolean applyFirstState, IButtonFrame... frames) {
         if (!guiButtons.containsKey(buttonKey)) return;
         for (GUIButton button : guiButtons.get(buttonKey)) {
-            button.setAnimated(true);
-            ButtonAnimation animation = new ButtonAnimation(button.getItem());
-            for (IButtonFrame f : frames) {
-                animation.addFrame(f, applyFirstState);
-            }
-            animation.setRepeatingAnimation(true);
-            button.setButtonAnimation(animation);
+            ButtonAnimationManager animationManager = new ButtonAnimationManager(button);
+            ButtonAnimation buttonAnimation = animationManager.getButtonAnimation();
+            animationManager.addFirstState();
+            for (IButtonFrame f : frames) buttonAnimation.addFrame(f);
+            buttonAnimation.setRepeating(true);
+            button.setButtonAnimationManager(animationManager);
         }
     }
 

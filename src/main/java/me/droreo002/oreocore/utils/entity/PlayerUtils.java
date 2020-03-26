@@ -54,6 +54,7 @@ public final class PlayerUtils {
                 gameProfileClass = Class.forName("net.minecraft.util.com.mojang.authlib.GameProfile");
             } catch (ClassNotFoundException e) { // 1.8
                 gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+                gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
             }
             gameProfileConstructor = gameProfileClass.getDeclaredConstructor(UUID.class, String.class);
             gameProfileConstructor.setAccessible(true);
@@ -235,7 +236,11 @@ public final class PlayerUtils {
      * @param player The target player
      */
     public static void closeInventory(Player player) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+        if (ServerUtils.isOldAsFuckVersion()) {
+            player.closeInventory();
+        } else {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), player::closeInventory, 1L);
+        }
     }
 
     /**
@@ -245,7 +250,11 @@ public final class PlayerUtils {
      * @param inventory The inventory to open
      */
     public static void openInventory(Player player, Inventory inventory) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+        if (ServerUtils.isOldAsFuckVersion()) {
+            player.openInventory(inventory);
+        } else {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> player.openInventory(inventory), 1L);
+        }
     }
 
     /**

@@ -1,132 +1,59 @@
 package me.droreo002.oreocore.inventory.animation.button;
 
 import lombok.Getter;
-import lombok.Setter;
-import me.droreo002.oreocore.debugging.ODebug;
-import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
-import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-public class ButtonAnimation implements Cloneable {
+/**
+ * A representation of ButtonAnimation
+ * every button animation also must have static
+ * method of build() that returns itself
+ */
+public abstract class ButtonAnimation {
+
+    public static final String UNSPECIFIC = "UnspecificAnimation";
 
     @Getter
-    private final ConfigurationSection buttonAnimationData;
+    private String buttonAnimationName;
     @Getter
-    private final String buttonAnimationName;
-    @Setter
-    private int nextFrame;
+    private LinkedList<IButtonFrame> animationFrames;
     @Getter
     private int animationSpeed;
     @Getter
-    private boolean repeatingAnimation;
-    @Getter @Setter
-    private Map<String, Object> buttonMetaData;
-    @Getter @Setter
-    private List<IButtonFrame> frames;
+    private boolean repeating;
 
-    public ButtonAnimation(ConfigurationSection buttonDataSection, ItemStack buttonItem) {
-        if (!buttonDataSection.isSet("animationData")) throw new NullPointerException("Button animation data cannot be null!");
-        this.buttonAnimationData = buttonDataSection.getConfigurationSection("animationData");
-        this.nextFrame = 0;
+    public ButtonAnimation(String buttonAnimationName) {
+        this.buttonAnimationName = buttonAnimationName;
         this.animationSpeed = 1;
-        this.repeatingAnimation = false;
-        this.frames = new ArrayList<>();
-        this.buttonAnimationName = buttonAnimationData.getString("animationName", "none");
-        this.buttonMetaData = new HashMap<>();
-
-        if (buttonAnimationName == null) {
-            // TODO: 06/08/2019 Setup animation from raw frames
-        }
-
-        try {
-            if (!buttonAnimationName.equals("none")) {
-                DefaultButtonAnimation.valueOf(buttonAnimationName);
-            }
-        } catch (Exception e) {
-            /*
-            Must users have typos here. So we print out the available button animations
-            to provider quick fix
-             */
-            ODebug.log("Failed to get button animation with the name of &a" + this.buttonAnimationName, true);
-            ODebug.log("    &c> Available are: " + Arrays.toString(DefaultButtonAnimation.values()), false);
-            e.printStackTrace();
-            return;
-        }
-
-        updateButtonMetaData(buttonItem);
-    }
-
-    public ButtonAnimation(ItemStack buttonItem) {
-        this.buttonAnimationName = "none";
-        this.buttonAnimationData = null;
-        this.nextFrame = 0;
-        this.animationSpeed = 1;
-        this.repeatingAnimation = false;
-        this.frames = new ArrayList<>();
-        this.buttonMetaData = new HashMap<>();
-
-        updateButtonMetaData(buttonItem);
-    }
-
-    public ButtonAnimation() {
-        this.buttonAnimationName = "none";
-        this.buttonAnimationData = null;
-        this.nextFrame = 0;
-        this.animationSpeed = 1;
-        this.repeatingAnimation = false;
-        this.frames = new ArrayList<>();
-        this.buttonMetaData = new HashMap<>();
+        this.animationFrames = new LinkedList<>();
     }
 
     /**
-     * Update the first state of the item
+     * Initialize this frame
      *
-     * @param buttonItem The button item
+     * @param buttonItem The item that will get affected
      */
-    public void updateButtonMetaData(ItemStack buttonItem) {
-        buttonMetaData.clear();
-        if (buttonItem.hasItemMeta()) {
-            if (buttonItem.getItemMeta().hasDisplayName()) buttonMetaData.put(ItemMetaType.DISPLAY_NAME.name(), buttonItem.getItemMeta().getDisplayName());
-            if (buttonItem.getItemMeta().hasLore()) buttonMetaData.put(ItemMetaType.LORE.name(), buttonItem.getItemMeta().getLore());
-        }
-        buttonMetaData.put("MATERIAL", buttonItem.getType());
+    public abstract void initializeFrame(ItemStack buttonItem);
+
+    /**
+     * Get frame on that slot
+     *
+     * @param slot The frame slot
+     * @return IButtonFrame
+     */
+    public IButtonFrame getFrame(int slot) {
+        return this.animationFrames.get(slot);
     }
 
     /**
-     * Get the next frame, will return null if nextFrame is last one already
+     * Get the frame size
      *
-     * @return the next frame. Will clear the nextFrame back to 0 if already reached max and this is a repeating animation
+     * @return Frame size
      */
-    public IButtonFrame getNextFrame() {
-        if (nextFrame >= frames.size()) {
-            if (repeatingAnimation) {
-                this.nextFrame = 0;
-                return getNextFrame();
-            } else {
-                return null;
-            }
-        }
-        IButtonFrame frm = frames.get(nextFrame);
-        nextFrame++;
-        return frm;
-    }
-
-    /**
-     * Get the current frame
-     *
-     * @return the frame if available, null otherwise
-     */
-    public IButtonFrame getCurrentFrame() {
-        return frames.get(nextFrame);
+    public int getFrameSize() {
+        return this.animationFrames.size();
     }
 
     /**
@@ -137,108 +64,55 @@ public class ButtonAnimation implements Cloneable {
      * @return ButtonAnimation
      */
     public ButtonAnimation addFrame(IButtonFrame buttonFrame) {
-        return this.addFrame(buttonFrame, true);
-    }
-
-    /**
-     * Add a frame into the Button
-     *
-     * @param buttonFrame the Button frame to add
-     */
-    public ButtonAnimation addFrame(IButtonFrame buttonFrame, boolean addFirstState) {
-        if (addFirstState) {
-            if (frames.isEmpty()) { // If first add, append this one first
-                if (!buttonMetaData.isEmpty()) { // If not empty, we proceed adding default value first
-                    frames.add(new IButtonFrame() {
-                        @Override
-                        public String nextDisplayName(String prev) {
-                            String next = (String) buttonMetaData.get(ItemMetaType.DISPLAY_NAME.name());
-                            return (next == null || next.isEmpty()) ? null : next;
-                        }
-
-                        @Override
-                        public List<String> nextLore(List<String> prev) {
-                            List<String> next = (List<String>) buttonMetaData.get(ItemMetaType.LORE.name());
-                            return (next == null || next.isEmpty()) ? null : next;
-                        }
-
-                        @Override
-                        public Material nextMaterial() {
-                            return (Material) buttonMetaData.get("MATERIAL");
-                        }
-                    });
-                }
-            }
-        }
-        // Animation speed are basically frame duplicates
-        for (int i = 0; i < this.animationSpeed; i++) {
-            // And then add the next one
-            frames.add(buttonFrame);
-        }
+        animationFrames.add(buttonFrame);
         return this;
     }
 
     /**
      * Set the animation speed or frame duplicates
+     * will do the frame duplication automatically
      *
      * @param animationSpeed The animation speed, the greater the longer animation you get
+     * @return ButtonAnimation
      */
-    public void setAnimationSpeed(int animationSpeed) {
+    public ButtonAnimation setAnimationSpeed(int animationSpeed) {
         if (animationSpeed == 0) throw new IllegalStateException("Animation speed cannot be null!");
         this.animationSpeed = animationSpeed;
-        List<IButtonFrame> newFrame = new ArrayList<>();
-        for (IButtonFrame frame : this.frames) {
+        List<IButtonFrame> newFrame = new LinkedList<>();
+        for (IButtonFrame frame : this.animationFrames) {
             for (int i = 0; i < animationSpeed; i++) {
                 newFrame.add(frame);
             }
         }
-        this.frames.clear();
-        this.frames.addAll(newFrame);
-    }
-
-    /**
-     * Setup the button animation
-     *
-     * @param def Should we use default value
-     * @param parent The button parent
-     */
-    public void setupAnimation(GUIButton parent, boolean def) {
-        if (def) {
-            try {
-                DefaultButtonAnimation animation = DefaultButtonAnimation.valueOf(getButtonAnimationName());
-                ButtonAnimationUtils.addAnimation(parent, animation);
-            } catch (Exception e) {
-                // Ignored
-            }
-        } else {
-            // TODO: 22/08/2019 Non default value maybe?
-        }
-    }
-
-    /**
-     * Set this animation as an repeating animation?
-     *
-     * @param repeatingAnimation Value
-     * @return ButtonAnimation
-     */
-    public ButtonAnimation setRepeatingAnimation(boolean repeatingAnimation) {
-        this.repeatingAnimation = repeatingAnimation;
+        this.animationFrames.clear();
+        this.animationFrames.addAll(newFrame);
         return this;
     }
 
-    @Override
-    public ButtonAnimation clone() {
-        try {
-            ButtonAnimation b = (ButtonAnimation) super.clone();
+    /**
+     * Set this as a repeating animation
+     *
+     * @param repeating Value
+     * @return ButtonAnimation
+     */
+    public ButtonAnimation setRepeating(boolean repeating) {
+        this.repeating = repeating;
+        return this;
+    }
 
-            /*
-            Apparently HashMap also need tobe cloned.
-             */
-            b.setButtonMetaData(new HashMap<>(this.buttonMetaData));
-            b.setFrames(new ArrayList<>(this.frames));
-            return b;
-        } catch (CloneNotSupportedException e) {
-            throw new Error(e);
+    /**
+     * Build the frames
+     *
+     * @return A LinkedList of IButtonFrame
+     */
+    public LinkedList<IButtonFrame> buildFrames() {
+        LinkedList<IButtonFrame> result = new LinkedList<>();
+        // Duplicate the frames
+        for (IButtonFrame frame : this.animationFrames) {
+            for (int i = 0; i < this.animationSpeed; i++) {
+                result.add(frame);
+            }
         }
+        return result;
     }
 }

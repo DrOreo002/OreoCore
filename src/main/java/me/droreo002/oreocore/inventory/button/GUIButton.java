@@ -3,7 +3,7 @@ package me.droreo002.oreocore.inventory.button;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
+import me.droreo002.oreocore.inventory.animation.button.ButtonAnimationManager;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
@@ -32,8 +32,6 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     @Getter
     private final UUID uniqueId;
     @Getter
-    private boolean animated;
-    @Getter
     private TextPlaceholder textPlaceholder;
     @Getter
     private ConfigurationSection itemDataSection;
@@ -42,11 +40,13 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     @Setter
     private Map<ClickType, List<ButtonListener>> buttonListeners;
     @Getter @Setter
+    private boolean animated;
+    @Getter @Setter
     private ItemStackBuilder buttonItemStackBuilder;
     @Getter @Setter
     private int inventorySlot;
     @Getter @Nullable
-    private ButtonAnimation buttonAnimation;
+    private ButtonAnimationManager buttonAnimationManager;
     @Getter @Setter
     private int maxListener;
 
@@ -65,21 +65,21 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * Get gui button from configuration section, this will also accept button slot
      * the data key will be 'slot'
      *
-     * @param section The section
+     * @param itemDataSection The section
      * @param textPlaceholder The TextPlaceholder to replace placeholder on item data
      */
-    public GUIButton(ConfigurationSection section, TextPlaceholder textPlaceholder) {
-        this.uniqueId = UUID.randomUUID();
-        this.buttonItemStackBuilder = ItemStackBuilder.deserialize(section);
-        this.inventorySlot = section.getInt("slot", 0);
+    public GUIButton(ConfigurationSection itemDataSection, TextPlaceholder textPlaceholder) {
+        this(ItemStackBuilder.deserialize(itemDataSection).build());
+        this.inventorySlot = itemDataSection.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
-        this.itemDataSection = section;
-        this.buttonListeners = new HashMap<>();
+        this.itemDataSection = itemDataSection;
         applyTextPlaceholder(textPlaceholder);
-        setAnimated(section.getBoolean("animated", false));
+        setAnimated(itemDataSection.getBoolean("animated", false));
 
-        if (section.getConfigurationSection("soundOnClick") != null)
-            this.soundOnClick = SoundObject.deserialize(section.getConfigurationSection("soundOnClick"));
+        if (itemDataSection.getConfigurationSection("soundOnClick") != null)
+            this.soundOnClick = SoundObject.deserialize(itemDataSection.getConfigurationSection("soundOnClick"));
+        if (itemDataSection.contains("animationData"))
+            this.buttonAnimationManager = new ButtonAnimationManager(itemDataSection, getItem());
     }
 
     /**
@@ -116,10 +116,11 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
         ItemMeta lastMeta = this.getItem().getItemMeta().clone();
         if (animated) {
-            if (buttonAnimation == null) return;
-            buttonAnimation.updateButtonMetaData(item);
-            if (updateAnimationFrames) {
-                buttonAnimation.setupAnimation(this, true);
+            if (buttonAnimationManager != null) {
+                buttonAnimationManager.updateButtonMetaData(item);
+                if (updateAnimationFrames) {
+                    buttonAnimationManager.updateAnimationFrames(item);
+                }
             }
         }
         if (!updateMetaData) {
@@ -141,7 +142,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public void applyTextPlaceholder(TextPlaceholder textPlaceholder) {
         if (textPlaceholder == null) return;
         this.textPlaceholder = textPlaceholder;
-        setItem(textPlaceholder.format(getItem()), true, true);
+        setItem(textPlaceholder.format(getItem()));
     }
 
     /**
@@ -153,25 +154,6 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public GUIButton setSoundOnClick(SoundObject soundOnClick) {
         this.soundOnClick = soundOnClick;
         return this;
-    }
-
-    /**
-     * Set button as animated or not
-     *
-     * @param animated Boolean
-     */
-    public void setAnimated(boolean animated) {
-        this.animated = animated;
-        if (animated) {
-            if (itemDataSection != null && itemDataSection.contains("animationData")) {
-                this.buttonAnimation = new ButtonAnimation(itemDataSection, getItem());
-            } else {
-                this.buttonAnimation = new ButtonAnimation(getItem());
-            }
-            this.buttonAnimation.setupAnimation(this, true);
-        } else {
-            this.buttonAnimation = null;
-        }
     }
 
     /**
@@ -254,8 +236,8 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
             clonedBuilder.setBuilderConditions(new ArrayList<>(this.buttonItemStackBuilder.getBuilderConditions()));
             b.setButtonItemStackBuilder(clonedBuilder);
 
-            if (this.buttonAnimation != null) {
-                b.setButtonAnimation(this.buttonAnimation.clone());
+            if (this.buttonAnimationManager != null) {
+                b.setButtonAnimationManager(this.buttonAnimationManager.clone());
             }
             return b;
         } catch (CloneNotSupportedException e) {
@@ -267,12 +249,12 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * Set the button animation
      * this will also automatically set the button as animated
      *
-     * @param buttonAnimation The button animation to se
+     * @param buttonAnimationManager The button animation to se
      */
-    public void setButtonAnimation(@Nullable ButtonAnimation buttonAnimation) {
-        if (buttonAnimation == null) return;
+    public void setButtonAnimationManager(@Nullable ButtonAnimationManager buttonAnimationManager) {
+        if (buttonAnimationManager == null) return;
         this.animated = true;
-        this.buttonAnimation = buttonAnimation;
+        this.buttonAnimationManager = buttonAnimationManager;
     }
 
     /**

@@ -47,7 +47,7 @@ public class ItemWave extends OpenAnimation {
      * @param waveSound The wave sound
      */
     public ItemWave(ItemStack waveHeader, ItemStack fillEmpty, SoundObject waveSound) {
-        super(OpenAnimations.ITEM_WAVE_ANIMATION.name());
+        super(OpenAnimationType.ITEM_WAVE_ANIMATION.name());
         this.waveHeader = waveHeader;
         this.startingPoint = new ArrayList<>();
         this.endSlot = new ArrayList<>();

@@ -6,14 +6,8 @@ import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 public class LinkedButton extends GUIButton {
@@ -74,7 +68,7 @@ public class LinkedButton extends GUIButton {
         this.belongsTo = owner.getInventoryName();
 
         setAnimated(button.isAnimated());
-        setButtonAnimation(button.getButtonAnimation());
+        setButtonAnimationManager(button.getButtonAnimationManager());
     }
 
     @Override

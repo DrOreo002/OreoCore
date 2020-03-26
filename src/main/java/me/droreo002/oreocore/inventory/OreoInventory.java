@@ -8,7 +8,7 @@ import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.animation.open.DiagonalFill;
 import me.droreo002.oreocore.inventory.animation.open.ItemFill;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
-import me.droreo002.oreocore.inventory.animation.open.OpenAnimations;
+import me.droreo002.oreocore.inventory.animation.open.OpenAnimationType;
 import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
@@ -77,8 +77,8 @@ public abstract class OreoInventory implements InventoryHolder {
         this.inventoryType = template.getInventoryType();
 
         if (!template.getOpenAnimationName().equals("none")) {
-            InventoryAnimationManager inventoryAnimationManager = InventoryAnimationManager.getDefault();
-            switch (OpenAnimations.valueOf(template.getOpenAnimationName())) {
+            if (this.inventoryAnimationManager == null) this.inventoryAnimationManager = InventoryAnimationManager.getDefault();
+            switch (OpenAnimationType.valueOf(template.getOpenAnimationName())) {
                 case DIAGONAL_FILL_ANIMATION:
                     inventoryAnimationManager.setOpenAnimation(new DiagonalFill());
                     break;
@@ -89,7 +89,6 @@ public abstract class OreoInventory implements InventoryHolder {
                     inventoryAnimationManager.setOpenAnimation(new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
                     break;
             }
-            setInventoryAnimationManager(inventoryAnimationManager);
         }
         setupDefault();
     }

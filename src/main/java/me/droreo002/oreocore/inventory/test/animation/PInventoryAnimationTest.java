@@ -1,12 +1,14 @@
 package me.droreo002.oreocore.inventory.test.animation;
 
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
+import me.droreo002.oreocore.inventory.animation.button.ButtonAnimationManager;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Animation test for PaginatedInventory
@@ -21,19 +23,18 @@ public class PInventoryAnimationTest extends PaginatedInventory {
 
         GUIButton button = new GUIButton(ItemStackBuilder.of(UMaterial.OAK_DOOR.getItemStack()).setDisplayName("Hello ").getItemStack());
         button.addListener(GUIButton.CLOSE_LISTENER);
-
-        ButtonAnimation animation = button.getButtonAnimation();
+        ButtonAnimationManager animationManager = new ButtonAnimationManager(button);
+        animationManager.addFirstState();
+        animationManager.getButtonAnimation().setRepeating(true);
         for (char c : "World".toCharArray()) {
-            animation.addFrame(new IButtonFrame() {
+            animationManager.getButtonAnimation().addFrame(new IButtonFrame() {
                 @Override
-                public String nextDisplayName(String prev) {
-                    return prev + c;
+                public String nextDisplayName(String previousDisplayName) {
+                    return previousDisplayName + c;
                 }
-            }, true);
+            });
         }
-        animation.setRepeatingAnimation(true);
-        button.setAnimated(true);
-        button.setButtonAnimation(animation);
+        button.setButtonAnimationManager(animationManager);
 
         setInventoryAnimationManager(InventoryAnimationManager.getDefault()); // Default value
         for (int i = 0; i < 50; i++) {

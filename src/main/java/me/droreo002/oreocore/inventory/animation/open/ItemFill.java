@@ -20,7 +20,7 @@ public class ItemFill extends OpenAnimation {
     private int addPerRun;
 
     public ItemFill(SoundObject fillSound, SoundObject endSound) {
-        super( OpenAnimations.ITEM_FILL_ANIMATION.name());
+        super( OpenAnimationType.ITEM_FILL_ANIMATION.name());
         this.slotAdded = new ArrayList<>();
         this.firstRun = true;
 

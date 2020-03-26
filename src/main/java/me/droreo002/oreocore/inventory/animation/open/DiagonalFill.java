@@ -12,7 +12,7 @@ public class DiagonalFill extends OpenAnimation {
     private Map<Integer, List<Integer>> fillSection;
 
     public DiagonalFill() {
-        super(OpenAnimations.DIAGONAL_FILL_ANIMATION.name());
+        super(OpenAnimationType.DIAGONAL_FILL_ANIMATION.name());
         this.slot = 1;
         this.fillSection = new HashMap<>();
     }
