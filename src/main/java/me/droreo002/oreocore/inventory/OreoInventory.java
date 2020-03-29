@@ -7,9 +7,9 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.animation.open.DiagonalFill;
 import me.droreo002.oreocore.inventory.animation.open.ItemFill;
+import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimationType;
-import me.droreo002.oreocore.inventory.animation.open.ItemWave;
 import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
@@ -41,25 +41,31 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
 public abstract class OreoInventory implements InventoryHolder {
 
-    private Inventory inventory;
-
     @Getter
     private final int size;
+    private Inventory inventory;
     @Getter
     private String title;
-    @Getter @Setter
+    @Getter
+    @Setter
     private InventoryType inventoryType;
-    @Getter @Setter
+    @Getter
+    @Setter
     private InventoryTemplate inventoryTemplate;
-    @Getter @Setter
+    @Getter
+    @Setter
     private List<GUIButton> buttons;
-    @Getter @Setter
+    @Getter
+    @Setter
     private List<Integer> disabledClickListeners;
-    @Getter @Setter
+    @Getter
+    @Setter
     private InventoryAnimationManager inventoryAnimationManager;
-    @Getter @Setter
+    @Getter
+    @Setter
     private SoundObject soundOnClick, soundOnOpen, soundOnClose;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean shouldProcessButtonClickEvent;
 
     public OreoInventory(int size, String title) {
@@ -77,7 +83,8 @@ public abstract class OreoInventory implements InventoryHolder {
         this.inventoryType = template.getInventoryType();
 
         if (!template.getOpenAnimationName().equals("none")) {
-            if (this.inventoryAnimationManager == null) this.inventoryAnimationManager = InventoryAnimationManager.getDefault();
+            if (this.inventoryAnimationManager == null)
+                this.inventoryAnimationManager = InventoryAnimationManager.getDefault();
             switch (OpenAnimationType.valueOf(template.getOpenAnimationName())) {
                 case DIAGONAL_FILL_ANIMATION:
                     inventoryAnimationManager.setOpenAnimation(new DiagonalFill());
@@ -100,6 +107,23 @@ public abstract class OreoInventory implements InventoryHolder {
         this.inventoryType = InventoryType.CHEST;
 
         setupDefault();
+    }
+
+    /**
+     * Process button listener by default
+     *
+     * @param button Clicked button
+     * @param e      Click event
+     */
+    public static void processButtonListener(GUIButton button, InventoryClickEvent e) {
+        ButtonClickEvent event = new ButtonClickEvent(e.getView(), e.getSlotType(), e.getSlot(), e.getClick(), e.getAction());
+        List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
+        if (loadedListeners != null) {
+            for (ButtonListener listener : loadedListeners) {
+                if (event.isButtonClickEventCancelled()) break;
+                listener.onClick(event);
+            }
+        }
     }
 
     private void setupDefault() {
@@ -140,7 +164,7 @@ public abstract class OreoInventory implements InventoryHolder {
 
         OreoInventory oreoInventory = cacheManager.getInventory(player);
         if (oreoInventory == null) {
-             oreoInventory = (OreoInventory) inventory.getHolder();
+            oreoInventory = (OreoInventory) inventory.getHolder();
             if (oreoInventory == null) return;
         }
 
@@ -153,23 +177,6 @@ public abstract class OreoInventory implements InventoryHolder {
         }
         if (oreoInventory.getSoundOnClick() != null) oreoInventory.getSoundOnClick().send(player);
         oreoInventory.onClick(e); // After process we call
-    }
-
-    /**
-     * Process button listener by default
-     *
-     * @param button Clicked button
-     * @param e Click event
-     */
-    public static void processButtonListener(GUIButton button, InventoryClickEvent e) {
-        ButtonClickEvent event = new ButtonClickEvent(e.getView(), e.getSlotType(), e.getSlot(), e.getClick(), e.getAction());
-        List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
-        if (loadedListeners != null) {
-            for (ButtonListener listener : loadedListeners) {
-                if (event.isButtonClickEventCancelled()) break;
-                listener.onClick(event);
-            }
-        }
     }
 
     /**
@@ -208,7 +215,8 @@ public abstract class OreoInventory implements InventoryHolder {
 
         if (inventoryAnimationManager != null) {
             inventoryAnimationManager.stopAnimation();
-            if (inventoryAnimationManager.isOpenAnimationRunning()) inventoryAnimationManager.getOpenAnimation().stop(false);
+            if (inventoryAnimationManager.isOpenAnimationRunning())
+                inventoryAnimationManager.getOpenAnimation().stop(false);
         }
     }
 
@@ -240,21 +248,24 @@ public abstract class OreoInventory implements InventoryHolder {
      *
      * @param e : The click event object
      */
-    public void onClick(InventoryClickEvent e) {}
+    public void onClick(InventoryClickEvent e) {
+    }
 
     /**
      * Called when close event is called, will only be called if its a valid custom inventory
      *
      * @param e : The close event object
      */
-    public void onClose(InventoryCloseEvent e) {}
+    public void onClose(InventoryCloseEvent e) {
+    }
 
     /**
      * Called when the open event is called, will only be called if its a valid custom inventory
      *
      * @param e : The open event object
      */
-    public void onOpen(InventoryOpenEvent e) {}
+    public void onOpen(InventoryOpenEvent e) {
+    }
 
     /**
      * Called before {@link OreoInventory#setup()} get called
@@ -287,7 +298,7 @@ public abstract class OreoInventory implements InventoryHolder {
     /**
      * Close player's inventory with sound
      *
-     * @param player The target player
+     * @param player     The target player
      * @param closeSound The sound to play
      */
     public void closeInventory(Player player, SoundObject closeSound) {
@@ -298,7 +309,7 @@ public abstract class OreoInventory implements InventoryHolder {
     /**
      * Open the inventory
      *
-     * @param player The target player
+     * @param player    The target player
      * @param inventory The inventory to open
      */
     public void openInventory(Player player, Inventory inventory) {
@@ -312,7 +323,7 @@ public abstract class OreoInventory implements InventoryHolder {
     /**
      * Open the inventory with sound
      *
-     * @param player The target player
+     * @param player    The target player
      * @param inventory The inventory to open
      * @param openSound The sound to play
      */
@@ -361,7 +372,7 @@ public abstract class OreoInventory implements InventoryHolder {
      * Add a button into the inventory (Will be updated when inventory is opened)
      *
      * @param guiButton The button to add
-     * @param replace Should we replace if it exists already?
+     * @param replace   Should we replace if it exists already?
      */
     public void addButton(GUIButton guiButton, boolean replace) {
         addButton(guiButton, replace, false);
@@ -370,8 +381,8 @@ public abstract class OreoInventory implements InventoryHolder {
     /**
      * Add a button into the inventory
      *
-     * @param guiButton The button to add
-     * @param replace Should we replace if it exists already?
+     * @param guiButton    The button to add
+     * @param replace      Should we replace if it exists already?
      * @param directUpdate Should we directly set this button to inventory?
      */
     public void addButton(GUIButton guiButton, boolean replace, boolean directUpdate) {
@@ -432,19 +443,19 @@ public abstract class OreoInventory implements InventoryHolder {
     /**
      * Add a border
      *
-     * @param row The row
-     * @param border The border item
+     * @param row     The row
+     * @param border  The border item
      * @param replace Should we replace item on the border line?
      */
     public void addBorder(ItemStack border, boolean replace, int row) {
-        addBorder(border, replace, new int[] {row});
+        addBorder(border, replace, new int[]{row});
     }
 
     /**
      * Add a border
      *
-     * @param rows The rows to add
-     * @param border the border item
+     * @param rows    The rows to add
+     * @param border  the border item
      * @param replace Should we replace item on the border line?
      */
     public void addBorder(ItemStack border, boolean replace, int... rows) {

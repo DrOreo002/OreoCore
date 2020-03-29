@@ -4,6 +4,8 @@ import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.database.DatabaseManager;
 import me.droreo002.oreocore.database.SQLType;
 import me.droreo002.oreocore.database.object.DatabaseSQL;
+import me.droreo002.oreocore.database.utils.SqlDataKey;
+import me.droreo002.oreocore.database.utils.SqlDatabaseTable;
 import me.droreo002.oreocore.debugging.ODebug;
 
 import java.io.File;
@@ -16,17 +18,14 @@ public class SqlDebug extends DatabaseSQL {
     }
 
     @Override
-    public void loadData() {
-        ODebug.log(owningPlugin,"Loading data....", true);
+    public void loadAllData() {
+        ODebug.log(owningPlugin,"Loading data!", true);
     }
 
     @Override
-    public String getFirstCommand() {
-        return "CREATE TABLE IF NOT EXISTS `csl` (\n"
-                + "  `UUID` VARCHAR(36) NOT NULL,\n" // UUID Length is 36 according to google
-                + "  `name` VARCHAR(16) NOT NULL,\n" // Minecraft usename length is 16 according to google
-                + "  `shopCreated` int(11) NOT NULL DEFAULT '0',\n"
-                + "  `maxShop` int(11) NOT NULL DEFAULT '0',\n"
-                + "PRIMARY KEY (UUID));";
+    public SqlDatabaseTable getSqlDatabaseTable() {
+        return new SqlDatabaseTable("csl")
+                .addKey(new SqlDataKey("UUID", true, SqlDataKey.KeyType.UUID, false, null))
+                .addKey(new SqlDataKey("name", false, SqlDataKey.KeyType.MINECRAFT_USERNAME, false, null));
     }
 }

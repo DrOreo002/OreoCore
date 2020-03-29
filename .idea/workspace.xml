@@ -2,30 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimationManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimationRegistry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/DisplayNameFill.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/DisplayNameWave.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/UnspecificAnimation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/SqlDataKey.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/SqlDatabaseTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/InventoryTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/OreoCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/SQLDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/SQLDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/MySqlDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/MySqlDebug.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/SqlDebug.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/debug/SqlDebug.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseMySQL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseSQL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/object/DatabaseSQL.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/IAnimationRunnable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/InventoryAnimationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/InventoryAnimationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimationUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/DefaultButtonAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/ButtonAnimationType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/IButtonFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/button/IButtonFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/DiagonalFill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/DiagonalFill.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/ItemFill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/ItemFill.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/ItemWave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/ItemWave.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/OpenAnimations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/animation/open/OpenAnimationType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/button/GUIButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/linked/LinkedButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/CInventoryAnimationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/PInventoryAnimationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/test/animation/PInventoryAnimationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/entity/PlayerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/entity/PlayerUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,13 +155,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Many changes">
-      <created>1572145834477</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1572145834477</updated>
     </task>
     <task id="LOCAL-00045" summary="Added a fix for comment updating">
       <created>1572184819579</created>
@@ -512,7 +492,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585103985136</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Yet another recode">
+      <created>1585184252681</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1585184252682</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -546,7 +533,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="More update" />
     <MESSAGE value="Added update checker" />
     <MESSAGE value="Some fixes and recode" />
     <MESSAGE value="Remove debug" />
@@ -571,17 +557,18 @@
     <MESSAGE value="Yes?" />
     <MESSAGE value="Some fixes" />
     <MESSAGE value="Debug message removed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Debug message removed" />
+    <MESSAGE value="Yet another recode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Yet another recode" />
   </component>
   <component name="WindowStateProjectService">
     <state x="297" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583419468634">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="297" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1583419468634" />
-    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1585144836116">
+    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1585488492459">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585144836116" />
+    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585488492459" />
     <state x="565" y="456" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1584518098522">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -594,50 +581,50 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="690" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1582623191448" />
-    <state x="696" y="52" key="CommitChangelistDialog2" timestamp="1585103983237">
+    <state x="696" y="52" key="CommitChangelistDialog2" timestamp="1585184246563">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="696" y="52" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585103983237" />
+    <state x="696" y="52" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585184246563" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1577891331222">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577891331222" />
-    <state width="1877" height="362" key="GridCell.Tab.0.bottom" timestamp="1585177136271">
+    <state width="1877" height="362" key="GridCell.Tab.0.bottom" timestamp="1585486683520">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="362" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585177136271" />
+    <state width="1877" height="362" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585486683520" />
     <state width="1397" height="380" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1585030164749" />
-    <state width="1877" height="362" key="GridCell.Tab.0.center" timestamp="1585177136271">
+    <state width="1877" height="362" key="GridCell.Tab.0.center" timestamp="1585486683520">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="362" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585177136271" />
+    <state width="1877" height="362" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585486683520" />
     <state width="1397" height="380" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1585030164749" />
-    <state width="1877" height="362" key="GridCell.Tab.0.left" timestamp="1585177136271">
+    <state width="1877" height="362" key="GridCell.Tab.0.left" timestamp="1585486683520">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="362" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585177136271" />
+    <state width="1877" height="362" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585486683520" />
     <state width="1397" height="380" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1585030164749" />
-    <state width="1877" height="362" key="GridCell.Tab.0.right" timestamp="1585177136271">
+    <state width="1877" height="362" key="GridCell.Tab.0.right" timestamp="1585486683520">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="362" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585177136271" />
+    <state width="1877" height="362" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585486683520" />
     <state width="1397" height="380" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1585030164749" />
     <state x="440" y="113" key="SettingsEditor" timestamp="1577010923793">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="440" y="113" key="SettingsEditor/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1577010923793" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1585045365245">
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1585184256315">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585045365245" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585184256315" />
     <state x="1665" y="54" width="1736" height="896" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1584688296040">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
     <state x="1665" y="54" width="1736" height="896" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1584688296040" />
-    <state x="1969" y="0" width="1407" height="1003" maximized="true" key="dock-window-1" timestamp="1585130565975">
+    <state x="1920" y="0" width="1327" height="1003" maximized="true" key="dock-window-1" timestamp="1585488057965">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
-    <state x="1969" y="0" width="1407" height="1003" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585130565975" />
+    <state x="1920" y="0" width="1327" height="1003" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585488057965" />
     <state x="1920" y="0" width="1345" height="1003" maximized="true" key="dock-window-2" timestamp="1585171794442">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>

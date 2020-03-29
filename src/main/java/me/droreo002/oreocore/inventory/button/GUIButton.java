@@ -39,15 +39,20 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     private SoundObject soundOnClick;
     @Setter
     private Map<ClickType, List<ButtonListener>> buttonListeners;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean animated;
-    @Getter @Setter
+    @Getter
+    @Setter
     private ItemStackBuilder buttonItemStackBuilder;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int inventorySlot;
-    @Getter @Nullable
+    @Getter
+    @Nullable
     private ButtonAnimationManager buttonAnimationManager;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int maxListener;
 
     /**
@@ -85,7 +90,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     /**
      * Construct a new gui button
      *
-     * @param item The item
+     * @param item          The item
      * @param inventorySlot The slot of this button
      */
     public GUIButton(ItemStack item, int inventorySlot) {
@@ -95,22 +100,16 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         this.buttonListeners = new HashMap<>();
     }
 
-    /**
-     * Set the item for this button
-     * will use the default boolean values of {@link GUIButton#setItem(ItemStack, boolean, boolean)}
-     *
-     * @param item The new item
-     */
-    public void setItem(ItemStack item) {
-        setItem(item, true, true);
+    public static GUIButton deserialize(ConfigurationSection section) {
+        return new GUIButton(section, null);
     }
 
     /**
      * Set the item for this button
      *
-     * @param item The new item
-     * @param updateMetaData Should we update the meta data?, meta data will be changed
-     *                       and will use the new item's meta data
+     * @param item                  The new item
+     * @param updateMetaData        Should we update the meta data?, meta data will be changed
+     *                              and will use the new item's meta data
      * @param updateAnimationFrames Should we update the animation frames?
      */
     public void setItem(ItemStack item, boolean updateMetaData, boolean updateAnimationFrames) {
@@ -163,7 +162,8 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * @return GUIButton, modified.
      */
     public GUIButton addListener(ButtonListener buttonListener) {
-        if (this.maxListener != 0 && this.buttonListeners.size() >= this.maxListener) throw new IllegalStateException("Max listener has been reached!");
+        if (this.maxListener != 0 && this.buttonListeners.size() >= this.maxListener)
+            throw new IllegalStateException("Max listener has been reached!");
         final ClickType clickType = buttonListener.getClickType();
         if (buttonListeners.containsKey(clickType)) {
             buttonListeners.get(clickType).add(buttonListener);
@@ -232,7 +232,8 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
             try {
                 clonedBuilder.setHeadTexture(this.buttonItemStackBuilder.getHeadTexture());
                 clonedBuilder.setHeadTextureUrl(this.buttonItemStackBuilder.getHeadTextureUrl());
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             clonedBuilder.setBuilderConditions(new ArrayList<>(this.buttonItemStackBuilder.getBuilderConditions()));
             b.setButtonItemStackBuilder(clonedBuilder);
 
@@ -267,8 +268,14 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         return this.buttonItemStackBuilder.getItemStack();
     }
 
-    public static GUIButton deserialize(ConfigurationSection section) {
-        return new GUIButton(section, null);
+    /**
+     * Set the item for this button
+     * will use the default boolean values of {@link GUIButton#setItem(ItemStack, boolean, boolean)}
+     *
+     * @param item The new item
+     */
+    public void setItem(ItemStack item) {
+        setItem(item, true, true);
     }
 
     @Override
