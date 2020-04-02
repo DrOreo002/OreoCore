@@ -26,28 +26,8 @@ public class PlayerInformationDatabase extends DatabaseSQL {
         super(plugin, "playerdata", plugin.getDataFolder(), SQLType.SQL_BASED);
         this.memory = plugin.getPluginConfig();
 
-        loadData();
+        loadAllData();
         DatabaseManager.registerDatabase(plugin, this);
-    }
-
-    @Override
-    public void loadData() {
-        final List<Object> query = queryRow("SELECT `playerName` FROM `playerData`;", "playerName");
-        final List<String> primaryKey = query.stream().map(o -> (String) o).collect(Collectors.toList());
-
-        for (String playerName : primaryKey) {
-            final UUID uuid = UUID.fromString((String) queryValue("SELECT `uuid` FROM `playerData` WHERE `playerName` IS '" + playerName + "';", "uuid"));
-            playerInformation.add(new PlayerInformation(playerName, uuid));
-        }
-    }
-
-    @Override
-    public String getFirstCommand() {
-        return "CREATE TABLE IF NOT EXISTS \"playerData\" (\n" +
-                "\t\"playerName\"\tVARCHAR(16) NOT NULL,\n" +
-                "\t\"uuid\"\tVARCHAR(36) NOT NULL,\n" +
-                "\tPRIMARY KEY(\"playerName\")\n" +
-                ");";
     }
 
     /**
@@ -82,5 +62,23 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     public PlayerInformation getPlayerInformation(UUID uuid) {
         if (!memory.isCachePlayerInformation()) throw new UnsupportedOperationException("Player information cache is disabled at this server!");
         return playerInformation.stream().filter(playerInformation -> playerInformation.getPlayerUuid().equals(uuid)).findAny().orElse(null);
+    }
+
+    @Override
+    public void loadAllData() {
+        final List<Object> query = queryRow("SELECT `playerName` FROM `playerData`;", "playerName");
+        final List<String> primaryKey = query.stream().map(o -> (String) o).collect(Collectors.toList());
+
+        for (String playerName : primaryKey) {
+            final UUID uuid = UUID.fromString((String) queryValue("SELECT `uuid` FROM `playerData` WHERE `playerName` IS '" + playerName + "';", "uuid"));
+            playerInformation.add(new PlayerInformation(playerName, uuid));
+        }
+    }
+
+    @Override
+    public SqlDatabaseTable getSqlDatabaseTable() {
+        return new SqlDatabaseTable("playerData")
+                .addKey(new SqlDataKey("playerName", true, SqlDataKey.KeyType.MINECRAFT_USERNAME, false, null))
+                .addKey(new SqlDataKey("uuid", false, SqlDataKey.KeyType.UUID, false, null));
     }
 }

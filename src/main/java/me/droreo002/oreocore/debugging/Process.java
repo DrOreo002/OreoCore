@@ -24,4 +24,16 @@ public class Process {
         long totalTime = end - start;
         return msg.replace("%totalTime", String.valueOf(totalTime / 1000000L));
     }
+
+    /**
+     * Get the total time in MS
+     * this will also stop the process
+     *
+     * @return Total time in ms
+     */
+    public int getTotalTimeInMs() {
+        this.end = System.nanoTime();
+        long totalTime = end - start;
+        return (int) (totalTime / 1000000L);
+    }
 }

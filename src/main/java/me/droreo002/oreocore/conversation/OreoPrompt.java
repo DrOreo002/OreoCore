@@ -2,9 +2,11 @@ package me.droreo002.oreocore.conversation;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.droreo002.oreocore.utils.misc.DoubleValueCallback;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Callable;
 
@@ -37,9 +39,12 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     public abstract T onInput(ConversationContext conversationContext, String s);
 
     @Override
-    public Prompt acceptInput(ConversationContext conversationContext, String s) {
+    public Prompt acceptInput(@NotNull ConversationContext conversationContext, String s) {
         T t = onInput(conversationContext, s);
-        if (state != State.CONTINUE) return null; // Cancel the conversation
+        if (state != State.CONTINUE) {
+            state = State.CONTINUE;
+            return null; // Cancel the conversation and reset the state. Don't ask me why
+        }
         conversationContext.getAllSessionData().put(DATA_KEY, t); // You can say DATA_KEY is a Universal data
         if (customDataKey != null) {
             conversationContext.getAllSessionData().put(customDataKey, t); // Also add to custom data key
@@ -58,9 +63,11 @@ public abstract class OreoPrompt<T> extends StringPrompt {
          * then its the last one
          */
         if (result == null) {
-            T dataResult = t;
-            if (conversation.getDataBuilder() != null) dataResult = conversation.getDataBuilder().build(conversationContext);
-            conversation.getLastCallback().success(dataResult, conversationContext);
+            Object dataResult = t;
+            if (conversation.getDataBuilder() != null) {
+                dataResult = conversation.getDataBuilder().build(conversationContext);
+            }
+            conversation.getLastCallback().success((T) dataResult, conversationContext);
         }
         return result;
     }

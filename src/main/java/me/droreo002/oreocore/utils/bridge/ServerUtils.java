@@ -36,6 +36,15 @@ public final class ServerUtils {
     }
 
     /**
+     * Check if BungeeCord is enabled or not
+     *
+     * @return Value
+     */
+    public static boolean isBungeeCordEnabled() {
+        return Bukkit.getServer().spigot().getConfig().getBoolean("settings.bungeecord");
+    }
+
+    /**
      * Check if the minecraft version is really old
      * or not. Seriously, why tho
      *

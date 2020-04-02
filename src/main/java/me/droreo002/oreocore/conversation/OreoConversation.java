@@ -217,10 +217,6 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
         return this;
     }
 
-    public OreoConversation<T> last(CompletableFuture<T> completableFuture) {
-        return this;
-    }
-
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
         Player player = (Player) abandonedEvent.getContext().getForWhom();
