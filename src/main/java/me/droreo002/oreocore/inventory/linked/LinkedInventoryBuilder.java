@@ -17,7 +17,7 @@ public class LinkedInventoryBuilder {
     @Getter
     private final LinkedList<Linkable> inventories;
     @Getter
-    private final LinkedDatas linkedDatas;
+    private final LinkedDataList linkedDataList;
     @Getter
     private final List<UUID> modifiedButton;
     @Getter
@@ -31,7 +31,7 @@ public class LinkedInventoryBuilder {
         this.inventories = new LinkedList<>();
         this.currentInventorySlot = 0;
         this.currentInventory = "";
-        this.linkedDatas = new LinkedDatas();
+        this.linkedDataList = new LinkedDataList();
         this.modifiedButton = new ArrayList<>();
     }
 
@@ -48,7 +48,7 @@ public class LinkedInventoryBuilder {
      * @param player Target player
      * @param extraData The extra data
      */
-    public void build(Player player, LinkedDatas extraData) {
+    public void build(Player player, LinkedDataList extraData) {
         build(player, null, extraData);
     }
 
@@ -59,13 +59,13 @@ public class LinkedInventoryBuilder {
      * @param extraData The extra data
      * @param firstInventory The first inventory to open
      */
-    public void build(Player player, String firstInventory, LinkedDatas extraData) {
+    public void build(Player player, String firstInventory, LinkedDataList extraData) {
         if (inventories.isEmpty()) throw new NullPointerException("Inventories cannot be empty!");
         Linkable linkable = (firstInventory == null) ? inventories.get(0) : getLinkedInventory(firstInventory);
         setCurrentInventory(linkable.getInventoryName());
         if (extraData != null) {
-            this.linkedDatas.addAll(extraData.getData());
-            linkable.acceptData(this.linkedDatas, null);
+            this.linkedDataList.addAll(extraData.getData());
+            linkable.acceptData(this.linkedDataList, null);
         }
         linkable.getInventoryOwner().open(player);
         build();
@@ -91,10 +91,10 @@ public class LinkedInventoryBuilder {
                 if (prevInventory == null) return;
                 PlayerUtils.closeInventory(player);
 
-                linkedDatas.addAll(prevInventory.getInventoryData());
+                linkedDataList.addAll(prevInventory.getInventoryData());
                 if (button.getExtraDataProvider() != null) {
                     try {
-                        linkedDatas.addAll(button.getExtraDataProvider().get().getData());
+                        linkedDataList.addAll(button.getExtraDataProvider().get().getData());
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
@@ -105,7 +105,7 @@ public class LinkedInventoryBuilder {
                     this.linkedInventoryListener.onInventoryPreTransfer(prevInventory, targetInventory);
                 }
 
-                targetInventory.acceptData(linkedDatas, prevInventory);
+                targetInventory.acceptData(linkedDataList, prevInventory);
                 targetInventory.onLinkOpen(prevInventory);
                 targetInventory.getInventoryOwner().open(player);
 

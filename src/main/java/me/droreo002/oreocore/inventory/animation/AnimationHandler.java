@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IAnimationRunnable implements Runnable {
+public class AnimationHandler implements Runnable {
 
     @Getter
     private Inventory inventory;
@@ -26,7 +26,7 @@ public class IAnimationRunnable implements Runnable {
     @Getter
     private List<Integer> singleButtonRunnable;
 
-    public IAnimationRunnable(Inventory inventory, OreoInventory oreoInventory) {
+    public AnimationHandler(Inventory inventory, OreoInventory oreoInventory) {
         this.oreoInventory = oreoInventory;
         this.inventory = inventory;
         this.singleButtonRunnable = new ArrayList<>();

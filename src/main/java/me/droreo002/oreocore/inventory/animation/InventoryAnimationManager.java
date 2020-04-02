@@ -6,7 +6,6 @@ import me.droreo002.oreocore.inventory.OreoInventory;
 import me.droreo002.oreocore.inventory.animation.open.OpenAnimation;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
-import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.Bukkit;
@@ -22,7 +21,7 @@ public class InventoryAnimationManager {
     @Getter
     private OpenAnimation openAnimation;
     @Getter
-    private IAnimationRunnable animationHandler;
+    private AnimationHandler animationHandler;
     @Getter @Nullable
     private SimpleCallback<Void> onInventoryUpdated;
 
@@ -38,8 +37,7 @@ public class InventoryAnimationManager {
      * @return The default inventory animation
      */
     public static InventoryAnimationManager getDefault() {
-        InventoryAnimationManager manager = new InventoryAnimationManager(0L, 0L, null);
-        return manager;
+        return new InventoryAnimationManager(0L, 0L, null);
     }
 
     /**
@@ -51,12 +49,12 @@ public class InventoryAnimationManager {
         if (animationTaskId != 0 || inventoryUpdaterTaskId != 0) return; // Already running
         animationHandler = null; // Reset
         if (oreoInventory.getButtons().stream().anyMatch(GUIButton::isAnimated)) {
-            animationHandler = new IAnimationRunnable(oreoInventory.getInventory(), oreoInventory);
+            animationHandler = new AnimationHandler(oreoInventory.getInventory(), oreoInventory);
         }
         if (oreoInventory instanceof PaginatedInventory) {
             PaginatedInventory paginatedInventory = (PaginatedInventory) oreoInventory;
             if (paginatedInventory.getCurrentPageButtons().stream().anyMatch(GUIButton::isAnimated)) {
-                animationHandler = new IAnimationRunnable(oreoInventory.getInventory(), oreoInventory);
+                animationHandler = new AnimationHandler(oreoInventory.getInventory(), oreoInventory);
             }
         }
         if (animationHandler == null) return;

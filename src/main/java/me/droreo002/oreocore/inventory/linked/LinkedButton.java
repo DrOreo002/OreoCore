@@ -17,7 +17,7 @@ public class LinkedButton extends GUIButton {
     @Getter @Setter
     private String targetInventory;
     @Getter @Setter
-    private Future<LinkedDatas> extraDataProvider;
+    private Future<LinkedDataList> extraDataProvider;
 
     /**
      * Construct a new LickedButton (without slot)
@@ -63,7 +63,7 @@ public class LinkedButton extends GUIButton {
      * @param owner The owner
      */
     public LinkedButton(GUIButton button, String targetInventory, Linkable owner) {
-        super(button.getItem().clone(), button.getInventorySlot());
+        super(button.getItem(), button.getInventorySlot());
         this.targetInventory = targetInventory;
         this.belongsTo = owner.getInventoryName();
 

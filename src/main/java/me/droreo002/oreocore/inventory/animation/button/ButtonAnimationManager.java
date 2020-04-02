@@ -166,6 +166,9 @@ public class ButtonAnimationManager implements Cloneable {
             /*
             Apparently HashMap also need tobe cloned.
              */
+            ButtonAnimation newAnimation = ButtonAnimationRegistry.getAnimation(this.buttonAnimation.getButtonAnimationName());
+            newAnimation.getAnimationFrames().addAll(this.buttonAnimation.getAnimationFrames());
+            b.setButtonAnimation(newAnimation, this.useFirstState);
             b.setButtonMetaData(new HashMap<>(this.buttonMetaData));
             return b;
         } catch (CloneNotSupportedException e) {

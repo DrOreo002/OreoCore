@@ -2,19 +2,21 @@ package me.droreo002.oreocore.inventory.linked;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class LinkedDatas {
+public class LinkedDataList implements Iterable<LinkedData> {
 
     @Getter
     private final List<LinkedData> data;
 
-    public LinkedDatas() {
+    public LinkedDataList() {
         this.data = new CopyOnWriteArrayList<>();
     }
 
@@ -60,14 +62,12 @@ public class LinkedDatas {
     /**
      * Add all data
      *
-     * @param datas The data to add
+     * @param dataList The data list
      */
-    public void addAll(List<LinkedData> datas) {
-        if (datas.isEmpty()) return;
+    public void addAll(List<LinkedData> dataList) {
+        if (dataList.isEmpty()) return;
         synchronized (this.data) {
-            for (LinkedData d : datas) {
-                addData(d);
-            }
+            dataList.forEach(this::addData);
         }
     }
 
@@ -80,5 +80,11 @@ public class LinkedDatas {
         if (linkedData.getDataValue() == null) return;
         removeData(linkedData.getDataKey());
         data.add(linkedData);
+    }
+
+    @NotNull
+    @Override
+    public Iterator<LinkedData> iterator() {
+        return this.data.iterator();
     }
 }

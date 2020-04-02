@@ -14,7 +14,7 @@ public interface Linkable {
      * @param data The data from previous inventory
      * @param previousInventory The previous inventory
      */
-    default void acceptData(LinkedDatas data, Linkable previousInventory) {}
+    default void acceptData(LinkedDataList data, Linkable previousInventory) {}
 
     /**
      * Called when linked inventory is opened

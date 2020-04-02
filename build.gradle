@@ -54,7 +54,7 @@ dependencies {
 }
 
 def pluginName = project.name
-def spigotDirectory = "Spigot 1.13"
+def spigotDirectory = "Bungee Development\\Lobby"
 
 group = 'me.droreo002'
 version = '14.1'
