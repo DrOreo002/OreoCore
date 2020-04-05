@@ -460,9 +460,9 @@ public abstract class OreoInventory implements InventoryHolder {
      */
     public void addBorder(ItemStack border, boolean replace, int... rows) {
         for (int row : rows) {
-            if (row < 0) throw new IllegalStateException("Row cannot be 0!");
+            if (row < 0) throw new IllegalStateException("Row cannot be less than 0!");
             for (int i = row * 9; i < (row * 9) + 9; i++) {
-                addButton(new GUIButton(border, i).addListener(GUIButton.CLOSE_LISTENER), replace);
+                addButton(new GUIButton(border, i), replace);
             }
         }
     }

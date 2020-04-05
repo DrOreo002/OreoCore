@@ -5,10 +5,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.comphenix.packetwrapper.WrapperPlayServerOpenWindow;
 import lombok.SneakyThrows;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils;
+import net.minecraft.server.v1_15_R1.PacketPlayOutOpenWindow;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import static me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils.*;
@@ -20,9 +24,9 @@ import static me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils.*;
  */
 public final class InventoryTitleHelper {
 
-    private static Method sendPacket;
-    private static Field activeContainerField, windowIdField, playerConnectionField;
+    private static Field activeContainerField, windowIdField;
     private static Constructor<?> chatMessageConstructor, packetPlayOutOpenWindowConstructor;
+    private static boolean newVer = false;
 
     static {
         try {
@@ -30,9 +34,27 @@ public final class InventoryTitleHelper {
             Class<?> nmsPlayer = getNMSClass("EntityPlayer");
             activeContainerField = nmsPlayer.getField("activeContainer");
             windowIdField = getNMSClass("Container").getField("windowId");
-            playerConnectionField = nmsPlayer.getField("playerConnection");
-            packetPlayOutOpenWindowConstructor = getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, String.class, getNMSClass("IChatBaseComponent"), Integer.TYPE);
-            sendPacket = getNMSClass("PlayerConnection").getMethod("sendPacket", getNMSClass("Packet"));
+            switch (ServerUtils.getServerVersion()) {
+                case V1_8_R1:
+                case V1_8_R2:
+                case V1_8_R3:
+                case V1_9_R1:
+                case V1_9_R2:
+                case V1_10_R1:
+                case V1_11_R1:
+                case V1_12_R1:
+                case V1_13_R1:
+                case V1_13_R2:
+                    packetPlayOutOpenWindowConstructor = getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, String.class, getNMSClass("IChatBaseComponent"), Integer.TYPE);
+                    break;
+                case V1_14_R1:
+                case V1_15_R1:
+                    packetPlayOutOpenWindowConstructor = getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, getNMSClass("Containers"), getNMSClass("IChatBaseComponent"));
+                    newVer = true;
+                    break;
+                case UNKNOWN:
+                    throw new IllegalStateException("Something went wrong");
+            }
         } catch (NoSuchMethodException | SecurityException | NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -45,7 +67,13 @@ public final class InventoryTitleHelper {
             Object message = chatMessageConstructor.newInstance(title, new Object[0]);
             Object container = activeContainerField.get(handle);
             Object windowId = windowIdField.get(container);
-            Object packet = packetPlayOutOpenWindowConstructor.newInstance(windowId, "minecraft:chest", message, p.getOpenInventory().getTopInventory().getSize());
+            Object packet;
+            Inventory topInventory = p.getOpenInventory().getTopInventory();
+            if (!newVer) {
+                 packet = packetPlayOutOpenWindowConstructor.newInstance(windowId, "minecraft:chest", message, topInventory.getSize());
+            } else {
+                packet = packetPlayOutOpenWindowConstructor.newInstance(windowId, getNMSClass("Containers").getDeclaredField("GENERIC_9X" + InventoryUtils.getInventoryRows(topInventory).size()).get(null), message);
+            }
             sendPacket(p, packet);
         } catch (IllegalArgumentException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
