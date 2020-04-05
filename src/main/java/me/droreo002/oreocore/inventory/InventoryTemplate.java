@@ -11,6 +11,7 @@ import me.droreo002.oreocore.inventory.animation.open.OpenAnimationType;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.ItemUtils;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;

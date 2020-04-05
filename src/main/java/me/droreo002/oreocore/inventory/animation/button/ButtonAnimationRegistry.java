@@ -42,6 +42,7 @@ public final class ButtonAnimationRegistry {
     @SneakyThrows
     public static ButtonAnimation getAnimation(String animationName) {
         Class<? extends ButtonAnimation> clazz = REGISTERED.get(animationName);
+        if (clazz == null) return null;
         return (ButtonAnimation) clazz.getDeclaredMethod("build").invoke(null);
     }
 }

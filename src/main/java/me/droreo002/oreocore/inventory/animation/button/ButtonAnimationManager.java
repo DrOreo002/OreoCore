@@ -45,8 +45,8 @@ public class ButtonAnimationManager implements Cloneable {
         if (!buttonDataSection.isSet("animationData")) throw new NullPointerException("Button animation data cannot be null!");
         this.buttonAnimationData = buttonDataSection.getConfigurationSection("animationData");
         this.buttonMetaData = new HashMap<>();
-        String animationName = buttonAnimationData.getString("animationName", "null");
-        this.buttonAnimation = Objects.requireNonNull(ButtonAnimationRegistry.getAnimation(animationName));
+        String animationName = buttonAnimationData.getString("animationName");
+        this.buttonAnimation = (animationName != null) ? Objects.requireNonNull(ButtonAnimationRegistry.getAnimation(animationName)) : new UnspecificAnimation();
         this.buttonAnimation.initializeFrame(buttonItem);
     }
 
@@ -167,6 +167,7 @@ public class ButtonAnimationManager implements Cloneable {
             Apparently HashMap also need tobe cloned.
              */
             ButtonAnimation newAnimation = ButtonAnimationRegistry.getAnimation(this.buttonAnimation.getButtonAnimationName());
+            if (newAnimation == null) newAnimation = new UnspecificAnimation();
             newAnimation.getAnimationFrames().addAll(this.buttonAnimation.getAnimationFrames());
             b.setButtonAnimation(newAnimation, this.useFirstState);
             b.setButtonMetaData(new HashMap<>(this.buttonMetaData));
