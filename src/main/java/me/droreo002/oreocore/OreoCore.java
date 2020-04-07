@@ -100,7 +100,7 @@ public final class OreoCore extends JavaPlugin {
         }
 
         // Debug
-        new SqlDebug();
+        //new SqlDebug();
 
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {

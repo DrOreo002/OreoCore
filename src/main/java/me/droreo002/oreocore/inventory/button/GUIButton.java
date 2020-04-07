@@ -56,7 +56,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     private int maxListener;
 
     /**
-     * Construct a new gui button (without slot)
+     * Construct a new gui button
      *
      * @param item The item
      */
@@ -67,6 +67,16 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     }
 
     /**
+     * Construct a new gui button
+     *
+     * @param buttonItemStackBuilder The item stack builder
+     */
+    public GUIButton(ItemStackBuilder buttonItemStackBuilder) {
+        this(buttonItemStackBuilder.build());
+        this.buttonItemStackBuilder = buttonItemStackBuilder;
+    }
+
+    /**
      * Get gui button from configuration section, this will also accept button slot
      * the data key will be 'slot'
      *
@@ -74,7 +84,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      * @param textPlaceholder The TextPlaceholder to replace placeholder on item data
      */
     public GUIButton(ConfigurationSection itemDataSection, TextPlaceholder textPlaceholder) {
-        this(ItemStackBuilder.deserialize(itemDataSection).build());
+        this(ItemStackBuilder.deserialize(itemDataSection));
         this.inventorySlot = itemDataSection.getInt("slot", 0);
         this.textPlaceholder = textPlaceholder;
         this.itemDataSection = itemDataSection;

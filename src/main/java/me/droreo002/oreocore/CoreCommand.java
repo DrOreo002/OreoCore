@@ -22,6 +22,7 @@ import me.droreo002.oreocore.utils.item.Base64ItemStack;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.misc.BasicTimeFormatter;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import me.droreo002.oreocore.utils.strings.TextBuilder;
@@ -31,6 +32,8 @@ import me.droreo002.oreocore.utils.world.WorldUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
@@ -102,6 +105,16 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                             TimestampUtils.getDifference(new Date(),
                                     new Date(fromSecond.getTimestamp().getTime()), TimestampBuilder.TICKING_TIME_FORMAT)
                     );
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-play-time")) {
+                    Statistic enumStats;
+                    if (ServerUtils.isOldAsFuckVersion()) {
+                        enumStats = Statistic.valueOf("PLAY_ONE_TICK");
+                    } else {
+                        enumStats = Statistic.PLAY_ONE_MINUTE;
+                    }
+                    sendMessage(player, "Current statistic is " + BasicTimeFormatter.formatSeconds(player.getStatistic(enumStats)/20));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("enum-memory")) {
