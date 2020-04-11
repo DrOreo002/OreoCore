@@ -58,6 +58,8 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     private String timeOutFormat;
     @Getter @Nullable
     private DataBuilder<T> dataBuilder;
+    @Getter @Nullable
+    private Map<String, Object> firstContext;
 
     public OreoConversation(String nonPlayerMessage, String escapeSequence, JavaPlugin owner) {
         this.prompts = new LinkedList<>();
@@ -217,6 +219,19 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
         return this;
     }
 
+    /**
+     * Add first conversation context data
+     *
+     * @param key The data key
+     * @param value The data value
+     * @return OreoConversation
+     */
+    public OreoConversation<?> addFirstContext(String key, Object value) {
+        if (this.firstContext == null) this.firstContext = new HashMap<>();
+        this.firstContext.put(key, value);
+        return this;
+    }
+
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
         Player player = (Player) abandonedEvent.getContext().getForWhom();
@@ -249,14 +264,15 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      *
      * @param promptName The prompt name
      * @param player The player
-     * @param sessionData The session data in HashMap, where String is data key and object is value of it
      * @param timeOut The execution time out
      */
-    public void send(String promptName, Player player, Map<String, Object> sessionData, int timeOut) {
+    public void send(String promptName, Player player, int timeOut) {
         OreoPrompt<?> prompt = getPrompt(promptName);
         if (prompt == null) throw new NullPointerException("Failed to get prompt with the identifier of " + promptName);
 
+        Map<String, Object> sessionData = new HashMap<>();
         sessionData.put(CONVERSATION_DATA, this);
+        if (firstContext != null) sessionData.putAll(firstContext);
         Conversation conversation = conversationFactory.withFirstPrompt(prompt).withTimeout((timeOut == 0) ? DEFAULT_TIME_OUT : timeOut).buildConversation(player);
         for (Map.Entry<String, Object> ent : sessionData.entrySet()) {
             String key = ent.getKey();
@@ -278,7 +294,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      */
     public void send(Player player) {
         OreoPrompt<?> prompt = this.prompts.get(0); // First index
-        this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
+        this.send(prompt.getIdentifier(), player, timeOut);
     }
 
     /**
@@ -289,7 +305,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      */
     public void send(Player player, int timeOut) {
         OreoPrompt<?> prompt = this.prompts.get(0); // First index
-        this.send(prompt.getIdentifier(), player, new HashMap<>(), timeOut);
+        this.send(prompt.getIdentifier(), player, timeOut);
     }
 
     public interface DataBuilder<T> {

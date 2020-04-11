@@ -57,7 +57,7 @@ def pluginName = project.name
 def spigotDirectory = "Spigot 1.13"
 
 group = 'me.droreo002'
-version = '14.5'
+version = '14.6'
 description = 'OreoCore plugin!'
 targetCompatibility = '1.8'
 
