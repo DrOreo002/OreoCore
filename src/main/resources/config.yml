@@ -1,5 +1,5 @@
 # Setting for plugin
-ConfigVersion: '11.0'
+ConfigVersion: '11.1'
 Settings:
   # Should we disable the notification on join?. Keep in mind that notification is only available for player who have oreocore.admin permission
   disable-notification-on-join: false
@@ -68,10 +68,9 @@ ItemStackBuilderTest:
     - '&7Diamond hell yeah?'
   conditions:
     is-op:
-      changes:
+      true:
         material: DIAMOND
         name: '&aHello World'
         lore:
           - '&7Yes a diamond for OP!'
-      expectedCondition: true
 

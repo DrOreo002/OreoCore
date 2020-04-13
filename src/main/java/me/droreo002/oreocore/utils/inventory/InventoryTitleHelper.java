@@ -63,6 +63,9 @@ public final class InventoryTitleHelper {
     @SneakyThrows
     public static void updateTitle(Player p, String title) {
         try {
+            // There's a bug where client will crash if it founds an %
+            title = title.replace("%", ""); // We have to replace it with other thing for now
+
             Object handle = getHandle(p);
             Object message = chatMessageConstructor.newInstance(title, new Object[0]);
             Object container = activeContainerField.get(handle);

@@ -19,7 +19,7 @@ import java.io.File;
 
 public class PluginConfig extends CustomConfiguration implements ConfigurationMemory {
 
-    private static final String LATEST_VERSION = "11.0";
+    private static final String LATEST_VERSION = "11.1";
 
     @ConfigVariable(path = "Annotation.test")
     @Getter

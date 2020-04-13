@@ -22,18 +22,30 @@ public class ItemStackBuilderCondition {
     @Getter
     private final String conditionName;
     @Getter
-    private Map<ChangeType, Object> conditionChanges;
-    @Getter
-    private boolean expectedCondition;
+    private Map<Boolean, Map<ChangeType, Object>> conditionChanges;
 
     public ItemStackBuilderCondition(String conditionName, ConfigurationSection section) {
         this.conditionName = conditionName.toLowerCase();
         this.conditionChanges = new HashMap<>();
-        this.expectedCondition = section.getBoolean("expectedCondition");
 
-        for (String key : section.getConfigurationSection("changes").getKeys(false)) {
-            this.conditionChanges.put(ChangeType.valueOf(key.toUpperCase()), section.get("changes." + key));
+        Map<ChangeType, Object> onTrue = new HashMap<>();
+        ConfigurationSection onTrueSection = section.getConfigurationSection("true");
+        if (onTrueSection != null) {
+            for (String key : onTrueSection.getKeys(false)) {
+                onTrue.put(ChangeType.valueOf(key.toUpperCase()), section.get("true." + key));
+            }
         }
+
+        Map<ChangeType, Object> onFalse = new HashMap<>();
+        ConfigurationSection onFalseSection = section.getConfigurationSection("false");
+        if (onFalseSection != null) {
+            for (String key : onFalseSection.getKeys(false)) {
+                onFalse.put(ChangeType.valueOf(key.toUpperCase()), section.get("false." + key));
+            }
+        }
+
+        this.conditionChanges.put(true, onTrue);
+        this.conditionChanges.put(false, onFalse);
     }
 
     /**
@@ -45,23 +57,23 @@ public class ItemStackBuilderCondition {
      * @return ItemStackBuilder
      */
     public ItemStackBuilder applyCondition(ItemStackBuilder itemStackBuilder, boolean condition, @Nullable SimpleCallback<Void> onConditionApplied) {
-        if (condition == expectedCondition) {
-            for (Map.Entry<ChangeType, Object> changesEntry : this.conditionChanges.entrySet()) {
-                Object value = changesEntry.getValue();
-                switch (changesEntry.getKey()) {
-                    case MATERIAL:
-                        itemStackBuilder.setMaterial(UMaterial.match((String) value).getMaterial());
-                        break;
-                    case NAME:
-                        itemStackBuilder.setDisplayName((String) value);
-                        break;
-                    case LORE:
-                        itemStackBuilder.setLore((List<String>) value);
-                        break;
-                }
+        Map<ChangeType, Object> changeMap = this.conditionChanges.get(condition);
+        if (changeMap.isEmpty()) return itemStackBuilder;
+        for (Map.Entry<ChangeType, Object> changesEntry : changeMap.entrySet()) {
+            Object value = changesEntry.getValue();
+            switch (changesEntry.getKey()) {
+                case MATERIAL:
+                    itemStackBuilder.setMaterial(UMaterial.match((String) value).getMaterial());
+                    break;
+                case NAME:
+                    itemStackBuilder.setDisplayName((String) value);
+                    break;
+                case LORE:
+                    itemStackBuilder.setLore((List<String>) value);
+                    break;
             }
-            if (onConditionApplied != null) onConditionApplied.success(null);
         }
+        if (onConditionApplied != null) onConditionApplied.success(null);
         return itemStackBuilder;
     }
 
@@ -72,9 +84,10 @@ public class ItemStackBuilderCondition {
      */
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
-        map.put("conditions." + conditionName + ".expectedCondition", expectedCondition);
-        for (Map.Entry<ChangeType, Object> changesEntry : this.conditionChanges.entrySet()) {
-            map.put("conditions." + conditionName + ".changes." + changesEntry.getKey().name().toLowerCase(), changesEntry.getValue());
+        for (Map.Entry<Boolean, Map<ChangeType, Object>> changesEntry : this.conditionChanges.entrySet()) {
+            for (Map.Entry<ChangeType, Object> data : changesEntry.getValue().entrySet()) {
+                map.put("conditions." + conditionName + "." + changesEntry.getKey() + "." + data.getKey().name().toLowerCase(), data.getValue());
+            }
         }
         return map;
     }
