@@ -7,7 +7,9 @@ The core api for my plugins. This has the core features that I'll need to develo
 - Material Utilities (Using XMaterial and UMaterial)
 - Databases (Easy SQL/FlatFile/MySQL databse management)
 - Object Oriented command API (Per class argument)
-- Annotation driven Configuration (Easy use of configuration, no more spaghetti code!)
+- Annotation driven configuration (Easy use of configuration a.k.a yaml file, no more spaghetti code!)
+- Logging utilities
+- Conversation utilities (Create conversation easily and get user's response directly!)
 
 ## 📽 Documentation
 Documentation are not hosted online, but all the useful class is well documented already. Check it out!
