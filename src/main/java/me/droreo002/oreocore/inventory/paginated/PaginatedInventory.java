@@ -345,6 +345,9 @@ public abstract class PaginatedInventory extends OreoInventory {
         });
         if (informationButton == null) return;
         ItemStack infoButtonClone = placeholder.format(informationButton.getItem());
+        if (!(this.totalPage > 64)) {
+            infoButtonClone.setAmount(currentPage + 1);
+        }
         getInventory().setItem(informationButtonSlot, infoButtonClone);
     }
 
