@@ -7,12 +7,17 @@ import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.strings.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static me.droreo002.oreocore.utils.strings.StringUtils.*;
+import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
 public class LangManager extends CustomConfiguration {
 
@@ -22,7 +27,8 @@ public class LangManager extends CustomConfiguration {
     private final Set<String> paths = new HashSet<>();
     @Getter
     private boolean loaded;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String pluginPrefix;
 
     public LangManager(JavaPlugin plugin, String langFileName, String pluginPrefix) {
@@ -65,7 +71,7 @@ public class LangManager extends CustomConfiguration {
     /**
      * Get the lang string
      *
-     * @param path The lang path
+     * @param path      The lang path
      * @param addPrefix Should we add prefix?
      * @return the String if there's any null otherwise
      */
@@ -76,13 +82,14 @@ public class LangManager extends CustomConfiguration {
     /**
      * Get the lang string
      *
-     * @param path The lang path
+     * @param path        The lang path
      * @param placeholder The placeholder (null if there's none)
-     * @param addPrefix Should we add prefix?
+     * @param addPrefix   Should we add prefix?
      * @return the String if there's any, null otherwise
      */
     public String getLang(String path, TextPlaceholder placeholder, boolean addPrefix) {
-        if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
+        if (values.get(path) == null)
+            throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
         String result = (addPrefix) ? color(pluginPrefix + values.get(path)) : color((String) values.get(path));
         if (placeholder != null) result = placeholder.format(result);
         return result;
@@ -101,12 +108,13 @@ public class LangManager extends CustomConfiguration {
     /**
      * Get the lang as a list
      *
-     * @param path The lang path
+     * @param path        The lang path
      * @param placeholder The placeholder, null if there's none
      * @return List containing the string if there's any, null otherwise
      */
     public List<String> getLangList(String path, TextPlaceholder placeholder) {
-        if (values.get(path) == null) throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
+        if (values.get(path) == null)
+            throw new NullPointerException("Error. Lang message on path " + path + " cannot be found!, did you forget to load the data?");
         List<String> result = ((List<String>) values.get(path)).stream().map(StringUtils::color).collect(Collectors.toList());
         if (placeholder != null) result = placeholder.format(result);
         return result;
@@ -122,9 +130,14 @@ public class LangManager extends CustomConfiguration {
         return getConfig().getConfigurationSection(path);
     }
 
-    @Override
-    public void reloadConfig() {
+    /**
+     * Reload the lang
+     *
+     * @param pluginPrefix The new prefix, can be null
+     */
+    public void reload(@Nullable String pluginPrefix) {
         super.reloadConfig();
         loadData();
+        if (pluginPrefix != null) this.pluginPrefix = pluginPrefix;
     }
 }

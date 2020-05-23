@@ -22,50 +22,34 @@ public final class ItemUtils {
      * Get item name
      *
      * @param item The target item
-     * @param uMaterial Shoudl we use uMaterial as item name alternative?
+     * @param uMaterial Should we use uMaterial as item name alternative?
      * @return the item name if there's any, empty string otherwise
      */
     public static String getName(ItemStack item, boolean uMaterial) {
-        if (!item.hasItemMeta()) {
-            if (uMaterial) {
-                String name = UMaterial.match(item.getType().name()).name();
-                if (!name.contains("_")) return StringUtils.upperCaseFirstLetter(name.toLowerCase());
-                StringBuilder builder = new StringBuilder();
-                String[] arr = name.split("_");
-                for (int i = 0; i <= (arr.length - 1); i++) {
-                    builder.append(StringUtils.upperCaseFirstLetter(arr[i].toLowerCase())).append(" ");
-                }
-                return builder.toString();
-            } else {
-                StringBuilder builder = new StringBuilder();
-                String[] arr = item.getType().toString().split("_");
-                for (String s : arr) {
-                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
-                }
-                return builder.toString();
-            }
-        }
+        String[] nameData;
+        StringBuilder nameBuilder = new StringBuilder();
+
         ItemMeta meta = item.getItemMeta();
-        if (!meta.hasDisplayName()) {
-            if (uMaterial) {
-                String name = UMaterial.match(item.getType().name()).name();
-                if (!name.contains("_")) return StringUtils.upperCaseFirstLetter(name.toLowerCase());
-                StringBuilder builder = new StringBuilder();
-                String[] arr = name.split("_");
-                for (String s : arr) {
-                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
-                }
-                return builder.toString();
-            } else {
-                StringBuilder builder = new StringBuilder();
-                String[] arr = item.getType().toString().split("_");
-                for (String s : arr) {
-                    builder.append(StringUtils.upperCaseFirstLetter(s.toLowerCase())).append(" ");
-                }
-                return builder.toString();
-            }
+        if (meta != null) {
+            if (meta.hasDisplayName()) return meta.getDisplayName();
         }
-        return meta.getDisplayName();
+
+        if (uMaterial) {
+            String name = UMaterial.match(item.getType().name()).name();
+            if (!name.contains("_")) {
+                nameData = new String[]{StringUtils.upperCaseFirstLetter(name.toLowerCase())};
+            } else {
+                nameData = name.split("_");
+            }
+        } else {
+            nameData = item.getType().name().split("_");
+        }
+
+        for (int i = 0; i < nameData.length; i++) {
+            nameBuilder.append(StringUtils.upperCaseFirstLetter(nameData[i].toLowerCase()));
+            if (i != (nameData.length - 1)) nameBuilder.append(" ");
+        }
+        return nameBuilder.toString();
     }
 
     /**

@@ -1,15 +1,14 @@
 package me.droreo002.oreocore.utils.world;
 
-import jdk.nashorn.internal.ir.Block;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +47,19 @@ public final class LocationUtils {
     }
 
     /**
+     * Convert the location into a readable string
+     * (simplified)
+     *
+     * @param location The location to convert
+     * @return The converter location as string
+     */
+    public static String toStringSimplified(Location location) {
+        Validate.notNull(location, "Location cannot be null!");
+        DecimalFormat format = new DecimalFormat("0.#");
+        return location.getWorld().getName() + ", " + format.format(location.getX()) + ", " + format.format(location.getY()) + ", " + format.format(location.getZ());
+    }
+
+    /**
      * Convert the string into a location
      *
      * @param format The string
@@ -55,14 +67,19 @@ public final class LocationUtils {
      */
     public static Location toLocation(String format) {
         if (format.isEmpty()) return null;
-        String[] sp = format.split(";");
-        if (!sp[0].equalsIgnoreCase("Location")) return null;
+        String[] sp = format.replace(" ", "").split("([;,])");
         String world = sp[1];
         double x = Double.parseDouble(sp[2]);
         double y = Double.parseDouble(sp[3]);
         double z = Double.parseDouble(sp[4]);
-        float yaw = Float.parseFloat(sp[5]);
-        float pitch = Float.parseFloat(sp[6]);
+        float yaw = 0;
+        float pitch = 0;
+        try {
+            yaw = Float.parseFloat(sp[5]);
+            pitch = Float.parseFloat(sp[6]);
+        } catch (Exception ignored) {
+            // Simplified location
+        }
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 
@@ -78,7 +95,7 @@ public final class LocationUtils {
         List<Location> locations = new ArrayList<>();
         World world = center.getWorld();
         double increment = (2 * Math.PI) / amount;
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             double angle = i * increment;
             double x = center.getX() + (radius * Math.cos(angle));
             double z = center.getZ() + (radius * Math.sin(angle));
@@ -90,9 +107,9 @@ public final class LocationUtils {
     /**
      * Make a spiral circle (Up)
      *
-     * @param center The center location of the circle
-     * @param radius The radius of the circle
-     * @param amount The amount of point to create
+     * @param center      The center location of the circle
+     * @param radius      The radius of the circle
+     * @param amount      The amount of point to create
      * @param upIncrement The up increment of the circle a.k.a up speed
      * @return a list of locations
      */
@@ -102,7 +119,7 @@ public final class LocationUtils {
         double increment = (2 * Math.PI) / amount;
         double currIncrement = upIncrement;
 
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             double angle = i * increment;
             double x = center.getX() + (radius * Math.cos(angle));
             double z = center.getZ() + (radius * Math.sin(angle));
@@ -124,7 +141,7 @@ public final class LocationUtils {
         World world = center.getWorld();
         double increment = (2 * Math.PI) / amount;
         List<Location> locations = new ArrayList<>();
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             double angle = i * increment;
             double x = center.getX() - (radius * Math.cos(angle));
             double z = center.getZ() - (radius * Math.sin(angle));
@@ -151,8 +168,8 @@ public final class LocationUtils {
      * Make the Entity facing the locations's direction
      *
      * @param armorStand : The target ArmorStand
-     * @param target : The target location
-     * @param center : Should we center the location?
+     * @param target     : The target location
+     * @param center     : Should we center the location?
      */
     public static void faceDirection(ArmorStand armorStand, Location target, boolean center) {
         Vector dir = target.clone().subtract(armorStand.getEyeLocation()).toVector();

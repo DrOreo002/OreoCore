@@ -26,6 +26,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -244,27 +246,44 @@ public abstract class OreoInventory implements InventoryHolder {
     }
 
     /**
+     * Called when drag event is called
+     *
+     * @param e The event
+     */
+    public void onDrag(InventoryDragEvent e) {
+    }
+
+    /**
      * Called when click event is called
      *
-     * @param e : The click event object
+     * @param e The click event object
      */
     public void onClick(InventoryClickEvent e) {
     }
 
     /**
-     * Called when close event is called, will only be called if its a valid custom inventory
+     * Called when close event is called
      *
-     * @param e : The close event object
+     * @param e The event
      */
     public void onClose(InventoryCloseEvent e) {
     }
 
     /**
-     * Called when the open event is called, will only be called if its a valid custom inventory
+     * Called when the open event is called
      *
-     * @param e : The open event object
+     * @param e The event
      */
     public void onOpen(InventoryOpenEvent e) {
+    }
+
+    /**
+     * Called when move item event is called
+     * this will only call if {@link InventoryMoveItemEvent#getDestination()} is this instance
+     *
+     * @param e The event
+     */
+    public void onMove(InventoryMoveItemEvent e) {
     }
 
     /**

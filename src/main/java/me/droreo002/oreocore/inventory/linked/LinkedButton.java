@@ -6,8 +6,11 @@ import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public class LinkedButton extends GUIButton {
@@ -16,8 +19,6 @@ public class LinkedButton extends GUIButton {
     private String belongsTo;
     @Getter @Setter
     private String targetInventory;
-    @Getter @Setter
-    private Future<LinkedDataList> extraDataProvider;
 
     /**
      * Construct a new LickedButton (without slot)
@@ -57,6 +58,7 @@ public class LinkedButton extends GUIButton {
 
     /**
      * Construct new LinkedButton from GUIButton
+     * this will copy the GUIButtons's listener
      *
      * @param button The button
      * @param targetInventory The target inventory
@@ -67,6 +69,7 @@ public class LinkedButton extends GUIButton {
         this.targetInventory = targetInventory;
         this.belongsTo = owner.getInventoryName();
 
+        for (Map.Entry<ClickType, List<ButtonListener>> entry : button.getButtonListeners().entrySet()) entry.getValue().forEach(this::addListener);
         setAnimated(button.isAnimated());
         setButtonAnimationManager(button.getButtonAnimationManager());
     }

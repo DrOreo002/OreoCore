@@ -92,13 +92,6 @@ public class LinkedInventoryBuilder {
                 PlayerUtils.closeInventory(player);
 
                 linkedDataList.addAll(prevInventory.getInventoryData());
-                if (button.getExtraDataProvider() != null) {
-                    try {
-                        linkedDataList.addAll(button.getExtraDataProvider().get().getData());
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                }
 
                 // Pre
                 if (this.linkedInventoryListener != null) {
@@ -108,6 +101,7 @@ public class LinkedInventoryBuilder {
                 targetInventory.acceptData(linkedDataList, prevInventory);
                 targetInventory.onLinkOpen(prevInventory);
                 targetInventory.getInventoryOwner().open(player);
+                setupLinkedButtons(targetInventory, false); // Because sometimes buttons need to get initialized after acceptData
 
                 // Post
                 if (this.linkedInventoryListener != null) {
