@@ -509,7 +509,7 @@ public abstract class OreoInventory implements InventoryHolder {
         if (template != null) {
             this.inventoryType = template.getInventoryType();
             // There's a changes
-            if (!this.title.equals(template.getTitle())) {
+            if (!this.title.equals(color(template.getTitle()))) {
                 // Other than size is always a non customize able size inventory!
                 if (inventoryType != InventoryType.CHEST) {
                     this.inventory = Bukkit.createInventory(this, inventoryType, template.getTitle());

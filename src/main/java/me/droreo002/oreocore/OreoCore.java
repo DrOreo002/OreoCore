@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import me.droreo002.oreocore.bstats.Metrics;
+import me.droreo002.oreocore.configuration.dummy.MultiConfig;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
@@ -55,6 +56,8 @@ public final class OreoCore extends JavaPlugin {
     private PluginClassLoader pluginClassLoader;
     @Getter
     private DependencyManager dependencyManager;
+    @Getter
+    private MultiConfig multiConfig;
 
     @Override
     public void onEnable() {
@@ -101,6 +104,7 @@ public final class OreoCore extends JavaPlugin {
 
         // Debug
         //new SqlDebug();
+        multiConfig = new MultiConfig(this);
 
         // Run after few seconds because depend plugin will get ran first
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {

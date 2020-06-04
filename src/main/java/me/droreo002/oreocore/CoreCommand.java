@@ -52,6 +52,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Don't ask me why
+ */
 public class CoreCommand implements CommandExecutor, TabCompleter {
 
     private OreoCore plugin;
@@ -61,7 +64,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(commandSender instanceof Player)) {
             sendMessage(commandSender, "A CorePlugin specified for plugins from author &c@DrOreo002");
             return true;
@@ -221,6 +224,15 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("test-placeholder-inventory")) {
                     sendMessage(player, "Testing placeholder inventory...");
                     new InventoryTemplateTest(plugin.getPluginConfig().getTestTemplate().clone()).open(player);
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-multi-config")) {
+                    sendMessage(player, "Value -> " + plugin.getMultiConfig().getTestString());
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("test-reload-multi-config")) {
+                    plugin.getMultiConfig().reloadConfig();
+                    sendMessage(player, "Reloaded!");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("test-scoreboard")) {

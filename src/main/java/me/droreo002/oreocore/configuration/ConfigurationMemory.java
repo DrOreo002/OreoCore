@@ -10,7 +10,7 @@ public interface ConfigurationMemory {
      * @return The parent
      */
     @NonNull
-    CustomConfiguration getParent();
+    Configuration getParent();
 
     /**
      * Is this ConfigurationMemory's variable update-able?

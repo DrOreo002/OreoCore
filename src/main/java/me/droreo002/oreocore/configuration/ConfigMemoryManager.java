@@ -2,10 +2,8 @@ package me.droreo002.oreocore.configuration;
 
 import me.droreo002.oreocore.configuration.annotations.ConfigVariable;
 import me.droreo002.oreocore.debugging.ODebug;
-import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -14,41 +12,15 @@ import java.util.*;
 
 public final class ConfigMemoryManager {
 
-    private static final Map<JavaPlugin, List<ConfigurationMemory>> CONFIG_MEMORY = new HashMap<>();
-
-    /**
-     * Register the memory
-     *
-     * @param plugin Owner of this memory
-     * @param memory The memory
-     */
-    public static void registerMemory(JavaPlugin plugin, ConfigurationMemory memory) {
-        if (isLoaded(plugin, memory)) return;
-        List<ConfigurationMemory> arr = new ArrayList<>();
-        if (CONFIG_MEMORY.containsKey(plugin)) arr = CONFIG_MEMORY.get(plugin);
-        processMemory(memory);
-
-        arr.add(memory);
-        CONFIG_MEMORY.put(plugin, arr);
-        ODebug.log(plugin, "&eConfigMemory &ffor yaml file with the name of &7(&c" + memory.getParent().getFileName() + "&7) &ffrom plugin &b" + plugin.getName() + "&f has been registered!", true);
-    }
-
     /**
      * Update the config's memory
      *
-     * @param plugin Owner of this memory
      * @param memory The memory
      */
-    public static void updateMemory(JavaPlugin plugin, ConfigurationMemory memory) {
-        if (CONFIG_MEMORY.containsKey(plugin)) {
-            if (isLoaded(plugin, memory)) {
-                CONFIG_MEMORY.get(plugin).remove(memory);
-                writeChanges(memory);
-                memory.getParent().saveConfig(false);
-                processMemory(memory);
-                CONFIG_MEMORY.get(plugin).add(memory);
-            }
-        }
+    public static void updateMemory(ConfigurationMemory memory) {
+        writeChanges(memory);
+        memory.getParent().saveConfig(false);
+        processMemory(memory);
     }
 
     /**
@@ -91,8 +63,7 @@ public final class ConfigMemoryManager {
      *
      * @param memory The config memory
      */
-    private static void processMemory(ConfigurationMemory memory) {
-        final FileConfiguration config = memory.getParent().getConfig();
+    public static void processMemory(ConfigurationMemory memory) {
         final Map<ConfigVariable, Field> variables = new LinkedHashMap<>();
         for (Field f : getDeclaredFields(memory)) {
             if (f.isAnnotationPresent(ConfigVariable.class)) {
@@ -107,6 +78,7 @@ public final class ConfigMemoryManager {
         Collections.reverse(sorted);
 
         for (ConfigVariable configVariable : sorted) {
+            FileConfiguration config = (memory.getParent() instanceof MultiFileConfiguration) ? memory.getParent().getConfig(configVariable.yamlFileName()) : memory.getParent().getConfig();
             Field f = variables.get(configVariable);
 
             String path = configVariable.path();
@@ -240,18 +212,6 @@ public final class ConfigMemoryManager {
                     break;
             }
         }
-    }
-
-    /**
-     * Check if memory is loaded or not
-     *
-     * @param plugin The owner of the memory
-     * @param memory The memory
-     * @return true if loaded, false otherwise
-     */
-    private static boolean isLoaded(JavaPlugin plugin, ConfigurationMemory memory) {
-        if (CONFIG_MEMORY.get(plugin) == null) return false;
-       return CONFIG_MEMORY.get(plugin).stream().anyMatch(configurationMemory -> configurationMemory.getParent().getFileName().equals(memory.getParent().getFileName()));
     }
 
     /**

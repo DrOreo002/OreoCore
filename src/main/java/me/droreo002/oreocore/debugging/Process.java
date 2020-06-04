@@ -5,9 +5,7 @@ import lombok.Getter;
 public class Process {
 
     @Getter
-    private long start;
-    @Getter
-    private long end;
+    private long start, end;
 
     public Process() {
         this.start = System.nanoTime();

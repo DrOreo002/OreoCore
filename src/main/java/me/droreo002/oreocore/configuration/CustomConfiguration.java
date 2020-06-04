@@ -5,6 +5,8 @@ import me.droreo002.oreocore.debugging.ODebug;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,32 +15,21 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomConfiguration {
+public class CustomConfiguration implements Configuration {
+
+    private FileConfiguration config;
 
     @Getter
     private JavaPlugin plugin;
     @Getter
-    private FileConfiguration config;
-    @Getter
     private File yamlFile;
     @Getter
-    private String fileName;
-    @Getter
-    private String filePath;
-    @Getter
-    private String version;
+    private String fileName, filePath, version;
     @Getter
     private ConfigurationMemory registeredMemory;
     @Getter
     private boolean updateAble;
 
-    /**
-     * Extend this class into another class. And cache it somewhere as a field
-     * every time the class the initialized. The config will get created!
-     *
-     * @param plugin : The JavaPlugin class
-     * @param yamlFile : The yaml file object
-     */
     public CustomConfiguration(JavaPlugin plugin, File yamlFile) {
         this.plugin = plugin;
         this.yamlFile = yamlFile;
@@ -47,10 +38,8 @@ public class CustomConfiguration {
         setupConfig();
     }
 
-    /**
-     * Setup the config
-     */
-    private void setupConfig() {
+    @Override
+    public void setupConfig() {
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdir();
         }
@@ -69,15 +58,11 @@ public class CustomConfiguration {
         this.config = YamlConfiguration.loadConfiguration(yamlFile);
     }
 
-    /**
-     * Save the config, after saving the config comments will get updated also
-     *
-     * @param updateMemory Should we update the memory?
-     */
+    @Override
     public void saveConfig(boolean updateMemory) {
         if (updateMemory) {
             if (registeredMemory == null) throw new NullPointerException("Registered memory cannot be null!");
-            ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+            ConfigMemoryManager.updateMemory(registeredMemory);
         } else {
             try {
                 config.save(yamlFile);
@@ -89,16 +74,14 @@ public class CustomConfiguration {
         }
     }
 
-    /**
-     * Reload the config, will also keep the comments!
-     */
+    @Override
     public void reloadConfig() {
         yamlFile = new File(filePath);
         if (!yamlFile.exists()) {
             setupConfig();
         }
         config = YamlConfiguration.loadConfiguration(yamlFile);
-        if (registeredMemory != null) ConfigMemoryManager.updateMemory(getPlugin(), registeredMemory);
+        if (registeredMemory != null) ConfigMemoryManager.updateMemory(registeredMemory);
 
         saveConfig(false);
     }
@@ -147,9 +130,10 @@ public class CustomConfiguration {
      *
      * @param memory The memory to register
      */
+    @Override
     public void registerMemory(ConfigurationMemory memory) {
         this.registeredMemory = memory;
-        ConfigMemoryManager.registerMemory(getPlugin(), memory);
+        ConfigMemoryManager.processMemory(memory);
     }
 
     /**
@@ -184,5 +168,10 @@ public class CustomConfiguration {
      */
     private void write(Writer writer, String line) throws IOException {
         writer.write(line + System.lineSeparator());
+    }
+
+    @Override
+    public @NotNull FileConfiguration getConfig(@Nullable String filePath) {
+        return this.config;
     }
 }

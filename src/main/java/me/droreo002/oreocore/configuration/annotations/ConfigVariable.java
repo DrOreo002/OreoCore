@@ -26,7 +26,7 @@ public @interface ConfigVariable {
     boolean errorWhenNull() default false;
 
     /**
-     * Does it implements {@link SerializableYamlObject}
+     * Check if its a serialize able object
      *
      * @return true or false. Depend
      */
@@ -38,6 +38,14 @@ public @interface ConfigVariable {
      * @return true or false. Depend
      */
     boolean isUpdateAbleObject() default false;
+
+    /**
+     * Get the yaml file name for this
+     * config variable
+     *
+     * @return The yaml file name
+     */
+    String yamlFileName() default "";
     
     /**
      * The value type of this config, use auto for auto getting
