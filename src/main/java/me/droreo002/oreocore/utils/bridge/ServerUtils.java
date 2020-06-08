@@ -36,6 +36,16 @@ public final class ServerUtils {
     }
 
     /**
+     * Check if this server is running at Linux or not
+     *
+     * @return Boolean
+     */
+    public static boolean isLinux() {
+        String osName = System.getProperty("os.name");
+        return !osName.toLowerCase().contains("win");
+    }
+
+    /**
      * Check if BungeeCord is enabled or not
      *
      * @return Value

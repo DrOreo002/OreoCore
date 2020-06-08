@@ -2,6 +2,7 @@ package me.droreo002.oreocore.configuration;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.io.FileUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,7 +37,7 @@ public class MultiFileConfiguration implements Configuration {
         this.plugin = plugin;
         this.configFolder = configFolder;
         this.configFiles = new ArrayList<>();
-        this.parentPath = "plugins\\" + plugin.getName() + "\\" + configFolder.getName() + "\\";
+        this.parentPath = "plugins" + File.separator + plugin.getName() + File.separator + configFolder.getName() + File.separator;
         this.loadedConfigs = new HashMap<>();
         setupConfig();
     }
@@ -45,8 +46,8 @@ public class MultiFileConfiguration implements Configuration {
     public @NotNull FileConfiguration getConfig(@Nullable String filePath) {
         if (filePath == null) throw new NullPointerException("File path cannot be null in MultiFile mode!");
         if (!filePath.contains(".yml")) throw new IllegalStateException("Path must contains .yml");
-        return this.loadedConfigs.computeIfAbsent(filePath.replace("/", "\\"), (s) -> {
-            throw new NullPointerException("Cannot find config at  " + filePath.replace("/", "\\") + ", please make sure the main folder name is not included.");
+        return this.loadedConfigs.computeIfAbsent(((!ServerUtils.isLinux()) ? filePath.replace("/", "\\") : filePath), (s) -> {
+            throw new NullPointerException("Cannot find config at " + filePath.replace("/", "\\") + ", please make sure the main folder name is not included.");
         });
     }
 
