@@ -230,6 +230,10 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sendMessage(player, "Value -> " + plugin.getMultiConfig().getTestString());
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("test-color")) {
+                    sendMessage(player, "<#fcba03>Colorful!&r, and even more <#15c2ed>COLOR!");
+                    return true;
+                }
                 if (args[0].equalsIgnoreCase("test-reload-multi-config")) {
                     plugin.getMultiConfig().reloadConfig();
                     sendMessage(player, "Reloaded!");

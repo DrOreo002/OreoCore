@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="Bump and fix">
+    <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/RegexUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/inventory/InventoryTitleHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/inventory/InventoryTitleHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/CoreCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +30,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="OreoCore" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="OreoCore" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="OreoCore" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
               </path>
             </expand>
             <select />
@@ -128,13 +141,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00057" summary="Update on item">
-      <created>1576488581138</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1576488581139</updated>
     </task>
     <task id="LOCAL-00058" summary="Fixed invalid config format when reloading">
       <created>1577028094962</created>
@@ -472,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591629420375</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="Latest ver of OreoCore">
+      <created>1593146435045</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1593146435045</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -505,7 +518,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Recoded configuration" />
     <MESSAGE value="Added listener priority on button" />
     <MESSAGE value="Update on API and fix heads" />
     <MESSAGE value="Refactored CustomItem" />
@@ -530,7 +542,8 @@
     <MESSAGE value="Utilities update" />
     <MESSAGE value="Added new apis" />
     <MESSAGE value="Bump and fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bump and fix" />
+    <MESSAGE value="Latest ver of OreoCore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Latest ver of OreoCore" />
   </component>
   <component name="WindowStateProjectService">
     <state x="297" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589249313721">
@@ -549,34 +562,34 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="246" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1585817770157" />
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2" timestamp="1593145669939">
+    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2" timestamp="1593146432930">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593145669939" />
-    <state width="1879" height="299" key="GridCell.Tab.0.bottom" timestamp="1593145672721">
+    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593146432930" />
+    <state width="1879" height="299" key="GridCell.Tab.0.bottom" timestamp="1593149144269">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="299" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593145672721" />
+    <state width="1879" height="299" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593149144269" />
     <state width="1397" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
-    <state width="1879" height="299" key="GridCell.Tab.0.center" timestamp="1593145672721">
+    <state width="1879" height="299" key="GridCell.Tab.0.center" timestamp="1593149144268">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="299" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593145672721" />
+    <state width="1879" height="299" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593149144268" />
     <state width="1397" height="223" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
-    <state width="1879" height="299" key="GridCell.Tab.0.left" timestamp="1593145672720">
+    <state width="1879" height="299" key="GridCell.Tab.0.left" timestamp="1593149144268">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="299" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593145672720" />
+    <state width="1879" height="299" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593149144268" />
     <state width="1397" height="223" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
-    <state width="1879" height="299" key="GridCell.Tab.0.right" timestamp="1593145672721">
+    <state width="1879" height="299" key="GridCell.Tab.0.right" timestamp="1593149144268">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="299" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593145672721" />
+    <state width="1879" height="299" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593149144268" />
     <state width="1397" height="223" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1591629426681">
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1593146437961">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1591629426681" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593146437961" />
     <state x="1665" y="54" width="1736" height="896" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1584688296040">
       <screen x="1920" y="0" width="1440" height="900" />
     </state>
@@ -601,10 +614,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1590484307561" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1592544052370">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1593146445100">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1592544052370" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593146445100" />
     <state x="2387" y="196" width="672" height="565" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1587705615978" />
   </component>
 </project>

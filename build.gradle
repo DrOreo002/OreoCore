@@ -45,6 +45,7 @@ dependencies {
     compile 'com.zaxxer:HikariCP:3.3.1'
     compile 'org.slf4j:slf4j-api:2.0.0-alpha0'
     compile 'org.jetbrains:annotations:16.0.2'
+    compile 'net.md-5:bungeecord-chat:1.16-R0.1'
 
     compileOnly 'net.ess3:EssentialsX:2.16.0'
     compileOnly 'org.spigotmc:spigot:1.16.1-R0.1-SNAPSHOT'
