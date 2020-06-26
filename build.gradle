@@ -47,17 +47,17 @@ dependencies {
     compile 'org.jetbrains:annotations:16.0.2'
 
     compileOnly 'net.ess3:EssentialsX:2.16.0'
-    compileOnly 'org.spigotmc:spigot:1.15-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.16.1-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib-API:4.4.0'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
 def pluginName = project.name
-def spigotDirectory = "Spigot 1.13"
+def spigotDirectory = "Spigot 1.16"
 
 group = 'me.droreo002'
-version = '15.3'
+version = '15.4'
 description = 'OreoCore plugin!'
 targetCompatibility = '1.8'
 
