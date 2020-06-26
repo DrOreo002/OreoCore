@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.utils.item;
 
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -22,10 +22,10 @@ public final class ItemUtils {
      * Get item name
      *
      * @param item The target item
-     * @param uMaterial Should we use uMaterial as item name alternative?
+     * @param xMat Should we use XMaterial as item name alternative?
      * @return the item name if there's any, empty string otherwise
      */
-    public static String getName(ItemStack item, boolean uMaterial) {
+    public static String getName(ItemStack item, boolean xMat) {
         String[] nameData;
         StringBuilder nameBuilder = new StringBuilder();
 
@@ -34,8 +34,8 @@ public final class ItemUtils {
             if (meta.hasDisplayName()) return meta.getDisplayName();
         }
 
-        if (uMaterial) {
-            String name = UMaterial.match(item.getType().name()).name();
+        if (xMat) {
+            String name = XMaterial.match(item.getType().name()).name();
             if (!name.contains("_")) {
                 nameData = new String[]{StringUtils.upperCaseFirstLetter(name.toLowerCase())};
             } else {
@@ -89,7 +89,7 @@ public final class ItemUtils {
      */
     public static boolean isEmpty(ItemStack itemStack) {
         if (itemStack == null) return true;
-        return itemStack.getType() == UMaterial.AIR.getMaterial();
+        return itemStack.getType() == XMaterial.AIR.getMaterial();
     }
 
     /**
@@ -103,7 +103,7 @@ public final class ItemUtils {
         final List<String> ec = new ArrayList<>();
 
         Map<Enchantment, Integer> enchants = item.getEnchantments();
-        if (item.getType() == UMaterial.ENCHANTED_BOOK.getMaterial()) {
+        if (item.getType() == XMaterial.ENCHANTED_BOOK.getMaterial()) {
             EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) item.getItemMeta();
             enchants = storageMeta.getStoredEnchants();
         }

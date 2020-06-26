@@ -6,8 +6,7 @@ import me.droreo002.oreocore.inventory.animation.button.ButtonAnimationManager;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import org.bukkit.entity.Player;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 
 import java.util.Objects;
 
@@ -23,7 +22,7 @@ public class CInventoryAnimationTest extends OreoInventory {
         setInventoryAnimationManager(InventoryAnimationManager.getDefault());
 
         GUIButton button = new GUIButton(
-                ItemStackBuilder.of(Objects.requireNonNull(UMaterial.DIAMOND.getItemStack()))
+                ItemStackBuilder.of(Objects.requireNonNull(XMaterial.DIAMOND.getItemStack()))
                         .setDisplayName("&aHello World").build());
         ButtonAnimationManager buttonAnimationManager = new ButtonAnimationManager(button);
         buttonAnimationManager.addFirstState();

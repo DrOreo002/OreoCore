@@ -21,7 +21,7 @@ import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.item.Base64ItemStack;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.misc.BasicTimeFormatter;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import me.droreo002.oreocore.utils.strings.StringUtils;
@@ -32,7 +32,6 @@ import me.droreo002.oreocore.utils.world.WorldUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -154,7 +153,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
                     sendMessage(player, "Testing get-texture on server version " + ServerUtils.getServerVersion());
                     sound(player);
                     ItemStack item = player.getInventory().getItemInMainHand();
-                    if (!item.getType().equals(UMaterial.PLAYER_HEAD.getItemStack())) {
+                    if (!item.getType().equals(XMaterial.PLAYER_HEAD.getItemStack())) {
                         sound(player);
                         sendMessage(commandSender, "Please put the head on your main hand");
                         return true;

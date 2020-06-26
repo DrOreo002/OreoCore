@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.utils.bridge.NBTEditor;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.ListUtils;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
@@ -34,7 +34,7 @@ import static me.droreo002.oreocore.utils.strings.StringUtils.*;
  */
 public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
 
-    public static final ItemStack GRAY_GLASS_PANE = ItemStackBuilder.of(UMaterial.GRAY_STAINED_GLASS_PANE.getItemStack()).getItemStack();
+    public static final ItemStack GRAY_GLASS_PANE = ItemStackBuilder.of(XMaterial.GRAY_STAINED_GLASS_PANE.getItemStack()).getItemStack();
 
     @Getter @Setter
     @NotNull
@@ -404,13 +404,13 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
             }
         }
 
-        if (material.equals(UMaterial.AIR.getMaterial().toString())) return new ItemStackBuilder(UMaterial.AIR.getItemStack());
+        if (material.equals(XMaterial.AIR.getMaterial().toString())) return new ItemStackBuilder(XMaterial.AIR.getItemStack());
 
-        UMaterial uMaterial = UMaterial.match(material);
-        if (uMaterial == null) throw new NullPointerException("Cannot find material with the ID of " + material);
-        ItemStack itemStack = uMaterial.getItemStack();
+        XMaterial xMat = XMaterial.matchXMaterial(material).orElse(null);
+        if (xMat == null) throw new NullPointerException("Cannot find material with the ID of " + material);
+        ItemStack itemStack = xMat.getItemStack();
 
-        if (uMaterial.name().contains("PLAYER_HEAD")) {
+        if (xMat.name().contains("PLAYER_HEAD")) {
             if (texture != null) {
                 itemStack = CustomSkull.fromHeadTexture(texture);
             }
@@ -456,6 +456,6 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
      * @return true if empty, false otherwise
      */
     public static boolean isEmpty(ItemStack item) {
-        return (item == null) || item.getType().equals(UMaterial.AIR.getMaterial());
+        return (item == null) || item.getType().equals(XMaterial.AIR.getMaterial());
     }
 }

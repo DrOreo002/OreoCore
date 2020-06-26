@@ -4,7 +4,7 @@ The core api for my plugins. This has the core features that I'll need to develo
 **Core features**
 - Inventory API
 - World/Player/Location/etc Utilities
-- Material Utilities (Using XMaterial and UMaterial)
+- Material Utilities (Using XMaterial and XMaterial)
 - Databases (Easy SQL/FlatFile/MySQL databse management)
 - Object Oriented command API (Per class argument)
 - Annotation driven configuration (Easy use of configuration a.k.a yaml file, no more spaghetti code!)

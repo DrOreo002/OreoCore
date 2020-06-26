@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.utils.item;
 
 import lombok.Getter;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.misc.SimpleCallback;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public class ItemStackBuilderCondition {
             Object value = changesEntry.getValue();
             switch (changesEntry.getKey()) {
                 case MATERIAL:
-                    itemStackBuilder.setMaterial(UMaterial.match((String) value).getMaterial());
+                    itemStackBuilder.setMaterial(XMaterial.match((String) value));
                     break;
                 case NAME:
                     itemStackBuilder.setDisplayName((String) value);

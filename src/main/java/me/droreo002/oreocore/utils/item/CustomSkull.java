@@ -5,10 +5,9 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -63,7 +62,7 @@ public final class CustomSkull {
      * @return The player's head as a ItemStack
      */
     public static ItemStack fromUniqueId(UUID uuid) {
-        ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
+        ItemStack item = XMaterial.PLAYER_HEAD.getItemStack();
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         setOwningPlayer(skull, uuid);
         item.setItemMeta(skull);
@@ -89,7 +88,7 @@ public final class CustomSkull {
 
         propertyMap.put("textures", new Property("textures", new String(encodedData)));
 
-        ItemStack head = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
+        ItemStack head = XMaterial.PLAYER_HEAD.getItemStack();
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 
@@ -135,7 +134,7 @@ public final class CustomSkull {
      */
     public static ItemStack toHeadUrl(ItemStack item, String url) {
         if (!url.contains(TEXTURE_URL)) url = TEXTURE_URL + url;
-        item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
+        item.setType(XMaterial.PLAYER_HEAD.getMaterial());
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
@@ -167,7 +166,7 @@ public final class CustomSkull {
      * @return The head item
      */
     public static ItemStack fromHeadTexture(String texture) {
-        final ItemStack item = UMaterial.PLAYER_HEAD_ITEM.getItemStack();
+        final ItemStack item = XMaterial.PLAYER_HEAD.getItemStack();
         final ItemMeta meta = item.getItemMeta();
         final Object skin = createGameProfile(texture, UUID.randomUUID());
         try {
@@ -224,8 +223,8 @@ public final class CustomSkull {
      * @param item : The item to validate
      */
     private static void tryFix(ItemStack item) {
-        if (item.getType() != UMaterial.PLAYER_HEAD_ITEM.getMaterial())
-            item.setType(UMaterial.PLAYER_HEAD_ITEM.getMaterial());
+        if (item.getType() != XMaterial.PLAYER_HEAD.getMaterial())
+            item.setType(XMaterial.PLAYER_HEAD.getMaterial());
     }
 
     /**

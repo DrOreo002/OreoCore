@@ -2,9 +2,8 @@ package me.droreo002.oreocore.enums;
 
 import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.multisupport.BukkitReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -573,7 +572,7 @@ public enum ParticleEffect {
      */
     private static boolean isWater(Location location) {
         Material material = location.getBlock().getType();
-        return material == UMaterial.WATER.getMaterial();
+        return material == XMaterial.WATER.getMaterial();
     }
 
     /**

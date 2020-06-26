@@ -3,7 +3,7 @@ package me.droreo002.oreocore.inventory.animation.button;
 import lombok.Getter;
 import lombok.Setter;
 import me.droreo002.oreocore.inventory.button.GUIButton;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.ItemMetaType;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -124,7 +124,7 @@ public class ButtonAnimationManager implements Cloneable {
                 @Override
                 public Material nextMaterial(Material previousMaterial) {
                     Material material = (Material) buttonMetaData.get("MATERIAL");
-                    return (material == UMaterial.PLAYER_HEAD_ITEM.getMaterial()) ? null : material;
+                    return (material == XMaterial.PLAYER_HEAD.getMaterial()) ? null : material;
                 }
             });
         }

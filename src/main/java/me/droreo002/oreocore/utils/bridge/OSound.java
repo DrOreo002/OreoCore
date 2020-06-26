@@ -19,8 +19,9 @@ public enum OSound {
 
     /*
      * Minecraft Versions and enum values
+     *   V1_16 or V1_14 or V_15
      *	 WEATHER_RAIN("same", "same", "same", "same", "same", ""),
-     *	 V1_14 or V_15	  V1_13,	V1_12,   V1_11,   V1_10,   V1_9,  V1_8
+     *	 	          V1_13,	V1_12,   V1_11,   V1_10,   V1_9,  V1_8
      */
     AMBIENT_CAVE("same", "same", "same", "same", "same", "AMBIENCE_CAVE"),
     AMBIENT_UNDERWATER_ENTER("same", "", "", "", "", ""),
@@ -956,7 +957,8 @@ public enum OSound {
                 return soun;
             }
             case "V1_14":
-            case "V1_15": {
+            case "V1_15":
+            case "V1_16": {
                 String val = this.toString();
                 Sound soun;
                 try {

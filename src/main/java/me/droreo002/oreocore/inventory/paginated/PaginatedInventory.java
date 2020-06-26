@@ -13,15 +13,13 @@ import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.inventory.Paginator;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
 import me.droreo002.oreocore.utils.item.CustomSkull;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.item.helper.TextPlaceholder;
 import me.droreo002.oreocore.utils.list.Iterators;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -92,7 +90,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         this.totalPage = 0;
 
         for (int i : this.paginatedButtonSlots) {
-            getInventory().setItem(i, UMaterial.AIR.getItemStack());
+            getInventory().setItem(i, XMaterial.AIR.getItemStack());
         }
     }
 
@@ -281,7 +279,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         }
         this.currentPage += 1;
         for (int i : paginatedButtonSlots) {
-            if (getInventory().getItem(i) != null) getInventory().setItem(i, UMaterial.AIR.getItemStack());
+            if (getInventory().getItem(i) != null) getInventory().setItem(i, XMaterial.AIR.getItemStack());
         }
 
         if ((currentPage + 1) >= totalPage) {
@@ -304,7 +302,7 @@ public abstract class PaginatedInventory extends OreoInventory {
         }
         this.currentPage -= 1;
         for (int i : paginatedButtonSlots) {
-            if (getInventory().getItem(i) != null) getInventory().setItem(i, UMaterial.AIR.getItemStack());
+            if (getInventory().getItem(i) != null) getInventory().setItem(i, XMaterial.AIR.getItemStack());
         }
 
         if (currentPage <= 0) {

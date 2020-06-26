@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import lombok.SneakyThrows;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import net.minecraft.server.v1_16_R1.PacketPlayOutOpenWindow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -43,6 +44,7 @@ public final class InventoryTitleHelper {
                     break;
                 case V1_14_R1:
                 case V1_15_R1:
+                case V1_16_R1:
                     packetPlayOutOpenWindowConstructor = getNMSClass("PacketPlayOutOpenWindow").getConstructor(Integer.TYPE, getNMSClass("Containers"), getNMSClass("IChatBaseComponent"));
                     newVer = true;
                     break;

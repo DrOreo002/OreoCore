@@ -1,6 +1,6 @@
 package me.droreo002.oreocore.inventory.animation.open;
 
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +22,9 @@ public class DiagonalFill extends OpenAnimation {
         int increment;
         for (int i = 0; i < getInventory().getSize() / 9; i++) {
             increment = slot;
-            getInventory().setItem(increment, UMaterial.PURPLE_STAINED_GLASS_PANE.getItemStack());
+            getInventory().setItem(increment, XMaterial.PURPLE_STAINED_GLASS_PANE.getItemStack());
             increment += 8;
-            getInventory().setItem(increment, UMaterial.PURPLE_STAINED_GLASS_PANE.getItemStack());
+            getInventory().setItem(increment, XMaterial.PURPLE_STAINED_GLASS_PANE.getItemStack());
         }
         slot++;
     }

@@ -1,14 +1,12 @@
 package me.droreo002.oreocore.inventory.test.animation;
 
-import me.droreo002.oreocore.inventory.animation.button.ButtonAnimation;
 import me.droreo002.oreocore.inventory.animation.button.ButtonAnimationManager;
 import me.droreo002.oreocore.inventory.animation.InventoryAnimationManager;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.animation.button.IButtonFrame;
 import me.droreo002.oreocore.inventory.paginated.PaginatedInventory;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
-import org.bukkit.inventory.ItemStack;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 
 /**
  * Animation test for PaginatedInventory
@@ -21,7 +19,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
         setItemRow(0, 1);
         setSearchRow(2, false, null);
 
-        GUIButton button = new GUIButton(ItemStackBuilder.of(UMaterial.OAK_DOOR.getItemStack()).setDisplayName("Hello ").getItemStack());
+        GUIButton button = new GUIButton(ItemStackBuilder.of(XMaterial.OAK_DOOR.getItemStack()).setDisplayName("Hello ").getItemStack());
         button.addListener(GUIButton.CLOSE_LISTENER);
         ButtonAnimationManager animationManager = new ButtonAnimationManager(button);
         animationManager.addFirstState();
@@ -41,7 +39,7 @@ public class PInventoryAnimationTest extends PaginatedInventory {
             if (i == 10) {
                 addPaginatedButton(button);
             } else {
-                addPaginatedButton(new GUIButton(UMaterial.CARROT_ITEM.getItemStack()));
+                addPaginatedButton(new GUIButton(XMaterial.CARROT.getItemStack()));
             }
         }
     }

@@ -6,7 +6,7 @@ import me.droreo002.oreocore.inventory.linked.LinkedButton;
 import me.droreo002.oreocore.inventory.linked.LinkedData;
 import me.droreo002.oreocore.inventory.linked.LinkedDataType;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ public class FirstLinkedInventory extends OreoInventory implements Linkable {
 
     public FirstLinkedInventory() {
         super(27, "First Inventory");
-        this.nextButton = new LinkedButton(ItemStackBuilder.of(UMaterial.ARROW.getItemStack()).setDisplayName("&aNext").getItemStack(), 26, "Second Inventory", this);
+        this.nextButton = new LinkedButton(ItemStackBuilder.of(XMaterial.ARROW.getItemStack()).setDisplayName("&aNext").getItemStack(), 26, "Second Inventory", this);
     }
 
     @Override

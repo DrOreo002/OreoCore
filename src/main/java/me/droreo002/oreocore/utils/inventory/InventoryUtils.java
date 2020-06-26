@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.utils.inventory;
 
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -57,7 +57,7 @@ public final class InventoryUtils {
     public static List<ItemStack> getContent(Inventory inventory) {
         final List<ItemStack> items = new ArrayList<>();
         for (ItemStack i : inventory.getContents()) {
-            if (ItemStackBuilder.isEmpty(i) || i.getType().equals(UMaterial.AIR.getMaterial())) continue;
+            if (ItemStackBuilder.isEmpty(i) || i.getType().equals(XMaterial.AIR.getMaterial())) continue;
             items.add(i);
         }
         return items;
@@ -573,7 +573,7 @@ public final class InventoryUtils {
      */
     public static void clearInventory(Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
-            inventory.setItem(i, UMaterial.AIR.getItemStack());
+            inventory.setItem(i, XMaterial.AIR.getItemStack());
         }
     }
 }

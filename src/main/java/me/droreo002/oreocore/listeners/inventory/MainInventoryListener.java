@@ -2,7 +2,6 @@ package me.droreo002.oreocore.listeners.inventory;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.inventory.OreoInventory;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,9 +13,6 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class MainInventoryListener implements Listener {
 

@@ -28,6 +28,8 @@ public enum MinecraftVersion {
 
     V1_15_R1("V1_15"),
 
+    V1_16_R1("V1_16"),
+
     UNKNOWN("UNKNOWN");
 
     @Getter

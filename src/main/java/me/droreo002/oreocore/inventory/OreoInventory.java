@@ -18,7 +18,7 @@ import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
-import me.droreo002.oreocore.utils.item.complex.UMaterial;
+import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -95,7 +95,7 @@ public abstract class OreoInventory implements InventoryHolder {
                     inventoryAnimationManager.setOpenAnimation(new ItemFill(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
                     break;
                 case ITEM_WAVE_ANIMATION:
-                    inventoryAnimationManager.setOpenAnimation(new ItemWave(UMaterial.DIAMOND_PICKAXE.getItemStack(), UMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
+                    inventoryAnimationManager.setOpenAnimation(new ItemWave(XMaterial.DIAMOND_PICKAXE.getItemStack(), XMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
                     break;
             }
         }
@@ -196,7 +196,7 @@ public abstract class OreoInventory implements InventoryHolder {
         might work, not sure.
          */
         if (!ServerUtils.isLegacyVersion()) {
-            if (!player.getItemOnCursor().getType().equals(UMaterial.AIR.getMaterial()) && player.isSneaking()) {
+            if (!player.getItemOnCursor().getType().equals(XMaterial.AIR.getMaterial()) && player.isSneaking()) {
                 player.setItemOnCursor(new ItemStack(Material.AIR));
             }
         } else {
@@ -495,7 +495,7 @@ public abstract class OreoInventory implements InventoryHolder {
             if (linkable.getLinkedButtons() != null) linkable.getLinkedButtons().clear();
         }
         for (int i = 0; i < size; i++) {
-            getInventory().setItem(i, UMaterial.AIR.getItemStack());
+            getInventory().setItem(i, XMaterial.AIR.getItemStack());
         }
         this.buttons.clear();
     }
