@@ -46,7 +46,7 @@ public final class StringUtils {
      */
     public static String color(String text) {
         if (text.contains("#")) {
-            Map<Integer, List<String>> hexCodes = RegexUtils.matchGroups(text, RegexUtils.SURROUNDED_WITH_DIAMOND);
+            Map<Integer, List<String>> hexCodes = RegexUtils.matchGroups(text, RegexUtils.SURROUNDED_WITH_DIAMOND, false);
             for (Map.Entry<Integer, List<String>> entry : hexCodes.entrySet()) {
                 for (String s : entry.getValue()) {
                     text = text.replace("<" + s + ">", net.md_5.bungee.api.ChatColor.of(s).toString());

@@ -39,19 +39,19 @@ public class RegexUtils {
      *
      * @param str The string to match
      * @param regex The regex
-     * @return List of captured groups
+     * @return Map of captured group. Where first key is matcher index, and second one is group
      */
-    public static Map<Integer, List<String>> matchGroups(String str, @Language("RegExp") String regex) {
+    public static Map<Integer, List<String>> matchGroups(String str, String regex, boolean includeFullMatch) {
         Map<Integer, List<String>> matches = new HashMap<>();
         Matcher matcher = Pattern.compile(regex).matcher(str);
-        int matchSize = 0;
+        int matchCount = 0;
         while (matcher.find()) {
             List<String> groups = new ArrayList<>();
-            for (int i = 1; i <= matcher.groupCount(); i++) { // Start at 1 to remove the Full Match
+            for (int i = (includeFullMatch) ? 0 : 1; i <= matcher.groupCount(); i++) {
                 groups.add(matcher.group(i));
             }
-            matches.put(matchSize, groups);
-            matchSize++;
+            matches.put(matchCount, groups);
+            matchCount++;
         }
         return matches;
     }

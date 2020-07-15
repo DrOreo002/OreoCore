@@ -7,6 +7,8 @@ import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -65,22 +67,27 @@ public final class LocationUtils {
      * @param format The string
      * @return the Location object if successful, null otherwise
      */
+    @Nullable
     public static Location toLocation(String format) {
         if (format.isEmpty()) return null;
-        String[] sp = format.replace(" ", "").split("([;,])");
-        String world = sp[1];
-        double x = Double.parseDouble(sp[2]);
-        double y = Double.parseDouble(sp[3]);
-        double z = Double.parseDouble(sp[4]);
-        float yaw = 0;
-        float pitch = 0;
         try {
-            yaw = Float.parseFloat(sp[5]);
-            pitch = Float.parseFloat(sp[6]);
-        } catch (Exception ignored) {
-            // Simplified location
+            String[] sp = format.replace(" ", "").split("([;,])");
+            String world = sp[1];
+            double x = Double.parseDouble(sp[2]);
+            double y = Double.parseDouble(sp[3]);
+            double z = Double.parseDouble(sp[4]);
+            float yaw = 0;
+            float pitch = 0;
+            try {
+                yaw = Float.parseFloat(sp[5]);
+                pitch = Float.parseFloat(sp[6]);
+            } catch (Exception ignored) {
+                // Simplified location. We ignore it
+            }
+            return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+        } catch (Exception e) {
+            return null;
         }
-        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 
     /**
