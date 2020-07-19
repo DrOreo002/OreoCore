@@ -16,3 +16,6 @@ Documentation are not hosted online, but all the useful class is well documented
 
 ## 🛠 Building
 To build please use gradle. Commands are `clean build shadowJar`
+
+## Known database problem
+If you happened to change your `online-mode` settings to true or false, you'll have to delete `playerdata.db` since player's UUID will change on that convertion.
