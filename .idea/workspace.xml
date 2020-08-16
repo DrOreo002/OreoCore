@@ -4,9 +4,6 @@
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/RegexUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/RegexUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/strings/StringUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/world/LocationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/world/LocationUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +73,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Custom Plugin Project/OraxenFaked" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -566,30 +563,22 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1879" height="237" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593343534397" />
-    <state width="1397" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
     <state width="1879" height="237" key="GridCell.Tab.0.center" timestamp="1593343534397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1879" height="237" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593343534397" />
-    <state width="1397" height="223" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
     <state width="1879" height="237" key="GridCell.Tab.0.left" timestamp="1593343534397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1879" height="237" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593343534397" />
-    <state width="1397" height="223" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
     <state width="1879" height="237" key="GridCell.Tab.0.right" timestamp="1593343534397">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1879" height="237" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593343534397" />
-    <state width="1397" height="223" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1586230797729" />
     <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1593153327815">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1593153327815" />
-    <state x="1920" y="0" width="1456" height="1003" maximized="true" key="dock-window-1" timestamp="1586738920464">
-      <screen x="1920" y="0" width="1440" height="900" />
-    </state>
-    <state x="1920" y="0" width="1456" height="1003" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1586738920464" />
     <state x="969" y="205" width="758" height="628" key="find.popup" timestamp="1593150470022">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -598,10 +587,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1590484307561" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1594781845820">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1597568743630">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1594781845820" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1597568743630" />
     <state x="2387" y="196" width="672" height="565" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1593187651744" />
   </component>
 </project>
