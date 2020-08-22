@@ -46,6 +46,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:2.0.0-alpha0'
     compile 'org.jetbrains:annotations:16.0.2'
     compile 'net.md-5:bungeecord-chat:1.16-R0.1'
+    compile 'com.google.http-client:google-http-client:1.27.0'
 
     compileOnly 'net.ess3:EssentialsX:2.16.0'
     compileOnly 'org.spigotmc:spigot:1.16.2-R0.1-SNAPSHOT'
@@ -71,6 +72,7 @@ shadowJar {
         include(dependency('co.aikar:.*'))
         include(dependency('com.zaxxer:.*'))
         include(dependency('org.slf4j:.*'))
+        include(dependency('com.google.http-client:.*'))
     }
 }
 
