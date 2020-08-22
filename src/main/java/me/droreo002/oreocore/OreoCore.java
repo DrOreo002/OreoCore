@@ -10,7 +10,6 @@ import me.droreo002.oreocore.configuration.dummy.MultiConfig;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
 import me.droreo002.oreocore.database.DatabaseManager;
-import me.droreo002.oreocore.database.debug.SqlDebug;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.debugging.Process;

@@ -2,30 +2,53 @@ package me.droreo002.oreocore.database.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
 @AllArgsConstructor
 public class SqlDataKey {
-    private String keyName;
-    private boolean primary;
-    private String keyType;
-    private boolean nullAble;
+    private String keyName, keyType;
+    private boolean primary, nullAble, autoIncrement;
     private @Nullable String defaultValue;
 
-    public SqlDataKey(String keyName, boolean primary, KeyType keyType, boolean nullAble, @Nullable String defaultValue) {
+    SqlDataKey(String keyName, KeyType keyType) {
         this.keyName = keyName;
-        this.primary = primary;
         this.keyType = keyType.asString;
-        this.nullAble = nullAble;
+    }
+
+    @NotNull
+    public static SqlDataKey create(String keyName, KeyType keyType) {
+        return new SqlDataKey(keyName, keyType);
+    }
+
+    public SqlDataKey primary() {
+        this.primary = true;
+        return this;
+    }
+
+    public SqlDataKey nullable() {
+        this.primary = true;
+        return this;
+    }
+
+    public SqlDataKey defaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+        return this;
+    }
+
+    public SqlDataKey autoIncrement() {
+        this.autoIncrement = true;
+        return this;
     }
 
     @Override
     public String toString() {
-        return "`" + keyName + "` " + keyType + " " +
-                ((nullAble) ? "" : "NOT NULL ") +
-                ((defaultValue != null) ? "DEFAULT " + "'" + defaultValue + "'" : "");
+        StringBuilder builder = new StringBuilder("`" + keyName + "` " + keyType);
+        if (!nullAble) builder.append(" ").append("NOT NULL");
+        if (autoIncrement) builder.append(" ").append("AUTO_INCREMENT");
+        if (defaultValue != null) builder.append(" DEFAULT ").append("'").append(defaultValue).append("'");
+        return builder.toString();
     }
 
     public enum KeyType {

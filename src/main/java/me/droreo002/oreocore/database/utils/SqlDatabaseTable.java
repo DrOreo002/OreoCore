@@ -47,7 +47,7 @@ public class SqlDatabaseTable {
             }
         }
         if (primaryKey != null) {
-            builder.append("PRIMARY KEY (" + primaryKey + "));");
+            builder.append("PRIMARY KEY (").append(primaryKey).append("));");
         } else {
             builder.append(");");
         }

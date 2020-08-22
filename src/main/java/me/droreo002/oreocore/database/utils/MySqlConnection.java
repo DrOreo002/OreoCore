@@ -12,15 +12,9 @@ import java.util.Map;
 public class MySqlConnection implements SerializableConfigVariable {
 
     @Getter
-    private String host;
+    private String host, databaseName, password, user;
     @Getter
     private int port;
-    @Getter
-    private String databaseName;
-    @Getter
-    private String password;
-    @Getter
-    private String user;
 
     /**
      * Allow null for @ConfigVariable support

@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static me.droreo002.oreocore.database.utils.SqlDataKey.create;
+
 public class PlayerInformationDatabase extends DatabaseSQL {
 
     @Getter
@@ -78,7 +80,7 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     @Override
     public SqlDatabaseTable getSqlDatabaseTable() {
         return new SqlDatabaseTable("playerData")
-                .addKey(new SqlDataKey("playerName", true, SqlDataKey.KeyType.MINECRAFT_USERNAME, false, null))
-                .addKey(new SqlDataKey("uuid", false, SqlDataKey.KeyType.UUID, false, null));
+                .addKey(create("playerName", SqlDataKey.KeyType.MINECRAFT_USERNAME).primary())
+                .addKey(create("uuid", SqlDataKey.KeyType.UUID));
     }
 }
