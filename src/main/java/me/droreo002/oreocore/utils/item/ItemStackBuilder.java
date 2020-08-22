@@ -294,6 +294,12 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
      * @return Result item stack
      */
     public ItemStack build() {
+        if (this.headTexture != null) {
+            this.itemStack = CustomSkull.toHeadTexture(this.itemStack.clone(), this.headTexture);
+        }
+        if (this.headTextureUrl != null) {
+            this.itemStack = CustomSkull.toHeadUrl(this.itemStack.clone(), this.headTextureUrl);
+        }
         return this.itemStack;
     }
 
@@ -388,7 +394,7 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
         int amount = section.getInt("amount", 1);
         boolean unBreakAble = section.getBoolean("unbreakable", false);
         String texture = section.getString("texture");
-        String texture_url = section.getString("texture-url");
+        String textureUrl = section.getString("texture-url");
         List<String> lore = section.getStringList("lore");
         List<String> itemFlags = section.getStringList("itemFlags");
         List<ConfigurationSection> builderConditions = new ArrayList<>();
@@ -414,8 +420,8 @@ public class ItemStackBuilder implements SerializableConfigVariable, Cloneable {
             if (texture != null) {
                 itemStack = CustomSkull.fromHeadTexture(texture);
             }
-            if (texture_url != null) {
-                itemStack = CustomSkull.fromUrl(texture_url);
+            if (textureUrl != null) {
+                itemStack = CustomSkull.fromUrl(textureUrl);
             }
         }
 

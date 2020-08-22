@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -132,6 +133,7 @@ public final class CustomSkull {
      * @param url The texture url
      * @return the result ItemStack if successful, null otherwise
      */
+    @NotNull
     public static ItemStack toHeadUrl(ItemStack item, String url) {
         if (!url.contains(TEXTURE_URL)) url = TEXTURE_URL + url;
         item.setType(XMaterial.PLAYER_HEAD.getMaterial());
@@ -152,7 +154,6 @@ public final class CustomSkull {
             BukkitReflectionUtils.setValue(headMeta, true, "profile", profile);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
-            return null;
         }
 
         item.setItemMeta(headMeta);
@@ -186,6 +187,7 @@ public final class CustomSkull {
      * @param texture : The texture
      * @return the result ItemStack if successful, null otherwise
      */
+    @NotNull
     public static ItemStack toHeadTexture(ItemStack item, String texture) {
         tryFix(item);
         final ItemMeta meta = item.getItemMeta();
