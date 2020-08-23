@@ -7,37 +7,37 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 @AllArgsConstructor
-public class SqlDataKey {
+public class SQLDataKey {
     private String keyName, keyType;
     private boolean primary, nullAble, autoIncrement;
     private @Nullable String defaultValue;
 
-    SqlDataKey(String keyName, KeyType keyType) {
+    SQLDataKey(String keyName, KeyType keyType) {
         this.keyName = keyName;
         this.keyType = keyType.asString;
     }
 
     @NotNull
-    public static SqlDataKey create(String keyName, KeyType keyType) {
-        return new SqlDataKey(keyName, keyType);
+    public static SQLDataKey create(String keyName, KeyType keyType) {
+        return new SQLDataKey(keyName, keyType);
     }
 
-    public SqlDataKey primary() {
+    public SQLDataKey primary() {
         this.primary = true;
         return this;
     }
 
-    public SqlDataKey nullable() {
+    public SQLDataKey nullable() {
         this.primary = true;
         return this;
     }
 
-    public SqlDataKey defaultValue(String defaultValue) {
+    public SQLDataKey defaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
 
-    public SqlDataKey autoIncrement() {
+    public SQLDataKey autoIncrement() {
         this.autoIncrement = true;
         return this;
     }

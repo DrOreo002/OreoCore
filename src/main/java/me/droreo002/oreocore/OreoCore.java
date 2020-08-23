@@ -9,7 +9,7 @@ import me.droreo002.oreocore.bstats.Metrics;
 import me.droreo002.oreocore.configuration.dummy.MultiConfig;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
 import me.droreo002.oreocore.database.Database;
-import me.droreo002.oreocore.database.DatabaseManager;
+import me.droreo002.oreocore.database.DatabaseRegistry;
 import me.droreo002.oreocore.database.utils.PlayerInformationDatabase;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.debugging.Process;
@@ -148,9 +148,7 @@ public final class OreoCore extends JavaPlugin {
             PlayerUtils.closeInventory(player);
         }
         inventoryCacheManager.getCache().clear();
-
-        // Disable
-        DatabaseManager.getDatabases().forEach(Database::onDisable);
+        DatabaseRegistry.getDatabases().forEach(Database::onDisable);
     }
 
     /**

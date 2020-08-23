@@ -16,6 +16,7 @@ public abstract class Database {
         Validate.notNull(databaseType, "DatabaseType cannot be null!");
         this.databaseType = databaseType;
         this.owningPlugin = owningPlugin;
+        DatabaseRegistry.register(this);
     }
 
     public abstract void init();

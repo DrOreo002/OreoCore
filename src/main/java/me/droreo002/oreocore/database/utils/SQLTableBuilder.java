@@ -2,28 +2,26 @@ package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SqlDatabaseTable {
+public class SQLTableBuilder {
 
     @Getter
-    private List<SqlDataKey> dataKeys;
+    private List<SQLDataKey> dataKeys;
     @Getter
     private String tableName;
 
-    public SqlDatabaseTable(String tableName, SqlDataKey... dataKeys) {
+    SQLTableBuilder(String tableName, SQLDataKey... dataKeys) {
         this.tableName = tableName;
         this.dataKeys = Arrays.asList(dataKeys);
     }
 
-    public SqlDatabaseTable(String tableName) {
-        this.tableName = tableName;
-        this.dataKeys = new ArrayList<>();
+    public static SQLTableBuilder of(String tableName, SQLDataKey... sqlDataKeys) {
+        return new SQLTableBuilder(tableName, sqlDataKeys);
     }
 
-    public SqlDatabaseTable addKey(SqlDataKey sqlDataKey) {
+    public SQLTableBuilder addKey(SQLDataKey sqlDataKey) {
         this.dataKeys.add(sqlDataKey);
         return this;
     }
@@ -33,12 +31,12 @@ public class SqlDatabaseTable {
      *
      * @return The create command
      */
-    public String getCreateCommand() {
+    public String build() {
         StringBuilder builder = new StringBuilder();
         builder.append("CREATE TABLE IF NOT EXISTS `").append(tableName).append("` (");
         String primaryKey = null;
         for (int i = 0; i < this.dataKeys.size(); i++) {
-            SqlDataKey dataKey = this.dataKeys.get(i);
+            SQLDataKey dataKey = this.dataKeys.get(i);
             if (dataKey.isPrimary()) primaryKey = dataKey.getKeyName();
             if (i == (this.dataKeys.size() - 1) && primaryKey == null) {
                 builder.append(dataKey.toString());

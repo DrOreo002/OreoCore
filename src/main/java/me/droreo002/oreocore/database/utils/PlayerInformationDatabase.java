@@ -1,23 +1,21 @@
 package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
-import me.droreo002.oreocore.database.DatabaseManager;
-import me.droreo002.oreocore.database.SQLType;
-import me.droreo002.oreocore.database.object.DatabaseSQL;
+import me.droreo002.oreocore.database.SQLDatabase;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static me.droreo002.oreocore.database.utils.SqlDataKey.create;
+import static me.droreo002.oreocore.database.utils.SQLDataKey.create;
 
-public class PlayerInformationDatabase extends DatabaseSQL {
+public class PlayerInformationDatabase extends SQLDatabase {
 
     @Getter
     private final Set<PlayerInformation> playerInformation = new HashSet<>();
@@ -25,11 +23,24 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     private PluginConfig memory;
 
     public PlayerInformationDatabase(OreoCore plugin) {
-        super(plugin, "playerdata", plugin.getDataFolder(), SQLType.SQL_BASED);
+        super(plugin, SQLConfiguration.sql("playerdata.db"), SQLTableBuilder.of("playerData")
+                .addKey(create("playerName", SQLDataKey.KeyType.MINECRAFT_USERNAME).primary())
+                .addKey(create("uuid", SQLDataKey.KeyType.UUID)));
         this.memory = plugin.getPluginConfig();
-
         loadAllData();
-        DatabaseManager.registerDatabase(plugin, this);
+    }
+
+    @SneakyThrows
+    public void loadAllData() {
+        List<Object> query = queryRow("SELECT `playerName` FROM `playerData`;", "playerName");
+        List<String> primaryKey = query.stream().map(o -> (String) o).collect(Collectors.toList());
+
+        for (String playerName : primaryKey) {
+            Object value = queryValue("SELECT `uuid` FROM `playerData` WHERE `playerName` IS '" + playerName + "';", "uuid");
+            if (value == null) continue;
+            final UUID uuid = UUID.fromString((String) value);
+            playerInformation.add(new PlayerInformation(playerName, uuid));
+        }
     }
 
     /**
@@ -40,7 +51,7 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     public void loadPlayer(Player player) {
         if (!player.isOnline()) return;
         if (getPlayerInformation(player.getUniqueId()) != null) return;
-        executeAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
+        executeQueryAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
         playerInformation.add(new PlayerInformation(player));
     }
 
@@ -67,20 +78,5 @@ public class PlayerInformationDatabase extends DatabaseSQL {
     }
 
     @Override
-    public void loadAllData() {
-        final List<Object> query = queryRow("SELECT `playerName` FROM `playerData`;", "playerName");
-        final List<String> primaryKey = query.stream().map(o -> (String) o).collect(Collectors.toList());
-
-        for (String playerName : primaryKey) {
-            final UUID uuid = UUID.fromString((String) queryValue("SELECT `uuid` FROM `playerData` WHERE `playerName` IS '" + playerName + "';", "uuid"));
-            playerInformation.add(new PlayerInformation(playerName, uuid));
-        }
-    }
-
-    @Override
-    public SqlDatabaseTable getSqlDatabaseTable() {
-        return new SqlDatabaseTable("playerData")
-                .addKey(create("playerName", SqlDataKey.KeyType.MINECRAFT_USERNAME).primary())
-                .addKey(create("uuid", SqlDataKey.KeyType.UUID));
-    }
+    public void onDisable() { }
 }

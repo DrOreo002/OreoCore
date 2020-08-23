@@ -1,4 +1,4 @@
-package me.droreo002.oreocore.database.object;
+package me.droreo002.oreocore.database;
 
 import lombok.Data;
 import lombok.Getter;
@@ -19,20 +19,16 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public abstract class DatabaseFlatFile extends Database {
+public abstract class FlatFileDatabase extends Database {
 
     @Getter
-    private final File dataFolder;
+    private File dataFolder;
     @Getter
-    private final boolean loadDataOnStartup;
-
-    /**
-     * Where the string is the file name
-     */
+    private boolean loadDataOnStartup;
     @Getter
     private List<DataCache> dataCaches;
 
-    public DatabaseFlatFile(JavaPlugin plugin, String folderName, boolean loadDataOnStartup) {
+    public FlatFileDatabase(JavaPlugin plugin, String folderName, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
         this.dataFolder = new File(plugin.getDataFolder(), folderName);
         this.dataCaches = new CopyOnWriteArrayList<>();
@@ -40,7 +36,7 @@ public abstract class DatabaseFlatFile extends Database {
         init(); // You have to call this first!
     }
 
-    public DatabaseFlatFile(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
+    public FlatFileDatabase(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
         super(DatabaseType.FLAT_FILE, plugin);
         this.dataFolder = databaseFolder;
         this.dataCaches = new CopyOnWriteArrayList<>();
