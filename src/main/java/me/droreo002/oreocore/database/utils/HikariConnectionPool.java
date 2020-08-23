@@ -58,7 +58,7 @@ public final class HikariConnectionPool {
             this.config.setDataSourceClassName(null);
             File databaseFile = new File(owningPlugin.getDataFolder(), sqlConfig.getDatabase(databaseType));
             if (!databaseFile.exists()) databaseFile.createNewFile();
-            this.config.setJdbcUrl(String.format("jdbc:sqlite:%s", sqlConfig.getDatabase(databaseType)));
+            this.config.setJdbcUrl("jdbc:sqlite:" + databaseFile);
             this.config.addDataSourceProperty("socketTimeout", String.valueOf(TimeUnit.SECONDS.toMillis(30)));
         }
 

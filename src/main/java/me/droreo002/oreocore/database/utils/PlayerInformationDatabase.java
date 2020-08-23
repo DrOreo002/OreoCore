@@ -8,10 +8,12 @@ import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.database.SQLDatabase;
 import org.bukkit.entity.Player;
 
+import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static me.droreo002.oreocore.database.utils.SQLDataKey.create;
@@ -49,10 +51,11 @@ public class PlayerInformationDatabase extends SQLDatabase {
      *
      * @param player The player, must be online
      */
+    @SneakyThrows
     public void loadPlayer(Player player) {
         if (!player.isOnline()) return;
         if (getPlayerInformation(player.getUniqueId()) != null) return;
-        executeQueryAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
+        executeUpdateAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
         playerInformation.add(new PlayerInformation(player));
     }
 

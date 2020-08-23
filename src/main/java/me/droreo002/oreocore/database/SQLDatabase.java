@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
@@ -121,13 +122,24 @@ public abstract class SQLDatabase extends Database {
     }
 
     /**
+     * Execute a update sql command via Async way. Ex: INSERT, UPDATE, DELETE
+     *
+     * @param sql The sql command
+     * @return Total changes / affected when the execution
+     */
+    @NotNull
+    public CompletableFuture<Integer> executeUpdateAsync(@NotNull String sql) {
+        return ThreadingUtils.makeFuture(() -> executeUpdate(sql));
+    }
+
+    /**
      * Execute a new SQL command via Async way
      *
      * @param sql The sql command
      * @return a new ResultSet class if succeeded, null otherwise
      */
     @NotNull
-    public Future<ResultSet> executeQueryAsync(@NotNull String sql) {
+    public CompletableFuture<ResultSet> executeQueryAsync(@NotNull String sql) {
         return ThreadingUtils.makeFuture(() -> executeQuery(sql));
     }
 
@@ -138,7 +150,7 @@ public abstract class SQLDatabase extends Database {
      * @param row       The row
      */
     @NotNull
-    public Future<Object> queryValueAsync(@NotNull String statement, @NotNull String row) {
+    public CompletableFuture<Object> queryValueAsync(@NotNull String statement, @NotNull String row) {
         return ThreadingUtils.makeFuture(() -> queryValue(statement, row));
     }
 
@@ -149,7 +161,7 @@ public abstract class SQLDatabase extends Database {
      * @param toSelect  What row that will be selected
      */
     @NotNull
-    public Future<Object> queryRowAsync(@NotNull String statement, @NotNull String... toSelect) {
+    public CompletableFuture<Object> queryRowAsync(@NotNull String statement, @NotNull String... toSelect) {
         return ThreadingUtils.makeFuture(() -> queryRow(statement, toSelect));
     }
 
@@ -159,7 +171,7 @@ public abstract class SQLDatabase extends Database {
      * @param statement The statement
      * @param row       The rows
      */
-    public Future<Multimap<String, Object>> queryMultipleRowsAsync(@NotNull String statement, @NotNull String... row) {
+    public CompletableFuture<Multimap<String, Object>> queryMultipleRowsAsync(@NotNull String statement, @NotNull String... row) {
         return ThreadingUtils.makeFuture(() -> queryMultipleRow(statement, row));
     }
 
@@ -171,7 +183,7 @@ public abstract class SQLDatabase extends Database {
      * @param table  The table
      */
     @NotNull
-    public Future<Boolean> isExistsAsync(@NotNull String column, @NotNull String data, @NotNull String table) {
+    public CompletableFuture<Boolean> isExistsAsync(@NotNull String column, @NotNull String data, @NotNull String table) {
         return ThreadingUtils.makeFuture(() -> isExists(column, data, table));
     }
 
