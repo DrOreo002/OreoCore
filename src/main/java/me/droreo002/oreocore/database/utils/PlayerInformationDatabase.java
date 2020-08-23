@@ -8,13 +8,12 @@ import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.database.SQLDatabase;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 import static me.droreo002.oreocore.database.utils.SQLDataKey.create;
 
@@ -35,14 +34,14 @@ public class PlayerInformationDatabase extends SQLDatabase {
 
     @SneakyThrows
     public void loadAllData() {
-        List<Object> query = queryRow("SELECT `playerName` FROM `playerData`;", "playerName");
-        List<String> primaryKey = query.stream().map(o -> (String) o).collect(Collectors.toList());
-
-        for (String playerName : primaryKey) {
-            Object value = queryValue("SELECT `uuid` FROM `playerData` WHERE `playerName` IS '" + playerName + "';", "uuid");
-            if (value == null) continue;
-            final UUID uuid = UUID.fromString((String) value);
-            playerInformation.add(new PlayerInformation(playerName, uuid));
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM `playerData`;")) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        playerInformation.add(new PlayerInformation(resultSet.getString("playerName"), UUID.fromString(resultSet.getString("uuid"))));
+                    }
+                }
+            }
         }
     }
 

@@ -169,7 +169,7 @@ public abstract class SQLDatabase extends Database {
         try (Connection connection = getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    return (!resultSet.wasNull()) ? resultSet.getObject(row) : null;
+                    return resultSet.getObject(row);
                 }
             }
         }
