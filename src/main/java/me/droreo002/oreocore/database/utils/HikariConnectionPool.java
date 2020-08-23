@@ -26,17 +26,20 @@ public final class HikariConnectionPool {
     private SQLConfiguration connectionAddress;
 
     @SneakyThrows
-    public HikariConnectionPool(JavaPlugin owningPlugin, DatabaseType databaseType, SQLConfiguration connectionAddress) {
+    public HikariConnectionPool(JavaPlugin owningPlugin, DatabaseType databaseType, SQLConfiguration sqlConfig) {
         this.config = new HikariConfig();
         this.owningPlugin = owningPlugin;
         this.databaseType = databaseType;
-        this.connectionAddress = connectionAddress;
+        this.connectionAddress = sqlConfig;
 
         if (databaseType == DatabaseType.MYSQL) {
             this.config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-            this.config.setJdbcUrl(String.format("jdbc:mysql:%s/%s", connectionAddress.getAddress(), connectionAddress.getDatabase(databaseType)));
-            this.config.setUsername(connectionAddress.getUsername());
-            this.config.setPassword(connectionAddress.getPassword());
+            String[] addr = sqlConfig.getAddress().split(":");
+            this.config.addDataSourceProperty("serverName", addr[0]);
+            this.config.addDataSourceProperty("port", addr[1]);
+            this.config.addDataSourceProperty("databaseName", sqlConfig.getDatabase(databaseType));
+            this.config.setUsername(sqlConfig.getUsername());
+            this.config.setPassword(sqlConfig.getPassword());
 
             // https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration
             this.config.addDataSourceProperty("cachePrepStmts", "true");
@@ -53,24 +56,22 @@ public final class HikariConnectionPool {
             this.config.addDataSourceProperty("cacheCallableStmts", "true");
         } else {
             this.config.setDataSourceClassName(null);
-            File databaseFile = new File(owningPlugin.getDataFolder(), connectionAddress.getDatabase(databaseType));
+            File databaseFile = new File(owningPlugin.getDataFolder(), sqlConfig.getDatabase(databaseType));
             if (!databaseFile.exists()) databaseFile.createNewFile();
-            this.config.setJdbcUrl(String.format("jdbc:sqlite:%s", connectionAddress.getDatabase(databaseType)));
+            this.config.setJdbcUrl(String.format("jdbc:sqlite:%s", sqlConfig.getDatabase(databaseType)));
+            this.config.addDataSourceProperty("socketTimeout", String.valueOf(TimeUnit.SECONDS.toMillis(30)));
         }
 
         this.config.setPoolName(owningPlugin.getName() + " : HikariCP");
 
-        // https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery
-        this.config.addDataSourceProperty("socketTimeout", String.valueOf(TimeUnit.SECONDS.toMillis(30)));
         this.config.addDataSourceProperty("useUnicode", "true");
         this.config.addDataSourceProperty("characterEncoding", "utf8");
-        this.config.setMaximumPoolSize(10);
-        this.config.setMinimumIdle(10);
-        this.config.setConnectionInitSql("SELECT 1;");
-        this.config.setMaxLifetime(1800000);
-        this.config.setConnectionTimeout(5000);
+        this.config.setMaximumPoolSize(sqlConfig.getMaxPoolSize());
+        this.config.setMinimumIdle(sqlConfig.getMinIdle());
+        this.config.setMaxLifetime(sqlConfig.getMaxLifetime());
+        this.config.setConnectionTimeout(sqlConfig.getConnectionTimeout());
 
-        this.dataSource = new HikariDataSource(config);
+        this.dataSource = new HikariDataSource(this.config);
     }
 
     public Connection getConnection() throws SQLException {

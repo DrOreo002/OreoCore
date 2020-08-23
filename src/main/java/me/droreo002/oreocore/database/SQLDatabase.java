@@ -15,9 +15,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public abstract class SQLDatabase extends Database {
 
@@ -45,7 +47,7 @@ public abstract class SQLDatabase extends Database {
         this.connectionPool = new HikariConnectionPool(owningPlugin, databaseType, configuration);
         try {
             getConnection();
-            if (this.sqlTableBuilder != null) executeQuery(this.sqlTableBuilder.build());
+            if (this.sqlTableBuilder != null) executeUpdate(this.sqlTableBuilder.build());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,15 +61,55 @@ public abstract class SQLDatabase extends Database {
     }
 
     /**
-     * Execute a new SQL command
+     * Execute a batch sql command
+     *
+     * @param statements The sql command to execute
+     * @return Total changes / affected when execution. Separated by each rows
+     * @throws SQLException If something goes wrong
+     */
+    public int[] executeBatch(@NotNull String... statements) throws SQLException {
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+        for (String sql : statements) {
+            sql = getStatementProcessor().apply(sql);
+            statement.addBatch(sql);
+        }
+        int[] result = statement.executeBatch();
+        statement.close();
+        con.close();
+
+        return result;
+    }
+
+    /**
+     * Execute a update sql command. Ex: INSERT, UPDATE, DELETE
+     *
+     * @param sql The sql command
+     * @return Total changes / affected when the execution
+     * @throws SQLException If something goes wrong
+     */
+    public int executeUpdate(@NotNull String sql) throws SQLException {
+        sql = getStatementProcessor().apply(sql);
+        Connection con = getConnection();
+        PreparedStatement statement = con.prepareStatement(sql);
+        int count = statement.executeUpdate();
+
+        statement.close();
+        con.close();
+
+        return count;
+    }
+
+    /**
+     * Execute a query sql command. Ex: SELECT
      *
      * @param sql The sql command
      * @return a new ResultSet class if succeeded, null otherwise
      * @throws SQLException If something goes wrong
      */
     @NotNull
-    public ResultSet executeQuery(String sql) throws SQLException {
-        if (this.databaseType == DatabaseType.MYSQL) sql = sql.replace("'", "`");
+    public ResultSet executeQuery(@NotNull String sql) throws SQLException {
+        sql = getStatementProcessor().apply(sql);
         Connection con = getConnection();
         PreparedStatement statement = con.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
@@ -85,7 +127,7 @@ public abstract class SQLDatabase extends Database {
      * @return a new ResultSet class if succeeded, null otherwise
      */
     @NotNull
-    public Future<ResultSet> executeQueryAsync(String sql) {
+    public Future<ResultSet> executeQueryAsync(@NotNull String sql) {
         return ThreadingUtils.makeFuture(() -> executeQuery(sql));
     }
 
@@ -96,7 +138,7 @@ public abstract class SQLDatabase extends Database {
      * @param row       The row
      */
     @NotNull
-    public Future<Object> queryValueAsync(String statement, String row) {
+    public Future<Object> queryValueAsync(@NotNull String statement, @NotNull String row) {
         return ThreadingUtils.makeFuture(() -> queryValue(statement, row));
     }
 
@@ -107,7 +149,7 @@ public abstract class SQLDatabase extends Database {
      * @param toSelect  What row that will be selected
      */
     @NotNull
-    public Future<Object> queryRowAsync(String statement, String... toSelect) {
+    public Future<Object> queryRowAsync(@NotNull String statement, @NotNull String... toSelect) {
         return ThreadingUtils.makeFuture(() -> queryRow(statement, toSelect));
     }
 
@@ -117,7 +159,7 @@ public abstract class SQLDatabase extends Database {
      * @param statement The statement
      * @param row       The rows
      */
-    public Future<Multimap<String, Object>> queryMultipleRowsAsync(String statement, String... row) {
+    public Future<Multimap<String, Object>> queryMultipleRowsAsync(@NotNull String statement, @NotNull String... row) {
         return ThreadingUtils.makeFuture(() -> queryMultipleRow(statement, row));
     }
 
@@ -129,7 +171,7 @@ public abstract class SQLDatabase extends Database {
      * @param table  The table
      */
     @NotNull
-    public Future<Boolean> isExistsAsync(String column, String data, String table) {
+    public Future<Boolean> isExistsAsync(@NotNull String column, @NotNull String data, @NotNull String table) {
         return ThreadingUtils.makeFuture(() -> isExists(column, data, table));
     }
 
@@ -141,7 +183,7 @@ public abstract class SQLDatabase extends Database {
      * @return The specified value if there's any, null otherwise
      */
     @Nullable
-    public Object queryValue(String statement, String row) throws SQLException {
+    public Object queryValue(@NotNull String statement, @NotNull String row) throws SQLException {
         try (ResultSet resultSet = executeQuery(statement)) {
             return (!resultSet.wasNull()) ? resultSet.getObject(row) : null;
         }
@@ -155,7 +197,7 @@ public abstract class SQLDatabase extends Database {
      * @return The specified value as a list if there's any, empty list otherwise
      */
     @NotNull
-    public List<Object> queryRow(String statement, String... toSelect) throws SQLException {
+    public List<Object> queryRow(@NotNull String statement, @NotNull String... toSelect) throws SQLException {
         try (ResultSet resultSet = executeQuery(statement)) {
             List<Object> values = new ArrayList<>();
             while (resultSet.next()) {
@@ -175,7 +217,7 @@ public abstract class SQLDatabase extends Database {
      * @return a HashMap contained the result values if there's any, empty HashMap otherwise
      */
     @NotNull
-    public Multimap<String, Object> queryMultipleRow(String statement, String... rows) throws SQLException {
+    public Multimap<String, Object> queryMultipleRow(@NotNull String statement, @NotNull String... rows) throws SQLException {
         try (ResultSet resultSet = executeQuery(statement)) {
             Multimap<String, Object> multimap = ArrayListMultimap.create();
             while (resultSet.next()) {
@@ -195,7 +237,7 @@ public abstract class SQLDatabase extends Database {
      * @param table  The table
      * @return true if exists, false otherwise
      */
-    public boolean isExists(String column, String data, String table) throws SQLException {
+    public boolean isExists(@NotNull String column, @NotNull String data, @NotNull String table) throws SQLException {
         try (ResultSet resultSet = executeQuery(String.format("SELECT * FROM `" + table + "` WHERE `" + column + "` = `%s`;", data))) {
             return resultSet.next();
         }
@@ -208,5 +250,15 @@ public abstract class SQLDatabase extends Database {
     public Connection getConnection() throws SQLException {
         if (this.connectionPool == null) throw new NullPointerException("Hikari connection pool is not set!");
         return this.connectionPool.getConnection();
+    }
+
+    /**
+     * Get the statement processor
+     *
+     * @return Statement processor function
+     */
+    @NotNull
+    public Function<String, String> getStatementProcessor() {
+        return (this.databaseType == DatabaseType.MYSQL) ? s -> s.replace("'", "`") : s -> s;
     }
 }
