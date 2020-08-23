@@ -67,6 +67,7 @@ public abstract class SQLDatabase extends Database {
      */
     @NotNull
     public ResultSet executeQuery(String sql) throws SQLException {
+        if (this.databaseType == DatabaseType.MYSQL) sql = sql.replace("'", "`");
         Connection con = getConnection();
         PreparedStatement statement = con.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();

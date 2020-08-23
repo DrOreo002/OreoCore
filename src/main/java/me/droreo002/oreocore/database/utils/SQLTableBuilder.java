@@ -2,6 +2,7 @@ package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class SQLTableBuilder {
 
     SQLTableBuilder(String tableName, SQLDataKey... dataKeys) {
         this.tableName = tableName;
-        this.dataKeys = Arrays.asList(dataKeys);
+        this.dataKeys = new ArrayList<>(Arrays.asList(dataKeys));
     }
 
     public static SQLTableBuilder of(String tableName, SQLDataKey... sqlDataKeys) {

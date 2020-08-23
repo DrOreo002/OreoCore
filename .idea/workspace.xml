@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/FlatFileDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/FlatFileDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/SQLDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/SQLDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformationDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/PlayerInformationDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/SQLConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/SQLConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/HikariConnectionPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/database/utils/HikariConnectionPool.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,13 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00068" summary="Added update checker">
-      <created>1580549392936</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1580549392937</updated>
     </task>
     <task id="LOCAL-00069" summary="Some fixes and recode">
       <created>1580732922335</created>
@@ -485,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598176985272</updated>
     </task>
-    <option name="localTasksCounter" value="117" />
+    <task id="LOCAL-00117" summary="Some method rename">
+      <created>1598177534855</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1598177534855</updated>
+    </task>
+    <option name="localTasksCounter" value="118" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -518,7 +515,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Some fixes" />
     <MESSAGE value="Debug message removed" />
     <MESSAGE value="Yet another recode" />
     <MESSAGE value="Recoded sql database, also did a small reformat" />
@@ -543,7 +539,8 @@
     <MESSAGE value="Fixed head texture not working on builder" />
     <MESSAGE value="Recoded SQLDatabase" />
     <MESSAGE value="Bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fix" />
+    <MESSAGE value="Some method rename" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some method rename" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1598176164285">
@@ -558,30 +555,30 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="690" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598167384375" />
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2" timestamp="1598176984741">
+    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2" timestamp="1598177534346">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598176984741" />
-    <state width="1879" height="237" key="GridCell.Tab.0.bottom" timestamp="1598177470236">
+    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177534346" />
+    <state width="1879" height="237" key="GridCell.Tab.0.bottom" timestamp="1598182196795">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="237" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177470236" />
-    <state width="1879" height="237" key="GridCell.Tab.0.center" timestamp="1598177470235">
+    <state width="1879" height="237" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598182196795" />
+    <state width="1879" height="237" key="GridCell.Tab.0.center" timestamp="1598182196794">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="237" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177470235" />
-    <state width="1879" height="237" key="GridCell.Tab.0.left" timestamp="1598177470235">
+    <state width="1879" height="237" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598182196794" />
+    <state width="1879" height="237" key="GridCell.Tab.0.left" timestamp="1598182196794">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="237" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177470235" />
-    <state width="1879" height="237" key="GridCell.Tab.0.right" timestamp="1598177470235">
+    <state width="1879" height="237" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598182196794" />
+    <state width="1879" height="237" key="GridCell.Tab.0.right" timestamp="1598182196794">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1879" height="237" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177470235" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1598177330577">
+    <state width="1879" height="237" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598182196794" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1598177536687">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177330577" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177536687" />
     <state x="92" y="92" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1598161586654">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -602,10 +599,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1590484307561" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1598177111670">
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1598180194465">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177111670" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598180194465" />
     <state x="2387" y="196" width="672" height="565" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1598021003122" />
   </component>
 </project>
