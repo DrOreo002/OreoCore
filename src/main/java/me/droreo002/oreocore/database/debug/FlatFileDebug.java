@@ -9,7 +9,6 @@ public class FlatFileDebug extends FlatFileDatabase {
 
     public FlatFileDebug() {
         super(OreoCore.getInstance(), OreoCore.getInstance().getDataFolder(), true);
-        DatabaseManager.registerDatabase(OreoCore.getInstance(), this);
     }
 
     @Override
