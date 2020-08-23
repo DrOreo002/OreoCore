@@ -3,17 +3,16 @@ package me.droreo002.oreocore.database;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Database {
 
     @Getter
-    protected final DatabaseType databaseType;
+    protected DatabaseType databaseType;
     @Getter
-    protected final JavaPlugin owningPlugin;
+    protected JavaPlugin owningPlugin;
 
-    public Database(DatabaseType databaseType, JavaPlugin owningPlugin) {
-        Validate.notNull(owningPlugin, "Plugin cannot be null!");
-        Validate.notNull(databaseType, "DatabaseType cannot be null!");
+    public Database(@NotNull JavaPlugin owningPlugin, @NotNull DatabaseType databaseType) {
         this.databaseType = databaseType;
         this.owningPlugin = owningPlugin;
         DatabaseRegistry.register(this);

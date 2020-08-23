@@ -16,9 +16,6 @@ public class SQLConfiguration implements SerializableConfigVariable {
     @NotNull
     private String database;
     @Getter
-    @NotNull
-    private DatabaseType databaseType;
-    @Getter
     @Nullable
     private String address, username, password, characterEncoding;
     @Getter
@@ -31,14 +28,12 @@ public class SQLConfiguration implements SerializableConfigVariable {
      */
     public SQLConfiguration() {
         this.database = "database";
-        this.databaseType = DatabaseType.SQL;
     }
 
-    public SQLConfiguration(@NotNull String database, @NotNull DatabaseType databaseType, @Nullable String address, @Nullable String username,
+    public SQLConfiguration(@NotNull String database, @Nullable String address, @Nullable String username,
                             @Nullable String password, @Nullable String characterEncoding, int maxPoolSize, int minIdle, int maxLifetime,
                             int connectionTimeout, boolean useUnicode) {
         this.database = database;
-        this.databaseType = databaseType;
         this.address = address;
         this.username = username;
         this.password = password;
@@ -50,9 +45,8 @@ public class SQLConfiguration implements SerializableConfigVariable {
         this.useUnicode = useUnicode;
     }
 
-    public SQLConfiguration(@NotNull String database, @NotNull DatabaseType databaseType, @Nullable String address, @Nullable String username, @Nullable String password) {
+    public SQLConfiguration(@NotNull String database, @Nullable String address, @Nullable String username, @Nullable String password) {
         this.database = database;
-        this.databaseType = databaseType;
         this.address = address;
         this.username = username;
         this.password = password;
@@ -65,18 +59,16 @@ public class SQLConfiguration implements SerializableConfigVariable {
     }
 
     public static SQLConfiguration sql(@NotNull String database) {
-        return new SQLConfiguration(database, DatabaseType.SQL, null, null, null);
+        return new SQLConfiguration(database, null, null, null);
     }
 
     public static SQLConfiguration mysql(@NotNull String database, @NotNull String address,
                                          @NotNull String username, @NotNull String password) {
-        return new SQLConfiguration(database, DatabaseType.MYSQL, address, username, password);
+        return new SQLConfiguration(database, address, username, password);
     }
 
     public static SQLConfiguration deserialize(ConfigurationSection section) {
         String database = section.getString("database", "database");
-        DatabaseType databaseType = DatabaseType.valueOf("type");
-        if (databaseType == DatabaseType.FLAT_FILE) throw new IllegalStateException("DatabaseType FLAT_FILE is not allowed!");
         String address = section.getString("address");
         String username = section.getString("username");
         String password = section.getString("password");
@@ -86,7 +78,7 @@ public class SQLConfiguration implements SerializableConfigVariable {
         int connectionTimeout = section.getInt("pool-settings.connection-timeout", 5000);
         boolean useUnicode = section.getBoolean("pool-settings.properties.use-unicode", true);
         String characterEncoding = section.getString("pool-settings.properties.character-encoding", "utf8");
-        return new SQLConfiguration(Objects.requireNonNull(database), databaseType, address, username, password, characterEncoding,
+        return new SQLConfiguration(Objects.requireNonNull(database), address, username, password, characterEncoding,
                 maxPoolSize, minIdle, maxLifetime, connectionTimeout, useUnicode);
     }
 
@@ -94,7 +86,6 @@ public class SQLConfiguration implements SerializableConfigVariable {
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("database", this.database);
-        map.put("type", this.databaseType.name());
         map.put("address", this.address);
         map.put("username", this.username);
         map.put("password", this.password);

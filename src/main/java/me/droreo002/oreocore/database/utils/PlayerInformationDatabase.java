@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.dummy.PluginConfig;
+import me.droreo002.oreocore.database.DatabaseType;
 import me.droreo002.oreocore.database.SQLDatabase;
 import org.bukkit.entity.Player;
 
@@ -23,7 +24,7 @@ public class PlayerInformationDatabase extends SQLDatabase {
     private PluginConfig memory;
 
     public PlayerInformationDatabase(OreoCore plugin) {
-        super(plugin, SQLConfiguration.sql("playerdata.db"), SQLTableBuilder.of("playerData")
+        super(plugin, DatabaseType.SQL, SQLConfiguration.sql("playerdata.db"), SQLTableBuilder.of("playerData")
                 .addKey(create("playerName", SQLDataKey.KeyType.MINECRAFT_USERNAME).primary())
                 .addKey(create("uuid", SQLDataKey.KeyType.UUID)));
         this.memory = plugin.getPluginConfig();

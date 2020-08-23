@@ -29,7 +29,7 @@ public abstract class FlatFileDatabase extends Database {
     private List<DataCache> dataCaches;
 
     public FlatFileDatabase(JavaPlugin plugin, String folderName, boolean loadDataOnStartup) {
-        super(DatabaseType.FLAT_FILE, plugin);
+        super(plugin, DatabaseType.FLAT_FILE);
         this.dataFolder = new File(plugin.getDataFolder(), folderName);
         this.dataCaches = new CopyOnWriteArrayList<>();
         this.loadDataOnStartup = loadDataOnStartup;
@@ -37,7 +37,7 @@ public abstract class FlatFileDatabase extends Database {
     }
 
     public FlatFileDatabase(JavaPlugin plugin, File databaseFolder, boolean loadDataOnStartup) {
-        super(DatabaseType.FLAT_FILE, plugin);
+        super(plugin, DatabaseType.FLAT_FILE);
         this.dataFolder = databaseFolder;
         this.dataCaches = new CopyOnWriteArrayList<>();
         this.loadDataOnStartup = loadDataOnStartup;

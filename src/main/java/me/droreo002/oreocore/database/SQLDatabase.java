@@ -26,12 +26,17 @@ public abstract class SQLDatabase extends Database {
     @Getter
     private SQLConfiguration configuration;
     @Getter
-    private SQLTableBuilder sqlDatabaseTable;
+    @Nullable
+    private SQLTableBuilder sqlTableBuilder;
 
-    public SQLDatabase(JavaPlugin owningPlugin, SQLConfiguration configuration, SQLTableBuilder sqlDatabaseTable) {
-        super(configuration.getDatabaseType(), owningPlugin);
+    public SQLDatabase(@NotNull JavaPlugin owningPlugin, @NotNull DatabaseType databaseType, @NotNull SQLConfiguration configuration) {
+        this(owningPlugin, databaseType, configuration, null);
+    }
+
+    public SQLDatabase(@NotNull JavaPlugin owningPlugin, @NotNull DatabaseType databaseType, @NotNull SQLConfiguration configuration, @Nullable SQLTableBuilder sqlTableBuilder) {
+        super(owningPlugin, databaseType);
         this.configuration = configuration;
-        this.sqlDatabaseTable = sqlDatabaseTable;
+        this.sqlTableBuilder = sqlTableBuilder;
         init();
     }
 
@@ -40,6 +45,7 @@ public abstract class SQLDatabase extends Database {
         this.connectionPool = new HikariConnectionPool(owningPlugin, databaseType, configuration);
         try {
             getConnection();
+            if (this.sqlTableBuilder != null) executeQuery(this.sqlTableBuilder.build());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,8 +62,8 @@ public abstract class SQLDatabase extends Database {
      * Execute a new SQL command
      *
      * @param sql The sql command
-     * @throws SQLException If something goes wrong
      * @return a new ResultSet class if succeeded, null otherwise
+     * @throws SQLException If something goes wrong
      */
     @NotNull
     public ResultSet executeQuery(String sql) throws SQLException {
@@ -164,7 +170,7 @@ public abstract class SQLDatabase extends Database {
      * Query a multiple rows to get its values
      *
      * @param statement The statement
-     * @param rows       The rows to get
+     * @param rows      The rows to get
      * @return a HashMap contained the result values if there's any, empty HashMap otherwise
      */
     @NotNull
