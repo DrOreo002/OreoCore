@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,26 +103,6 @@ public abstract class SQLDatabase extends Database {
     }
 
     /**
-     * Execute a query sql command. Ex: SELECT
-     *
-     * @param sql The sql command
-     * @return a new ResultSet class if succeeded, null otherwise
-     * @throws SQLException If something goes wrong
-     */
-    @NotNull
-    public ResultSet executeQuery(@NotNull String sql) throws SQLException {
-        sql = getStatementProcessor().apply(sql);
-        Connection con = getConnection();
-        PreparedStatement statement = con.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
-
-        statement.close();
-        con.close();
-
-        return resultSet;
-    }
-
-    /**
      * Execute a update sql command via Async way. Ex: INSERT, UPDATE, DELETE
      *
      * @param sql The sql command
@@ -130,17 +111,6 @@ public abstract class SQLDatabase extends Database {
     @NotNull
     public CompletableFuture<Integer> executeUpdateAsync(@NotNull String sql) {
         return ThreadingUtils.makeFuture(() -> executeUpdate(sql));
-    }
-
-    /**
-     * Execute a new SQL command via Async way
-     *
-     * @param sql The sql command
-     * @return a new ResultSet class if succeeded, null otherwise
-     */
-    @NotNull
-    public CompletableFuture<ResultSet> executeQueryAsync(@NotNull String sql) {
-        return ThreadingUtils.makeFuture(() -> executeQuery(sql));
     }
 
     /**
@@ -196,8 +166,12 @@ public abstract class SQLDatabase extends Database {
      */
     @Nullable
     public Object queryValue(@NotNull String statement, @NotNull String row) throws SQLException {
-        try (ResultSet resultSet = executeQuery(statement)) {
-            return (!resultSet.wasNull()) ? resultSet.getObject(row) : null;
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return (!resultSet.wasNull()) ? resultSet.getObject(row) : null;
+                }
+            }
         }
     }
 
@@ -210,15 +184,19 @@ public abstract class SQLDatabase extends Database {
      */
     @NotNull
     public List<Object> queryRow(@NotNull String statement, @NotNull String... toSelect) throws SQLException {
-        try (ResultSet resultSet = executeQuery(statement)) {
-            List<Object> values = new ArrayList<>();
-            while (resultSet.next()) {
-                for (String s : toSelect) {
-                    values.add(resultSet.getObject(s));
+        List<Object> values = new ArrayList<>();
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        for (String s : toSelect) {
+                            values.add(resultSet.getObject(s));
+                        }
+                    }
                 }
             }
-            return values;
         }
+        return values;
     }
 
     /**
@@ -230,15 +208,19 @@ public abstract class SQLDatabase extends Database {
      */
     @NotNull
     public Multimap<String, Object> queryMultipleRow(@NotNull String statement, @NotNull String... rows) throws SQLException {
-        try (ResultSet resultSet = executeQuery(statement)) {
-            Multimap<String, Object> multimap = ArrayListMultimap.create();
-            while (resultSet.next()) {
-                for (String row : rows) {
-                    multimap.put(row, resultSet.getObject(row));
+        Multimap<String, Object> multimap = ArrayListMultimap.create();
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        for (String row : rows) {
+                            multimap.put(row, resultSet.getObject(row));
+                        }
+                    }
                 }
             }
-            return multimap;
         }
+        return multimap;
     }
 
     /**
@@ -249,9 +231,30 @@ public abstract class SQLDatabase extends Database {
      * @param table  The table
      * @return true if exists, false otherwise
      */
-    public boolean isExists(@NotNull String column, @NotNull String data, @NotNull String table) throws SQLException {
-        try (ResultSet resultSet = executeQuery(String.format("SELECT * FROM `" + table + "` WHERE `" + column + "` = `%s`;", data))) {
-            return resultSet.next();
+    public boolean isExists(@NotNull String table, @NotNull String column, @NotNull String data) {
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(String.format("SELECT * FROM `%s` WHERE `%s` = '%s' LIMIT 1;", table, column, data))) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if column is missing from the database
+     *
+     * @param tableName The table name
+     * @param columnName The column name
+     * @return Boolean
+     * @throws SQLException If something goes wrong
+     */
+    public boolean isColumnMissing(@NotNull String tableName, @NotNull String columnName) throws SQLException {
+        DatabaseMetaData databaseMetaData = getConnection().getMetaData();
+        try (ResultSet rs = databaseMetaData.getColumns(null, null, tableName, columnName)) {
+            return !rs.next();
         }
     }
 
@@ -271,6 +274,6 @@ public abstract class SQLDatabase extends Database {
      */
     @NotNull
     public Function<String, String> getStatementProcessor() {
-        return (this.databaseType == DatabaseType.MYSQL) ? s -> s.replace("'", "`") : s -> s;
+        return s -> s;
     }
 }

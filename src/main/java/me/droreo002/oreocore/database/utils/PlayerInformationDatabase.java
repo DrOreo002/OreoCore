@@ -55,7 +55,7 @@ public class PlayerInformationDatabase extends SQLDatabase {
     public void loadPlayer(Player player) {
         if (!player.isOnline()) return;
         if (getPlayerInformation(player.getUniqueId()) != null) return;
-        executeUpdateAsync("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
+        executeUpdate("INSERT INTO `playerData` (playerName,uuid) VALUES ('" + player.getName() + "','" + player.getUniqueId().toString() + "');");
         playerInformation.add(new PlayerInformation(player));
     }
 

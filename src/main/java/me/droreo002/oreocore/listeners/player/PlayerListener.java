@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
         final Player player = e.getPlayer();
         final PluginConfig memory = plugin.getPluginConfig();
 
-        if (memory.isCachePlayerInformation()) {
+        if (plugin.getPlayerInformationDatabase() != null) {
             plugin.getPlayerInformationDatabase().loadPlayer(player);
         }
         if (memory.isCachePlayerHead()) {
