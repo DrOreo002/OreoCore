@@ -29,11 +29,9 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.droreo002.oreocore.dependencies.classloader.LoaderType;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Base64;
 import java.util.List;
 
 public class Dependency {
@@ -47,18 +45,13 @@ public class Dependency {
     @Getter
     private final List<URL> urls;
     @Getter
-    private final String version;
-    @Getter
-    private final byte[] checksum;
+    private final String version, md5;
     @Getter @Setter
     private boolean autoLoad;
-    @Getter @Setter
-    private LoaderType loaderType;
 
-    public Dependency(String name, String groupId, String artifactId, String version, String checksum, LoaderType loaderType) {
+    public Dependency(String name, String groupId, String artifactId, String version, String md5) {
         this.name = name;
         this.autoLoad = true;
-        this.loaderType = loaderType;
 
         String path = String.format(MAVEN_FORMAT,
                 rewriteEscaping(groupId).replace(".", "/"),
@@ -76,7 +69,7 @@ public class Dependency {
             throw new RuntimeException(e); // propagate
         }
         this.version = version;
-        this.checksum = Base64.getDecoder().decode(checksum);
+        this.md5 = md5;
     }
 
     private static String rewriteEscaping(String s) {

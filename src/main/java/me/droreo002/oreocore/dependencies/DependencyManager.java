@@ -27,18 +27,15 @@ package me.droreo002.oreocore.dependencies;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.debugging.ODebug;
 import me.droreo002.oreocore.dependencies.classloader.IsolatedClassLoader;
-import me.droreo002.oreocore.dependencies.classloader.LoaderType;
 import me.droreo002.oreocore.dependencies.classloader.PluginClassLoader;
-import me.droreo002.oreocore.dependencies.classloader.ReflectionClassLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,8 +45,6 @@ import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +71,7 @@ public class DependencyManager {
         this.pluginClassLoader = pluginClassLoader;
 
         try {
-            this.digest = MessageDigest.getInstance("SHA-256");
+            this.digest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -186,15 +181,12 @@ public class DependencyManager {
                         throw new RuntimeException("Empty stream");
                     }
 
-
                     // compute a hash for the downloaded file
-                    byte[] hash = this.digest.digest(bytes);
+                    String md5 = new HexBinaryAdapter().marshal(this.digest.digest(bytes)).toLowerCase();
 
                     // ensure the hash matches the expected checksum
-                    if (!Arrays.equals(hash, dependency.getChecksum())) {
-                        throw new RuntimeException("Downloaded file had an invalid hash. " +
-                                "Expected: " + Base64.getEncoder().encodeToString(dependency.getChecksum()) + " " +
-                                "Actual: " + Base64.getEncoder().encodeToString(hash));
+                    if (!md5.equals(dependency.getMd5().toLowerCase())) {
+                        throw new RuntimeException("Downloaded file had an invalid hash!");
                     }
 
                     // if the checksum matches, save the content to disk
@@ -257,13 +249,9 @@ public class DependencyManager {
         }
     }
 
+    @AllArgsConstructor
     private static final class Source {
         private final Dependency dependency;
         private final Path file;
-
-        private Source(Dependency dependency, Path file) {
-            this.dependency = dependency;
-            this.file = file;
-        }
     }
 }

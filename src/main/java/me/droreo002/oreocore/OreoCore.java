@@ -52,8 +52,6 @@ public final class OreoCore extends JavaPlugin {
     @Getter
     private Metrics metrics;
     @Getter
-    private PluginClassLoader pluginClassLoader;
-    @Getter
     private DependencyManager dependencyManager;
     @Getter
     private MultiConfig multiConfig;
@@ -66,8 +64,7 @@ public final class OreoCore extends JavaPlugin {
         metrics = new Metrics(this);
         prefix = StringUtils.color("&7[ &bOreoCore &7]&f ");
         protocolManager = ProtocolLibrary.getProtocolManager();
-        pluginClassLoader = new ReflectionClassLoader(this);
-        dependencyManager = new DependencyManager(this, pluginClassLoader);
+        dependencyManager = new DependencyManager(this, new ReflectionClassLoader(this));
         inventoryCacheManager = new InventoryCacheManager();
 
         HookUtils.getInstance(); // Initialize
@@ -81,12 +78,6 @@ public final class OreoCore extends JavaPlugin {
              */
             for (OCoreDependency dependency : OCoreDependency.values()) {
                 dependencyManager.loadDependencies(dependency.getDependency());
-            }
-
-            try {
-                Class.forName("org.sqlite.jdbc4.JDBC4Connection");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
             ODebug.log(this, process.stop("Dependencies successfully loaded in &e%totalTime ms!"), true);
         }

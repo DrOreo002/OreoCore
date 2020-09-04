@@ -3,9 +3,12 @@ package me.droreo002.oreocore.database;
 import lombok.Getter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import me.droreo002.oreocore.database.utils.HikariConnectionPool;
+import me.droreo002.oreocore.database.connection.HikariConnection;
+import me.droreo002.oreocore.database.connection.LegacyConnection;
+import me.droreo002.oreocore.database.connection.SQLConnection;
 import me.droreo002.oreocore.database.utils.SQLConfiguration;
 import me.droreo002.oreocore.database.utils.SQLTableBuilder;
+import me.droreo002.oreocore.utils.bridge.ServerUtils;
 import me.droreo002.oreocore.utils.misc.ThreadingUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -20,13 +23,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 
 public abstract class SQLDatabase extends Database {
 
     @Getter
-    private HikariConnectionPool connectionPool;
+    private SQLConnection sqlConnection;
     @Getter
     private SQLConfiguration configuration;
     @Getter
@@ -46,7 +48,7 @@ public abstract class SQLDatabase extends Database {
 
     @Override
     public void init() {
-        this.connectionPool = new HikariConnectionPool(owningPlugin, databaseType, configuration);
+        this.sqlConnection = ServerUtils.isOldAsFuckVersion() ? new LegacyConnection(owningPlugin, databaseType, configuration) : new HikariConnection(owningPlugin, databaseType, configuration);
         try {
             getConnection();
             if (this.sqlTableBuilder != null) executeUpdate(this.sqlTableBuilder.build());
@@ -59,7 +61,7 @@ public abstract class SQLDatabase extends Database {
      * Try to close the connection
      */
     public void close() {
-        this.connectionPool.getDataSource().close();
+        this.sqlConnection.close();
     }
 
     /**
@@ -263,8 +265,8 @@ public abstract class SQLDatabase extends Database {
      */
     @NotNull
     public Connection getConnection() throws SQLException {
-        if (this.connectionPool == null) throw new NullPointerException("Hikari connection pool is not set!");
-        return this.connectionPool.getConnection();
+        if (this.sqlConnection == null) throw new NullPointerException("Hikari connection pool is not set!");
+        return this.sqlConnection.getConnection();
     }
 
     /**
