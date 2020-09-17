@@ -38,7 +38,8 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     @Getter
     private SoundObject soundOnClick;
     @Setter
-    private Map<ClickType, List<ButtonListener>> buttonListeners;
+    @Getter
+    private List<ButtonListener> buttonListeners;
     @Getter
     @Setter
     private boolean animated;
@@ -63,7 +64,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public GUIButton(ItemStack item) {
         this.uniqueId = UUID.randomUUID();
         this.buttonItemStackBuilder = ItemStackBuilder.of(item);
-        this.buttonListeners = new HashMap<>();
+        this.buttonListeners = new ArrayList<>();
     }
 
     /**
@@ -107,7 +108,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
         this.uniqueId = UUID.randomUUID();
         this.buttonItemStackBuilder = ItemStackBuilder.of(item);
         this.inventorySlot = inventorySlot;
-        this.buttonListeners = new HashMap<>();
+        this.buttonListeners = new ArrayList<>();
     }
 
     public static GUIButton deserialize(ConfigurationSection section) {
@@ -174,12 +175,9 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
     public GUIButton addListener(ButtonListener buttonListener) {
         if (this.maxListener != 0 && this.buttonListeners.size() >= this.maxListener)
             throw new IllegalStateException("Max listener has been reached!");
-        final ClickType clickType = buttonListener.getClickType();
-        if (buttonListeners.containsKey(clickType)) {
-            buttonListeners.get(clickType).add(buttonListener);
-        } else {
-            buttonListeners.put(clickType, new CopyOnWriteArrayList<>(Collections.singletonList(buttonListener)));
-        }
+        this.buttonListeners.add(buttonListener);
+        this.buttonListeners.sort(Comparator.comparingInt(listener -> listener.getListenerPriority().getLevel()));
+        Collections.reverse(this.buttonListeners);
         return this;
     }
 
@@ -188,40 +186,6 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
      */
     public void clearListener() {
         this.buttonListeners.clear();
-    }
-
-    /**
-     * For debug purpose
-     *
-     * @return String
-     */
-    public String getListenerInformation() {
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry<ClickType, List<ButtonListener>> entry : this.buttonListeners.entrySet()) {
-            builder.append(entry.getKey().name()).append(":").append(entry.getValue().size()).append(", ");
-        }
-        return builder.toString();
-    }
-
-
-    /**
-     * Get the button listener (sorted)
-     *
-     * @return The button listener
-     */
-    @NotNull
-    public Map<ClickType, List<ButtonListener>> getButtonListeners() {
-        Map<ClickType, List<ButtonListener>> newMap = new HashMap<>();
-        for (Map.Entry<ClickType, List<ButtonListener>> entry : this.buttonListeners.entrySet()) {
-            List<ButtonListener> listeners = entry.getValue();
-            // We do not want to change anything if no priority is set to other than default
-            if (listeners.stream().anyMatch(bListener -> bListener.getListenerPriority() != ButtonListener.Priority.DEFAULT)) {
-                listeners.sort(Comparator.comparingInt(button -> button.getListenerPriority().getLevel()));
-                Collections.reverse(listeners);
-            }
-            newMap.put(entry.getKey(), listeners);
-        }
-        return newMap;
     }
 
     /**
@@ -237,7 +201,7 @@ public class GUIButton implements SerializableConfigVariable, Cloneable {
             /*
             Hell yeah hardcode because why not
              */
-            b.setButtonListeners(new HashMap<>(this.buttonListeners));
+            b.setButtonListeners(new ArrayList<>(this.buttonListeners));
             ItemStackBuilder clonedBuilder = ItemStackBuilder.of(this.getItem().clone());
             try {
                 clonedBuilder.setHeadTexture(this.buttonItemStackBuilder.getHeadTexture());

@@ -5,6 +5,7 @@ import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.utils.item.complex.XMaterial;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Simple api test for CustomInventory
@@ -18,7 +19,7 @@ public class CustomInventoryTest extends OreoInventory {
         addButton(new GUIButton(XMaterial.DIRT.getItemStack(), 5)
                 .addListener(new ButtonListener() {
                     @Override
-                    public Priority getListenerPriority() {
+                    public @NotNull Priority getListenerPriority() {
                         return Priority.HIGH;
                     }
 
@@ -29,7 +30,7 @@ public class CustomInventoryTest extends OreoInventory {
                 })
                 .addListener(new ButtonListener() {
                     @Override
-                    public Priority getListenerPriority() {
+                    public @NotNull Priority getListenerPriority() {
                         return Priority.MEDIUM;
                     }
 
@@ -40,7 +41,7 @@ public class CustomInventoryTest extends OreoInventory {
                 })
                 .addListener(new ButtonListener() {
                     @Override
-                    public Priority getListenerPriority() {
+                    public @NotNull Priority getListenerPriority() {
                         return Priority.LOW;
                     }
 
@@ -51,7 +52,7 @@ public class CustomInventoryTest extends OreoInventory {
                 })
                 .addListener(new ButtonListener() {
                     @Override
-                    public Priority getListenerPriority() {
+                    public @NotNull Priority getListenerPriority() {
                         return Priority.DEFAULT;
                     }
 

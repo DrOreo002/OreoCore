@@ -2,17 +2,18 @@ package me.droreo002.oreocore.inventory.button;
 
 import lombok.Getter;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
 public interface ButtonListener {
 
     /**
-     * Get the button listener's ClickType
+     * Get the button's allowed click type
      *
-     * @return The click type
+     * @return The click type array
      */
-    default ClickType getClickType() {
-        return ClickType.LEFT;
+    @NotNull
+    default ClickType[] getAllowedClickType() {
+        return new ClickType[]{ClickType.LEFT};
     }
 
     /**
@@ -20,6 +21,7 @@ public interface ButtonListener {
      *
      * @return The listener priority
      */
+    @NotNull
     default Priority getListenerPriority() {
         return Priority.DEFAULT;
     }

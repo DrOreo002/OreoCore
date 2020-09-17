@@ -69,7 +69,7 @@ public class LinkedButton extends GUIButton {
         this.targetInventory = targetInventory;
         this.belongsTo = owner.getInventoryName();
 
-        for (Map.Entry<ClickType, List<ButtonListener>> entry : button.getButtonListeners().entrySet()) entry.getValue().forEach(this::addListener);
+        button.getButtonListeners().forEach(this::addListener);
         setAnimated(button.isAnimated());
         setButtonAnimationManager(button.getButtonAnimationManager());
     }

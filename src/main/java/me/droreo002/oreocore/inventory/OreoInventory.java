@@ -37,7 +37,9 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.color;
 
@@ -119,12 +121,11 @@ public abstract class OreoInventory implements InventoryHolder {
      */
     public static void processButtonListener(GUIButton button, InventoryClickEvent e) {
         ButtonClickEvent event = new ButtonClickEvent(e.getView(), e.getSlotType(), e.getSlot(), e.getClick(), e.getAction());
-        List<ButtonListener> loadedListeners = button.getButtonListeners().get(e.getClick());
-        if (loadedListeners != null) {
-            for (ButtonListener listener : loadedListeners) {
-                if (event.isButtonClickEventCancelled()) break;
-                listener.onClick(event);
-            }
+        List<ButtonListener> loadedListeners = button.getButtonListeners().stream().filter(listener ->
+                Arrays.asList(listener.getAllowedClickType()).contains(e.getClick())).collect(Collectors.toList());
+        for (ButtonListener listener : loadedListeners) {
+            if (event.isButtonClickEventCancelled()) break;
+            listener.onClick(event);
         }
     }
 
