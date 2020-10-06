@@ -1,6 +1,7 @@
 package me.droreo002.oreocore.database.utils;
 
 import lombok.Getter;
+import lombok.ToString;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
 import me.droreo002.oreocore.database.DatabaseType;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@ToString
 public class SQLConfiguration implements SerializableConfigVariable {
 
     @NotNull

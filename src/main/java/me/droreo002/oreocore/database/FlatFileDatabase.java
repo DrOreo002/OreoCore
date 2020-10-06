@@ -17,9 +17,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 public abstract class FlatFileDatabase extends Database {
+
+    private final Lock saveLock = new ReentrantLock();
 
     @Getter
     private File dataFolder;
@@ -100,8 +104,9 @@ public abstract class FlatFileDatabase extends Database {
      * @param fileName The data's file name
      */
     public void addData(String fileName) {
-        File file = new File(dataFolder, validateName(fileName));
-        if (!file.exists()) return;
+        fileName = validateName(fileName);
+        File file = new File(dataFolder, fileName);
+        if (!file.exists() || isDataCached(fileName)) return;
         addData(new DataCache(YamlConfiguration.loadConfiguration(file), file));
     }
 
@@ -126,8 +131,7 @@ public abstract class FlatFileDatabase extends Database {
         File file = new File(dataFolder, fileName);
         CreateResult createResult;
         if (file.exists()) {
-            if (isDataCached(fileName)) return;
-            addData(new DataCache(YamlConfiguration.loadConfiguration(file), file));
+            addData(fileName);
             createResult = CreateResult.LOADED;
         } else {
             file.createNewFile();
@@ -159,9 +163,7 @@ public abstract class FlatFileDatabase extends Database {
      */
     @Nullable
     public DataCache getDataCache(String fileName) {
-        String newName = validateName(fileName);
-        if (!isDataCached(newName)) return null;
-        return dataCaches.stream().filter(dataCache -> dataCache.getDataFileName().equals(newName)).findAny().orElse(null);
+        return dataCaches.stream().filter(dataCache -> dataCache.getDataFileName().equals(validateName(fileName))).findAny().orElse(null);
     }
 
     /**
@@ -171,11 +173,14 @@ public abstract class FlatFileDatabase extends Database {
      */
     public void saveData(DataCache dataCache) {
         FileConfiguration config = dataCache.getConfig();
-        File file = dataCache.getDataFile();
+        this.saveLock.lock();
         try {
+            File file = dataCache.getDataFile();
             config.save(file);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            this.saveLock.unlock();
         }
         removeData(dataCache, false);
         addData(dataCache);

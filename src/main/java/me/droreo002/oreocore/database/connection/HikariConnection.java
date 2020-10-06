@@ -58,8 +58,8 @@ public final class HikariConnection extends SQLConnection {
 
         this.config.setPoolName(owningPlugin.getName() + " : HikariCP");
 
-        this.config.addDataSourceProperty("useUnicode", "true");
-        this.config.addDataSourceProperty("characterEncoding", "utf8");
+        this.config.addDataSourceProperty("useUnicode", sqlConfiguration.isUseUnicode());
+        this.config.addDataSourceProperty("characterEncoding", sqlConfiguration.getCharacterEncoding());
         this.config.setMaximumPoolSize(sqlConfiguration.getMaxPoolSize());
         this.config.setMinimumIdle(sqlConfiguration.getMinIdle());
         this.config.setMaxLifetime(sqlConfiguration.getMaxLifetime());

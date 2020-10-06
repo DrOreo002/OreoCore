@@ -22,7 +22,7 @@ public final class FileDownloader {
                 download(url, file);
                 break;
             } catch (IOException e) {
-                if (totalTries >= maxTries) throw new NullPointerException("Failed to download file from " + url.toString() + " Caused by: Maximum tries has been reached!");
+                if (totalTries >= maxTries) throw new RuntimeException("Failed to download file from " + url.toString(), e);
                 totalTries++;
             }
         }
