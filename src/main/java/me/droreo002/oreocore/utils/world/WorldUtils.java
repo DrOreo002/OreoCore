@@ -2,8 +2,8 @@ package me.droreo002.oreocore.utils.world;
 
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.enums.ParticleEffect;
-import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.bridge.XSound;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
@@ -27,7 +27,7 @@ public final class WorldUtils {
     public static void createFakeExplosion(Location location, Player player) {
         Validate.notNull(location, "Location cannot be null!");
         playParticles(ParticleEffect.EXPLOSION_HUGE, 0, 0, 0, 1, 5, location, 4);
-        new SoundObject(OSound.ENTITY_GENERIC_EXPLODE).send(player);
+        new SoundObject(XSound.ENTITY_GENERIC_EXPLODE).send(player);
     }
 
     /**

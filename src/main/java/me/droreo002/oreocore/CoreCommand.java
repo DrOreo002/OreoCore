@@ -16,8 +16,8 @@ import me.droreo002.oreocore.inventory.test.normal.PaginatedInventoryTest;
 import me.droreo002.oreocore.inventory.test.normal.SecondLinkedInventory;
 import me.droreo002.oreocore.netty.NettyDebug;
 import me.droreo002.oreocore.scoreboard.OreoScoreboard;
-import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.bridge.XSound;
 import me.droreo002.oreocore.utils.item.Base64ItemStack;
 import me.droreo002.oreocore.utils.item.CustomSkull;
 import me.droreo002.oreocore.utils.item.ItemStackBuilder;
@@ -333,7 +333,7 @@ public class CoreCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sound(Player player) {
-        new SoundObject(OSound.UI_BUTTON_CLICK).send(player);
+        new SoundObject(XSound.UI_BUTTON_CLICK).send(player);
     }
 
     @Override

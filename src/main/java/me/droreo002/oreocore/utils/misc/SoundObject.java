@@ -3,28 +3,30 @@ package me.droreo002.oreocore.utils.misc;
 import lombok.Getter;
 import me.droreo002.oreocore.OreoCore;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.bridge.XSound;
+import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SoundObject implements SerializableConfigVariable {
 
     // Pre - Initialized
-    public static SoundObject SUCCESS_SOUND = new SoundObject(OSound.ENTITY_EXPERIENCE_ORB_PICKUP);
-    public static SoundObject ERROR_SOUND = new SoundObject(OSound.BLOCK_ANVIL_FALL);
+    public static SoundObject SUCCESS_SOUND = new SoundObject(XSound.ENTITY_EXPERIENCE_ORB_PICKUP);
+    public static SoundObject ERROR_SOUND = new SoundObject(XSound.BLOCK_ANVIL_FALL);
 
     static {
         if (ServerUtils.isOldAsFuckVersion()) {
-            SUCCESS_SOUND = new SoundObject(OSound.ENTITY_PLAYER_LEVELUP);
-            ERROR_SOUND = new SoundObject(OSound.ENTITY_VILLAGER_NO);
+            SUCCESS_SOUND = new SoundObject(XSound.ENTITY_PLAYER_LEVELUP);
+            ERROR_SOUND = new SoundObject(XSound.ENTITY_VILLAGER_NO);
         }
     }
 
@@ -40,13 +42,13 @@ public class SoundObject implements SerializableConfigVariable {
      */
     public SoundObject() { }
 
-    public SoundObject(OSound sound, float volume, float pitch) {
+    public SoundObject(XSound sound, float volume, float pitch) {
         this.volume = volume;
         this.pitch = pitch;
         this.sound = sound.parseSound();
     }
 
-    public SoundObject(OSound sound) {
+    public SoundObject(XSound sound) {
         this.volume = 1.0f;
         this.pitch = 1.0f;
         this.sound = sound.parseSound();
@@ -81,8 +83,7 @@ public class SoundObject implements SerializableConfigVariable {
     public static SoundObject deserialize(ConfigurationSection section) {
         float volume = (float) section.getDouble("volume", 1.0f);
         float pitch = (float) section.getDouble("pitch", 1.0f);
-        OSound sounds = OSound.match(section.getString("sound"));
-        if (sounds == null) throw new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound"));
+        XSound sounds = XSound.matchXSound(Objects.requireNonNull(section.getString("sound"))).orElseThrow(() -> new NullPointerException("Error!. Cannot find sound with the name of " + section.getString("sound")));
         return new SoundObject(sounds, volume, pitch);
     }
 

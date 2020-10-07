@@ -1,7 +1,7 @@
 package me.droreo002.oreocore.inventory.animation.open;
 
 import lombok.Getter;
-import me.droreo002.oreocore.utils.bridge.OSound;
+import me.droreo002.oreocore.utils.bridge.XSound;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.XMaterial;
 import me.droreo002.oreocore.utils.misc.MathUtils;
@@ -34,8 +34,8 @@ public class ItemWave extends OpenAnimation {
      * @return the ItemWave
      */
     public static ItemWave getDefault() {
-        final ItemWave waveAnimation = new ItemWave(XMaterial.DIAMOND_PICKAXE.getItemStack(), XMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_HIT));
-        waveAnimation.setEndSound(new SoundObject(OSound.BLOCK_ANVIL_FALL));
+        final ItemWave waveAnimation = new ItemWave(XMaterial.DIAMOND_PICKAXE.getItemStack(), XMaterial.STONE.getItemStack(), new SoundObject(XSound.BLOCK_STONE_HIT));
+        waveAnimation.setEndSound(new SoundObject(XSound.BLOCK_ANVIL_FALL));
         return waveAnimation;
     }
 

@@ -14,8 +14,8 @@ import me.droreo002.oreocore.inventory.button.ButtonClickEvent;
 import me.droreo002.oreocore.inventory.button.ButtonListener;
 import me.droreo002.oreocore.inventory.button.GUIButton;
 import me.droreo002.oreocore.inventory.linked.Linkable;
-import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.bridge.XSound;
 import me.droreo002.oreocore.utils.entity.PlayerUtils;
 import me.droreo002.oreocore.utils.inventory.InventoryUtils;
 import me.droreo002.oreocore.utils.item.complex.XMaterial;
@@ -94,10 +94,10 @@ public abstract class OreoInventory implements InventoryHolder {
                     inventoryAnimationManager.setOpenAnimation(new DiagonalFill());
                     break;
                 case ITEM_FILL_ANIMATION:
-                    inventoryAnimationManager.setOpenAnimation(new ItemFill(new SoundObject(OSound.ENTITY_ITEM_PICKUP), new SoundObject(OSound.BLOCK_ANVIL_FALL)));
+                    inventoryAnimationManager.setOpenAnimation(new ItemFill(new SoundObject(XSound.ENTITY_ITEM_PICKUP), new SoundObject(XSound.BLOCK_ANVIL_FALL)));
                     break;
                 case ITEM_WAVE_ANIMATION:
-                    inventoryAnimationManager.setOpenAnimation(new ItemWave(XMaterial.DIAMOND_PICKAXE.getItemStack(), XMaterial.STONE.getItemStack(), new SoundObject(OSound.BLOCK_STONE_BREAK)));
+                    inventoryAnimationManager.setOpenAnimation(new ItemWave(XMaterial.DIAMOND_PICKAXE.getItemStack(), XMaterial.STONE.getItemStack(), new SoundObject(XSound.BLOCK_STONE_BREAK)));
                     break;
             }
         }
@@ -133,9 +133,9 @@ public abstract class OreoInventory implements InventoryHolder {
         this.buttons = new ArrayList<>();
         this.disabledClickListeners = new ArrayList<>();
         this.inventory = Bukkit.createInventory(this, size, title);
-        this.soundOnClick = new SoundObject(OSound.UI_BUTTON_CLICK);
-        this.soundOnClose = new SoundObject(OSound.BLOCK_CHEST_CLOSE);
-        this.soundOnOpen = new SoundObject(OSound.BLOCK_CHEST_OPEN);
+        this.soundOnClick = new SoundObject(XSound.UI_BUTTON_CLICK);
+        this.soundOnClose = new SoundObject(XSound.BLOCK_CHEST_CLOSE);
+        this.soundOnOpen = new SoundObject(XSound.BLOCK_CHEST_OPEN);
         this.shouldProcessButtonClickEvent = true;
     }
 

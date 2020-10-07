@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import me.droreo002.oreocore.configuration.SerializableConfigVariable;
-import me.droreo002.oreocore.utils.bridge.OSound;
 import me.droreo002.oreocore.utils.bridge.ServerUtils;
+import me.droreo002.oreocore.utils.bridge.XSound;
 import me.droreo002.oreocore.utils.misc.SoundObject;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static me.droreo002.oreocore.utils.strings.StringUtils.*;
 import static me.droreo002.oreocore.utils.multisupport.SimpleReflectionUtils.*;
@@ -118,7 +119,7 @@ public class OreoTitle implements SerializableConfigVariable, Cloneable {
         int fadeOut = section.getInt("fade-out");
         SoundObject soundOnSend = null;
         if (section.isSet("soundOnSend")) {
-            final OSound s = OSound.match(section.getString("soundOnSend"));
+            final XSound s = XSound.matchXSound(Objects.requireNonNull(section.getString("soundOnSend"))).orElse(null);
             if (s != null) soundOnSend = new SoundObject(s);
         }
         return new OreoTitle(title, subTitle, fadeIn, stay, fadeOut, soundOnSend);
