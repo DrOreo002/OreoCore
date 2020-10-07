@@ -339,7 +339,7 @@ public abstract class PaginatedInventory extends OreoInventory {
     public void updatePageInformation() {
         TextPlaceholder placeholder = TextPlaceholder.of("%currPage%", currentPage + 1).add("%currentPage%", currentPage + 1).add("%totalPage%", totalPage).add("%maxPage%", totalPage);
         getInventory().getViewers().forEach(view -> {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> InventoryTitleHelper.updateTitle((Player) view, placeholder.format(getTitle())), 1L);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(OreoCore.getInstance(), () -> InventoryTitleHelper.sendInventoryTitle((Player) view, placeholder.format(getTitle())), 1L);
         });
         if (informationButton == null) return;
         ItemStack infoButtonClone = placeholder.format(informationButton.getItem());
