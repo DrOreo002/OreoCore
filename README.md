@@ -1,5 +1,5 @@
 # ⚡️OreoCore
-[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)  
+[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)  
 The core api for my plugins. This has the core features that I'll need to develop my plugins, basically removes the hassle of copy and pasting codes.
 
 **Core features**
