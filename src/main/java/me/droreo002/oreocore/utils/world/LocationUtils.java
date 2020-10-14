@@ -72,15 +72,15 @@ public final class LocationUtils {
         if (format.isEmpty()) return null;
         try {
             String[] sp = format.replace(" ", "").split("([;,])");
-            String world = sp[1];
-            double x = Double.parseDouble(sp[2]);
-            double y = Double.parseDouble(sp[3]);
-            double z = Double.parseDouble(sp[4]);
+            String world = sp[0];
+            double x = Double.parseDouble(sp[1]);
+            double y = Double.parseDouble(sp[2]);
+            double z = Double.parseDouble(sp[3]);
             float yaw = 0;
             float pitch = 0;
             try {
-                yaw = Float.parseFloat(sp[5]);
-                pitch = Float.parseFloat(sp[6]);
+                yaw = Float.parseFloat(sp[4]);
+                pitch = Float.parseFloat(sp[5]);
             } catch (Exception ignored) {
                 // Simplified location. We ignore it
             }

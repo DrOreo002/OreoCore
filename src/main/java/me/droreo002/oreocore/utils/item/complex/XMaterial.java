@@ -2119,7 +2119,7 @@ public enum XMaterial {
      */
     @NotNull
     public static Material match(@NotNull String name) {
-        return Objects.requireNonNull(matchXMaterial(name).orElseThrow(NullPointerException::new).parseMaterial());
+        return Objects.requireNonNull(matchXMaterial(name).orElseThrow(() -> new NullPointerException("Failed to match material: " + name)).parseMaterial());
     }
 
     ///////////////////////////////////////////////////////////////////

@@ -22,7 +22,7 @@ public class MainInventoryListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent e) {
         InventoryView view = e.getView();
         Inventory inventory = view.getTopInventory();
@@ -62,7 +62,7 @@ public class MainInventoryListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrag(InventoryDragEvent e) {
         final Inventory inventory = e.getInventory();
         if (inventory.getHolder() instanceof OreoInventory) {
@@ -70,7 +70,7 @@ public class MainInventoryListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onMove(InventoryMoveItemEvent e) {
         final Inventory inventory = e.getDestination();
         if (inventory.getHolder() instanceof OreoInventory) {
