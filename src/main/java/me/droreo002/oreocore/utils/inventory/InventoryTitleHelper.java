@@ -108,10 +108,6 @@ public class InventoryTitleHelper {
                 id = 5;
                 size = 4;
                 break;
-            case CRAFTING:
-                return;
-            case CREATIVE:
-                return;
             case DISPENSER:
                 id = 3;
                 size = 9;
@@ -141,8 +137,6 @@ public class InventoryTitleHelper {
                 id = 6;
                 size = 3;
                 break;
-            case PLAYER:
-                return;
             case WORKBENCH:
                 id = 1;
                 size = 9;

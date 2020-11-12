@@ -30,6 +30,7 @@ public enum MinecraftVersion {
 
     V1_16_R1("V1_16"),
     V1_16_R2("V1_16"),
+    V1_16_R3("V1_16"),
 
     UNKNOWN("UNKNOWN");
 

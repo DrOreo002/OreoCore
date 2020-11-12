@@ -183,6 +183,7 @@ public final class ServerUtils {
             case V1_15_R1:
             case V1_16_R1:
             case V1_16_R2:
+            case V1_16_R3:
             case UNKNOWN:
                 return false;
         }
@@ -195,10 +196,7 @@ public final class ServerUtils {
      * @return True if contains, false otherwise
      */
     public static boolean isVersionHas(MinecraftFeature feature) {
-        for (MinecraftVersion versions : feature.getOnVersion()) {
-            if (getServerVersion().getBaseVersion().equals(versions.getBaseVersion())) return true;
-        }
-        return false;
+        return getServerVersion().getBaseVersion().equals(feature.getStartFrom().getBaseVersion());
     }
 
     /**

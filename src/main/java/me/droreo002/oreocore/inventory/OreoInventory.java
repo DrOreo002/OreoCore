@@ -172,7 +172,6 @@ public abstract class OreoInventory implements InventoryHolder {
         }
 
         e.setCancelled(!oreoInventory.getDisabledClickListeners().contains(slot));
-        System.out.println("A: " + e.isCancelled());
         GUIButton button = oreoInventory.getButton(slot);
         if (button != null) {
             if (oreoInventory.isShouldProcessButtonClickEvent()) {
