@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="e6cb67d4-e512-481a-bef6-e968686c5512" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/MinecraftVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/enums/MinecraftVersion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/inventory/OreoInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/bridge/ServerUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/inventory/InventoryTitleHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/inventory/InventoryTitleHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/complex/XMaterial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/item/complex/XMaterial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/multisupport/MinecraftFeature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/utils/multisupport/MinecraftFeature.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/OreoConversation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/OreoConversation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/OreoPrompt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/conversation/OreoPrompt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/player/PlayerListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/droreo002/oreocore/listeners/player/PlayerListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,13 +76,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Hydra/GrowtopiaPathFinding" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.toDoOptions" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -94,7 +92,7 @@
       <recent name="H:\anom\Java Project\OreoCore\src\main\java\me\droreo002\oreocore" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.GradleBuild">
+  <component name="RunManager" selected="Gradle.BUILD">
     <configuration name="NettyDebug" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="me.droreo002.oreocore.netty.NettyDebug" />
       <module name="OreoCore.main" />
@@ -108,7 +106,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GradleBuild" type="GradleRunConfiguration" factoryName="Gradle">
+    <configuration name="BUILD" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -131,13 +129,16 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.NettyDebug" />
+      <item itemvalue="Gradle.BUILD" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.NettyDebug" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -148,13 +149,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563115503927</updated>
-    </task>
-    <task id="LOCAL-00083" summary="Refactored CustomItem">
-      <created>1583409288136</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1583409288137</updated>
     </task>
     <task id="LOCAL-00084" summary="Add ItemStackBuilder">
       <created>1583419831056</created>
@@ -492,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602663791154</updated>
     </task>
-    <option name="localTasksCounter" value="132" />
+    <task id="LOCAL-00132" summary="Added support for 1.16.4">
+      <created>1605193265026</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1605193265026</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -525,7 +526,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Latest ver of OreoCore" />
     <MESSAGE value="Added color api" />
     <MESSAGE value="Version change" />
     <MESSAGE value="Apply 1.16 fix" />
@@ -550,77 +550,29 @@
     <MESSAGE value="Updated XSound" />
     <MESSAGE value="Prevent ui from actually cancelling" />
     <MESSAGE value="Updated location serializing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated location serializing" />
+    <MESSAGE value="Added support for 1.16.4" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for 1.16.4" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser" timestamp="1605192486782">
+    <state x="414" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1617533027232">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="765" y="255" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192486782" />
-    <state x="352" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1598177355593">
+    <state x="414" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.93.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1617533027232" />
+    <state width="1877" height="247" key="GridCell.Tab.0.bottom" timestamp="1617533205200">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="352" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598177355593" />
-    <state x="690" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1599203632079">
+    <state width="1877" height="247" key="GridCell.Tab.0.bottom/1920.93.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1617533205200" />
+    <state width="1877" height="247" key="GridCell.Tab.0.center" timestamp="1617533205200">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="690" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1599203632079" />
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2" timestamp="1602663790349">
+    <state width="1877" height="247" key="GridCell.Tab.0.center/1920.93.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1617533205200" />
+    <state width="1877" height="247" key="GridCell.Tab.0.left" timestamp="1617533205199">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="696" y="63" width="695" height="976" key="CommitChangelistDialog2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1602663790349" />
-    <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1602672455332">
+    <state width="1877" height="247" key="GridCell.Tab.0.left/1920.93.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1617533205199" />
+    <state width="1877" height="247" key="GridCell.Tab.0.right" timestamp="1617533205200">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1602672455332" />
-    <state width="1879" height="164" key="GridCell.Tab.0.bottom" timestamp="1605192651069">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1879" height="399" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1602653133457" />
-    <state width="1879" height="164" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192651069" />
-    <state width="1879" height="164" key="GridCell.Tab.0.center" timestamp="1605192651068">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1879" height="399" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1602653133457" />
-    <state width="1879" height="164" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192651068" />
-    <state width="1879" height="164" key="GridCell.Tab.0.left" timestamp="1605192651068">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1879" height="399" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1602653133457" />
-    <state width="1879" height="164" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192651068" />
-    <state width="1879" height="164" key="GridCell.Tab.0.right" timestamp="1605192651068">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1879" height="399" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1602653133457" />
-    <state width="1879" height="164" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192651068" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1602663793665">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1602663793665" />
-    <state x="92" y="92" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599201625311">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="92" y="92" width="1736" height="896" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1599201625311" />
-    <state x="1920" y="0" width="1456" height="1003" maximized="true" key="dock-window-1" timestamp="1598161586654">
-      <screen x="1920" y="0" width="1440" height="900" />
-    </state>
-    <state x="1920" y="0" width="1456" height="1003" maximized="true" key="dock-window-1/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598161586654" />
-    <state x="170" y="133" width="1456" height="1003" key="dock-window-2" timestamp="1598175443451">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="170" y="133" width="1456" height="1003" key="dock-window-2/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1598175443451" />
-    <state x="969" y="205" width="758" height="628" key="find.popup" timestamp="1605192629665">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="969" y="205" width="758" height="628" key="find.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192629665" />
-    <state x="616" y="250" key="run.anything.popup" timestamp="1600323069108">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="616" y="250" key="run.anything.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1600323069108" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1605192632958">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@0.0.1920.1080" timestamp="1605192632958" />
-    <state x="2387" y="196" width="672" height="565" key="search.everywhere.popup/0.0.1920.1080/1920.0.1440.900@1920.0.1440.900" timestamp="1598021003122" />
+    <state width="1877" height="247" key="GridCell.Tab.0.right/1920.93.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1617533205200" />
   </component>
 </project>

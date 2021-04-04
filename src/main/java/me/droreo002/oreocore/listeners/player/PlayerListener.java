@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
             plugin.getPlayerInformationDatabase().loadPlayer(player);
         }
         if (memory.isCachePlayerHead()) {
-            ThreadingUtils.makeChain().asyncFirst(() -> CustomSkull.fromUniqueId(player.getUniqueId())).execute();
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> CustomSkull.fromUniqueId(player.getUniqueId()));
         }
 
         if (!player.hasPermission("oreocore.admin")) return;

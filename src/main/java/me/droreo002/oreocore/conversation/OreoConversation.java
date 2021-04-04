@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class OreoConversation<T> implements ConversationAbandonedListener {
 
@@ -29,9 +28,9 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     private static final int DEFAULT_TIME_OUT = 1800; // 30 Minutes
 
     @Getter
-    private ConversationFactory conversationFactory;
+    private final ConversationFactory conversationFactory;
     @Getter
-    private LinkedList<OreoPrompt<?>> prompts;
+    private List<OreoPrompt<?>> prompts;
     @Getter
     private DoubleValueCallback<T, ConversationContext> lastCallback;
     @Getter
@@ -39,7 +38,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private SimpleCallback<ConversationAbandonedEvent> onConversationAbandoned;
     @Getter
-    private String abandonedMessage;
+    private String abandonedMessage, timeoutFormat;
     @Getter
     private SoundObject abandonedSound;
     @Getter
@@ -47,29 +46,25 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
     @Getter
     private TimestampBuilder conversationTimeOut;
     @Getter
-    private OreoTitle titleCountdown;
+    private OreoTitle countdownTitle, abandonedTitle;
     @Getter
-    private OreoTitle abandonedTitle;
-    @Getter
-    private boolean useTitle;
+    private boolean enableTitle;
     @Getter
     private int timeOut;
-    @Getter
-    private String timeOutFormat;
     @Getter @Nullable
     private DataBuilder<T> dataBuilder;
     @Getter @Nullable
     private Map<String, Object> firstContext;
 
     public OreoConversation(String nonPlayerMessage, String escapeSequence, JavaPlugin owner) {
-        this.prompts = new LinkedList<>();
+        this.prompts = new ArrayList<>();
         this.conversationFactory = new ConversationFactory(owner)
                 .withModality(false)
                 .withLocalEcho(false)
                 .addConversationAbandonedListener(this)
                 .withEscapeSequence(escapeSequence)
                 .thatExcludesNonPlayersWithMessage(nonPlayerMessage);
-        this.useTitle = false;
+        this.enableTitle = false;
     }
 
     /**
@@ -87,11 +82,11 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      *
      * @param titleCountdown The title countdown
      */
-    public OreoConversation<T> withTitleCountdown(OreoTitle titleCountdown, int timeOut, SimpleCallback<Player> whenDone) {
-        this.useTitle = true;
+    public OreoConversation<T> withCountdownTitle(OreoTitle titleCountdown, int timeOut, SimpleCallback<Player> whenDone) {
+        this.enableTitle = true;
         this.timeOut = timeOut;
-        this.titleCountdown = titleCountdown;
-        this.titleAnimation = new TitleAnimation(this.titleCountdown,20L)
+        this.countdownTitle = titleCountdown;
+        this.titleAnimation = new TitleAnimation(this.countdownTitle,20L)
             .addFrame(new TitleFrame() {
 
                 @Override
@@ -103,7 +98,7 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
                 public String getNextSubTitle(String prevSubTitle) {
                     if (conversationTimeOut == null) return " ";
                     Date date = new Date();
-                    return TimestampUtils.getDifference(date, new Date(conversationTimeOut.getTimestamp().getTime()), timeOutFormat);
+                    return TimestampUtils.getDifference(date, new Date(conversationTimeOut.getTimestamp().getTime()), timeoutFormat);
                 }
             })
             .setOnDone(whenDone);
@@ -115,8 +110,8 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
      *
      * @param timeOutFormat The format
      */
-    public OreoConversation<T> withTimeOutFormat(String timeOutFormat) {
-        this.timeOutFormat = timeOutFormat;
+    public OreoConversation<T> withTimeoutFormat(String timeOutFormat) {
+        this.timeoutFormat = timeOutFormat;
         return this;
     }
 
@@ -278,8 +273,8 @@ public class OreoConversation<T> implements ConversationAbandonedListener {
             String key = ent.getKey();
             conversation.getContext().setSessionData(key, ent.getValue());
         }
-        if (useTitle) {
-            this.timeOutFormat = (timeOutFormat == null) ? TimestampBuilder.TICKING_TIME_FORMAT : timeOutFormat;
+        if (enableTitle) {
+            this.timeoutFormat = (timeoutFormat == null) ? TimestampBuilder.TICKING_TIME_FORMAT : timeoutFormat;
             this.conversationTimeOut = TimestampUtils.fromSeconds(TimestampBuilder.DEFAULT_FORMAT, timeOut);
             this.titleAnimation.start(player);
         }

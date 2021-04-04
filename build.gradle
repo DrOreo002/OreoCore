@@ -1,71 +1,48 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.1.0'
     id 'java'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
-
-apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'maven-publish'
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
+project.version = "16.2"
+
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
+
+    maven {
+        url = 'https://repo.essentialsx.net/snapshots/'
+    }
 
     maven {
         url = 'https://repo.aikar.co/content/groups/aikar/'
     }
 
     maven {
-        url = 'https://ci.ender.zone/plugin/repository/everything/'
-    }
-
-    maven {
-        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
-
-    maven {
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-
-    maven {
         url = 'http://repo.dmulloy2.net/nexus/repository/public/'
-    }
-
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-
     compile 'co.aikar:taskchain-bukkit:3.7.2'
     compile 'com.zaxxer:HikariCP:3.3.1'
     compile 'org.slf4j:slf4j-api:2.0.0-alpha0'
-    compile 'org.jetbrains:annotations:16.0.2'
-    compile 'net.md-5:bungeecord-chat:1.16-R0.1'
     compile 'com.google.http-client:google-http-client:1.27.0'
 
-    compileOnly 'net.ess3:EssentialsX:2.16.0'
-    compileOnly 'org.spigotmc:spigot:1.16.2-R0.1-SNAPSHOT'
+    compileOnly 'org.jetbrains:annotations:16.0.2'
+    compileOnly 'net.md-5:bungeecord-chat:1.16-R0.1'
+    compileOnly 'net.ess3:EssentialsX:2.18.2'
+    compileOnly 'org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib-API:4.4.0'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
-def pluginName = project.name
-def spigotDirectory = "Spigot 1.16"
-
-group = 'me.droreo002'
-version = '16.2'
-description = 'OreoCore plugin!'
-targetCompatibility = '1.8'
-
 shadowJar {
-    archiveFileName = pluginName + '-' + project.version + '.jar'
-    destinationDirectory = file("C:\\Users\\Anom\\Desktop\\" + spigotDirectory + "\\plugins")
+    archiveFileName = 'OreoCore-' + rootProject.version + '.jar'
+    destinationDirectory = file("I:\\Workspace\\Spigot 1.16\\plugins")
 
     mergeServiceFiles()
     dependencies {
@@ -87,9 +64,15 @@ processResources {
     }
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
+            groupId = 'me.droreo002'
+            version = project.version
+            artifactId = rootProject.name
             from components.java
         }
     }

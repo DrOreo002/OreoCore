@@ -15,11 +15,7 @@ public abstract class OreoPrompt<T> extends StringPrompt {
     public static final String DATA_KEY = "DATA";
 
     @Getter @Setter
-    private String nextPrompt;
-    @Getter @Setter
-    private String identifier;
-    @Getter @Setter
-    private String customDataKey;
+    private String nextPrompt, identifier, customDataKey;
     @Getter @Setter
     private State state;
 
@@ -74,6 +70,6 @@ public abstract class OreoPrompt<T> extends StringPrompt {
 
     public enum State {
         FAIL,
-        CONTINUE;
+        CONTINUE
     }
 }
