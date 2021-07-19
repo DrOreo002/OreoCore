@@ -1,6 +1,5 @@
-# ⚡️OreoCore
-[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)  
-The core api for my plugins. This has the core features that I'll need to develop my plugins, basically removes the hassle of copy and pasting codes.
+# ⚡️OreoCore (Abandoned)
+The core api for my plugins. This is a really old code that I written when I had only 2 years experience on programming, so expect some really silly and un logical codes here. If you are a plugin developer that needs to edit my plugin or create addon I'd recommend to just re create the whole thing rather than editing this source, its much more worth your time.. trust me!
 
 **Core features**
 - Inventory API
@@ -14,9 +13,6 @@ The core api for my plugins. This has the core features that I'll need to develo
 
 ## 📽 Documentation
 Documentation are not hosted online, but all the useful class is well documented already. Check it out!
-
-## 🛠 Building
-To build please use gradle. Commands are `clean build shadowJar`
 
 ## Known database problem
 If you happened to change your `online-mode` settings to true or false, you'll have to delete `playerdata.db` since player's UUID will change on that convertion.
